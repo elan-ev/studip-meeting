@@ -15,12 +15,26 @@
 
 require_once dirname(__FILE__) . '/bbb_api.php';
 
-class BBBPlugin extends StudipPlugin implements SystemPlugin
+class BBBPlugin extends StudipPlugin implements StandardPlugin
 {
 
     const SALT = '';
     const BBB  = '';
-
+    
+    function __construct() {
+        
+        parent::__construct();
+        global $SessSemName, $perm;
+        
+        
+        $main = new Navigation("BigBlue");
+        $main->setURL(PluginEngine::getURL('bigblue'));
+        
+        if ($this->isActivated($_SESSION['SessionSeminar'])) {
+            Navigation::addItem('/course/bigblue', $main);
+        }
+        
+    }
     function createMeeting_action($name, $meetingId, $attPw, $modPw)
     {
        $bbb = new BigBlueButton();
@@ -29,10 +43,25 @@ class BBBPlugin extends StudipPlugin implements SystemPlugin
 
     function joinMeeting_action($username, $meetingId, $pw)
     {
+        return true;
     }
 
     function meetingInfo_action($meetingId, $moderatorPw)
     {
+        return true;
         // get details about a currently running meeting
+    }
+    function getInfoTemplate($course_id) {
+        return null;
+    }
+    
+    function getIconNavigation($course_id, $last_visit){
+        return null;
+    }
+    public function deactivationWarning($context = null) {
+        return _("Das BigBlue wurde deaktiviert.");
+    }
+    public function getTabNavigation($course_id) {
+        return null;
     }
 }
