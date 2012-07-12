@@ -18,30 +18,35 @@ require_once dirname(__FILE__) . '/bbb_api.php';
 
 class BBBPlugin extends StudipPlugin implements StandardPlugin {
 
-    const SALT = '';
-    const BBB = '';
+    const SALT = 'cb5dbc361d4959e27f4bfa027adc559a';
+    const BBB  = 'http://bbb.virtuos.uni-osnabrueck.de/bigbluebutton/'; 
 
-    function __construct() {
-
-        parent::__construct();
-        global $SessSemName, $perm;
-
-
-        $main = new Navigation("BigBlue");
-        $main->setURL(PluginEngine::getURL('bigblue'));
-
-        if ($this->isActivated($_SESSION['SessionSeminar'])) {
-            Navigation::addItem('/course/bigblue', $main);
-        }
+    function show_action()
+    {
+        Navigation::activateItem('course/BBBPLugin');
+        $factory = new Flexi_TemplateFactory(dirname(__FILE__) . '/templates/');
+        echo $factory->render("index");
     }
-
-    function createMeeting_action($name, $meetingId, $attPw, $modPw) {
+    
+    function createMeeting_action() {
+        $meetingId = Request::option('cid');
+        $modPw = md5($meetingID.'modPW');
+        $attPw = md5($meetingID.'attPw');
+        $ret = $_SERVER['HTTP_REFERER'];
+        
         $bbb = new BigBlueButton();
-        echo $bbb->createMeetingAndGetJoinURL(get_username($GLOBALS['user']->id), $meetingId, 'MOTD', $modPw, $attPw, self::SALT, self::BBB, 'www.inspace.de');
+        $url = $bbb->createMeetingAndGetJoinURL(get_username($GLOBALS['user']->id), $meetingId, 'MOTD', $modPw, $attPw, self::SALT, self::BBB, $ret);
+        header('Location: '.$url);
     }
 
-    function joinMeeting_action($username, $meetingId, $pw) {
-        return true;
+    function joinMeeting_action() {
+        $meetingId = Request::option('cid');
+        $PW = md5($meetingID.'attPw');
+        $ret = $_SERVER['HTTP_REFERER'];
+        
+        $bbb = new BigBlueButton();
+        $url = $bbb->joinURL($meetingID, get_username($GLOBALS['user']->id), $PW, $SALT, $ret );
+        header('Location: '.$url);
     }
 
     function meetingInfo_action($meetingId, $moderatorPw) {
@@ -57,12 +62,10 @@ class BBBPlugin extends StudipPlugin implements StandardPlugin {
         return null;
     }
 
-    public function deactivationWarning($context = null) {
-        return _("Das BigBlue wurde deaktiviert.");
-    }
-
     public function getTabNavigation($course_id) {
-        return null;
+        $main = new Navigation("BigBlueButton");
+        $main->setURL(PluginEngine::getURL('BBBPLugin'));
+        return array('BBBPLugin' => $main);
     }
 
 }
