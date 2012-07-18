@@ -20,45 +20,112 @@ class BBBPlugin extends StudipPlugin implements StandardPlugin {
 
     const SALT = 'cb5dbc361d4959e27f4bfa027adc559a';
     const BBB  = 'http://bbb.virtuos.uni-osnabrueck.de/bigbluebutton/'; 
-
-    function show_action()
+    
+    private $params = array('perm' => '',
+                'allow_join' => false,
+                'meeting_running' => false,
+                'path' => '');
+    /**
+     * Initiate plugin params:
+     * 
+     * 'perm'           => 'mod' has BBB moderator permission
+     *                     'att' has BBB attendee permission 
+     * 'allow_join      => true if user is allowed to join
+     * 'meeting_running'=> true if meeting is running
+     * 'path'           => relative path to plugin
+     */
+    private function get_params()
     {
+        if($GLOBALS['perm']->have_studip_perm("dozent", $this->getContext()))
+        {
+            $this->params['perm'] = 'mod';
+        } elseif($GLOBALS['perm']->have_studip_perm("autor", 
+                $this->getContext()))
+        {
+            $this->params['perm'] = 'att';
+        }
+
+        if($this->params['perm'] !== '')
+        {
+            $this->params['allow_join'] = true;
+        }
+        
+        $bbb = new BigBlueButton();
+        $meetingId = Request::option('cid');
+        $this->params['meeting_running'] = 
+                $bbb->isMeetingRunning($meetingId, self::BBB, self::SALT);
+        //TODO: path doesnt point to image, find StudIP function for absolute path
+        $this->params['img_path'] = $this->getPluginPath().'/img/';
+        
+        
+    }
+    private function getContext()
+    {
+        return $GLOBALS['SessSemName'][1];
+    }
+    public function show_action()
+    {
+        $this->get_params();
         Navigation::activateItem('course/BBBPLugin');
         $factory = new Flexi_TemplateFactory(dirname(__FILE__) . '/templates/');
-        echo $factory->render("index");
+        echo $factory->render("index", array('params' => $this->params));
     }
-    
-    function createMeeting_action() {
+    /**
+     * creates meeting and redirects to BBB meeting. 
+     */
+    public function createMeeting_action() {
+        $this->get_params();
+        if(!$this->params['perm'] == 'dozent')
+        {
+            $this->error();
+        }
         $meetingId = Request::option('cid');
         $modPw = md5($meetingID.'modPW');
         $attPw = md5($meetingID.'attPw');
         $ret = $_SERVER['HTTP_REFERER'];
         
         $bbb = new BigBlueButton();
-        $url = $bbb->createMeetingAndGetJoinURL(get_username($GLOBALS['user']->id), $meetingId, 'MOTD', $modPw, $attPw, self::SALT, self::BBB, $ret);
+        $url = $bbb->createMeetingAndGetJoinURL(
+                get_username($GLOBALS['user']->id), $meetingId, 'MOTD', $modPw, 
+                $attPw, self::SALT, self::BBB, $ret);
         header('Location: '.$url);
     }
-
-    function joinMeeting_action() {
+    /**
+     *  redirects to active BBB meeting. 
+     */
+    public function joinMeeting_action() {
+        $this->get_params();
         $meetingId = Request::option('cid');
-        $PW = md5($meetingID.'attPw');
-        $ret = $_SERVER['HTTP_REFERER'];
+        if($this->params['perm'] == 'att') 
+        {
+            $PW = md5($meetingID.'attPw');
+        } elseif ($this->params['perm'] == 'mod')
+        {
+            $PW = md5($meetingID.'modPw');
+        } else {
+            $this->error();
+        }
+        if(!$this->params['meeting_running'])
+        {
+            $this->error();
+        }
         
         $bbb = new BigBlueButton();
-        $url = $bbb->joinURL($meetingID, get_username($GLOBALS['user']->id), $PW, $SALT, $ret );
+        $url = $bbb->joinURL($meetingId, get_username($GLOBALS['user']->id),
+                $PW, self::SALT, self::BBB);
         header('Location: '.$url);
     }
 
-    function meetingInfo_action($meetingId, $moderatorPw) {
+    public function meetingInfo_action($meetingId, $moderatorPw) {
         return true;
         // get details about a currently running meeting
     }
 
-    function getInfoTemplate($course_id) {
+    public function getInfoTemplate($course_id) {
         return null;
     }
 
-    function getIconNavigation($course_id, $last_visit) {
+    public function getIconNavigation($course_id, $last_visit) {
         return null;
     }
 
@@ -66,6 +133,10 @@ class BBBPlugin extends StudipPlugin implements StandardPlugin {
         $main = new Navigation("BigBlueButton");
         $main->setURL(PluginEngine::getURL('BBBPLugin'));
         return array('BBBPLugin' => $main);
+    }
+    //TODO: show error message
+    public function error(){
+        return null;
     }
 
 }
