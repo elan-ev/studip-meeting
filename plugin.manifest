@@ -1,4 +1,4 @@
-pluginclassname=BBBPlugin
 pluginname=BigBlueButton
+pluginclassname=BBBPlugin
 origin=elan-ev
 version=0.1
