@@ -18,13 +18,16 @@ require_once dirname(__FILE__) . '/bbb_api.php';
 
 class BBBPlugin extends StudipPlugin implements StandardPlugin {
 
-    const SALT = 'cb5dbc361d4959e27f4bfa027adc559a';
-    const BBB  = 'http://bbb.virtuos.uni-osnabrueck.de/bigbluebutton/'; 
+    const SALT = '';
+    const BBB  = ''; 
     
-    private $params = array('perm' => '',
-                'allow_join' => false,
-                'meeting_running' => false,
-                'path' => '');
+    private $params = array(
+        'perm' => '',
+        'allow_join' => false,
+        'meeting_running' => false,
+        'path' => ''
+    );
+
     /**
      * Initiate plugin params:
      * 
@@ -36,33 +39,32 @@ class BBBPlugin extends StudipPlugin implements StandardPlugin {
      */
     private function get_params()
     {
-        if($GLOBALS['perm']->have_studip_perm("dozent", $this->getContext()))
-        {
+        if ($GLOBALS['perm']->have_studip_perm("dozent", $this->getContext())) {
             $this->params['perm'] = 'mod';
-        } elseif($GLOBALS['perm']->have_studip_perm("autor", 
-                $this->getContext()))
-        {
+        } elseif ($GLOBALS['perm']->have_studip_perm("autor", $this->getContext())) {
             $this->params['perm'] = 'att';
         }
 
-        if($this->params['perm'] !== '')
-        {
+        if ($this->params['perm'] !== '') {
             $this->params['allow_join'] = true;
         }
         
         $bbb = new BigBlueButton();
         $meetingId = Request::option('cid');
         $this->params['meeting_running'] = 
-                $bbb->isMeetingRunning($meetingId, self::BBB, self::SALT);
+        $bbb->isMeetingRunning($meetingId, self::BBB, self::SALT);
+
         //TODO: path doesnt point to image, find StudIP function for absolute path
         $this->params['img_path'] = $this->getPluginPath().'/img/';
         
         
     }
+
     private function getContext()
     {
         return $GLOBALS['SessSemName'][1];
     }
+
     public function show_action()
     {
         $this->get_params();
@@ -70,15 +72,16 @@ class BBBPlugin extends StudipPlugin implements StandardPlugin {
         $factory = new Flexi_TemplateFactory(dirname(__FILE__) . '/templates/');
         echo $factory->render("index", array('params' => $this->params));
     }
+
     /**
      * creates meeting and redirects to BBB meeting. 
      */
     public function createMeeting_action() {
         $this->get_params();
-        if(!$this->params['perm'] == 'dozent')
-        {
+        if (!$this->params['perm'] == 'dozent') {
             $this->error();
         }
+
         $meetingId = Request::option('cid');
         $modPw = md5($meetingID.'modPW');
         $attPw = md5($meetingID.'attPw');
@@ -90,23 +93,23 @@ class BBBPlugin extends StudipPlugin implements StandardPlugin {
                 $attPw, self::SALT, self::BBB, $ret);
         header('Location: '.$url);
     }
+
     /**
      *  redirects to active BBB meeting. 
      */
     public function joinMeeting_action() {
         $this->get_params();
         $meetingId = Request::option('cid');
-        if($this->params['perm'] == 'att') 
-        {
+
+        if ($this->params['perm'] == 'att') {
             $PW = md5($meetingID.'attPw');
-        } elseif ($this->params['perm'] == 'mod')
-        {
+        } elseif ($this->params['perm'] == 'mod') {
             $PW = md5($meetingID.'modPw');
         } else {
             $this->error();
         }
-        if(!$this->params['meeting_running'])
-        {
+
+        if(!$this->params['meeting_running']) {
             $this->error();
         }
         
@@ -134,6 +137,7 @@ class BBBPlugin extends StudipPlugin implements StandardPlugin {
         $main->setURL(PluginEngine::getURL('BBBPLugin'));
         return array('BBBPLugin' => $main);
     }
+
     //TODO: show error message
     public function error(){
         return null;
