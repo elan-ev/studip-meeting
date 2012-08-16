@@ -21,6 +21,11 @@ class BBBPlugin extends StudipPlugin implements StandardPlugin {
     public function __construct() {
         parent::__construct();
 
+        // do nothing if plugin is deactivated in this seminar/institute
+        if (!$this->isActivated()) {
+            return;
+        }
+
         if (!version_compare($GLOBALS['SOFTWARE_VERSION'], '2.3', '>')) {
             $navigation = $this->getTabNavigation(Request::get('cid', $GLOBALS['SessSemName'][1]));
             Navigation::insertItem('/course/BBBPlugin', $navigation['BBBPlugin'], null); 
