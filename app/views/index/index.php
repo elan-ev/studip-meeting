@@ -12,7 +12,21 @@ $infobox_content[] = array(
 );
 
 $infobox = array('picture' => '/../plugins_packages/elan-ev/BBBPlugin/images/bbb_overview.png', 'content' => $infobox_content);
-?>
+
+if ($noconfig) : ?>
+    <?= MessageBox::info(_('Der Verbindung zum BigBlueButton-Server wurde noch nicht konfiguriert.')) ?>
+    <? if ($GLOBALS['perm']->have_perm('root')) : ?>
+    <form method="post" action="<?= PluginEngine::getLink("BBBPlugin/index/saveConfig") ?>">
+        URL des BBB-Servers:<br>
+        <input type="text" name="bbb_url" size="50"><br><br>
+        
+        Api-Key (Salt):<br>
+        <input type="text" name="bbb_salt" size="50"><br>
+        
+        <?= Studip\Button::createAccept(_('Konfiguration speichern')) ?>
+    </form>
+<? endif ?>
+<? else : ?>
 <div style="float: left">
     <h1>Konferenzen</h1>
     <? if( $param['meeting_running'] && $param['allow_join']): ?>
@@ -38,9 +52,4 @@ $infobox = array('picture' => '/../plugins_packages/elan-ev/BBBPlugin/images/bbb
     </div>
     <? endif; ?>
 </div>
-
-<div style="float: right; display: none;">
-    <a target="_blank" href="http://www.bigbluebutton.org/">
-        <img width="300" src="<?= $picture_path ?>/bbb_overview.png" title="BigBlueButton Main Interface" class="aligncenter">
-    </a>
-</div>
+<? endif ?>

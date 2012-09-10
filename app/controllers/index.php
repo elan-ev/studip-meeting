@@ -19,19 +19,23 @@ require_once 'app/controllers/studip_controller.php';
 
 class IndexController extends StudipController
 { 
-    private $BBB_URL;
-    private $BBB_SALT;
+    private static $BBB_URL;
+    private static $BBB_SALT;
 
     private $params = array(
-        'perm' => '',
-        'allow_join' => false,
+        'perm'            => '',
+        'allow_join'      => false,
         'meeting_running' => false,
-        'path' => ''
+        'path'            => ''
     );
 
     public function index_action()
     {
-        $this->param = $this->get_params();
+        if (!self::$BBB_URL || !self::$BBB_SALT) {
+            $this->noconfig = true;
+        } else {
+            $this->param = $this->get_params();
+        }
         
         Navigation::activateItem('course/BBBPlugin');
     }
@@ -39,7 +43,8 @@ class IndexController extends StudipController
     /**
      * creates meeting and redirects to BBB meeting. 
      */
-    public function createMeeting_action() {
+    public function createMeeting_action()
+    {
         $this->param = $this->get_params();
 
         if (!$this->param['perm'] == 'dozent') {
@@ -47,7 +52,7 @@ class IndexController extends StudipController
         }
 
         $meetingId = Request::option('cid');
-        $modPw = md5($meetingID.'modPW');
+        $modPw = md5($meetingID.'modPw');
         $attPw = md5($meetingID.'attPw');
         $ret = $_SERVER['HTTP_REFERER'];
         
@@ -61,7 +66,8 @@ class IndexController extends StudipController
     /**
      *  redirects to active BBB meeting. 
      */
-    public function joinMeeting_action() {
+    public function joinMeeting_action()
+    {
         $this->param = $this->get_params();
 
         $meetingId = Request::option('cid');
@@ -85,9 +91,18 @@ class IndexController extends StudipController
         $this->redirect($url);
     }
 
-    public function meetingInfo_action($meetingId, $moderatorPw) {
+    public function meetingInfo_action($meetingId, $moderatorPw)
+    {
         return true;
         // get details about a currently running meeting
+    }
+    
+    public function saveConfig_action()
+    {
+        Config::get()->store('BBB_URL', Request::get('bbb_url'));
+        Config::get()->store('BBB_SALT', Request::get('bbb_salt'));
+        
+        $this->redirect(PluginEngine::getLink('BBBPlugin/index/index'));
     }
     
     /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -163,7 +178,7 @@ class IndexController extends StudipController
             $this->picturepath = '/'. $this->dispatcher->trails_root . '/images';
         }
 
-        self::$BBB_URL  = Config::get('BBB_URL');
-        self::$BBB_SALT = Config::get('BBB_SALT');
+        self::$BBB_URL  = Config::get()->getValue('BBB_URL');
+        self::$BBB_SALT = Config::get()->getValue('BBB_SALT');
     }
 }
