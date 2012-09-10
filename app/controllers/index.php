@@ -18,10 +18,10 @@
 require_once 'app/controllers/studip_controller.php';
 
 class IndexController extends StudipController
-{
-    const SALT = 'cb5dbc361d4959e27f4bfa027adc559a';
-    const BBB  = 'http://bbb.virtuos.uni-osnabrueck.de/bigbluebutton/'; 
-    
+{ 
+    private $BBB_URL;
+    private $BBB_SALT;
+
     private $params = array(
         'perm' => '',
         'allow_join' => false,
@@ -54,7 +54,7 @@ class IndexController extends StudipController
         $bbb = new BigBlueButton();
         $url = $bbb->createMeetingAndGetJoinURL(
                 get_username($GLOBALS['user']->id), $meetingId, 'MOTD', $modPw, 
-                $attPw, self::SALT, self::BBB, $ret);
+                $attPw, self::$BBB_SALT, self::$BBB_URL, $ret);
         $this->redirect($url);
     }
 
@@ -80,7 +80,7 @@ class IndexController extends StudipController
         
         $bbb = new BigBlueButton();
         $url = $bbb->joinURL($meetingId, get_username($GLOBALS['user']->id),
-                $PW, self::SALT, self::BBB);
+                $PW, self::$BBB_SALT, self::$BBB_URL);
         
         $this->redirect($url);
     }
@@ -118,7 +118,7 @@ class IndexController extends StudipController
         
         $bbb = new BigBlueButton();
         $meetingId = Request::option('cid');
-        $params['meeting_running'] = $bbb->isMeetingRunning($meetingId, self::BBB, self::SALT);
+        $params['meeting_running'] = $bbb->isMeetingRunning($meetingId, self::$BBB_URL, self::$BBB_SALT);
         
         return $params;
     }
@@ -162,5 +162,8 @@ class IndexController extends StudipController
         } else {
             $this->picturepath = '/'. $this->dispatcher->trails_root . '/images';
         }
+
+        self::$BBB_URL  = Config::get('BBB_URL');
+        self::$BBB_SALT = Config::get('BBB_SALT');
     }
 }
