@@ -36,13 +36,20 @@ class BBBPlugin extends StudipPlugin implements StandardPlugin {
         return null;
     }
 
-    public function getIconNavigation($course_id, $last_visit) {
+    public function getIconNavigation($course_id, $last_visit, $user_id = null) {
         return null;
+    }
+    
+    /* interface method */
+    function getNotificationObjects($course_id, $since, $user_id)
+    {
+        return array();
     }
 
     public function getTabNavigation($course_id) {
-        $main = new Navigation("BigBlueButton");
+        $main = new Navigation("Konferenz");
         $main->setURL(PluginEngine::getURL('BBBPlugin/index'));
+        $main->setImage('icons/16/grey/chat.png', array('title', 'Big Blue Button'));
         return array('BBBPlugin' => $main);
     }
 
