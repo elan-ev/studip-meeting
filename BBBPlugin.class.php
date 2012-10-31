@@ -49,7 +49,7 @@ class BBBPlugin extends StudipPlugin implements StandardPlugin {
     public function getTabNavigation($course_id) {
         $main = new Navigation("Konferenz");
         $main->setURL(PluginEngine::getURL('BBBPlugin/index'));
-        $main->setImage('icons/16/grey/white.png', array('title', 'Big Blue Button'));
+        $main->setImage('icons/16/white/chat.png', array('title', 'Big Blue Button'));
         return array('BBBPlugin' => $main);
     }
 
