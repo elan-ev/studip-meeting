@@ -38,6 +38,8 @@ class IndexController extends StudipController
         }
         
         Navigation::activateItem('course/BBBPlugin');
+        $nav = Navigation::getItem('course/BBBPlugin');
+        $nav->setImage('icons/16/black/chat.png');
     }
 
     /**
