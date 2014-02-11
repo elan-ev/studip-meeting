@@ -29,18 +29,18 @@ if ($noconfig) : ?>
 <? else : ?>
 <div style="float: left">
     <h1>Konferenzen</h1>
-    <? if( $param['meeting_running'] && $param['allow_join']): ?>
+    <? if( $meeting_running && $allow_join): ?>
     <div>
         <?= Studip\LinkButton::create(_('Konferenz beitreten'), PluginEngine::getLink("BBBPlugin/index/joinMeeting"),
             array('target' => '_blank')) ?><br>
         <?= _('Es wurde eine Webkonferenz für dieses Seminar gestartet.') ?>
     </div>
 
-    <? elseif(!$param['meeting_running']): ?>
+    <? elseif(!$meeting_running): ?>
     <div>
         
 
-        <? if($param['perm'] == 'mod'): ?>
+        <? if($perm == 'mod'): ?>
             <?= Studip\LinkButton::create(_('Neue Konferenz starten'), PluginEngine::getLink("BBBPlugin/index/createMeeting"),
                 array('target' => '_blank')) ?>
             <br>
