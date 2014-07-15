@@ -190,8 +190,7 @@ class IndexController extends StudipController
         $this->attPw = md5($this->meetingId . 'attPw');        
         
         $this->bbb = new BigBlueButton(self::$BBB_SALT, self::$BBB_URL);
-        
-        $this->meeting_running = $this->bbb->isMeetingRunningWithXmlResponseArray($this->meetingId);
-        
+        $info = $this->bbb->isMeetingRunningWithXmlResponseArray($this->meetingId);
+        $this->meeting_running = $info !== null && (string)$info['running'] == 'true';
     }
 }
