@@ -1,0 +1,9 @@
+{
+    "name": "elanev/big-blue-button-plugin",
+    "description": "integrate Big Blue Button conferences into the Stud.IP LMS",
+    "autoload": {
+        "psr-4": {
+            "ElanEv\\": ""
+        }
+    }
+}

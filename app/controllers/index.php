@@ -17,24 +17,42 @@
 
 require_once 'app/controllers/studip_controller.php';
 
+use ElanEv\Driver\BigBlueButtonDriver;
+use ElanEv\Driver\MeetingParameters;
+use ElanEv\Driver\JoinParameters;
+
 class IndexController extends StudipController
-{ 
+{
     private static $BBB_URL;
     private static $BBB_SALT;
+
+    /**
+     * @var ElanEv\Driver\DriverInterface
+     */
+    private $driver;
+
+    public function __construct($dispatcher)
+    {
+        parent::__construct($dispatcher);
+        $this->driver = new BigBlueButtonDriver(
+            Config::get()->getValue('BBB_URL'),
+            Config::get()->getValue('BBB_SALT')
+        );
+    }
 
     public function index_action()
     {
         if (!self::$BBB_URL || !self::$BBB_SALT) {
             $this->noconfig = true;
         }
-        
+
         Navigation::activateItem('course/BBBPlugin');
         $nav = Navigation::getItem('course/BBBPlugin');
         $nav->setImage('icons/16/black/chat.png');
     }
 
     /**
-     * creates meeting and redirects to BBB meeting. 
+     * creates meeting and redirects to BBB meeting.
      */
     public function createMeeting_action()
     {
@@ -43,25 +61,15 @@ class IndexController extends StudipController
         }
 
         $course = Course::find($this->meetingId);
-        
-        $creationParams = array(
-            'meetingId'   => $this->meetingId, // REQUIRED
-            'meetingName' => $course->name, // REQUIRED
-            'attendeePw'  => $this->attPw, 
-            'moderatorPw' => $this->modPw, 
-            'welcomeMsg'  => '', 
-            'dialNumber'  => '',
-            'voiceBridge' => rand(10000, 99999), // 5 digit PIN to join voice conference. Required.
-            'webVoice'    => '',
-            'logoutUrl'   => '',
-            'maxParticipants' => '-1', 
-            'record'      => 'false', // New. 'true' will tell BBB to record the meeting.
-            'duration'    => '0', // Default = 0 which means no set duration in minutes. [number]
-        );
+        $meetingParameters = new MeetingParameters();
+        $meetingParameters->setMeetingId($this->meetingId);
+        $meetingParameters->setMeetingName($course->name);
+        $meetingParameters->setAttendeePassword($this->attPw);
+        $meetingParameters->setModeratorPassword($this->modPw);
 
-        $result = $this->bbb->createMeetingWithXmlResponseArray($creationParams);
+        echo '<pre>';
 
-        if ($result['returncode'] == 'SUCCESS') {
+        if ($this->driver->createMeeting($meetingParameters)) {
             // get the join url
             $joinParams = array(
                 'meetingId' => $this->meetingId, // REQUIRED - We have to know which meeting to join.
@@ -73,33 +81,41 @@ class IndexController extends StudipController
                 $joinParams['password'] = $this->attPw;
             }
 
-            $this->redirect($this->bbb->getJoinMeetingURL($joinParams));
+            $joinParameters = new JoinParameters();
+            $joinParameters->setMeetingId($this->meetingId);
+            $joinParameters->setUsername(get_username($GLOBALS['user']->id));
+
+            if ($GLOBALS['perm']->have_studip_perm('tutor', $this->meetingId)) {
+                $joinParameters->setPassword($meetingParameters->getModeratorPassword());
+            } else {
+                $joinParameters->setPassword($meetingParameters->getAttendeePassword());
+            }
+
+            $this->redirect($this->driver->getJoinMeetingUrl($joinParameters));
         }
 
     }
 
     /**
-     *  redirects to active BBB meeting. 
+     *  redirects to active BBB meeting.
      */
     public function joinMeeting_action()
     {
         if(!$this->meeting_running) {
             $this->error();
         }
-        
-        // get the join url
-        $joinParams = array(
-            'meetingId' => $this->meetingId, // REQUIRED - We have to know which meeting to join.
-            'username'  => get_username($GLOBALS['user']->id),  // REQUIRED - The user display name that will show in the BBB meeting.
-        );
-        
-        if ($GLOBALS['perm']->have_studip_perm('tutor', $this->meetingId)) {
-            $joinParams['password'] = $this->modPw;
-        } else {
-            $joinParams['password'] = $this->attPw;
-        }        
 
-        $this->redirect($this->bbb->getJoinMeetingURL($joinParams));
+        $joinParameters = new JoinParameters();
+        $joinParameters->setMeetingId($this->meetingId);
+        $joinParameters->setUsername(get_username($GLOBALS['user']->id));
+
+        if ($GLOBALS['perm']->have_studip_perm('tutor', $this->meetingId)) {
+            $joinParameters->setPassword($this->modPw);
+        } else {
+            $joinParameters->setPassword($this->attPw);
+        }
+
+        $this->redirect($this->driver->getJoinMeetingUrl($joinParameters));
     }
 
     public function meetingInfo_action($meetingId, $moderatorPw)
@@ -107,26 +123,26 @@ class IndexController extends StudipController
         return true;
         // get details about a currently running meeting
     }
-    
+
     public function saveConfig_action()
     {
         if (!$GLOBALS['perm']->have('root')) die;
 
         Config::get()->store('BBB_URL', Request::get('bbb_url'));
         Config::get()->store('BBB_SALT', Request::get('bbb_salt'));
-        
+
         $this->redirect(PluginEngine::getLink('BBBPlugin/index/index'));
     }
-    
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * */
     /* * * * * H E L P E R   F U N C T I O N S * * * * */
     /* * * * * * * * * * * * * * * * * * * * * * * * * */
-    
+
     /**
      * Initiate plugin params:
-     * 
+     *
      * 'perm'           => 'mod' has BBB moderator permission
-     *                     'att' has BBB attendee permission 
+     *                     'att' has BBB attendee permission
      * 'allow_join      => true if user is allowed to join
      * 'meeting_running'=> true if meeting is running
      * 'path'           => relative path to plugin
@@ -174,7 +190,7 @@ class IndexController extends StudipController
 
         self::$BBB_URL  = Config::get()->getValue('BBB_URL');
         self::$BBB_SALT = Config::get()->getValue('BBB_SALT');
-        
+
         if ($GLOBALS['perm']->have_studip_perm("tutor", $this->getId())) {
             $this->perm = 'mod';
         } elseif ($GLOBALS['perm']->have_studip_perm("autor", $this->getId())) {
@@ -184,13 +200,11 @@ class IndexController extends StudipController
         if ($this->perm !== '') {
             $this->allow_join = true;
         }
-        
+
         $this->meetingId = $this->getId();
         $this->modPw = md5($this->meetingId . 'modPw');
-        $this->attPw = md5($this->meetingId . 'attPw');        
-        
-        $this->bbb = new BigBlueButton(self::$BBB_SALT, self::$BBB_URL);
-        $info = $this->bbb->isMeetingRunningWithXmlResponseArray($this->meetingId);
-        $this->meeting_running = $info !== null && (string)$info['running'] == 'true';
+        $this->attPw = md5($this->meetingId . 'attPw');
+
+        $this->meeting_running = $this->driver->isMeetingRunning($this->meetingId);
     }
 }
