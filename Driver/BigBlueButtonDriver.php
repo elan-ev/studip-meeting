@@ -2,6 +2,8 @@
 
 namespace ElanEv\Driver;
 
+use Guzzle\Http\ClientInterface;
+
 /**
  * Big Blue Button driver implementation.
  *
@@ -10,18 +12,18 @@ namespace ElanEv\Driver;
 class BigBlueButtonDriver implements DriverInterface
 {
     /**
-     * @var string The url to access the Big Blue Button server
+     * @var \Guzzle\Http\ClientInterface The HTTP client
      */
-    private $serverUrl;
+    private $client;
 
     /**
      * @var string A secret salt used to sign request
      */
     private $salt;
 
-    public function __construct($serverUrl, $salt)
+    public function __construct(ClientInterface $client, $salt)
     {
-        $this->serverUrl = $serverUrl;
+        $this->client = $client;
         $this->salt = $salt;
     }
 
@@ -36,7 +38,6 @@ class BigBlueButtonDriver implements DriverInterface
             'attendeePW' => $parameters->getAttendeePassword(),
             'moderatorPW' => $parameters->getModeratorPassword(),
             'dialNumber' => '',
-            'voiceBridge' => rand(10000, 99999),
             'webVoice' => '',
             'logoutURL' => '',
             'maxParticipants' => '-1',
@@ -82,30 +83,26 @@ class BigBlueButtonDriver implements DriverInterface
         );
         $params['checksum'] = $this->createSignature('join', $params);
 
-        return $this->createUrl('join', $params);
+        return sprintf('%s/api/join?%s', rtrim($this->client->getBaseUrl(), '/'), $this->buildQueryString($params));
     }
 
     private function performRequest($endpoint, array $params = array())
     {
         $params['checksum'] = $this->createSignature($endpoint, $params);
-        $url = $this->createUrl($endpoint, $params);
-        $response = file_get_contents($url);
+        $uri = 'api/'.$endpoint.'?'.$this->buildQueryString($params);
+        $request = $this->client->get($uri);
+        $response = $request->send();
 
-        return $response;
+        return $response->getBody(true);
     }
 
     private function createSignature($prefix, array $params = array())
     {
-        return sha1($prefix.http_build_query($params).$this->salt);
+        return sha1($prefix.$this->buildQueryString($params).$this->salt);
     }
 
-    private function createUrl($path, array $params = array())
+    private function buildQueryString($params)
     {
-        return sprintf(
-            '%s/api/%s?%s',
-            rtrim($this->serverUrl, '/'),
-            $path,
-            http_build_query($params)
-        );
+        return http_build_query($params, null, '&', PHP_QUERY_RFC3986);
     }
 }

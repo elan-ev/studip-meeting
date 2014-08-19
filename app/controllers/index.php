@@ -20,6 +20,7 @@ require_once 'app/controllers/studip_controller.php';
 use ElanEv\Driver\BigBlueButtonDriver;
 use ElanEv\Driver\MeetingParameters;
 use ElanEv\Driver\JoinParameters;
+use Guzzle\Service\Client;
 
 class IndexController extends StudipController
 {
@@ -34,8 +35,9 @@ class IndexController extends StudipController
     public function __construct($dispatcher)
     {
         parent::__construct($dispatcher);
+        $client = new Client(Config::get()->getValue('BBB_URL'));
         $this->driver = new BigBlueButtonDriver(
-            Config::get()->getValue('BBB_URL'),
+            $client,
             Config::get()->getValue('BBB_SALT')
         );
     }
@@ -67,8 +69,6 @@ class IndexController extends StudipController
         $meetingParameters->setAttendeePassword($this->attPw);
         $meetingParameters->setModeratorPassword($this->modPw);
 
-        echo '<pre>';
-
         if ($this->driver->createMeeting($meetingParameters)) {
             // get the join url
             $joinParams = array(
@@ -93,7 +93,6 @@ class IndexController extends StudipController
 
             $this->redirect($this->driver->getJoinMeetingUrl($joinParameters));
         }
-
     }
 
     /**
