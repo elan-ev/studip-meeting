@@ -14,7 +14,6 @@
  * @category    Stud.IP
  */
 
-require_once dirname(__FILE__) . '/bbb-api.php';
 require_once __DIR__.'/vendor/autoload.php';
 
 class BBBPlugin extends StudipPlugin implements StandardPlugin {
