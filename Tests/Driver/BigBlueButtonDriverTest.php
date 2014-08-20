@@ -105,21 +105,38 @@ class BigBlueButtonDriverTest extends AbstractDriverTest
      */
     public function getGetJoinMeetingUrlData()
     {
-        $parameters = new JoinParameters();
-        $parameters->setMeetingId('280c0c8c16220807126f8787f24bf949');
-        $parameters->setUsername('the-username');
-        $parameters->setPassword('the-password');
+        $parameters1 = new JoinParameters();
+        $parameters1->setMeetingId('280c0c8c16220807126f8787f24bf949');
+        $parameters1->setUsername('the-username');
+        $parameters1->setPassword('the-password');
 
-        $urlParameters = array(
-            'meetingID' => '280c0c8c16220807126f8787f24bf949',
-            'fullName' => 'the-username',
-            'password' => 'the-password',
-            'userID' => '',
-            'webVoiceConf' => '',
-            'checksum' => 'b04523cca534cfcca964347f4c00f634ba0ae0e4',
+        $urlParameters1 = array(
+            'meetingID=280c0c8c16220807126f8787f24bf949',
+            'fullName=the-username',
+            'password=the-password',
+            'userID=',
+            'webVoiceConf=',
+            'checksum=b04523cca534cfcca964347f4c00f634ba0ae0e4',
         );
 
-        return array(array($parameters, 'http://example.com/api/join?'.http_build_query($urlParameters)));
+        $parameters2 = new JoinParameters();
+        $parameters2->setMeetingId('280c0c8c16220807126f8787f24bf949');
+        $parameters2->setUsername('the username');
+        $parameters2->setPassword('the password');
+
+        $urlParameters2 = array(
+            'meetingID=280c0c8c16220807126f8787f24bf949',
+            'fullName=the%20username',
+            'password=the%20password',
+            'userID=',
+            'webVoiceConf=',
+            'checksum=b211323a8de25b149bea8d304efd48d44434c0ff',
+        );
+
+        return array(
+            'without-spaces-invalues' => array($parameters1, 'http://example.com/api/join?'.implode('&', $urlParameters1)),
+            'with-spaces-invalues' => array($parameters2, 'http://example.com/api/join?'.implode('&', $urlParameters2)),
+        );
     }
 
     /**

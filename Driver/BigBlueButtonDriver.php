@@ -103,6 +103,11 @@ class BigBlueButtonDriver implements DriverInterface
 
     private function buildQueryString($params)
     {
-        return http_build_query($params, null, '&', PHP_QUERY_RFC3986);
+        $segments = array();
+        foreach ($params as $key => $value) {
+            $segments[] = rawurlencode($key).'='.rawurlencode($value);
+        }
+
+        return implode('&', $segments);
     }
 }
