@@ -11,6 +11,8 @@ use Guzzle\Http\ClientInterface;
  */
 abstract class AbstractDriverTest extends \PHPUnit_Framework_TestCase
 {
+    protected $apiUrl = 'http://example.com';
+
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\Guzzle\Http\Client
      */
@@ -20,6 +22,9 @@ abstract class AbstractDriverTest extends \PHPUnit_Framework_TestCase
      * @var \ElanEv\Driver\DriverInterface
      */
     protected $driver;
+
+    private $getIndex = 0;
+    private $postIndex = 0;
 
     protected function setUp()
     {
@@ -74,7 +79,7 @@ abstract class AbstractDriverTest extends \PHPUnit_Framework_TestCase
         $client
             ->expects($this->any())
             ->method('getBaseUrl')
-            ->will($this->returnValue('http://example.com'));
+            ->will($this->returnValue($this->apiUrl));
 
         return $client;
     }
@@ -90,8 +95,16 @@ abstract class AbstractDriverTest extends \PHPUnit_Framework_TestCase
             case 'get':
                 $this
                     ->client
-                    ->expects($this->any())
+                    ->expects($this->at($this->getIndex++))
                     ->method('get')
+                    ->with($requestData['uri'])
+                    ->will($this->returnValue($request));
+                break;
+            case 'post':
+                $this
+                    ->client
+                    ->expects($this->at($this->postIndex++))
+                    ->method('post')
                     ->with($requestData['uri'])
                     ->will($this->returnValue($request));
                 break;
@@ -100,7 +113,7 @@ abstract class AbstractDriverTest extends \PHPUnit_Framework_TestCase
         $request
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnValue($this->createResponseMock($requestData['response'])));
+            ->will($this->returnValue($this->createResponseMock(isset($requestData['response']) ? $requestData['response'] : '')));
     }
 
     /**
