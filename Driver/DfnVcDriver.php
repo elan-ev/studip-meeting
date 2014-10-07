@@ -46,38 +46,22 @@ class DfnVcDriver implements DriverInterface
     public function createMeeting(MeetingParameters $parameters)
     {
         // request the session cookie
-        $response = $this->performRequest(null, array('action' => 'common-info'));
-        $xml = new \SimpleXMLElement($response);
-        $sessionCookie = $xml->common->cookie;
+        $sessionCookie = $this->requestSessionCookie();
 
         // login using the LMS credentials
-        $response = $this->performRequest(null, array(
-            'action' => 'login',
-            'login' => $this->login,
-            'password' => $this->password,
-            'session' => $sessionCookie,
-        ));
-        $xml = new \SimpleXMLElement($response);
-
-        if ((string) $xml->status->attributes()->code !== 'ok') {
+        if (!$this->authenticate($sessionCookie)) {
             return false;
         }
 
         // request the folder id
-        $response = $this->performRequest(null, array(
-            'action' => 'sco-shortcuts',
-            'session' => $sessionCookie,
-        ));
-        $xml = new \SimpleXMLElement($response);
-        $folderShortcutElement = $xml->xpath('./shortcuts/sco[@type="my-meetings"]/@sco-id');
+        $folderId = $this->getFolderId($sessionCookie, 'my-meetings');
 
-        if (count($folderShortcutElement) === 0) {
+        if ($folderId === null) {
             return false;
         }
 
         // create the meeting
-        $folderId = (string) $folderShortcutElement[0];
-        $this->performRequest(null, array(
+        $response = $this->performRequest(null, array(
             'action' => 'sco-update',
             'type' => 'meeting',
             'name' => $parameters->getIdentifier(),
@@ -133,5 +117,67 @@ class DfnVcDriver implements DriverInterface
         }
 
         return implode('&', $segments);
+    }
+
+    /**
+     * Requests a session cookie from the API.
+     *
+     * @return string The session cookie
+     */
+    private function requestSessionCookie()
+    {
+        $response = $this->performRequest(null, array('action' => 'common-info'));
+        $xml = new \SimpleXMLElement($response);
+
+        return $xml->common->cookie;
+    }
+
+    /**
+     * Authenticates the LMS at the API.
+     *
+     * @param string $sessionCookie The current session cookie
+     *
+     * @return bool True if the LMS could be authenticated successfully,
+     *              false otherwise
+     */
+    private function authenticate($sessionCookie)
+    {
+        $response = $this->performRequest(null, array(
+            'action' => 'login',
+            'login' => $this->login,
+            'password' => $this->password,
+            'session' => $sessionCookie,
+        ));
+        $xml = new \SimpleXMLElement($response);
+
+        if ((string) $xml->status->attributes()->code !== 'ok') {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Requests the SCO id of a certain folder.
+     *
+     * @param string $sessionCookie The current session cookie
+     * @param string $folderName    The name of the folder to retrieve
+     *
+     * @return string|null The folder name or null if no folder could be found
+     */
+    private function getFolderId($sessionCookie, $folderName)
+    {
+        $response = $this->performRequest(null, array(
+            'action' => 'sco-shortcuts',
+            'session' => $sessionCookie,
+        ));
+        $xml = new \SimpleXMLElement($response);
+        $folderShortcutElement = $xml->xpath('./shortcuts/sco[@type="'.$folderName.'"]/@sco-id');
+
+        if (count($folderShortcutElement) === 0) {
+            return null;
+        }
+
+        return (string) $folderShortcutElement[0];
     }
 }
