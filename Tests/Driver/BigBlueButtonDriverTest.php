@@ -66,12 +66,18 @@ class BigBlueButtonDriverTest extends AbstractDriverTest
     public function getIsMeetingRunningData()
     {
         $meetingId1 = '788b98f571322bb3a471c8f2926fce9b';
+        $parameters1 = new MeetingParameters();
+        $parameters1->setIdentifier($meetingId1);
         $meetingId2 = '687c258d96bd340c4aa09bfe67842d40';
+        $parameters2 = new MeetingParameters();
+        $parameters2->setIdentifier($meetingId2);
         $meetingId3 = '1b0ac2b59cc262b1651c0b8d7a53c7ba';
+        $parameters3 = new MeetingParameters();
+        $parameters3->setIdentifier($meetingId3);
 
         return array(
             'meeting-running' => array(
-                $meetingId1,
+                $parameters1,
                 array(array(
                     'method' => 'get',
                     'uri' => 'api/isMeetingRunning?meetingID='.$meetingId1.'&checksum=2ebbbc94d0ca360b02b2a83ceeed1112b60bd90e',
@@ -80,7 +86,7 @@ class BigBlueButtonDriverTest extends AbstractDriverTest
                 true,
             ),
             'meeting-not-running' => array(
-                $meetingId2,
+                $parameters2,
                 array(array(
                     'method' => 'get',
                     'uri' => 'api/isMeetingRunning?meetingID='.$meetingId2.'&checksum=6a9941fb0cb3f7df87626dd5d741ca4247ccce6c',
@@ -89,7 +95,7 @@ class BigBlueButtonDriverTest extends AbstractDriverTest
                 false,
             ),
             'checksum-check-failed' => array(
-                $meetingId3,
+                $parameters3,
                 array(array(
                     'method' => 'get',
                     'uri' => 'api/isMeetingRunning?meetingID='.$meetingId3.'&checksum=d3f5a816abad3d40f7880b619dc00cbb8170a895',

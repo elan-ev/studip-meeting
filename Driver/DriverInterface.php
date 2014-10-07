@@ -22,11 +22,11 @@ interface DriverInterface
     /**
      * Checks if a meeting with a certain id is already running.
      *
-     * @param string $meetingId The id of the meeting
+     * @param MeetingParameters $parameters The parameters describing the meeting
      *
      * @return bool True if the meeting is running, false otherwise
      */
-    public function isMeetingRunning($meetingId);
+    public function isMeetingRunning(MeetingParameters $parameters);
 
     /**
      * Returns the URL which can be browsed to join a meeting.

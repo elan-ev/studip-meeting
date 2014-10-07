@@ -88,7 +88,7 @@ class DfnVcDriver implements DriverInterface
     /**
      * {@inheritdoc}
      */
-    public function isMeetingRunning($meetingId)
+    public function isMeetingRunning(MeetingParameters $parameters)
     {
         // TODO: Implement isMeetingRunning() method.
     }

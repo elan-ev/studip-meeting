@@ -57,9 +57,9 @@ class BigBlueButtonDriver implements DriverInterface
     /**
      * {@inheritdoc}
      */
-    public function isMeetingRunning($meetingId)
+    public function isMeetingRunning(MeetingParameters $parameters)
     {
-        $response = $this->performRequest('isMeetingRunning', array('meetingID' => $meetingId));
+        $response = $this->performRequest('isMeetingRunning', array('meetingID' => $parameters->getIdentifier()));
         $xml = new \SimpleXMLElement($response);
 
         if (!$xml instanceof \SimpleXMLElement) {

@@ -77,6 +77,11 @@ class DfnVcDriverTest extends AbstractDriverTest
         );
     }
 
+    public function testIsMeetingRunning()
+    {
+        $this->markTestSkipped();
+    }
+
     /**
      * {@inheritdoc}
      */
