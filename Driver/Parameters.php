@@ -10,7 +10,7 @@ namespace ElanEv\Driver;
 abstract class Parameters
 {
     /**
-     * @var string The meeting id
+     * @var int The meeting id
      */
     protected $meetingId;
 
