@@ -132,20 +132,32 @@ class DfnVcDriverTest extends AbstractDriverTest
         );
     }
 
-    public function testGetJoinMeetingUrl()
-    {
-        $this->markTestSkipped();
-    }
-
     /**
      * {@inheritdoc}
      */
     public function getGetJoinMeetingUrlData()
     {
         $parameters = new JoinParameters();
+        $parameters->setRemoteId(383324);
+        $sessionCookie = md5(uniqid());
 
         return array(
-            array($parameters, null),
+            array(
+                $parameters,
+                array(
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=common-info',
+                        'response' => trim($this->createSessionCookieResponse($sessionCookie)),
+                    ),
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
+                        'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="no-data"/></results>',
+                    ),
+                ),
+                false,
+            ),
         );
     }
 

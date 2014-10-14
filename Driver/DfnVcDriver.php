@@ -118,7 +118,49 @@ class DfnVcDriver implements DriverInterface
      */
     public function getJoinMeetingUrl(JoinParameters $parameters)
     {
-        // TODO: Implement getJoinMeetingUrl() method.
+        // request the session cookie
+        $sessionCookie = $this->requestSessionCookie();
+
+        // login using the LMS credentials
+        if (!$this->authenticate($sessionCookie)) {
+            return false;
+        }
+
+        // request the folder id
+        $folderId = $this->getFolderId($sessionCookie, 'my-meetings');
+
+        // retrieve user information
+        $user = $this->getUser($sessionCookie, $parameters);
+
+        $this->performRequest(null, array(
+            'action' => 'permissions-update',
+            'acl-id' => $parameters->getRemoteId(),
+            'principal-id' => $user['id'],
+            'permission-id' => 'host',
+            'session' => $sessionCookie,
+        ));
+
+        // request a session cookie for the user
+        $userSessionCookie = $this->userLogin($parameters, $sessionCookie);
+
+        // request all SCOs in the folder
+        $response = $this->performRequest(null, array(
+            'action' => 'sco-contents',
+            'sco-id' => $folderId,
+            'session' => $sessionCookie,
+        ));
+        $xml = new \SimpleXMLElement($response);
+        $scoElements = $xml->xpath('./scos/sco[@sco-id="'.$parameters->getRemoteId().'"]');
+
+        foreach ($scoElements[0] as $key => $value) {
+            if ($key === 'url-path') {
+                $urlPath = (string) $value;
+
+                break;
+            }
+        }
+
+        return $this->client->getBaseUrl().$urlPath.'?session='.$userSessionCookie;
     }
 
     private function performRequest($endpoint, array $params = array())
@@ -199,5 +241,79 @@ class DfnVcDriver implements DriverInterface
         }
 
         return (string) $folderShortcutElement[0];
+    }
+
+    /**
+     * Returns data for a certain user.
+     *
+     * @param string         $sessionCookie The current session cookie
+     * @param JoinParameters $parameters    Parameters describing the user
+     *
+     * @return array The user's data
+     */
+    private function getUser($sessionCookie, $parameters)
+    {
+        $response = $this->performRequest(null, array(
+            'action' => 'lms-user-exists',
+            'login' => $parameters->getEmail(),
+            'session' => $sessionCookie,
+        ));
+        $xml = new \SimpleXMLElement($response);
+        $users = $xml->xpath('./principal-list/principal');
+
+        // create the user if they don't exist yet
+        if (count($users) == 0) {
+            $response = $this->userCreate($sessionCookie, $parameters->getEmail());
+            $xml = new \SimpleXMLElement($response);
+            $users = $xml->xpath('./principal');
+        }
+
+        $userDetails = $users[0];
+
+        return array(
+            'id' => (int) current($userDetails->xpath('./@principal-id')),
+            'username' => (string) $userDetails->login,
+            'email' => (string) $userDetails->login,
+            'name' => (string) $userDetails->name,
+        );
+    }
+
+    /**
+     * Creates a new API user.
+     *
+     * @param string         $sessionCookie The current session cookie
+     * @param JoinParameters $parameters    Parameters describing the user
+     *
+     * @return string The API response
+     */
+    private function userCreate($sessionCookie, $parameters)
+    {
+        return $this->performRequest(null, array(
+            'action' => 'lms-user-create',
+            'first-name' => $parameters->getFirstName(),
+            'last-name' => $parameters->getLastName(),
+            'login' => $parameters->getEmail(),
+            'session' => $sessionCookie,
+        ));
+    }
+
+    /**
+     * Requests a session cookie for a user.
+     *
+     * @param string         $sessionCookie The current session cookie
+     * @param JoinParameters $parameters    Parameters describing the user
+     *
+     * @return string The user session cookie
+     */
+    private function userLogin($sessionCookie, JoinParameters $parameters)
+    {
+        $response = $this->performRequest(null, array(
+            'action' => 'lms-user-login',
+            'login' => $parameters->getEmail(),
+            'session' => $sessionCookie,
+        ));
+        $xml = new \SimpleXMLElement($response);
+
+        return (string) $xml->cookie;
     }
 }

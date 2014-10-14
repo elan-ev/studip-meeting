@@ -140,8 +140,8 @@ class BigBlueButtonDriverTest extends AbstractDriverTest
         );
 
         return array(
-            'without-spaces-invalues' => array($parameters1, 'http://example.com/api/join?'.implode('&', $urlParameters1)),
-            'with-spaces-invalues' => array($parameters2, 'http://example.com/api/join?'.implode('&', $urlParameters2)),
+            'without-spaces-invalues' => array($parameters1, array(), 'http://example.com/api/join?'.implode('&', $urlParameters1)),
+            'with-spaces-invalues' => array($parameters2, array(), 'http://example.com/api/join?'.implode('&', $urlParameters2)),
         );
     }
 

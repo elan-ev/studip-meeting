@@ -63,8 +63,12 @@ abstract class AbstractDriverTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getGetJoinMeetingUrlData
      */
-    public function testGetJoinMeetingUrl(JoinParameters $parameters, $expectedUrl)
+    public function testGetJoinMeetingUrl(JoinParameters $parameters, array $expectedRequests, $expectedUrl)
     {
+        foreach ($expectedRequests as $request) {
+            $this->validateRequest($request);
+        }
+
         $this->assertEquals($expectedUrl, $this->driver->getJoinMeetingUrl($parameters));
     }
 
