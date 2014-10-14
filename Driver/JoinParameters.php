@@ -19,6 +19,12 @@ class JoinParameters extends Parameters
      */
     private $password;
 
+    private $email;
+
+    private $firstName;
+
+    private $lastName;
+
     public function setUsername($username)
     {
         $this->username = $username;
@@ -37,5 +43,35 @@ class JoinParameters extends Parameters
     public function getPassword()
     {
         return $this->password;
+    }
+
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+    }
+
+    public function getLastName()
+    {
+        return $this->lastName;
     }
 }
