@@ -54,7 +54,7 @@ class DfnVcDriverTest extends AbstractDriverTest
                         'method' => 'get',
                         'uri' => '/lmsapi/xml?action=permissions-update&acl-id=412297&principal-id=public-access&permission-id=denied&session='.$sessionCookie,
                         'reponse' => '',
-                    )
+                    ),
                 ),
                 true,
             ),
@@ -77,18 +77,58 @@ class DfnVcDriverTest extends AbstractDriverTest
         );
     }
 
-    public function testIsMeetingRunning()
-    {
-        $this->markTestSkipped();
-    }
-
     /**
      * {@inheritdoc}
      */
     public function getIsMeetingRunningData()
     {
+        $parameters = new MeetingParameters();
+        $parameters->setRemoteId(383324);
+        $sessionCookie = md5(uniqid());
+
         return array(
-            array(null, array(), null),
+            array(
+                $parameters,
+                array(
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=common-info',
+                        'response' => trim($this->createSessionCookieResponse($sessionCookie)),
+                    ),
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
+                        'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="ok"/></results>',
+                    ),
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=sco-shortcuts&session='.$sessionCookie,
+                        'response' => trim($this->createScoShortcutsResponse()),
+                    ),
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=sco-contents&sco-id=383324&session='.$sessionCookie,
+                        'response' => trim($this->createScoContentsResponse()),
+                    ),
+                ),
+                true,
+            ),
+            array(
+                $parameters,
+                array(
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=common-info',
+                        'response' => trim($this->createSessionCookieResponse($sessionCookie)),
+                    ),
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
+                        'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="no-data"/></results>',
+                    ),
+                ),
+                false,
+            ),
         );
     }
 
@@ -183,5 +223,32 @@ EOT;
                 </shortcuts>
             </results>
 EOT;
+    }
+
+    private function createScoContentsResponse()
+    {
+        return <<<EOT
+            <?xml version="1.0" encoding="utf-8"?>
+            <results>
+                <status code="ok"/>
+                <scos>
+                    <sco sco-id="383325" source-sco-id="" folder-id="383324" type="folder" icon="folder" display-seq="0" duration="" is-folder="1">
+                        <name>Meine Vorlagen</name>
+                        <url-path>/f383325/</url-path>
+                        <date-created>2014-08-13T02:05:39.423-07:00</date-created>
+                        <date-modified>2014-08-13T02:05:39.423-07:00</date-modified>
+                        <is-seminar>false</is-seminar>
+                    </sco>
+                    <sco sco-id="383324" source-sco-id="" folder-id="383324" type="folder" icon="folder" display-seq="0" duration="" is-folder="1">
+                        <name>Meine Vorlagen</name>
+                        <url-path>/f383324/</url-path>
+                        <date-created>2014-08-13T02:05:39.423-07:00</date-created>
+                        <date-modified>2014-08-13T02:05:39.423-07:00</date-modified>
+                        <is-seminar>false</is-seminar>
+                    </sco>
+                </scos>
+            </results>
+EOT;
+
     }
 }
