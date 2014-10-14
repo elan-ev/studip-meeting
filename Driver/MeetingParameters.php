@@ -10,16 +10,6 @@ namespace ElanEv\Driver;
 class MeetingParameters extends Parameters
 {
     /**
-     * @var string A unique identifier
-     */
-    private $identifier;
-
-    /**
-     * @var mixed The remote identifier
-     */
-    private $remoteId;
-
-    /**
      * @var string The meeting name
      */
     private $meetingName;
@@ -33,26 +23,6 @@ class MeetingParameters extends Parameters
      * @var string A password needed to attend a meeting
      */
     private $attendeePassword;
-
-    public function setIdentifier($identifier)
-    {
-        $this->identifier = $identifier;
-    }
-
-    public function getIdentifier()
-    {
-        return $this->identifier;
-    }
-
-    public function setRemoteId($remoteId)
-    {
-        $this->remoteId = $remoteId;
-    }
-
-    public function getRemoteId()
-    {
-        return $this->remoteId;
-    }
 
     public function setMeetingName($meetingName)
     {

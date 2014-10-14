@@ -14,6 +14,16 @@ abstract class Parameters
      */
     protected $meetingId;
 
+    /**
+     * @var string A unique identifier
+     */
+    protected $identifier;
+
+    /**
+     * @var mixed The remote identifier
+     */
+    protected $remoteId;
+
     public function setMeetingId($meetingId)
     {
         $this->meetingId = $meetingId;
@@ -22,5 +32,25 @@ abstract class Parameters
     public function getMeetingId()
     {
         return $this->meetingId;
+    }
+
+    public function setIdentifier($identifier)
+    {
+        $this->identifier = $identifier;
+    }
+
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
+
+    public function setRemoteId($remoteId)
+    {
+        $this->remoteId = $remoteId;
+    }
+
+    public function getRemoteId()
+    {
+        return $this->remoteId;
     }
 }
