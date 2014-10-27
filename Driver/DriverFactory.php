@@ -29,6 +29,19 @@ class DriverFactory
     }
 
     /**
+     * Returns the application's default driver (according to its
+     * configuration).
+     *
+     * @throws \LogicException when the configured default driver is missing
+     *                         or when the default driver is not configured
+     *                         properly
+     */
+    public function getDefaultDriver()
+    {
+        return $this->getDriver($this->config->getValue('VC_DRIVER'));
+    }
+
+    /**
      * Returns the driver for the current application configuration.
      *
      * @param string $driver The name of the driver to use (one of the

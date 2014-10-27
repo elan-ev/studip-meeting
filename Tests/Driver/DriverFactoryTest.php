@@ -10,6 +10,36 @@ use ElanEv\Driver\DriverFactory;
 class DriverFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @expectedException \LogicException
+     */
+    public function testGetDefaultDriverThrowsExceptionForInvalidDefaultDriver()
+    {
+        $driverFactory = $this->getDriverFactory(array('VC_DRIVER' => 'foo'));
+        $driverFactory->getDefaultDriver();
+    }
+
+    /**
+     * @dataProvider getProperlyConfiguredDrivers
+     */
+    public function testGetDefaultDriverReturnsDriverIfProperlyConfigured($driver, array $configuration, $expectedClass)
+    {
+        $configuration['VC_DRIVER'] = $driver;
+
+        $this->assertInstanceOf($expectedClass, $this->getDriverFactory($configuration)->getDefaultDriver());
+    }
+
+    /**
+     * @dataProvider getNotProperlyConfiguredDrivers
+     * @expectedException \LogicException
+     */
+    public function testGetDefaultDriverThrowsExceptionIfNotProperlyConfigured($driver, array $configuration)
+    {
+        $configuration['VC_DRIVER'] = $driver;
+
+        $this->getDriverFactory($configuration)->getDefaultDriver();
+    }
+
+    /**
      * @expectedException \InvalidArgumentException
      */
     public function testGetDriverThrowsExceptionForInvalidDriver()
@@ -62,24 +92,26 @@ class DriverFactoryTest extends \PHPUnit_Framework_TestCase
         return array(
             'big-blue-button-without-url' => array(
                 DriverFactory::DRIVER_BIG_BLUE_BUTTON,
-                array('BBB_URL' => null),
+                array('BBB_SALT' => md5(uniqid())),
             ),
             'big-blue-button-without-salt' => array(
                 DriverFactory::DRIVER_BIG_BLUE_BUTTON,
                 array(
                     'BBB_URL' => 'http://example.com',
-                    'BBB_SALT' => null,
                 ),
             ),
             'dfn-vc-without-url' => array(
                 DriverFactory::DRIVER_DFN_VC,
-                array('DFN_VC_URL' => null),
+                array(
+                    'DFN_VC_LOGIN' => 'johndoe',
+                    'DFN_VC_PASSWORD' => 'password',
+                ),
             ),
             'dfn-vc-without-login' => array(
                 DriverFactory::DRIVER_DFN_VC,
                 array(
                     'DFN_VC_URL' => 'http://example.com',
-                    'DFN_VC_LOGIN' => null,
+                    'DFN_VC_PASSWORD' => 'password',
                 ),
             ),
             'dfn-vc-without-password' => array(
@@ -87,7 +119,6 @@ class DriverFactoryTest extends \PHPUnit_Framework_TestCase
                 array(
                     'DFN_VC_URL' => 'http://example.com',
                     'DFN_VC_LOGIN' => 'johndoe',
-                    'DFN_VC_PASSWORD' => null,
                 ),
             ),
         );
@@ -106,15 +137,11 @@ class DriverFactoryTest extends \PHPUnit_Framework_TestCase
     private function createConfig(array $configuredValues = array())
     {
         $config = $this->getMock('\Config', array('getValue'));
-
-        $i = 0;
-        foreach ($configuredValues as $option => $value) {
-            $config->expects($this->at($i))
-                ->method('getValue')
-                ->with($this->equalTo($option))
-                ->will($this->returnValue($value));
-            $i++;
-        }
+        $config->expects($this->any())
+            ->method('getValue')
+            ->will($this->returnCallback(function ($option) use ($configuredValues) {
+                return isset($configuredValues[$option]) ? $configuredValues[$option] : null;
+            }));
 
         return $config;
     }
