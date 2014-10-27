@@ -11,6 +11,7 @@ use Guzzle\Http\Client;
  */
 class DriverFactory
 {
+    const DEFAULT_DRIVER_CONFIG_ID = '3c6bfcf5dd3157f53ab1143af1acc899';
     const DRIVER_BIG_BLUE_BUTTON = 'bigbluebutton';
     const DRIVER_DFN_VC = 'dfnvc';
 
