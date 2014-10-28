@@ -11,6 +11,8 @@ use Guzzle\Http\ClientInterface;
  */
 class BigBlueButtonDriver implements DriverInterface
 {
+    const NAME = 'bigbluebutton';
+
     /**
      * @var \Guzzle\Http\ClientInterface The HTTP client
      */
@@ -25,6 +27,14 @@ class BigBlueButtonDriver implements DriverInterface
     {
         $this->client = $client;
         $this->salt = $salt;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return self::NAME;
     }
 
     /**

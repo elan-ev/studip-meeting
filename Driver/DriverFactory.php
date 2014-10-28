@@ -12,8 +12,6 @@ use Guzzle\Http\Client;
 class DriverFactory
 {
     const DEFAULT_DRIVER_CONFIG_ID = '3c6bfcf5dd3157f53ab1143af1acc899';
-    const DRIVER_BIG_BLUE_BUTTON = 'bigbluebutton';
-    const DRIVER_DFN_VC = 'dfnvc';
 
     /**
      * @var \Config
@@ -56,12 +54,12 @@ class DriverFactory
     public function getDriver($driver)
     {
         switch ($driver) {
-            case self::DRIVER_BIG_BLUE_BUTTON:
+            case BigBlueButtonDriver::NAME:
                 $config = $this->resolveConfiguration(array('BBB_URL', 'BBB_SALT'));
                 $client = $this->createHttpClient($config['BBB_URL']);
 
                 return new BigBlueButtonDriver($client, $config['BBB_SALT']);
-            case self::DRIVER_DFN_VC:
+            case DfnVcDriver::NAME:
                 $config = $this->resolveConfiguration(array('DFN_VC_URL', 'DFN_VC_LOGIN', 'DFN_VC_PASSWORD'));
                 $client = $this->createHttpClient($config['DFN_VC_URL']);
 

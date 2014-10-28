@@ -2,6 +2,8 @@
 
 namespace ElanEv\Tests;
 
+use ElanEv\Driver\BigBlueButtonDriver;
+use ElanEv\Driver\DfnVcDriver;
 use ElanEv\Driver\DriverFactory;
 
 /**
@@ -59,7 +61,7 @@ class DriverFactoryTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             'big-blue-button' => array(
-                DriverFactory::DRIVER_BIG_BLUE_BUTTON,
+                BigBlueButtonDriver::NAME,
                 array(
                     'BBB_URL' => 'http://example.com',
                     'BBB_SALT' => md5(uniqid()),
@@ -67,7 +69,7 @@ class DriverFactoryTest extends \PHPUnit_Framework_TestCase
                 'ElanEv\Driver\BigBlueButtonDriver',
             ),
             'dfn-vc' => array(
-                DriverFactory::DRIVER_DFN_VC,
+                DfnVcDriver::NAME,
                 array(
                     'DFN_VC_URL' => 'http://example.com',
                     'DFN_VC_LOGIN' => 'johndoe',
@@ -91,31 +93,31 @@ class DriverFactoryTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             'big-blue-button-without-url' => array(
-                DriverFactory::DRIVER_BIG_BLUE_BUTTON,
+                BigBlueButtonDriver::NAME,
                 array('BBB_SALT' => md5(uniqid())),
             ),
             'big-blue-button-without-salt' => array(
-                DriverFactory::DRIVER_BIG_BLUE_BUTTON,
+                BigBlueButtonDriver::NAME,
                 array(
                     'BBB_URL' => 'http://example.com',
                 ),
             ),
             'dfn-vc-without-url' => array(
-                DriverFactory::DRIVER_DFN_VC,
+                DfnVcDriver::NAME,
                 array(
                     'DFN_VC_LOGIN' => 'johndoe',
                     'DFN_VC_PASSWORD' => 'password',
                 ),
             ),
             'dfn-vc-without-login' => array(
-                DriverFactory::DRIVER_DFN_VC,
+                DfnVcDriver::NAME,
                 array(
                     'DFN_VC_URL' => 'http://example.com',
                     'DFN_VC_PASSWORD' => 'password',
                 ),
             ),
             'dfn-vc-without-password' => array(
-                DriverFactory::DRIVER_DFN_VC,
+                DfnVcDriver::NAME,
                 array(
                     'DFN_VC_URL' => 'http://example.com',
                     'DFN_VC_LOGIN' => 'johndoe',
