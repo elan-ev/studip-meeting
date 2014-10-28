@@ -17,10 +17,9 @@
 
 require_once 'app/controllers/studip_controller.php';
 
-use ElanEv\Driver\BigBlueButtonDriver;
+use ElanEv\Driver\DriverFactory;
 use ElanEv\Driver\MeetingParameters;
 use ElanEv\Driver\JoinParameters;
-use Guzzle\Service\Client;
 
 class IndexController extends StudipController
 {
@@ -35,11 +34,9 @@ class IndexController extends StudipController
     public function __construct($dispatcher)
     {
         parent::__construct($dispatcher);
-        $client = new Client(Config::get()->getValue('BBB_URL'));
-        $this->driver = new BigBlueButtonDriver(
-            $client,
-            Config::get()->getValue('BBB_SALT')
-        );
+
+        $driverFactory = new DriverFactory(Config::get());
+        $this->driver = $driverFactory->getDefaultDriver();
     }
 
     public function index_action()
