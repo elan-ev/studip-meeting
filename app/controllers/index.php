@@ -21,6 +21,9 @@ use ElanEv\Driver\DriverFactory;
 use ElanEv\Driver\JoinParameters;
 use ElanEv\Model\Meeting;
 
+/**
+ * @property string $meetingId
+ */
 class IndexController extends StudipController
 {
     private static $BBB_URL;
@@ -207,6 +210,7 @@ class IndexController extends StudipController
         $this->modPw = md5($this->meetingId . 'modPw');
         $this->attPw = md5($this->meetingId . 'attPw');
 
-        $this->meeting_running = $this->driver->isMeetingRunning($this->meetingId);
+        $meetings = Meeting::findByCourseId($this->meetingId);
+        $this->meeting_running = count($meetings) > 0 && $this->driver->isMeetingRunning($meetings[0]->getMeetingParameters());
     }
 }
