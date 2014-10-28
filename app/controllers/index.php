@@ -18,8 +18,8 @@
 require_once 'app/controllers/studip_controller.php';
 
 use ElanEv\Driver\DriverFactory;
-use ElanEv\Driver\MeetingParameters;
 use ElanEv\Driver\JoinParameters;
+use ElanEv\Model\Meeting;
 
 class IndexController extends StudipController
 {
@@ -60,13 +60,19 @@ class IndexController extends StudipController
         }
 
         $course = Course::find($this->meetingId);
-        $meetingParameters = new MeetingParameters();
-        $meetingParameters->setMeetingId($this->meetingId);
-        $meetingParameters->setMeetingName($course->name);
-        $meetingParameters->setAttendeePassword($this->attPw);
-        $meetingParameters->setModeratorPassword($this->modPw);
+        $meeting = new Meeting();
+        $meeting->course_id = $this->meetingId;
+        $meeting->name = $course->name;
+        $meeting->driver = $this->driver->getName();
+        $meeting->attendee_password = $this->attPw;
+        $meeting->moderator_password = $this->modPw;
+        $meeting->store();
+        $meetingParameters = $meeting->getMeetingParameters();
 
         if ($this->driver->createMeeting($meetingParameters)) {
+            $meeting->remote_id = $meetingParameters->getRemoteId();
+            $meeting->store();
+
             // get the join url
             $joinParams = array(
                 'meetingId' => $this->meetingId, // REQUIRED - We have to know which meeting to join.
