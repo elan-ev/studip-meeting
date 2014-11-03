@@ -22,9 +22,12 @@ use ElanEv\Driver\JoinParameters;
 use ElanEv\Model\Meeting;
 
 /**
- * @property \BBBPlugin $plugin
- * @property string     $meetingId
- * @property array      $errors
+ * @property \BBBPlugin    $plugin
+ * @property \Seminar_Perm $perm
+ * @property bool          $canModify
+ * @property bool          $canJoin
+ * @property string        $meetingId
+ * @property array         $errors
  */
 class IndexController extends StudipController
 {
@@ -41,6 +44,7 @@ class IndexController extends StudipController
         parent::__construct($dispatcher);
 
         $this->plugin = $GLOBALS['plugin'];
+        $this->perm = $GLOBALS['perm'];
         $driverFactory = new DriverFactory(Config::get());
         $this->driver = $driverFactory->getDefaultDriver();
     }
@@ -66,6 +70,8 @@ class IndexController extends StudipController
         Navigation::activateItem('course/BBBPlugin');
         $nav = Navigation::getItem('course/BBBPlugin');
         $nav->setImage('icons/16/black/chat.png');
+
+        $this->canModify = $this->canModify($this->getCourseId());
     }
 
     /**
@@ -73,7 +79,7 @@ class IndexController extends StudipController
      */
     public function createMeeting_action()
     {
-        if (!$this->perm == 'mod') {
+        if (!$this->canModify($this->getCourseId())) {
             $this->error();
         }
 
@@ -85,7 +91,7 @@ class IndexController extends StudipController
                 'meetingId' => $this->meetingId, // REQUIRED - We have to know which meeting to join.
                 'username' => get_username($GLOBALS['user']->id),  // REQUIRED - The user display name that will show in the BBB meeting.
             );
-            if ($GLOBALS['perm']->have_studip_perm('tutor', $this->meetingId)) {
+            if ($this->canModify($this->meetingId)) {
                 $joinParams['password'] = $this->modPw;
             } else {
                 $joinParams['password'] = $this->attPw;
@@ -95,7 +101,7 @@ class IndexController extends StudipController
             $joinParameters->setMeetingId($this->meetingId);
             $joinParameters->setUsername(get_username($GLOBALS['user']->id));
 
-            if ($GLOBALS['perm']->have_studip_perm('tutor', $this->meetingId)) {
+            if ($this->canModify($this->meetingId)) {
                 $joinParameters->setPassword($meetingParameters->getModeratorPassword());
             } else {
                 $joinParameters->setPassword($meetingParameters->getAttendeePassword());
@@ -107,9 +113,11 @@ class IndexController extends StudipController
 
     public function enable_action($meetingId)
     {
-        $meeting = new Meeting($meetingId);
-        $meeting->active = !$meeting->active;
-        $meeting->store();
+        if ($this->canModify($this->meetingId)) {
+            $meeting = new Meeting($meetingId);
+            $meeting->active = !$meeting->active;
+            $meeting->store();
+        }
 
         $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
     }
@@ -136,7 +144,7 @@ class IndexController extends StudipController
         $joinParameters->setFirstName($user->Vorname);
         $joinParameters->setLastName($user->Nachname);
 
-        if ($GLOBALS['perm']->have_studip_perm('tutor', $this->meetingId)) {
+        if ($this->canModify($this->meetingId)) {
             $joinParameters->setPassword($this->modPw);
         } else {
             $joinParameters->setPassword($this->attPw);
@@ -153,7 +161,9 @@ class IndexController extends StudipController
 
     public function saveConfig_action()
     {
-        if (!$GLOBALS['perm']->have('root')) die;
+        if (!$this->perm->have_perm('root')) {
+            die;
+        }
 
         Config::get()->store('BBB_URL', Request::get('bbb_url'));
         Config::get()->store('BBB_SALT', Request::get('bbb_salt'));
@@ -175,7 +185,7 @@ class IndexController extends StudipController
      * 'path'           => relative path to plugin
      */
 
-    function getId()
+    private function getCourseId()
     {
         if (!Request::option('cid')) {
             if ($GLOBALS['SessionSeminar']) {
@@ -207,7 +217,7 @@ class IndexController extends StudipController
         $layout = $GLOBALS['template_factory']->open('layouts/base');
         $this->set_layout($layout);
 
-        PageLayout::setTitle(getHeaderLine($this->getId()) .' - '. _('Big Blue Button'));
+        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Big Blue Button'));
         PageLayout::addHeadElement(
             'script',
             array('src' => $this->plugin->getPluginURL().'/assets/js/meetings.js'),
@@ -223,17 +233,11 @@ class IndexController extends StudipController
         self::$BBB_URL  = Config::get()->getValue('BBB_URL');
         self::$BBB_SALT = Config::get()->getValue('BBB_SALT');
 
-        if ($GLOBALS['perm']->have_studip_perm("tutor", $this->getId())) {
-            $this->perm = 'mod';
-        } elseif ($GLOBALS['perm']->have_studip_perm("autor", $this->getId())) {
-            $this->perm = 'att';
-        }
-
-        if ($this->perm !== '') {
+        if ($this->canJoin($this->getCourseId())) {
             $this->allow_join = true;
         }
 
-        $this->meetingId = $this->getId();
+        $this->meetingId = $this->getCourseId();
         $this->modPw = md5($this->meetingId . 'modPw');
         $this->attPw = md5($this->meetingId . 'attPw');
 
@@ -265,5 +269,15 @@ class IndexController extends StudipController
         $meeting->store();
 
         return true;
+    }
+
+    private function canModify($meetingId)
+    {
+        return $this->perm->have_studip_perm('tutor', $meetingId);
+    }
+
+    private function canJoin($meetingId)
+    {
+        return $this->canModify($meetingId) || $this->perm->have_studip_perm('autor', $meetingId);
     }
 }
