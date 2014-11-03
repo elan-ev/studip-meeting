@@ -1,4 +1,6 @@
-<?
+<?php
+/** @var array $errors */
+
 $infobox_content[] = array(
     'kategorie' => _('Informationen'),
     'eintrag'   => array(
@@ -62,27 +64,20 @@ if ($noconfig) : ?>
     ?>
     </table>
 
-    <? if( $meeting_running && $allow_join): ?>
-    <div>
-        <?= Studip\LinkButton::create(_('Konferenz beitreten'), PluginEngine::getLink("BBBPlugin/index/joinMeeting"),
-            array('target' => '_blank')) ?><br>
-        <?= _('Es wurde eine Webkonferenz für dieses Seminar gestartet.') ?>
-    </div>
-
-    <? elseif(!$meeting_running): ?>
-    <div>
-        
-
-        <? if($perm == 'mod'): ?>
-            <?= Studip\LinkButton::create(_('Neue Konferenz starten'), PluginEngine::getLink("BBBPlugin/index/createMeeting"),
-                array('target' => '_blank')) ?>
-            <br>
-            <?= _('Bisher wurde noch keine Webkonferenz gestartet.') ?><br>
-            <?= _('Wenn Sie einen neue Koferenz starten, können Teilnehmer/innen dieser Veranstaltung daran teilnehmen.') ?>
-        <? else : ?>
-            <?= _('Bisher wurde noch keine Webkonferenz gestartet.') ?>
-        <? endif ?>
-    </div>
-    <? endif; ?>
+    <form method="post" action="<?=PluginEngine::getURL($GLOBALS['plugin'], array(), 'index')?>">
+        <fieldset name="Meeting erstellen">
+            <?php
+            if (count($errors) > 0):
+                echo '<ul>';
+                foreach ($errors as $error):
+                    echo '<li>'.htmlReady($error).'</li>';
+                endforeach;
+                echo '</ul>';
+            endif;
+            ?>
+            <input type="text" name="name" placeholder="">
+            <input type="submit" value="Meeting erstellen">
+        </fieldset>
+    </form>
 </div>
 <? endif ?>

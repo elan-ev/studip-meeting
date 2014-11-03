@@ -23,6 +23,7 @@ use ElanEv\Model\Meeting;
 
 /**
  * @property string $meetingId
+ * @property array  $errors
  */
 class IndexController extends StudipController
 {
@@ -48,6 +49,18 @@ class IndexController extends StudipController
             $this->noconfig = true;
         }
 
+        $this->errors = array();
+
+        if (\Request::method() == 'POST') {
+            if (!\Request::get('name')) {
+                $this->errors[] = _('Bitte geben Sie dem Meeting einen Namen.');
+            }
+
+            if (count($this->errors) === 0) {
+                $this->createMeeting(\Request::get('name'));
+            }
+        }
+
         Navigation::activateItem('course/BBBPlugin');
         $nav = Navigation::getItem('course/BBBPlugin');
         $nav->setImage('icons/16/black/chat.png');
@@ -63,19 +76,8 @@ class IndexController extends StudipController
         }
 
         $course = Course::find($this->meetingId);
-        $meeting = new Meeting();
-        $meeting->course_id = $this->meetingId;
-        $meeting->name = $course->name;
-        $meeting->driver = $this->driver->getName();
-        $meeting->attendee_password = $this->attPw;
-        $meeting->moderator_password = $this->modPw;
-        $meeting->store();
-        $meetingParameters = $meeting->getMeetingParameters();
 
-        if ($this->driver->createMeeting($meetingParameters)) {
-            $meeting->remote_id = $meetingParameters->getRemoteId();
-            $meeting->store();
-
+        if ($this->createMeeting($course->name)) {
             // get the join url
             $joinParams = array(
                 'meetingId' => $this->meetingId, // REQUIRED - We have to know which meeting to join.
@@ -221,5 +223,31 @@ class IndexController extends StudipController
 
         $meetings = Meeting::findByCourseId($this->meetingId);
         $this->meeting_running = count($meetings) > 0 && $this->driver->isMeetingRunning($meetings[0]->getMeetingParameters());
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    private function createMeeting($name)
+    {
+        $meeting = new Meeting();
+        $meeting->course_id = $this->meetingId;
+        $meeting->name = $name;
+        $meeting->driver = $this->driver->getName();
+        $meeting->attendee_password = $this->attPw;
+        $meeting->moderator_password = $this->modPw;
+        $meeting->store();
+        $meetingParameters = $meeting->getMeetingParameters();
+
+        if (!$this->driver->createMeeting($meetingParameters)) {
+            return false;
+        }
+
+        $meeting->remote_id = $meetingParameters->getRemoteId();
+        $meeting->store();
+
+        return true;
     }
 }
