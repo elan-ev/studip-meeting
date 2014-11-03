@@ -27,8 +27,41 @@ if ($noconfig) : ?>
     </form>
 <? endif ?>
 <? else : ?>
-<div style="float: left">
+<div>
     <h1>Konferenzen</h1>
+
+    <table width="100%">
+        <thead>
+        <tr>
+            <th>Meeting</th>
+            <th>Server
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+    <?php
+    $meetings = \ElanEv\Model\Meeting::findByCourseId($meetingId);
+
+    foreach ($meetings as $meeting):
+        ?>
+        <tr>
+            <td><?=htmlReady($meeting->name)?></td>
+            <td>DFN Adobe Connect</td>
+            <td>
+                <?php
+                echo Studip\LinkButton::create(
+                    _('Konferenz beitreten'),
+                    PluginEngine::getLink("BBBPlugin/index/joinMeeting/".$meeting->id),
+                    array('target' => '_blank')
+                );
+                ?>
+            </td>
+        </tr>
+        <?php
+    endforeach;
+    ?>
+    </table>
+
     <? if( $meeting_running && $allow_join): ?>
     <div>
         <?= Studip\LinkButton::create(_('Konferenz beitreten'), PluginEngine::getLink("BBBPlugin/index/joinMeeting"),
