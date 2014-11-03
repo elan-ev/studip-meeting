@@ -15,6 +15,7 @@ use ElanEv\Driver\MeetingParameters;
  * @property string $course_id
  * @property string $name
  * @property string $driver
+ * @property bool   $active
  * @property string $attendee_password
  * @property string $moderator_password
  */

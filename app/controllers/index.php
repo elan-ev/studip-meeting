@@ -22,8 +22,9 @@ use ElanEv\Driver\JoinParameters;
 use ElanEv\Model\Meeting;
 
 /**
- * @property string $meetingId
- * @property array  $errors
+ * @property \BBBPlugin $plugin
+ * @property string     $meetingId
+ * @property array      $errors
  */
 class IndexController extends StudipController
 {
@@ -39,6 +40,7 @@ class IndexController extends StudipController
     {
         parent::__construct($dispatcher);
 
+        $this->plugin = $GLOBALS['plugin'];
         $driverFactory = new DriverFactory(Config::get());
         $this->driver = $driverFactory->getDefaultDriver();
     }
@@ -101,6 +103,15 @@ class IndexController extends StudipController
 
             $this->redirect($this->driver->getJoinMeetingUrl($joinParameters));
         }
+    }
+
+    public function enable_action($meetingId)
+    {
+        $meeting = new Meeting($meetingId);
+        $meeting->active = !$meeting->active;
+        $meeting->store();
+
+        $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
     }
 
     /**
@@ -197,6 +208,11 @@ class IndexController extends StudipController
         $this->set_layout($layout);
 
         PageLayout::setTitle(getHeaderLine($this->getId()) .' - '. _('Big Blue Button'));
+        PageLayout::addHeadElement(
+            'script',
+            array('src' => $this->plugin->getPluginURL().'/assets/js/meetings.js'),
+            ''
+        );
 
         if ($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] && $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] != '/') {
             $this->picturepath = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] .'/'. $this->dispatcher->trails_root . '/images';

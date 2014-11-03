@@ -36,8 +36,8 @@ if ($noconfig) : ?>
         <thead>
         <tr>
             <th>Meeting</th>
-            <th>Server
-            </th>
+            <th>Server</th>
+            <th><?= _('Freigegeben') ?></th>
             <th></th>
         </tr>
         </thead>
@@ -49,6 +49,7 @@ if ($noconfig) : ?>
         <tr>
             <td><?=htmlReady($meeting->name)?></td>
             <td>DFN Adobe Connect</td>
+            <td><input type="checkbox"<?=$meeting->active ? ' checked="checked"' : ''?> data-meeting-enable-url="<?=PluginEngine::getLink("BBBPlugin/index/enable/".$meeting->id)?>"></td>
             <td>
                 <?php
                 echo Studip\LinkButton::create(
