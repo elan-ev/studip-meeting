@@ -104,15 +104,24 @@ class IndexController extends StudipController
     /**
      *  redirects to active BBB meeting.
      */
-    public function joinMeeting_action()
+    public function joinMeeting_action($meetingId)
     {
         if(!$this->meeting_running) {
             $this->error();
         }
 
+        /** @var Seminar_User $user */
+        $user = $GLOBALS['user'];
+
+        $meeting = new Meeting($meetingId);
         $joinParameters = new JoinParameters();
-        $joinParameters->setMeetingId($this->meetingId);
-        $joinParameters->setUsername(get_username($GLOBALS['user']->id));
+        $joinParameters->setMeetingId($meetingId);
+        $joinParameters->setIdentifier($meeting->identifier);
+        $joinParameters->setRemoteId($meeting->remote_id);
+        $joinParameters->setUsername(get_username($user->id));
+        $joinParameters->setEmail($user->Email);
+        $joinParameters->setFirstName($user->Vorname);
+        $joinParameters->setLastName($user->Nachname);
 
         if ($GLOBALS['perm']->have_studip_perm('tutor', $this->meetingId)) {
             $joinParameters->setPassword($this->modPw);
