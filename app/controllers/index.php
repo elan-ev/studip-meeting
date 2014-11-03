@@ -28,6 +28,7 @@ use ElanEv\Model\Meeting;
  * @property bool          $canJoin
  * @property string        $meetingId
  * @property array         $errors
+ * @property Meeting[]     $meetings
  */
 class IndexController extends StudipController
 {
@@ -72,6 +73,12 @@ class IndexController extends StudipController
         $nav->setImage('icons/16/black/chat.png');
 
         $this->canModify = $this->canModify($this->getCourseId());
+
+        if ($this->canModify) {
+            $this->meetings = \ElanEv\Model\Meeting::findByCourseId($this->getCourseId());
+        } else {
+            $this->meetings = \ElanEv\Model\Meeting::findActiveByCourseId($this->getCourseId());
+        }
     }
 
     /**

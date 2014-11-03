@@ -1,5 +1,6 @@
 <?php
 /** @var bool $canModify */
+/** @var ElanEv\Model\Meeting[] $meetings */
 /** @var array $errors */
 
 $infobox_content[] = array(
@@ -49,8 +50,6 @@ if ($noconfig) : ?>
         </tr>
         </thead>
     <?php
-    $meetings = \ElanEv\Model\Meeting::findByCourseId($meetingId);
-
     foreach ($meetings as $meeting):
         ?>
         <tr>

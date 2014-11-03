@@ -73,4 +73,28 @@ class Meeting extends \SimpleORMap
     {
         return static::findByCourseId($course->id);
     }
+
+    /**
+     * Finds all active meetings for a course.
+     *
+     * @param string $courseId The course id
+     *
+     * @return Meeting[] The meetings
+     */
+    public static function findActiveByCourseId($courseId)
+    {
+        return static::findBySQL('course_id = :course_id AND active = 1', array('course_id' => $courseId));
+    }
+
+    /**
+     * Finds all active meetings for a course.
+     *
+     * @param \Seminar $course The course
+     *
+     * @return Meeting[] The meetings
+     */
+    public static function findActiveByCourse(\Seminar $course)
+    {
+        return static::findActiveByCourseId($course->id);
+    }
 }
