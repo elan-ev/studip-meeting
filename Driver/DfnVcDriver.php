@@ -151,7 +151,7 @@ class DfnVcDriver implements DriverInterface
         ));
 
         // request a session cookie for the user
-        $userSessionCookie = $this->userLogin($parameters, $sessionCookie);
+        $userSessionCookie = $this->userLogin($sessionCookie, $parameters);
 
         // request all SCOs in the folder
         $response = $this->performRequest(null, array(
@@ -273,7 +273,7 @@ class DfnVcDriver implements DriverInterface
 
         // create the user if they don't exist yet
         if (count($users) == 0) {
-            $response = $this->userCreate($sessionCookie, $parameters->getEmail());
+            $response = $this->userCreate($sessionCookie, $parameters);
             $xml = new \SimpleXMLElement($response);
             $users = $xml->xpath('./principal');
         }
@@ -296,7 +296,7 @@ class DfnVcDriver implements DriverInterface
      *
      * @return string The API response
      */
-    private function userCreate($sessionCookie, $parameters)
+    private function userCreate($sessionCookie, JoinParameters $parameters)
     {
         return $this->performRequest(null, array(
             'action' => 'lms-user-create',
