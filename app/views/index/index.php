@@ -66,6 +66,15 @@ if ($noconfig) : ?>
                 $joinUrl = PluginEngine::getLink($plugin, array(), 'index/joinMeeting/'.$meeting->id);
                 ?>
                 <a href="<?=$joinUrl?>" target="_blank"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/door-enter.png"></a>
+
+                <?php
+                if ($canModify):
+                    $deleteUrl = PluginEngine::getLink($plugin, array(), 'index/delete/'.$meeting->id);
+                ?>
+                    <a href="<?=$deleteUrl?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/remove-circle.png"></a>
+                <?php
+                endif;
+                ?>
             </td>
         </tr>
         <?php

@@ -129,6 +129,16 @@ class IndexController extends StudipController
         $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
     }
 
+    public function delete_action($meetingId)
+    {
+        if ($this->canModify($this->meetingId)) {
+            $meeting = new Meeting($meetingId);
+            $meeting->delete();
+        }
+
+        $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
+    }
+
     /**
      *  redirects to active BBB meeting.
      */
