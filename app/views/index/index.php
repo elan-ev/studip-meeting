@@ -34,11 +34,10 @@ if ($noconfig) : ?>
 <div>
     <h1>Konferenzen</h1>
 
-    <table width="100%">
+    <table class="default collapsable tablesorter">
         <thead>
         <tr>
             <th>Meeting</th>
-            <th>Server</th>
             <?php
             if ($canModify):
             ?>
@@ -54,7 +53,6 @@ if ($noconfig) : ?>
         ?>
         <tr>
             <td><?=htmlReady($meeting->name)?></td>
-            <td>DFN Adobe Connect</td>
             <?php
             if ($canModify):
             ?>
