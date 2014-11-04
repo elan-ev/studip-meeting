@@ -18,91 +18,71 @@ $infobox_content[] = array(
 );
 
 $infobox = array('picture' => '/../plugins_packages/elan-ev/BBBPlugin/images/bbb_overview.png', 'content' => $infobox_content);
+?>
 
-if (!$configured) : ?>
+<?php if (!$configured): ?>
     <?= MessageBox::info(_('Es wurden noch keine Konferenzverbindungen eingerichtet.')) ?>
+
     <? if ($GLOBALS['perm']->have_perm('root')) : ?>
-    <form method="post" action="<?= PluginEngine::getLink("BBBPlugin/index/saveConfig") ?>">
-        URL des BBB-Servers:<br>
-        <input type="text" name="bbb_url" size="50"><br><br>
-        
-        Api-Key (Salt):<br>
-        <input type="text" name="bbb_salt" size="50"><br>
-        
-        <?= Studip\Button::createAccept(_('Konfiguration speichern')) ?>
-    </form>
-<? endif ?>
-<? else : ?>
-<div>
-    <h1>Konferenzen</h1>
+        <form method="post" action="<?= PluginEngine::getLink("BBBPlugin/index/saveConfig") ?>">
+            URL des BBB-Servers:<br>
+            <input type="text" name="bbb_url" size="50"><br><br>
 
-    <table class="default collapsable tablesorter">
-        <thead>
-        <tr>
-            <th>Meeting</th>
-            <?php
-            if ($canModify):
-            ?>
-                <th><?= _('Freigegeben') ?></th>
-            <?php
-            endif;
-            ?>
-            <th><?=_('Aktion')?></th>
-        </tr>
-        </thead>
-    <?php
-    foreach ($meetings as $meeting):
-        ?>
-        <tr>
-            <td><?=htmlReady($meeting->name)?></td>
-            <?php
-            if ($canModify):
-            ?>
-                <td><input type="checkbox"<?=$meeting->active ? ' checked="checked"' : ''?> data-meeting-enable-url="<?=PluginEngine::getLink("BBBPlugin/index/enable/".$meeting->id)?>"></td>
-            <?php
-            endif;
-            ?>
-            <td>
-                <?php
-                $joinUrl = PluginEngine::getLink($plugin, array(), 'index/joinMeeting/'.$meeting->id);
-                ?>
-                <a href="<?=$joinUrl?>" target="_blank"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/door-enter.png"></a>
+            Api-Key (Salt):<br>
+            <input type="text" name="bbb_salt" size="50"><br>
 
-                <?php
-                if ($canModify):
+            <?= Studip\Button::createAccept(_('Konfiguration speichern')) ?>
+        </form>
+    <?php endif; ?>
+<?php else: ?>
+    <div>
+        <h1>Konferenzen</h1>
+
+        <table class="default collapsable tablesorter">
+            <thead>
+            <tr>
+                <th>Meeting</th>
+                <?php if ($canModify): ?>
+                    <th><?= _('Freigegeben') ?></th>
+                <?php endif; ?>
+                <th><?=_('Aktion')?></th>
+            </tr>
+            </thead>
+        <?php foreach ($meetings as $meeting): ?>
+            <tr>
+                <td><?=htmlReady($meeting->name)?></td>
+                <?php if ($canModify): ?>
+                    <td><input type="checkbox"<?=$meeting->active ? ' checked="checked"' : ''?> data-meeting-enable-url="<?=PluginEngine::getLink("BBBPlugin/index/enable/".$meeting->id)?>"></td>
+                <?php endif; ?>
+                <td>
+                    <?php
+                    $joinUrl = PluginEngine::getLink($plugin, array(), 'index/joinMeeting/'.$meeting->id);
                     $deleteUrl = PluginEngine::getLink($plugin, array(), 'index/delete/'.$meeting->id);
-                ?>
-                    <a href="<?=$deleteUrl?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/remove-circle.png"></a>
-                <?php
-                endif;
-                ?>
-            </td>
-        </tr>
-        <?php
-    endforeach;
-    ?>
-    </table>
+                    ?>
+                    <a href="<?=$joinUrl?>" target="_blank"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/door-enter.png"></a>
 
-    <?php
-    if ($canModify):
-    ?>
-    <form method="post" action="<?=PluginEngine::getURL($GLOBALS['plugin'], array(), 'index')?>">
-        <fieldset name="Meeting erstellen">
-            <?php
-            if (count($errors) > 0):
-                echo '<ul>';
-                foreach ($errors as $error):
-                    echo '<li>'.htmlReady($error).'</li>';
-                endforeach;
-                echo '</ul>';
-            endif;
-            ?>
-            <input type="text" name="name" placeholder="">
-            <input type="submit" value="Meeting erstellen">
-        </fieldset>
-    </form>
-    <?php
-    endif;
-    ?>
-</div>
+                    <?php if ($canModify): ?>
+                        <a href="<?=$deleteUrl?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/remove-circle.png"></a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </table>
+
+        <?php if ($canModify): ?>
+        <form method="post" action="<?=PluginEngine::getURL($GLOBALS['plugin'], array(), 'index')?>">
+            <fieldset name="Meeting erstellen">
+                <?php if (count($errors) > 0): ?>
+                    <ul>
+                        <?php foreach ($errors as $error): ?>
+                            <li><?php echo htmlReady($error); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+                <input type="text" name="name" placeholder="">
+                <input type="submit" value="Meeting erstellen">
+            </fieldset>
+        </form>
+        <?php endif; ?>
+    </div>
 <? endif ?>
