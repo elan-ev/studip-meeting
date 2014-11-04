@@ -1,4 +1,5 @@
 <?php
+/** @var BBBPlugin $plugin */
 /** @var bool $canModify */
 /** @var ElanEv\Model\Meeting[] $meetings */
 /** @var array $errors */
@@ -62,9 +63,9 @@ if ($noconfig) : ?>
             ?>
             <td>
                 <?php
-                $joinUrl = PluginEngine::getLink("BBBPlugin/index/joinMeeting/".$meeting->id);
+                $joinUrl = PluginEngine::getLink($plugin, array(), 'index/joinMeeting/'.$meeting->id);
                 ?>
-                <a href="<?=$joinUrl?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/door-enter.png"></a>
+                <a href="<?=$joinUrl?>" target="_blank"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/door-enter.png"></a>
             </td>
         </tr>
         <?php
