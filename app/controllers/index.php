@@ -23,6 +23,7 @@ use ElanEv\Model\Meeting;
 
 /**
  * @property \BBBPlugin    $plugin
+ * @property bool          $configured
  * @property \Seminar_Perm $perm
  * @property bool          $canModify
  * @property bool          $canJoin
@@ -47,15 +48,17 @@ class IndexController extends StudipController
         $this->plugin = $GLOBALS['plugin'];
         $this->perm = $GLOBALS['perm'];
         $driverFactory = new DriverFactory(Config::get());
-        $this->driver = $driverFactory->getDefaultDriver();
+
+        try {
+            $this->driver = $driverFactory->getDefaultDriver();
+            $this->configured = true;
+        } catch (\LogicException $e) {
+            $this->configured = false;
+        }
     }
 
     public function index_action()
     {
-        if (!self::$BBB_URL || !self::$BBB_SALT) {
-            $this->noconfig = true;
-        }
-
         $this->errors = array();
 
         if (\Request::method() == 'POST') {

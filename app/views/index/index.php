@@ -1,5 +1,6 @@
 <?php
 /** @var BBBPlugin $plugin */
+/** @var bool $configured */
 /** @var bool $canModify */
 /** @var ElanEv\Model\Meeting[] $meetings */
 /** @var array $errors */
@@ -18,8 +19,8 @@ $infobox_content[] = array(
 
 $infobox = array('picture' => '/../plugins_packages/elan-ev/BBBPlugin/images/bbb_overview.png', 'content' => $infobox_content);
 
-if ($noconfig) : ?>
-    <?= MessageBox::info(_('Der Verbindung zum BigBlueButton-Server wurde noch nicht konfiguriert.')) ?>
+if (!$configured) : ?>
+    <?= MessageBox::info(_('Es wurden noch keine Konferenzverbindungen eingerichtet.')) ?>
     <? if ($GLOBALS['perm']->have_perm('root')) : ?>
     <form method="post" action="<?= PluginEngine::getLink("BBBPlugin/index/saveConfig") ?>">
         URL des BBB-Servers:<br>
