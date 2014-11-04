@@ -45,7 +45,7 @@ if ($noconfig) : ?>
             <?php
             endif;
             ?>
-            <th></th>
+            <th><?=_('Aktion')?></th>
         </tr>
         </thead>
     <?php
@@ -62,12 +62,9 @@ if ($noconfig) : ?>
             ?>
             <td>
                 <?php
-                echo Studip\LinkButton::create(
-                    _('Konferenz beitreten'),
-                    PluginEngine::getLink("BBBPlugin/index/joinMeeting/".$meeting->id),
-                    array('target' => '_blank')
-                );
+                $joinUrl = PluginEngine::getLink("BBBPlugin/index/joinMeeting/".$meeting->id);
                 ?>
+                <a href="<?=$joinUrl?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/door-enter.png"></a>
             </td>
         </tr>
         <?php
