@@ -62,7 +62,7 @@ $infobox = array('picture' => '/../plugins_packages/elan-ev/BBBPlugin/images/bbb
                     <a href="<?=$joinUrl?>" target="_blank"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/door-enter.png"></a>
 
                     <?php if ($canModify): ?>
-                        <a href="<?=$deleteUrl?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/remove-circle.png"></a>
+                        <a href="<?=$deleteUrl?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/trash.png"></a>
                     <?php endif; ?>
                 </td>
             </tr>
