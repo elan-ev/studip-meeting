@@ -49,18 +49,16 @@ $infobox = array('picture' => '/../plugins_packages/elan-ev/BBBPlugin/images/bbb
             </tr>
             </thead>
         <?php foreach ($meetings as $meeting): ?>
+            <?php
+            $joinUrl = PluginEngine::getLink($plugin, array(), 'index/joinMeeting/'.$meeting->id);
+            $deleteUrl = PluginEngine::getLink($plugin, array(), 'index/delete/'.$meeting->id);
+            ?>
             <tr>
-                <td><?=htmlReady($meeting->name)?></td>
+                <td><a href="<?=$joinUrl?>"><?=htmlReady($meeting->name)?></a></td>
                 <?php if ($canModify): ?>
                     <td><input type="checkbox"<?=$meeting->active ? ' checked="checked"' : ''?> data-meeting-enable-url="<?=PluginEngine::getLink("BBBPlugin/index/enable/".$meeting->id)?>"></td>
                 <?php endif; ?>
                 <td>
-                    <?php
-                    $joinUrl = PluginEngine::getLink($plugin, array(), 'index/joinMeeting/'.$meeting->id);
-                    $deleteUrl = PluginEngine::getLink($plugin, array(), 'index/delete/'.$meeting->id);
-                    ?>
-                    <a href="<?=$joinUrl?>" target="_blank"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/door-enter.png"></a>
-
                     <?php if ($canModify): ?>
                         <a href="<?=$deleteUrl?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/trash.png"></a>
                     <?php endif; ?>
