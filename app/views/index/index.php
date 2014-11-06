@@ -54,13 +54,13 @@ $infobox = array('picture' => '/../plugins_packages/elan-ev/BBBPlugin/images/bbb
             $deleteUrl = PluginEngine::getLink($plugin, array(), 'index/delete/'.$meeting->id);
             ?>
             <tr>
-                <td><a href="<?=$joinUrl?>"><?=htmlReady($meeting->name)?></a></td>
+                <td><a href="<?=$joinUrl?>" title="<?=_('Meeting betreten')?>"><?=htmlReady($meeting->name)?></a></td>
                 <?php if ($canModify): ?>
                     <td><input type="checkbox"<?=$meeting->active ? ' checked="checked"' : ''?> data-meeting-enable-url="<?=PluginEngine::getLink("BBBPlugin/index/enable/".$meeting->id)?>"></td>
                 <?php endif; ?>
                 <td>
                     <?php if ($canModify): ?>
-                        <a href="<?=$deleteUrl?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/trash.png"></a>
+                        <a href="<?=$deleteUrl?>" title="<?=_('Meeting löschen')?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/trash.png"></a>
                     <?php endif; ?>
                 </td>
             </tr>
