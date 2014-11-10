@@ -75,7 +75,7 @@ class IndexController extends StudipController
         $nav = Navigation::getItem('course/BBBPlugin');
         $nav->setImage('icons/16/black/chat.png');
 
-        $this->canModify = $this->canModify($this->getCourseId());
+        $this->canModify = $this->userCanModifyCourse($this->getCourseId());
 
         if ($this->canModify) {
             $this->meetings = \ElanEv\Model\Meeting::findByCourseId($this->getCourseId());
@@ -89,7 +89,7 @@ class IndexController extends StudipController
      */
     public function createMeeting_action()
     {
-        if (!$this->canModify($this->getCourseId())) {
+        if (!$this->userCanModifyCourse($this->getCourseId())) {
             $this->error();
         }
 
@@ -101,7 +101,7 @@ class IndexController extends StudipController
                 'meetingId' => $this->meetingId, // REQUIRED - We have to know which meeting to join.
                 'username' => get_username($GLOBALS['user']->id),  // REQUIRED - The user display name that will show in the BBB meeting.
             );
-            if ($this->canModify($this->meetingId)) {
+            if ($this->userCanModifyCourse($this->meetingId)) {
                 $joinParams['password'] = $this->modPw;
             } else {
                 $joinParams['password'] = $this->attPw;
@@ -111,7 +111,7 @@ class IndexController extends StudipController
             $joinParameters->setMeetingId($this->meetingId);
             $joinParameters->setUsername(get_username($GLOBALS['user']->id));
 
-            if ($this->canModify($this->meetingId)) {
+            if ($this->userCanModifyCourse($this->meetingId)) {
                 $joinParameters->setPassword($meetingParameters->getModeratorPassword());
             } else {
                 $joinParameters->setPassword($meetingParameters->getAttendeePassword());
@@ -123,7 +123,7 @@ class IndexController extends StudipController
 
     public function enable_action($meetingId)
     {
-        if ($this->canModify($this->meetingId)) {
+        if ($this->userCanModifyCourse($this->meetingId)) {
             $meeting = new Meeting($meetingId);
             $meeting->active = !$meeting->active;
             $meeting->store();
@@ -134,7 +134,7 @@ class IndexController extends StudipController
 
     public function rename_action($meetingId)
     {
-        if (!$this->canModify($this->meetingId)) {
+        if (!$this->userCanModifyCourse($this->meetingId)) {
             return;
         }
 
@@ -150,7 +150,7 @@ class IndexController extends StudipController
 
     public function delete_action($meetingId)
     {
-        if ($this->canModify($this->meetingId)) {
+        if ($this->userCanModifyCourse($this->meetingId)) {
             $meeting = new Meeting($meetingId);
             $meeting->delete();
         }
@@ -180,7 +180,7 @@ class IndexController extends StudipController
         $joinParameters->setFirstName($user->Vorname);
         $joinParameters->setLastName($user->Nachname);
 
-        if ($this->canModify($this->meetingId)) {
+        if ($this->userCanModifyCourse($this->meetingId)) {
             $joinParameters->setPassword($this->modPw);
         } else {
             $joinParameters->setPassword($this->attPw);
@@ -304,13 +304,13 @@ class IndexController extends StudipController
         return true;
     }
 
-    private function canModify($meetingId)
+    private function userCanModifyCourse($courseId)
     {
-        return $this->perm->have_studip_perm('tutor', $meetingId);
+        return $this->perm->have_studip_perm('tutor', $courseId);
     }
 
     private function canJoin($meetingId)
     {
-        return $this->canModify($meetingId) || $this->perm->have_studip_perm('autor', $meetingId);
+        return $this->userCanModifyCourse($meetingId) || $this->perm->have_studip_perm('autor', $meetingId);
     }
 }
