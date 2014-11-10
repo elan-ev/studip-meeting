@@ -1,7 +1,7 @@
 <?php
 /** @var BBBPlugin $plugin */
 /** @var bool $configured */
-/** @var bool $canModify */
+/** @var bool $canModifyCourse */
 /** @var ElanEv\Model\Meeting[] $meetings */
 /** @var array $errors */
 
@@ -42,7 +42,7 @@ $infobox = array('picture' => '/../plugins_packages/elan-ev/BBBPlugin/images/bbb
             <thead>
             <tr>
                 <th>Meeting</th>
-                <?php if ($canModify): ?>
+                <?php if ($canModifyCourse): ?>
                     <th><?= _('Freigegeben') ?></th>
                 <?php endif; ?>
                 <th><?=_('Aktion')?></th>
@@ -61,11 +61,11 @@ $infobox = array('picture' => '/../plugins_packages/elan-ev/BBBPlugin/images/bbb
                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/grey/decline.png" class="decline-button">
                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/ajax_indicator_small.gif" class="loading-indicator">
                 </td>
-                <?php if ($canModify): ?>
+                <?php if ($canModifyCourse): ?>
                     <td><input type="checkbox"<?=$meeting->active ? ' checked="checked"' : ''?> data-meeting-enable-url="<?=PluginEngine::getLink("BBBPlugin/index/enable/".$meeting->id)?>"></td>
                 <?php endif; ?>
                 <td>
-                    <?php if ($canModify): ?>
+                    <?php if ($canModifyCourse): ?>
                         <a href="#" title="<?=_('Meeting umbenennen')?>" class="edit-meeting" data-meeting-rename-url="<?=PluginEngine::getLink("BBBPlugin/index/rename/".$meeting->id)?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/edit.png"></a>
                         <a href="<?=$deleteUrl?>" title="<?=_('Meeting löschen')?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/trash.png"></a>
                     <?php endif; ?>
@@ -74,7 +74,7 @@ $infobox = array('picture' => '/../plugins_packages/elan-ev/BBBPlugin/images/bbb
             <?php endforeach; ?>
         </table>
 
-        <?php if ($canModify): ?>
+        <?php if ($canModifyCourse): ?>
         <form method="post" action="<?=PluginEngine::getURL($GLOBALS['plugin'], array(), 'index')?>">
             <fieldset name="Meeting erstellen">
                 <?php if (count($errors) > 0): ?>

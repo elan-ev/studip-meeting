@@ -25,7 +25,7 @@ use ElanEv\Model\Meeting;
  * @property \BBBPlugin    $plugin
  * @property bool          $configured
  * @property \Seminar_Perm $perm
- * @property bool          $canModify
+ * @property bool          $canModifyCourse
  * @property bool          $canJoin
  * @property string        $meetingId
  * @property array         $errors
@@ -75,9 +75,9 @@ class IndexController extends StudipController
         $nav = Navigation::getItem('course/BBBPlugin');
         $nav->setImage('icons/16/black/chat.png');
 
-        $this->canModify = $this->userCanModifyCourse($this->getCourseId());
+        $this->canModifyCourse = $this->userCanModifyCourse($this->getCourseId());
 
-        if ($this->canModify) {
+        if ($this->canModifyCourse) {
             $this->meetings = \ElanEv\Model\Meeting::findByCourseId($this->getCourseId());
         } else {
             $this->meetings = \ElanEv\Model\Meeting::findActiveByCourseId($this->getCourseId());
