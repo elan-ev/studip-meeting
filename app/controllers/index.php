@@ -254,11 +254,7 @@ class IndexController extends StudipController
         $this->set_layout($layout);
 
         PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Big Blue Button'));
-        PageLayout::addHeadElement(
-            'script',
-            array('src' => $this->plugin->getPluginURL().'/assets/js/meetings.js'),
-            ''
-        );
+        PageLayout::addScript($this->plugin->getPluginURL().'/assets/js/meetings.js');
         PageLayout::addStylesheet($this->plugin->getPluginURL().'/assets/css/meetings.css');
 
         if ($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] && $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] != '/') {
