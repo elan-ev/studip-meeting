@@ -97,20 +97,10 @@ class IndexController extends StudipController
 
         if ($this->createMeeting($course->name)) {
             // get the join url
-            $joinParams = array(
-                'meetingId' => $this->courseId, // REQUIRED - We have to know which meeting to join.
-                'username' => get_username($GLOBALS['user']->id),  // REQUIRED - The user display name that will show in the BBB meeting.
-            );
-            if ($this->userCanModifyCourse($this->courseId)) {
-                $joinParams['password'] = $this->modPw;
-            } else {
-                $joinParams['password'] = $this->attPw;
-            }
-
             $joinParameters = new JoinParameters();
             $joinParameters->setMeetingId($this->courseId);
             $joinParameters->setUsername(get_username($GLOBALS['user']->id));
-            $joinParameters->setPassword($meetingParameters->getModeratorPassword());
+            $joinParameters->setPassword($this->modPw);
 
             $this->redirect($this->driver->getJoinMeetingUrl($joinParameters));
         }
