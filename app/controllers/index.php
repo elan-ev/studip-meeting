@@ -132,6 +132,22 @@ class IndexController extends StudipController
         $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
     }
 
+    public function rename_action($meetingId)
+    {
+        if (!$this->canModify($this->meetingId)) {
+            return;
+        }
+
+        $name = Request::get('name');
+        if ($name) {
+            $meeting = new Meeting($meetingId);
+            $meeting->name = $name;
+            $meeting->store();
+        }
+
+        $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
+    }
+
     public function delete_action($meetingId)
     {
         if ($this->canModify($this->meetingId)) {
@@ -243,6 +259,7 @@ class IndexController extends StudipController
             array('src' => $this->plugin->getPluginURL().'/assets/js/meetings.js'),
             ''
         );
+        PageLayout::addStylesheet($this->plugin->getPluginURL().'/assets/css/meetings.css');
 
         if ($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] && $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] != '/') {
             $this->picturepath = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] .'/'. $this->dispatcher->trails_root . '/images';

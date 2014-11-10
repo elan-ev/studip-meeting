@@ -38,7 +38,7 @@ $infobox = array('picture' => '/../plugins_packages/elan-ev/BBBPlugin/images/bbb
     <div>
         <h1>Konferenzen</h1>
 
-        <table class="default collapsable tablesorter">
+        <table class="default collapsable tablesorter conference-meetings">
             <thead>
             <tr>
                 <th>Meeting</th>
@@ -54,12 +54,19 @@ $infobox = array('picture' => '/../plugins_packages/elan-ev/BBBPlugin/images/bbb
             $deleteUrl = PluginEngine::getLink($plugin, array(), 'index/delete/'.$meeting->id);
             ?>
             <tr>
-                <td><a href="<?=$joinUrl?>" title="<?=_('Meeting betreten')?>"><?=htmlReady($meeting->name)?></a></td>
+                <td class="meeting-name">
+                    <a href="<?=$joinUrl?>" title="<?=_('Meeting betreten')?>"><?=htmlReady($meeting->name)?></a>
+                    <input type="text" name="name">
+                    <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/grey/accept.png" class="accept-button">
+                    <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/grey/decline.png" class="decline-button">
+                    <img src="<?=$GLOBALS['ASSETS_URL']?>/images/ajax_indicator_small.gif" class="loading-indicator">
+                </td>
                 <?php if ($canModify): ?>
                     <td><input type="checkbox"<?=$meeting->active ? ' checked="checked"' : ''?> data-meeting-enable-url="<?=PluginEngine::getLink("BBBPlugin/index/enable/".$meeting->id)?>"></td>
                 <?php endif; ?>
                 <td>
                     <?php if ($canModify): ?>
+                        <a href="#" title="<?=_('Meeting umbenennen')?>" class="edit-meeting" data-meeting-rename-url="<?=PluginEngine::getLink("BBBPlugin/index/rename/".$meeting->id)?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/edit.png"></a>
                         <a href="<?=$deleteUrl?>" title="<?=_('Meeting löschen')?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/trash.png"></a>
                     <?php endif; ?>
                 </td>
