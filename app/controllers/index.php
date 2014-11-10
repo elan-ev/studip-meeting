@@ -110,12 +110,7 @@ class IndexController extends StudipController
             $joinParameters = new JoinParameters();
             $joinParameters->setMeetingId($this->courseId);
             $joinParameters->setUsername(get_username($GLOBALS['user']->id));
-
-            if ($this->userCanModifyCourse($this->courseId)) {
-                $joinParameters->setPassword($meetingParameters->getModeratorPassword());
-            } else {
-                $joinParameters->setPassword($meetingParameters->getAttendeePassword());
-            }
+            $joinParameters->setPassword($meetingParameters->getModeratorPassword());
 
             $this->redirect($this->driver->getJoinMeetingUrl($joinParameters));
         }
@@ -123,8 +118,9 @@ class IndexController extends StudipController
 
     public function enable_action($meetingId)
     {
-        if ($this->userCanModifyCourse($this->courseId)) {
-            $meeting = new Meeting($meetingId);
+        $meeting = new Meeting($meetingId);
+
+        if (!$meeting->isNew() && $this->userCanModifyMeeting($meeting)) {
             $meeting->active = !$meeting->active;
             $meeting->store();
         }
@@ -134,12 +130,10 @@ class IndexController extends StudipController
 
     public function rename_action($meetingId)
     {
-        if (!$this->userCanModifyCourse($this->courseId)) {
-            return;
-        }
-
+        $meeting = new Meeting($meetingId);
         $name = Request::get('name');
-        if ($name) {
+
+        if (!$meeting->isNew() && $this->userCanModifyMeeting($meeting) && $name) {
             $meeting = new Meeting($meetingId);
             $meeting->name = $name;
             $meeting->store();
@@ -150,8 +144,9 @@ class IndexController extends StudipController
 
     public function delete_action($meetingId)
     {
-        if ($this->userCanModifyCourse($this->courseId)) {
-            $meeting = new Meeting($meetingId);
+        $meeting = new Meeting($meetingId);
+
+        if (!$meeting->isNew() && $this->userCanModifyMeeting($meeting)) {
             $meeting->delete();
         }
 
@@ -180,7 +175,7 @@ class IndexController extends StudipController
         $joinParameters->setFirstName($user->Vorname);
         $joinParameters->setLastName($user->Nachname);
 
-        if ($this->userCanModifyCourse($this->courseId)) {
+        if ($this->userCanModifyMeeting($meeting)) {
             $joinParameters->setPassword($this->modPw);
         } else {
             $joinParameters->setPassword($this->attPw);
@@ -307,6 +302,11 @@ class IndexController extends StudipController
     private function userCanModifyCourse($courseId)
     {
         return $this->perm->have_studip_perm('tutor', $courseId);
+    }
+
+    private function userCanModifyMeeting(Meeting $meeting)
+    {
+        return $this->userCanModifyCourse($meeting->course_id);
     }
 
     private function canJoin($meetingId)
