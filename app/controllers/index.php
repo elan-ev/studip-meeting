@@ -27,7 +27,7 @@ use ElanEv\Model\Meeting;
  * @property \Seminar_Perm $perm
  * @property bool          $canModifyCourse
  * @property bool          $canJoin
- * @property string        $meetingId
+ * @property string        $courseId
  * @property array         $errors
  * @property Meeting[]     $meetings
  */
@@ -93,25 +93,25 @@ class IndexController extends StudipController
             $this->error();
         }
 
-        $course = Course::find($this->meetingId);
+        $course = Course::find($this->courseId);
 
         if ($this->createMeeting($course->name)) {
             // get the join url
             $joinParams = array(
-                'meetingId' => $this->meetingId, // REQUIRED - We have to know which meeting to join.
+                'meetingId' => $this->courseId, // REQUIRED - We have to know which meeting to join.
                 'username' => get_username($GLOBALS['user']->id),  // REQUIRED - The user display name that will show in the BBB meeting.
             );
-            if ($this->userCanModifyCourse($this->meetingId)) {
+            if ($this->userCanModifyCourse($this->courseId)) {
                 $joinParams['password'] = $this->modPw;
             } else {
                 $joinParams['password'] = $this->attPw;
             }
 
             $joinParameters = new JoinParameters();
-            $joinParameters->setMeetingId($this->meetingId);
+            $joinParameters->setMeetingId($this->courseId);
             $joinParameters->setUsername(get_username($GLOBALS['user']->id));
 
-            if ($this->userCanModifyCourse($this->meetingId)) {
+            if ($this->userCanModifyCourse($this->courseId)) {
                 $joinParameters->setPassword($meetingParameters->getModeratorPassword());
             } else {
                 $joinParameters->setPassword($meetingParameters->getAttendeePassword());
@@ -123,7 +123,7 @@ class IndexController extends StudipController
 
     public function enable_action($meetingId)
     {
-        if ($this->userCanModifyCourse($this->meetingId)) {
+        if ($this->userCanModifyCourse($this->courseId)) {
             $meeting = new Meeting($meetingId);
             $meeting->active = !$meeting->active;
             $meeting->store();
@@ -134,7 +134,7 @@ class IndexController extends StudipController
 
     public function rename_action($meetingId)
     {
-        if (!$this->userCanModifyCourse($this->meetingId)) {
+        if (!$this->userCanModifyCourse($this->courseId)) {
             return;
         }
 
@@ -150,7 +150,7 @@ class IndexController extends StudipController
 
     public function delete_action($meetingId)
     {
-        if ($this->userCanModifyCourse($this->meetingId)) {
+        if ($this->userCanModifyCourse($this->courseId)) {
             $meeting = new Meeting($meetingId);
             $meeting->delete();
         }
@@ -180,7 +180,7 @@ class IndexController extends StudipController
         $joinParameters->setFirstName($user->Vorname);
         $joinParameters->setLastName($user->Nachname);
 
-        if ($this->userCanModifyCourse($this->meetingId)) {
+        if ($this->userCanModifyCourse($this->courseId)) {
             $joinParameters->setPassword($this->modPw);
         } else {
             $joinParameters->setPassword($this->attPw);
@@ -270,11 +270,11 @@ class IndexController extends StudipController
             $this->allow_join = true;
         }
 
-        $this->meetingId = $this->getCourseId();
-        $this->modPw = md5($this->meetingId . 'modPw');
-        $this->attPw = md5($this->meetingId . 'attPw');
+        $this->courseId = $this->getCourseId();
+        $this->modPw = md5($this->courseId . 'modPw');
+        $this->attPw = md5($this->courseId . 'attPw');
 
-        $meetings = Meeting::findByCourseId($this->meetingId);
+        $meetings = Meeting::findByCourseId($this->courseId);
         $this->meeting_running = count($meetings) > 0 && $this->driver->isMeetingRunning($meetings[0]->getMeetingParameters());
     }
 
@@ -286,7 +286,7 @@ class IndexController extends StudipController
     private function createMeeting($name)
     {
         $meeting = new Meeting();
-        $meeting->course_id = $this->meetingId;
+        $meeting->course_id = $this->courseId;
         $meeting->name = $name;
         $meeting->driver = $this->driver->getName();
         $meeting->attendee_password = $this->attPw;
