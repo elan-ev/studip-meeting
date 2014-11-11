@@ -43,7 +43,7 @@ $infobox = array('picture' => '/../plugins_packages/elan-ev/BBBPlugin/images/bbb
             <tr>
                 <th>Meeting</th>
                 <?php if ($canModifyCourse): ?>
-                    <th><?= _('Freigegeben') ?></th>
+                    <th><?= _('Freigeben') ?></th>
                 <?php endif; ?>
                 <th><?=_('Aktion')?></th>
             </tr>
