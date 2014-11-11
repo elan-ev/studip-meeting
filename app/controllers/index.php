@@ -270,8 +270,12 @@ class IndexController extends StudipController
      */
     private function createMeeting($name)
     {
+        /** @var \Seminar_User $user */
+        global $user;
+
         $meeting = new Meeting();
         $meeting->course_id = $this->courseId;
+        $meeting->user_id = $user->cfg->getUserId();
         $meeting->name = $name;
         $meeting->driver = $this->driver->getName();
         $meeting->attendee_password = $this->attPw;

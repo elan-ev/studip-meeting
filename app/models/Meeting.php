@@ -13,6 +13,7 @@ use ElanEv\Driver\MeetingParameters;
  * @property string $identifier
  * @property mixed  $remote_id
  * @property string $course_id
+ * @property string $user_id
  * @property string $name
  * @property string $driver
  * @property bool   $active
