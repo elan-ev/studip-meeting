@@ -1,6 +1,6 @@
 <?php
 
-namespace ElanEv\Tests;
+namespace ElanEv\Tests\Driver;
 
 use ElanEv\Driver\DfnVcDriver;
 use ElanEv\Driver\JoinParameters;
