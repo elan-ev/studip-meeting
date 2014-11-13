@@ -71,7 +71,7 @@ class DfnVcDriver implements DriverInterface
         }
 
         // create the meeting
-        $response = $this->performRequest(null, array(
+        $response = $this->performRequest(array(
             'action' => 'sco-update',
             'type' => 'meeting',
             'name' => $parameters->getIdentifier(),
@@ -84,7 +84,7 @@ class DfnVcDriver implements DriverInterface
 
         // make the meeting private (participants have to be granted
         // view permissions explicitly)
-        $this->performRequest(null, array(
+        $this->performRequest(array(
             'action' => 'permissions-update',
             'acl-id' => (int) $scoIdAttributes[0],
             'principal-id' => 'public-access',
@@ -109,7 +109,7 @@ class DfnVcDriver implements DriverInterface
         }
 
         // send the a delete request to the DFN API
-        $response = $this->performRequest(null, array(
+        $response = $this->performRequest(array(
             'action' => 'sco-delete',
             'sco-id' => $parameters->getRemoteId(),
             'session' => $sessionCookie,
@@ -140,7 +140,7 @@ class DfnVcDriver implements DriverInterface
         $folderId = $this->getFolderId($sessionCookie, 'my-meetings');
 
         // request all SCOs in the folder
-        $response = $this->performRequest(null, array(
+        $response = $this->performRequest(array(
             'action' => 'sco-contents',
             'sco-id' => $folderId,
             'session' => $sessionCookie,
@@ -201,9 +201,9 @@ class DfnVcDriver implements DriverInterface
         return $this->client->getBaseUrl().$urlPath.'?session='.$userSessionCookie;
     }
 
-    private function performRequest($endpoint, array $params = array())
+    private function performRequest(array $params = array())
     {
-        $request = $this->client->get('/lmsapi/xml'.$endpoint.'?'.$this->buildQueryString($params));
+        $request = $this->client->get('/lmsapi/xml?'.$this->buildQueryString($params));
         $response = $request->send();
 
         return $response->getBody(true);
@@ -226,7 +226,7 @@ class DfnVcDriver implements DriverInterface
      */
     private function requestSessionCookie()
     {
-        $response = $this->performRequest(null, array('action' => 'common-info'));
+        $response = $this->performRequest(array('action' => 'common-info'));
         $xml = new \SimpleXMLElement($response);
 
         return $xml->common->cookie;
@@ -242,7 +242,7 @@ class DfnVcDriver implements DriverInterface
      */
     private function authenticate($sessionCookie)
     {
-        $response = $this->performRequest(null, array(
+        $response = $this->performRequest(array(
             'action' => 'login',
             'login' => $this->login,
             'password' => $this->password,
@@ -267,7 +267,7 @@ class DfnVcDriver implements DriverInterface
      */
     private function getFolderId($sessionCookie, $folderName)
     {
-        $response = $this->performRequest(null, array(
+        $response = $this->performRequest(array(
             'action' => 'sco-shortcuts',
             'session' => $sessionCookie,
         ));
