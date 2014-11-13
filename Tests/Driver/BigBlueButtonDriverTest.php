@@ -63,6 +63,27 @@ class BigBlueButtonDriverTest extends AbstractDriverTest
     /**
      * {@inheritdoc}
      */
+    public function testDeleteMeeting()
+    {
+        $this->client
+            ->expects($this->never())
+            ->method('get');
+        $this->client
+            ->expects($this->never())
+            ->method('post');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDeleteMeetingData()
+    {
+        return array();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getIsMeetingRunningData()
     {
         $meetingId1 = '788b98f571322bb3a471c8f2926fce9b';

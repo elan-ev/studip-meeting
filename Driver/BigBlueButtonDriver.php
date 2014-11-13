@@ -67,6 +67,15 @@ class BigBlueButtonDriver implements DriverInterface
     /**
      * {@inheritdoc}
      */
+    public function deleteMeeting(MeetingParameters $parameters)
+    {
+        // Big Blue Button meetings are not persistent and therefore cannot
+        // be removed
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isMeetingRunning(MeetingParameters $parameters)
     {
         $response = $this->performRequest('isMeetingRunning', array('meetingID' => $parameters->getIdentifier()));

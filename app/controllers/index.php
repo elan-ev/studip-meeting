@@ -137,6 +137,8 @@ class IndexController extends StudipController
         $meeting = new Meeting($meetingId);
 
         if (!$meeting->isNew() && $this->userCanModifyMeeting($meeting)) {
+            $parameters = $meeting->getMeetingParameters();
+            $this->driver->deleteMeeting($parameters);
             $meeting->delete();
         }
 

@@ -28,6 +28,17 @@ interface DriverInterface
     public function createMeeting(MeetingParameters $parameters);
 
     /**
+     * Deletes a meeting.
+     *
+     * @param MeetingParameters $parameters Parameters describing the meeting
+     *                                      to be removed
+     *
+     * @return bool True if the meeting was removed successfully, false
+     *              otherwise
+     */
+    public function deleteMeeting(MeetingParameters $parameters);
+
+    /**
      * Checks if a meeting with a certain id is already running.
      *
      * @param MeetingParameters $parameters The parameters describing the meeting

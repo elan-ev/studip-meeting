@@ -98,6 +98,34 @@ class DfnVcDriver implements DriverInterface
     /**
      * {@inheritdoc}
      */
+    public function deleteMeeting(MeetingParameters $parameters)
+    {
+        // request the session cookie
+        $sessionCookie = $this->requestSessionCookie();
+
+        // login using the LMS credentials
+        if (!$this->authenticate($sessionCookie)) {
+            return false;
+        }
+
+        // send the a delete request to the DFN API
+        $response = $this->performRequest(null, array(
+            'action' => 'sco-delete',
+            'sco-id' => $parameters->getRemoteId(),
+            'session' => $sessionCookie,
+        ));
+        $xml = new \SimpleXMLElement($response);
+
+        if ((string) $xml->status->attributes()->code !== 'ok') {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function isMeetingRunning(MeetingParameters $parameters)
     {
         // request the session cookie

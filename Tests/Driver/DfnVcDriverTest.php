@@ -80,6 +80,77 @@ class DfnVcDriverTest extends AbstractDriverTest
     /**
      * {@inheritdoc}
      */
+    public function getDeleteMeetingData()
+    {
+        $parameters = new MeetingParameters();
+        $parameters->setRemoteId(383324);
+        $sessionCookie = md5(uniqid());
+
+        return array(
+            'successful-deletion' => array(
+                $parameters,
+                array(
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=common-info',
+                        'response' => trim($this->createSessionCookieResponse($sessionCookie)),
+                    ),
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
+                        'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="ok"/></results>',
+                    ),
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=sco-delete&sco-id=383324&session='.$sessionCookie,
+                        'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="ok"/></results>',
+                    ),
+                ),
+                true,
+            ),
+            'delete-non-existing-meeting' => array(
+                $parameters,
+                array(
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=common-info',
+                        'response' => trim($this->createSessionCookieResponse($sessionCookie)),
+                    ),
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
+                        'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="ok"/></results>',
+                    ),
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=sco-delete&sco-id=383324&session='.$sessionCookie,
+                        'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="no-data"/></results> ',
+                    ),
+                ),
+                false,
+            ),
+            'invalid-login' => array(
+                $parameters,
+                array(
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=common-info',
+                        'response' => trim($this->createSessionCookieResponse($sessionCookie)),
+                    ),
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
+                        'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="no-data"/></results>',
+                    ),
+                ),
+                false,
+            ),
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getIsMeetingRunningData()
     {
         $parameters = new MeetingParameters();
