@@ -71,6 +71,7 @@ class BigBlueButtonDriver implements DriverInterface
     {
         // Big Blue Button meetings are not persistent and therefore cannot
         // be removed
+        return true;
     }
 
     /**

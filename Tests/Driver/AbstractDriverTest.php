@@ -25,6 +25,7 @@ abstract class AbstractDriverTest extends \PHPUnit_Framework_TestCase
 
     private $getIndex = 0;
     private $postIndex = 0;
+    private $requestsCount = 0;
 
     protected function setUp()
     {
@@ -41,7 +42,8 @@ abstract class AbstractDriverTest extends \PHPUnit_Framework_TestCase
             $this->validateRequest($request);
         }
 
-        $this->assertEquals($expectedResult, $this->driver->createMeeting($parameters));
+        $this->assertSame($expectedResult, $this->driver->createMeeting($parameters));
+        $this->assertSame(count($expectedRequests), $this->requestsCount);
     }
 
     public abstract function getCreateMeetingData();
@@ -55,7 +57,8 @@ abstract class AbstractDriverTest extends \PHPUnit_Framework_TestCase
             $this->validateRequest($request);
         }
 
-        $this->assertEquals($expectedResult, $this->driver->deleteMeeting($parameters));
+        $this->assertSame($expectedResult, $this->driver->deleteMeeting($parameters));
+        $this->assertSame(count($expectedRequests), $this->requestsCount);
     }
 
     public abstract function getDeleteMeetingData();
@@ -69,7 +72,8 @@ abstract class AbstractDriverTest extends \PHPUnit_Framework_TestCase
             $this->validateRequest($request);
         }
 
-        $this->assertEquals($expectedResult, $this->driver->isMeetingRunning($meetingId));
+        $this->assertSame($expectedResult, $this->driver->isMeetingRunning($meetingId));
+        $this->assertSame(count($expectedRequests), $this->requestsCount);
     }
 
     public abstract function getIsMeetingRunningData();
@@ -83,7 +87,8 @@ abstract class AbstractDriverTest extends \PHPUnit_Framework_TestCase
             $this->validateRequest($request);
         }
 
-        $this->assertEquals($expectedUrl, $this->driver->getJoinMeetingUrl($parameters));
+        $this->assertSame($expectedUrl, $this->driver->getJoinMeetingUrl($parameters));
+        $this->assertSame(count($expectedRequests), $this->requestsCount);
     }
 
     public abstract function getGetJoinMeetingUrlData();
@@ -128,10 +133,16 @@ abstract class AbstractDriverTest extends \PHPUnit_Framework_TestCase
                 break;
         }
 
+        $requestsCount = &$this->requestsCount;
+        $response = $this->createResponseMock(isset($requestData['response']) ? $requestData['response'] : '');
         $request
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnValue($this->createResponseMock(isset($requestData['response']) ? $requestData['response'] : '')));
+            ->will($this->returnCallback(function () use ($response, &$requestsCount) {
+                $requestsCount++;
+
+                return $response;
+            }));
     }
 
     /**
