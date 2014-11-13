@@ -6,8 +6,8 @@
         </testsuite>
     </testsuites>
     <filter>
-        <!--<whitelist>-->
-            <!--<directory>src</directory>-->
-        <!--</whitelist>-->
+        <whitelist>
+            <directory>Driver</directory>
+        </whitelist>
     </filter>
 </phpunit>
