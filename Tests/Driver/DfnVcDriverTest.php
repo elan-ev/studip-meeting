@@ -210,10 +210,52 @@ class DfnVcDriverTest extends AbstractDriverTest
     {
         $parameters = new JoinParameters();
         $parameters->setRemoteId(383324);
+        $parameters->setEmail('user@example.com');
         $sessionCookie = md5(uniqid());
+        $userSessionCookie = md5(uniqid());
 
         return array(
-            array(
+            'successfully-join' => array(
+                $parameters,
+                array(
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=common-info',
+                        'response' => trim($this->createSessionCookieResponse($sessionCookie)),
+                    ),
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
+                        'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="ok"/></results>',
+                    ),
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=sco-shortcuts&session='.$sessionCookie,
+                        'response' => trim($this->createScoShortcutsResponse()),
+                    ),
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=lms-user-exists&login=user%40example.com&session='.$sessionCookie,
+                        'response' => trim($this->createUserExistsWithExistingUserResponse(12345, 'user@example.com')),
+                    ),
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=permissions-update&acl-id=383324&principal-id=12345&permission-id=host&session='.$sessionCookie,
+                    ),
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=lms-user-login&login=user%40example.com&session='.$sessionCookie,
+                        'response' => trim($this->createUserSessionCookieResponse($userSessionCookie)),
+                    ),
+                    array(
+                        'method' => 'get',
+                        'uri' => '/lmsapi/xml?action=sco-contents&sco-id=383324&session='.$sessionCookie,
+                        'response' => trim($this->createScoContentsResponse()),
+                    ),
+                ),
+                $this->apiUrl.'/f383324/?session='.$userSessionCookie,
+            ),
+            'login-failed-when-joining' => array(
                 $parameters,
                 array(
                     array(
@@ -332,6 +374,32 @@ EOT;
                 </scos>
             </results>
 EOT;
+    }
 
+    private function createUserExistsWithExistingUserResponse($userId, $email)
+    {
+        return <<<EOT
+            <?xml version="1.0" encoding="utf-8"?>
+            <results>
+                <status code="ok"/>
+                <principal-list>
+                    <principal principal-id="$userId">
+                        <login>$email</login>
+                        <name>Jon Doe</name>
+                    </principal>
+                </principal-list>
+            </results>
+EOT;
+    }
+
+    private function createUserSessionCookieResponse($userCookie)
+    {
+        return <<<EOT
+            <?xml version="1.0" encoding="utf-8"?>
+            <results>
+                <status code="ok"/>
+                <cookie>$userCookie</cookie>
+            </results>
+EOT;
     }
 }
