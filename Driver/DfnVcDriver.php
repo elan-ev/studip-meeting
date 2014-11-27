@@ -170,7 +170,7 @@ class DfnVcDriver implements DriverInterface
         // retrieve user information
         $user = $this->getUser($sessionCookie, $parameters);
 
-        $this->performRequest(null, array(
+        $this->performRequest(array(
             'action' => 'permissions-update',
             'acl-id' => $parameters->getRemoteId(),
             'principal-id' => $user['id'],
@@ -182,7 +182,7 @@ class DfnVcDriver implements DriverInterface
         $userSessionCookie = $this->userLogin($sessionCookie, $parameters);
 
         // request all SCOs in the folder
-        $response = $this->performRequest(null, array(
+        $response = $this->performRequest(array(
             'action' => 'sco-contents',
             'sco-id' => $folderId,
             'session' => $sessionCookie,
@@ -291,7 +291,7 @@ class DfnVcDriver implements DriverInterface
      */
     private function getUser($sessionCookie, $parameters)
     {
-        $response = $this->performRequest(null, array(
+        $response = $this->performRequest(array(
             'action' => 'lms-user-exists',
             'login' => $parameters->getEmail(),
             'session' => $sessionCookie,
@@ -326,7 +326,7 @@ class DfnVcDriver implements DriverInterface
      */
     private function userCreate($sessionCookie, JoinParameters $parameters)
     {
-        return $this->performRequest(null, array(
+        return $this->performRequest(array(
             'action' => 'lms-user-create',
             'first-name' => $parameters->getFirstName(),
             'last-name' => $parameters->getLastName(),
@@ -345,7 +345,7 @@ class DfnVcDriver implements DriverInterface
      */
     private function userLogin($sessionCookie, JoinParameters $parameters)
     {
-        $response = $this->performRequest(null, array(
+        $response = $this->performRequest(array(
             'action' => 'lms-user-login',
             'login' => $parameters->getEmail(),
             'session' => $sessionCookie,
