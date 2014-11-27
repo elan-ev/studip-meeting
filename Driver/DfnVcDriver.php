@@ -161,7 +161,7 @@ class DfnVcDriver implements DriverInterface
 
         // login using the LMS credentials
         if (!$this->authenticate($sessionCookie)) {
-            return false;
+            return null;
         }
 
         // request the folder id
