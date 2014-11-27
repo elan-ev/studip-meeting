@@ -174,7 +174,7 @@ class DfnVcDriver implements DriverInterface
             'action' => 'permissions-update',
             'acl-id' => $parameters->getRemoteId(),
             'principal-id' => $user['id'],
-            'permission-id' => 'host',
+            'permission-id' => $parameters->hasModerationPermissions() ? 'host' : 'view',
             'session' => $sessionCookie,
         ));
 

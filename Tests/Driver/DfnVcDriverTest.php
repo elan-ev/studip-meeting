@@ -214,8 +214,16 @@ class DfnVcDriverTest extends AbstractDriverTest
         $sessionCookie = md5(uniqid());
         $userSessionCookie = md5(uniqid());
 
-        return array(
-            'successfully-join' => array(
+        $expectedRequestsOnSuccess = function ($hasModerationPermissions) use ($sessionCookie, $userSessionCookie) {
+            $parameters = new JoinParameters();
+            $parameters->setRemoteId(383324);
+            $parameters->setEmail('user@example.com');
+            $parameters->setHasModerationPermissions($hasModerationPermissions);
+            $sessionCookie = md5(uniqid());
+            $userSessionCookie = md5(uniqid());
+            $permissionId = $hasModerationPermissions ? 'host' : 'view';
+
+            return array(
                 $parameters,
                 array(
                     array(
@@ -240,7 +248,7 @@ class DfnVcDriverTest extends AbstractDriverTest
                     ),
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=permissions-update&acl-id=383324&principal-id=12345&permission-id=host&session='.$sessionCookie,
+                        'uri' => '/lmsapi/xml?action=permissions-update&acl-id=383324&principal-id=12345&permission-id='.$permissionId.'&session='.$sessionCookie,
                     ),
                     array(
                         'method' => 'get',
@@ -254,7 +262,12 @@ class DfnVcDriverTest extends AbstractDriverTest
                     ),
                 ),
                 $this->apiUrl.'/f383324/?session='.$userSessionCookie,
-            ),
+            );
+        };
+
+        return array(
+            'successfully-join-as-host' => $expectedRequestsOnSuccess(true),
+            'successfully-join-as-participant' => $expectedRequestsOnSuccess(false),
             'login-failed-when-joining' => array(
                 $parameters,
                 array(

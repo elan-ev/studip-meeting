@@ -25,6 +25,8 @@ class JoinParameters extends Parameters
 
     private $lastName;
 
+    private $hasModerationPermissions;
+
     public function setUsername($username)
     {
         $this->username = $username;
@@ -73,5 +75,15 @@ class JoinParameters extends Parameters
     public function getLastName()
     {
         return $this->lastName;
+    }
+
+    public function setHasModerationPermissions($hasModerationPermissions)
+    {
+        $this->hasModerationPermissions = $hasModerationPermissions;
+    }
+
+    public function hasModerationPermissions()
+    {
+        return $this->hasModerationPermissions;
     }
 }

@@ -101,6 +101,7 @@ class IndexController extends StudipController
             $joinParameters->setMeetingId($this->courseId);
             $joinParameters->setUsername(get_username($GLOBALS['user']->id));
             $joinParameters->setPassword($this->modPw);
+            $joinParameters->setHasModerationPermissions(true);
 
             $this->redirect($this->driver->getJoinMeetingUrl($joinParameters));
         }
@@ -169,8 +170,10 @@ class IndexController extends StudipController
 
         if ($this->userCanModifyMeeting($meeting)) {
             $joinParameters->setPassword($this->modPw);
+            $joinParameters->setHasModerationPermissions(true);
         } else {
             $joinParameters->setPassword($this->attPw);
+            $joinParameters->setHasModerationPermissions(false);
         }
 
         $this->redirect($this->driver->getJoinMeetingUrl($joinParameters));
