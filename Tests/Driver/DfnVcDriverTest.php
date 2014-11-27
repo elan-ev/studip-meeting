@@ -212,63 +212,10 @@ class DfnVcDriverTest extends AbstractDriverTest
         $parameters->setRemoteId(383324);
         $parameters->setEmail('user@example.com');
         $sessionCookie = md5(uniqid());
-        $userSessionCookie = md5(uniqid());
-        $that = $this;
-
-        $expectedRequestsOnSuccess = function ($hasModerationPermissions) use ($that, $sessionCookie, $userSessionCookie) {
-            $parameters = new JoinParameters();
-            $parameters->setRemoteId(383324);
-            $parameters->setEmail('user@example.com');
-            $parameters->setHasModerationPermissions($hasModerationPermissions);
-            $sessionCookie = md5(uniqid());
-            $userSessionCookie = md5(uniqid());
-            $permissionId = $hasModerationPermissions ? 'host' : 'view';
-
-            return array(
-                $parameters,
-                array(
-                    array(
-                        'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=common-info',
-                        'response' => trim($that->createSessionCookieResponse($sessionCookie)),
-                    ),
-                    array(
-                        'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
-                        'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="ok"/></results>',
-                    ),
-                    array(
-                        'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=sco-shortcuts&session='.$sessionCookie,
-                        'response' => trim($that->createScoShortcutsResponse()),
-                    ),
-                    array(
-                        'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=lms-user-exists&login=user%40example.com&session='.$sessionCookie,
-                        'response' => trim($that->createUserExistsWithExistingUserResponse(12345, 'user@example.com')),
-                    ),
-                    array(
-                        'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=permissions-update&acl-id=383324&principal-id=12345&permission-id='.$permissionId.'&session='.$sessionCookie,
-                    ),
-                    array(
-                        'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=lms-user-login&login=user%40example.com&session='.$sessionCookie,
-                        'response' => trim($that->createUserSessionCookieResponse($userSessionCookie)),
-                    ),
-                    array(
-                        'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=sco-contents&sco-id=383324&session='.$sessionCookie,
-                        'response' => trim($that->createScoContentsResponse()),
-                    ),
-                ),
-                $that->apiUrl.'/f383324/?session='.$userSessionCookie,
-            );
-        };
 
         return array(
-            'successfully-join-as-host' => $expectedRequestsOnSuccess(true),
-            'successfully-join-as-participant' => $expectedRequestsOnSuccess(false),
+            'successfully-join-as-host' => $this->getRequestsForSuccessfulJoinMeetingUrlCall($parameters, true),
+            'successfully-join-as-participant' => $this->getRequestsForSuccessfulJoinMeetingUrlCall($parameters, false),
             'login-failed-when-joining' => array(
                 $parameters,
                 array(
@@ -415,5 +362,55 @@ EOT;
                 <cookie>$userCookie</cookie>
             </results>
 EOT;
+    }
+
+    private function getRequestsForSuccessfulJoinMeetingUrlCall(JoinParameters $parameters, $hasModerationPermissions)
+    {
+        $parameters = clone $parameters;
+        $parameters->setHasModerationPermissions($hasModerationPermissions);
+        $sessionCookie = md5(uniqid());
+        $userSessionCookie = md5(uniqid());
+        $permissionId = $hasModerationPermissions ? 'host' : 'view';
+
+        return array(
+            $parameters,
+            array(
+                array(
+                    'method' => 'get',
+                    'uri' => '/lmsapi/xml?action=common-info',
+                    'response' => trim($this->createSessionCookieResponse($sessionCookie)),
+                ),
+                array(
+                    'method' => 'get',
+                    'uri' => '/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
+                    'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="ok"/></results>',
+                ),
+                array(
+                    'method' => 'get',
+                    'uri' => '/lmsapi/xml?action=sco-shortcuts&session='.$sessionCookie,
+                    'response' => trim($this->createScoShortcutsResponse()),
+                ),
+                array(
+                    'method' => 'get',
+                    'uri' => '/lmsapi/xml?action=lms-user-exists&login=user%40example.com&session='.$sessionCookie,
+                    'response' => trim($this->createUserExistsWithExistingUserResponse(12345, 'user@example.com')),
+                ),
+                array(
+                    'method' => 'get',
+                    'uri' => '/lmsapi/xml?action=permissions-update&acl-id=383324&principal-id=12345&permission-id='.$permissionId.'&session='.$sessionCookie,
+                ),
+                array(
+                    'method' => 'get',
+                    'uri' => '/lmsapi/xml?action=lms-user-login&login=user%40example.com&session='.$sessionCookie,
+                    'response' => trim($this->createUserSessionCookieResponse($userSessionCookie)),
+                ),
+                array(
+                    'method' => 'get',
+                    'uri' => '/lmsapi/xml?action=sco-contents&sco-id=383324&session='.$sessionCookie,
+                    'response' => trim($this->createScoContentsResponse()),
+                ),
+            ),
+            $this->apiUrl.'/f383324/?session='.$userSessionCookie,
+        );
     }
 }
