@@ -213,8 +213,9 @@ class DfnVcDriverTest extends AbstractDriverTest
         $parameters->setEmail('user@example.com');
         $sessionCookie = md5(uniqid());
         $userSessionCookie = md5(uniqid());
+        $that = $this;
 
-        $expectedRequestsOnSuccess = function ($hasModerationPermissions) use ($sessionCookie, $userSessionCookie) {
+        $expectedRequestsOnSuccess = function ($hasModerationPermissions) use ($that, $sessionCookie, $userSessionCookie) {
             $parameters = new JoinParameters();
             $parameters->setRemoteId(383324);
             $parameters->setEmail('user@example.com');
@@ -229,7 +230,7 @@ class DfnVcDriverTest extends AbstractDriverTest
                     array(
                         'method' => 'get',
                         'uri' => '/lmsapi/xml?action=common-info',
-                        'response' => trim($this->createSessionCookieResponse($sessionCookie)),
+                        'response' => trim($that->createSessionCookieResponse($sessionCookie)),
                     ),
                     array(
                         'method' => 'get',
@@ -239,12 +240,12 @@ class DfnVcDriverTest extends AbstractDriverTest
                     array(
                         'method' => 'get',
                         'uri' => '/lmsapi/xml?action=sco-shortcuts&session='.$sessionCookie,
-                        'response' => trim($this->createScoShortcutsResponse()),
+                        'response' => trim($that->createScoShortcutsResponse()),
                     ),
                     array(
                         'method' => 'get',
                         'uri' => '/lmsapi/xml?action=lms-user-exists&login=user%40example.com&session='.$sessionCookie,
-                        'response' => trim($this->createUserExistsWithExistingUserResponse(12345, 'user@example.com')),
+                        'response' => trim($that->createUserExistsWithExistingUserResponse(12345, 'user@example.com')),
                     ),
                     array(
                         'method' => 'get',
@@ -253,15 +254,15 @@ class DfnVcDriverTest extends AbstractDriverTest
                     array(
                         'method' => 'get',
                         'uri' => '/lmsapi/xml?action=lms-user-login&login=user%40example.com&session='.$sessionCookie,
-                        'response' => trim($this->createUserSessionCookieResponse($userSessionCookie)),
+                        'response' => trim($that->createUserSessionCookieResponse($userSessionCookie)),
                     ),
                     array(
                         'method' => 'get',
                         'uri' => '/lmsapi/xml?action=sco-contents&sco-id=383324&session='.$sessionCookie,
-                        'response' => trim($this->createScoContentsResponse()),
+                        'response' => trim($that->createScoContentsResponse()),
                     ),
                 ),
-                $this->apiUrl.'/f383324/?session='.$userSessionCookie,
+                $that->apiUrl.'/f383324/?session='.$userSessionCookie,
             );
         };
 
