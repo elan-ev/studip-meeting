@@ -16,7 +16,9 @@
 
 require_once __DIR__.'/vendor/autoload.php';
 
-class BBBPlugin extends StudipPlugin implements StandardPlugin {
+class BBBPlugin extends StudipPlugin implements StandardPlugin
+{
+    private $assetsUrl;
 
     public function __construct() {
         parent::__construct();
@@ -29,7 +31,9 @@ class BBBPlugin extends StudipPlugin implements StandardPlugin {
         if (!version_compare($GLOBALS['SOFTWARE_VERSION'], '2.3', '>')) {
             $navigation = $this->getTabNavigation(Request::get('cid', $GLOBALS['SessSemName'][1]));
             Navigation::insertItem('/course/BBBPlugin', $navigation['BBBPlugin'], null); 
-        } 
+        }
+
+        $this->assetsUrl = rtrim($this->getPluginURL(), '/').'/assets';
     }
 
     public function getInfoTemplate($course_id) {
@@ -71,4 +75,8 @@ class BBBPlugin extends StudipPlugin implements StandardPlugin {
 
     }
 
+    public function getAssetsUrl()
+    {
+        return $this->assetsUrl;
+    }
 }

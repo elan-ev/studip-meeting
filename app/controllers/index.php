@@ -244,8 +244,8 @@ class IndexController extends StudipController
         $this->set_layout($layout);
 
         PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Big Blue Button'));
-        PageLayout::addScript($this->plugin->getPluginURL().'/assets/js/meetings.js');
-        PageLayout::addStylesheet($this->plugin->getPluginURL().'/assets/css/meetings.css');
+        PageLayout::addScript($this->plugin->getAssetsUrl().'/js/meetings.js');
+        PageLayout::addStylesheet($this->plugin->getAssetsUrl().'/css/meetings.css');
 
         if ($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] && $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] != '/') {
             $this->picturepath = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] .'/'. $this->dispatcher->trails_root . '/images';
