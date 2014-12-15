@@ -35,6 +35,8 @@ class CreateDefaultDriverOption extends Migration
               description = "bigbluebutton oder dfnvc"',
             \ElanEv\Driver\DriverFactory::DEFAULT_DRIVER_CONFIG_ID
         ));
+
+        SimpleORMap::expireTableScheme();
     }
 
     /**
@@ -50,5 +52,7 @@ class CreateDefaultDriverOption extends Migration
               config_id = "%s"',
             \ElanEv\Driver\DriverFactory::DEFAULT_DRIVER_CONFIG_ID
         ));
+
+        SimpleORMap::expireTableScheme();
     }
 }

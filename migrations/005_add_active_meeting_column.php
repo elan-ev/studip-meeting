@@ -27,6 +27,8 @@ class AddActiveMeetingColumn extends Migration
             ADD COLUMN
               active TINYINT NOT NULL DEFAULT 1 AFTER driver'
         );
+
+        SimpleORMap::expireTableScheme();
     }
 
     /**
@@ -41,5 +43,7 @@ class AddActiveMeetingColumn extends Migration
             DROP COLUMN
               active'
         );
+
+        SimpleORMap::expireTableScheme();
     }
 }

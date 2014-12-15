@@ -26,6 +26,8 @@ class AddMeetingAuthor extends Migration
               vc_meetings
             ADD COLUMN user_id VARCHAR(32) NOT NULL AFTER course_id'
         );
+
+        SimpleORMap::expireTableScheme();
     }
 
     /**
@@ -39,5 +41,7 @@ class AddMeetingAuthor extends Migration
               vc_meetings
             DROP COLUMN user_id'
         );
+
+        SimpleORMap::expireTableScheme();
     }
 }

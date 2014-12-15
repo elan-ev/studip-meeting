@@ -36,6 +36,8 @@ class CreateMeetingsTable extends Migration
               UNIQUE KEY(identifier)
             )'
         );
+
+        SimpleORMap::expireTableScheme();
     }
 
     /**
@@ -44,5 +46,7 @@ class CreateMeetingsTable extends Migration
     public function down()
     {
         DBManager::get()->exec('DROP TABLE IF EXISTS vc_meetings');
+
+        SimpleORMap::expireTableScheme();
     }
 }

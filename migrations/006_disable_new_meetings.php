@@ -26,6 +26,8 @@ class DisableNewMeetings extends Migration
               vc_meetings
             MODIFY active TINYINT NOT NULL DEFAULT 0'
         );
+
+        SimpleORMap::expireTableScheme();
     }
 
     /**
@@ -39,5 +41,7 @@ class DisableNewMeetings extends Migration
               vc_meetings
             MODIFY active TINYINT NOT NULL DEFAULT 1'
         );
+
+        SimpleORMap::expireTableScheme();
     }
 }
