@@ -1,5 +1,9 @@
 (function ($) {
     $(document).ready(function() {
+        $('table.conference-meetings img.info').click(function () {
+            $('div.info', $(this).closest('td')).toggle();
+        });
+
         $('input[type="checkbox"]').change(function() {
             var $checkbox = $(this);
             var url = $checkbox.attr('data-meeting-enable-url');

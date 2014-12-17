@@ -55,6 +55,7 @@ $infobox = array('picture' => '/../plugins_packages/elan-ev/BBBPlugin/images/bbb
             ?>
             <tr>
                 <td class="meeting-name">
+                    <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/black/info-circle.png" class="info">
                     <a href="<?=$joinUrl?>" title="<?=_('Meeting betreten')?>" target="_blank"><?=htmlReady($meeting->name)?></a>
                     <input type="text" name="name">
                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/grey/accept.png" class="accept-button">
