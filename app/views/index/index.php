@@ -25,6 +25,11 @@
         <h1>Konferenzen</h1>
 
         <table class="default collapsable tablesorter conference-meetings">
+            <colgroup>
+                <col>
+                <col style="width: 100px;">
+                <col style="width: 80px;">
+            </colgroup>
             <thead>
             <tr>
                 <th>Meeting</th>
@@ -76,7 +81,7 @@
         </table>
 
         <?php if ($canModifyCourse): ?>
-        <form method="post" action="<?=PluginEngine::getURL($GLOBALS['plugin'], array(), 'index')?>">
+        <form method="post" action="<?=PluginEngine::getURL($GLOBALS['plugin'], array(), 'index')?>" class="create-conference-meeting">
             <fieldset name="Meeting erstellen">
                 <?php if (count($errors) > 0): ?>
                     <ul>

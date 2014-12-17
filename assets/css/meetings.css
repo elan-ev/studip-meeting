@@ -18,7 +18,15 @@ table.conference-meetings input[type="text"] {
     display: none;
 }
 
+table.conference-meetings input[type="text"] {
+    width: 400px;
+}
+
 table.conference-meetings img.accept-button,
 table.conference-meetings img.decline-button {
     cursor: pointer;
+}
+
+form.create-conference-meeting input[type="text"] {
+    width: 400px;
 }
