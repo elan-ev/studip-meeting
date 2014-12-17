@@ -4,20 +4,6 @@
 /** @var bool $canModifyCourse */
 /** @var ElanEv\Model\Meeting[] $meetings */
 /** @var array $errors */
-
-$infobox_content[] = array(
-    'kategorie' => _('Informationen'),
-    'eintrag'   => array(
-        array(
-            'icon' => 'icons/16/black/info.png',
-            'text' =>  'BigBlueButton ist ein freies Webkonferenz Tool.<br>'
-                   .   'Eine Übersicht der Features und weitere Hilfen zum Tool erhalten Sie '
-                   .   '<a href="http://www.bigbluebutton.org/overview/" target="_blank">bei BigBlueButton</a>.'
-        )
-    )
-);
-
-$infobox = array('picture' => '/../plugins_packages/elan-ev/BBBPlugin/images/bbb_overview.png', 'content' => $infobox_content);
 ?>
 
 <?php if (!$configured): ?>

@@ -83,6 +83,17 @@ class IndexController extends StudipController
         } else {
             $this->meetings = \ElanEv\Model\Meeting::findActiveByCourseId($this->getCourseId());
         }
+
+        $sidebar = Sidebar::Get();
+        $settings = new ActionsWidget();
+        $settings->addCSSClass('sidebar-meeting-info');
+        $settings->setTitle('Informationen');
+        $settings->addLink(_('Alle Informationen anzeigen'), '#', null, array(
+            'class' => 'toggle-info show-info',
+            'data-show-text' => _('Alle Informationen anzeigen'),
+            'data-hide-text' => _('Alle Informationen ausblenden'),
+        ));
+        $sidebar->addWidget($settings);
     }
 
     /**

@@ -1,5 +1,22 @@
 (function ($) {
     $(document).ready(function() {
+        $('ul.sidebar-meeting-info a.toggle-info').on('click', function (event) {
+            event.preventDefault();
+            var $el = $(this);
+
+            if ($el.hasClass('show-info')) {
+                $el.removeClass('show-info');
+                $el.addClass('hide-info');
+                $el.text($el.attr('data-hide-text'));
+                $('table.conference-meetings div.info').show();
+            } else {
+                $el.removeClass('hide-info');
+                $el.addClass('show-info');
+                $el.text($el.attr('data-show-text'));
+                $('table.conference-meetings div.info').hide();
+            }
+        });
+
         $('table.conference-meetings img.info').click(function () {
             $('div.info', $(this).closest('td')).toggle();
         });
