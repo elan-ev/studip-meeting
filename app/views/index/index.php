@@ -60,6 +60,20 @@ $infobox = array('picture' => '/../plugins_packages/elan-ev/BBBPlugin/images/bbb
                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/grey/accept.png" class="accept-button">
                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/grey/decline.png" class="decline-button">
                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/ajax_indicator_small.gif" class="loading-indicator">
+
+                    <div class="info">
+                        <?php if (count($meeting->getRecentJoins()) === 1): ?>
+                            <?=_('Eine Person hat das Meeting in den letzten 24 Stunden betreten')?>.
+                        <?php else: ?>
+                            <?=count($meeting->getRecentJoins()).' '._('Personen haben das Meeting in den letzten 24 Stunden betreten')?>.
+                        <?php endif; ?>
+                        <br>
+                        <?php if (count($meeting->getAllJoins()) === 1): ?>
+                            <?=_('Eine Person hat das Meeting insgesamt betreten')?>.
+                        <?php else: ?>
+                            <?=count($meeting->getAllJoins()).' '._('Personen haben das Meeting insgesamt betreten')?>.
+                        <?php endif; ?>
+                    </div>
                 </td>
                 <?php if ($canModifyCourse): ?>
                     <td><input type="checkbox"<?=$meeting->active ? ' checked="checked"' : ''?> data-meeting-enable-url="<?=PluginEngine::getLink("BBBPlugin/index/enable/".$meeting->id)?>"></td>

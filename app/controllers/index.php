@@ -19,6 +19,7 @@ require_once 'app/controllers/studip_controller.php';
 
 use ElanEv\Driver\DriverFactory;
 use ElanEv\Driver\JoinParameters;
+use ElanEv\Model\Join;
 use ElanEv\Model\Meeting;
 
 /**
@@ -175,6 +176,11 @@ class IndexController extends StudipController
             $joinParameters->setPassword($this->attPw);
             $joinParameters->setHasModerationPermissions(false);
         }
+
+        $lastJoin = new Join();
+        $lastJoin->meeting_id = $meetingId;
+        $lastJoin->user_id = $user->cfg->getUserId();
+        $lastJoin->store();
 
         $this->redirect($this->driver->getJoinMeetingUrl($joinParameters));
     }

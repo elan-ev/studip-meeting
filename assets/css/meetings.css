@@ -1,3 +1,7 @@
+table.conference-meetings td {
+    vertical-align: top;
+}
+
 table.conference-meetings img.accept-button,
 table.conference-meetings img.decline-button,
 table.conference-meetings img.loading-indicator,

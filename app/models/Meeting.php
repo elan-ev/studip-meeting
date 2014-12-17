@@ -19,18 +19,45 @@ use ElanEv\Driver\MeetingParameters;
  * @property bool   $active
  * @property string $attendee_password
  * @property string $moderator_password
+ * @property Join[] $joins
  */
 class Meeting extends \SimpleORMap
 {
     public function __construct($id = null)
     {
         $this->db_table = 'vc_meetings';
+        $this->has_many['joins'] = array(
+            'class_name' => 'ElanEv\Model\Join',
+            'assoc_foreign_key' => 'meeting_id',
+            'on_delete' => 'delete',
+        );
 
         parent::__construct($id);
 
         if (!$this->identifier) {
             $this->identifier = md5(uniqid());
         }
+    }
+
+    /**
+     * Returns the most recent user joins of the meeting (the users that
+     * joined the meeting during the last 24 hours).
+     *
+     * @return Join[] The joins
+     */
+    public function getRecentJoins()
+    {
+        return Join::findRecentJoinsForMeeting($this);
+    }
+
+    /**
+     * Returns all user joins (the users that ever joined the meeting).
+     *
+     * @return Join[] The joins
+     */
+    public function getAllJoins()
+    {
+        return Join::findAllJoinsForMeeting($this);
     }
 
     /**
