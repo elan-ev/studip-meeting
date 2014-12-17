@@ -44,8 +44,8 @@
                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/black/info-circle.png" class="info">
                     <a href="<?=$joinUrl?>" title="<?=_('Meeting betreten')?>" target="_blank"><?=htmlReady($meeting->name)?></a>
                     <input type="text" name="name">
-                    <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/grey/accept.png" class="accept-button">
-                    <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/grey/decline.png" class="decline-button">
+                    <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/grey/accept.png" class="accept-button" title="<?=_('Änderungen speichern')?>">
+                    <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/grey/decline.png" class="decline-button" title="<?=_('Änderungen verwerfen')?>">
                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/ajax_indicator_small.gif" class="loading-indicator">
 
                     <div class="info">
