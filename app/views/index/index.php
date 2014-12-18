@@ -86,7 +86,7 @@
                     </div>
                 </td>
                 <?php if ($canModifyCourse): ?>
-                    <td><input type="checkbox"<?=$meeting->active ? ' checked="checked"' : ''?> data-meeting-enable-url="<?=PluginEngine::getLink($plugin, array(), 'index/enable/'.$meeting->id)?>"></td>
+                    <td><input type="checkbox"<?=$meeting->active ? ' checked="checked"' : ''?> data-meeting-enable-url="<?=PluginEngine::getLink($plugin, array(), 'index/enable/'.$meeting->id)?>" title="<?=$meeting->active ? _('Meeting für Studierende unsichtbar schalten') : _('Meeting für Studierende sichtbar schalten')?>"></td>
                 <?php endif; ?>
                 <td>
                     <?php if ($canModifyCourse): ?>
