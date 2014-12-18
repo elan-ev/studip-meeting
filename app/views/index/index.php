@@ -54,11 +54,11 @@
             ?>
             <tr>
                 <td class="meeting-name">
-                    <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/black/info-circle.png" class="info">
+                    <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/20/grey/info-circle.png" class="info">
                     <a href="<?=$joinUrl?>" title="<?=_('Meeting betreten')?>" target="_blank"><?=htmlReady($meeting->name)?></a>
                     <input type="text" name="name">
-                    <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/grey/accept.png" class="accept-button" title="<?=_('Änderungen speichern')?>">
-                    <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/grey/decline.png" class="decline-button" title="<?=_('Änderungen verwerfen')?>">
+                    <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/20/grey/accept.png" class="accept-button" title="<?=_('Änderungen speichern')?>">
+                    <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/20/grey/decline.png" class="decline-button" title="<?=_('Änderungen verwerfen')?>">
                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/ajax_indicator_small.gif" class="loading-indicator">
 
                     <div class="info">
@@ -90,13 +90,13 @@
                 <?php endif; ?>
                 <td>
                     <?php if ($canModifyCourse): ?>
-                        <a href="#" title="<?=_('Meeting umbenennen')?>" class="edit-meeting" data-meeting-rename-url="<?=PluginEngine::getLink($plugin, array(), 'index/rename/'.$meeting->id)?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/edit.png"></a>
+                        <a href="#" title="<?=_('Meeting umbenennen')?>" class="edit-meeting" data-meeting-rename-url="<?=PluginEngine::getLink($plugin, array(), 'index/rename/'.$meeting->id)?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/20/blue/edit.png"></a>
                         <?php if ($meeting->join_as_moderator): ?>
-                            <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('Ändern zu: nur DozentInnen und TutorInnen haben Moderationsrechte')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/check-circle.png"></a>
+                            <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('Ändern zu: nur DozentInnen und TutorInnen haben Moderationsrechte')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/moderator-enabled.png"></a>
                         <?php else: ?>
-                            <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('Ändern zu: alle Teilnehmenden haben Moderationsrechte')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/radiobutton-unchecked.png"></a>
+                            <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('Ändern zu: alle Teilnehmenden haben Moderationsrechte')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/moderator-disabled.png"></a>
                         <?php endif; ?>
-                        <a href="<?=$deleteUrl?>" title="<?=_('Meeting löschen')?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/trash.png"></a>
+                        <a href="<?=$deleteUrl?>" title="<?=_('Meeting löschen')?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/20/blue/trash.png"></a>
                     <?php endif; ?>
                 </td>
             </tr>
