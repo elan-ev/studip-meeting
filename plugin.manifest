@@ -2,4 +2,4 @@ pluginname=VideoConference
 pluginclassname=VideoConferencePlugin
 origin=elan-ev
 version=0.3
-studipMinVersion=2.5.x
+studipMinVersion=3.1
