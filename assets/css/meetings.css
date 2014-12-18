@@ -27,6 +27,11 @@ table.conference-meetings img.decline-button {
     cursor: pointer;
 }
 
+form.create-conference-meeting fieldset {
+    border-width: 0;
+}
+
 form.create-conference-meeting input[type="text"] {
     width: 400px;
+    display: inline;
 }
