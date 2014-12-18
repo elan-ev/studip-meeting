@@ -42,6 +42,7 @@
         <?php foreach ($meetings as $meeting): ?>
             <?php
             $joinUrl = PluginEngine::getLink($plugin, array(), 'index/joinMeeting/'.$meeting->id);
+            $moderatorPermissionsUrl = PluginEngine::getLink($plugin, array(), 'index/moderator_permissions/'.$meeting->id);
             $deleteUrl = PluginEngine::getLink($plugin, array(), 'index/delete/'.$meeting->id);
             ?>
             <tr>
@@ -54,12 +55,22 @@
                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/ajax_indicator_small.gif" class="loading-indicator">
 
                     <div class="info">
+                        <?php if ($meeting->join_as_moderator): ?>
+                            <?=_('alle Teilnehmenden haben Moderationsrechte')?>
+                        <?php else: ?>
+                            <?=_('nur DozentInnen und TutorInnen haben Moderationsrechte')?>
+                        <?php endif; ?>
+
+                        <br>
+
                         <?php if (count($meeting->getRecentJoins()) === 1): ?>
                             <?=_('Eine Person hat das Meeting in den letzten 24 Stunden betreten')?>.
                         <?php else: ?>
                             <?=count($meeting->getRecentJoins()).' '._('Personen haben das Meeting in den letzten 24 Stunden betreten')?>.
                         <?php endif; ?>
+
                         <br>
+
                         <?php if (count($meeting->getAllJoins()) === 1): ?>
                             <?=_('Eine Person hat das Meeting insgesamt betreten')?>.
                         <?php else: ?>
@@ -73,6 +84,11 @@
                 <td>
                     <?php if ($canModifyCourse): ?>
                         <a href="#" title="<?=_('Meeting umbenennen')?>" class="edit-meeting" data-meeting-rename-url="<?=PluginEngine::getLink("BBBPlugin/index/rename/".$meeting->id)?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/edit.png"></a>
+                        <?php if ($meeting->join_as_moderator): ?>
+                            <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('ändern zu: nur DozentInnen und TutorInnen haben Moderationsrechte')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/check-circle.png"></a>
+                        <?php else: ?>
+                            <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('ändern zu: alle Teilnehmenden haben Moderationsrechte')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/radiobutton-unchecked.png"></a>
+                        <?php endif; ?>
                         <a href="<?=$deleteUrl?>" title="<?=_('Meeting löschen')?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/trash.png"></a>
                     <?php endif; ?>
                 </td>

@@ -19,6 +19,7 @@ use ElanEv\Driver\MeetingParameters;
  * @property bool   $active
  * @property string $attendee_password
  * @property string $moderator_password
+ * @property bool   $join_as_moderator
  * @property Join[] $joins
  */
 class Meeting extends \SimpleORMap

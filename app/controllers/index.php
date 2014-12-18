@@ -145,6 +145,18 @@ class IndexController extends StudipController
         $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
     }
 
+    public function moderator_permissions_action($meetingId)
+    {
+        $meeting = new Meeting($meetingId);
+
+        if (!$meeting->isNew() && $this->userCanModifyMeeting($meeting)) {
+            $meeting->join_as_moderator = !$meeting->join_as_moderator;
+            $meeting->store();
+        }
+
+        $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
+    }
+
     public function delete_action($meetingId)
     {
         $meeting = new Meeting($meetingId);
@@ -180,7 +192,7 @@ class IndexController extends StudipController
         $joinParameters->setFirstName($user->Vorname);
         $joinParameters->setLastName($user->Nachname);
 
-        if ($this->userCanModifyMeeting($meeting)) {
+        if ($this->userCanModifyMeeting($meeting) || $meeting->join_as_moderator) {
             $joinParameters->setPassword($this->modPw);
             $joinParameters->setHasModerationPermissions(true);
         } else {
