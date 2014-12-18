@@ -63,9 +63,9 @@
 
                     <div class="info">
                         <?php if ($meeting->join_as_moderator): ?>
-                            <?=_('alle Teilnehmenden haben Moderationsrechte')?>
+                            <?=_('Alle Teilnehmenden haben Moderationsrechte.')?>
                         <?php else: ?>
-                            <?=_('nur DozentInnen und TutorInnen haben Moderationsrechte')?>
+                            <?=_('Nur DozentInnen und TutorInnen haben Moderationsrechte.')?>
                         <?php endif; ?>
 
                         <br>
@@ -92,9 +92,9 @@
                     <?php if ($canModifyCourse): ?>
                         <a href="#" title="<?=_('Meeting umbenennen')?>" class="edit-meeting" data-meeting-rename-url="<?=PluginEngine::getLink($plugin, array(), 'index/rename/'.$meeting->id)?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/edit.png"></a>
                         <?php if ($meeting->join_as_moderator): ?>
-                            <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('ändern zu: nur DozentInnen und TutorInnen haben Moderationsrechte')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/check-circle.png"></a>
+                            <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('Ändern zu: nur DozentInnen und TutorInnen haben Moderationsrechte')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/check-circle.png"></a>
                         <?php else: ?>
-                            <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('ändern zu: alle Teilnehmenden haben Moderationsrechte')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/radiobutton-unchecked.png"></a>
+                            <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('Ändern zu: alle Teilnehmenden haben Moderationsrechte')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/radiobutton-unchecked.png"></a>
                         <?php endif; ?>
                         <a href="<?=$deleteUrl?>" title="<?=_('Meeting löschen')?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/trash.png"></a>
                     <?php endif; ?>
