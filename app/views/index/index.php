@@ -62,29 +62,25 @@
                             <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/20/grey/decline.png" class="decline-button" title="<?=_('Änderungen verwerfen')?>">
                             <img src="<?=$GLOBALS['ASSETS_URL']?>/images/ajax_indicator_small.gif" class="loading-indicator">
 
-                            <div class="info">
+                            <ul class="info">
                                 <?php if ($meeting->join_as_moderator): ?>
-                                    <?=_('Alle Teilnehmenden haben Moderationsrechte.')?>
+                                    <li><?=_('Alle Teilnehmenden haben Moderationsrechte.')?></li>
                                 <?php else: ?>
-                                    <?=_('Nur DozentInnen und TutorInnen haben Moderationsrechte.')?>
+                                    <li><?=_('Nur DozentInnen und TutorInnen haben Moderationsrechte.')?></li>
                                 <?php endif; ?>
-
-                                <br>
 
                                 <?php if (count($meeting->getRecentJoins()) === 1): ?>
-                                    <?=_('Eine Person hat das Meeting in den letzten 24 Stunden betreten')?>.
+                                    <li><?=_('Eine Person hat das Meeting in den letzten 24 Stunden betreten')?>.</li>
                                 <?php else: ?>
-                                    <?=count($meeting->getRecentJoins()).' '._('Personen haben das Meeting in den letzten 24 Stunden betreten')?>.
+                                    <li><?=count($meeting->getRecentJoins()).' '._('Personen haben das Meeting in den letzten 24 Stunden betreten')?>.</li>
                                 <?php endif; ?>
-
-                                <br>
 
                                 <?php if (count($meeting->getAllJoins()) === 1): ?>
-                                    <?=_('Eine Person hat das Meeting insgesamt betreten')?>.
+                                    <li><?=_('Eine Person hat das Meeting insgesamt betreten')?>.</li>
                                 <?php else: ?>
-                                    <?=count($meeting->getAllJoins()).' '._('Personen haben das Meeting insgesamt betreten')?>.
+                                    <li><?=count($meeting->getAllJoins()).' '._('Personen haben das Meeting insgesamt betreten')?>.</li>
                                 <?php endif; ?>
-                            </div>
+                            </ul>
                         </td>
                         <?php if ($canModifyCourse): ?>
                             <td><input type="checkbox"<?=$meeting->active ? ' checked="checked"' : ''?> data-meeting-enable-url="<?=PluginEngine::getLink($plugin, array(), 'index/enable/'.$meeting->id)?>" title="<?=$meeting->active ? _('Meeting für Studierende unsichtbar schalten') : _('Meeting für Studierende sichtbar schalten')?>"></td>

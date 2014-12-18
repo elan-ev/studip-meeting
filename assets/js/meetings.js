@@ -8,17 +8,17 @@
                 $el.removeClass('show-info');
                 $el.addClass('hide-info');
                 $el.text($el.attr('data-hide-text'));
-                $('table.conference-meetings div.info').show();
+                $('table.conference-meetings ul.info').show();
             } else {
                 $el.removeClass('hide-info');
                 $el.addClass('show-info');
                 $el.text($el.attr('data-show-text'));
-                $('table.conference-meetings div.info').hide();
+                $('table.conference-meetings ul.info').hide();
             }
         });
 
         $('table.conference-meetings img.info').click(function () {
-            $('div.info', $(this).closest('td')).toggle();
+            $('ul.info', $(this).closest('td')).toggle();
         });
 
         $('input[type="checkbox"]').change(function() {

@@ -7,7 +7,7 @@ table.conference-meetings img.info {
     cursor: pointer;
 }
 
-table.conference-meetings div.info {
+table.conference-meetings ul.info {
     display: none;
 }
 
