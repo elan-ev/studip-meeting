@@ -1,6 +1,9 @@
 <?php
 /** @var VideoConferencePlugin $plugin */
+/** @var Flexi_TemplateFactory $templateFactory */
 /** @var bool $configured */
+/** @var bool $confirmDeleteMeeting */
+/** @var string[] $questionOptions */
 /** @var bool $canModifyCourse */
 /** @var ElanEv\Model\Meeting[] $meetings */
 /** @var array $errors */
@@ -21,6 +24,10 @@
         </form>
     <?php endif; ?>
 <?php else: ?>
+    <? if ($confirmDeleteMeeting): ?>
+        <?= $templateFactory->render('shared/question', $questionOptions) ?>
+    <? endif ?>
+
     <div>
         <h1>Konferenzen</h1>
 
@@ -43,7 +50,7 @@
             <?php
             $joinUrl = PluginEngine::getLink($plugin, array(), 'index/joinMeeting/'.$meeting->id);
             $moderatorPermissionsUrl = PluginEngine::getLink($plugin, array(), 'index/moderator_permissions/'.$meeting->id);
-            $deleteUrl = PluginEngine::getLink($plugin, array(), 'index/delete/'.$meeting->id);
+            $deleteUrl = PluginEngine::getLink($plugin, array('delete' => $meeting->id), 'index');
             ?>
             <tr>
                 <td class="meeting-name">

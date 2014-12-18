@@ -26,6 +26,9 @@ use ElanEv\Model\Meeting;
  * @property \VideoConferencePlugin $plugin
  * @property bool                   $configured
  * @property \Seminar_Perm          $perm
+ * @property \Flexi_TemplateFactory $templateFactory
+ * @property bool                   $confirmDeleteMeeting
+ * @property string[]               $questionOptions
  * @property bool                   $canModifyCourse
  * @property bool                   $canJoin
  * @property string                 $courseId
@@ -62,13 +65,27 @@ class IndexController extends StudipController
     {
         $this->errors = array();
 
-        if (\Request::method() == 'POST') {
-            if (!\Request::get('name')) {
+        if (Request::method() == 'POST') {
+            if (!Request::get('name')) {
                 $this->errors[] = _('Bitte geben Sie dem Meeting einen Namen.');
             }
 
             if (count($this->errors) === 0) {
                 $this->createMeeting(\Request::get('name'));
+            }
+        }
+
+        if (Request::get('delete') > 0) {
+            $meeting = new Meeting(Request::get('delete'));
+
+            if (!$meeting->isNew()) {
+                $this->templateFactory = $GLOBALS['template_factory'];
+                $this->confirmDeleteMeeting = true;
+                $this->questionOptions = array(
+                    'question' => _('Wollen Sie wirklich das Meeting "'.$meeting->name.'" löschen?'),
+                    'approvalLink' => PluginEngine::getLink($this->plugin, array(), 'index/delete/'.$meeting->id),
+                    'disapprovalLink' => PluginEngine::getLink($this->plugin, array(), 'index'),
+                );
             }
         }
 
