@@ -23,14 +23,14 @@ use ElanEv\Model\Join;
 use ElanEv\Model\Meeting;
 
 /**
- * @property \BBBPlugin    $plugin
- * @property bool          $configured
- * @property \Seminar_Perm $perm
- * @property bool          $canModifyCourse
- * @property bool          $canJoin
- * @property string        $courseId
- * @property array         $errors
- * @property Meeting[]     $meetings
+ * @property \VideoConferencePlugin $plugin
+ * @property bool                   $configured
+ * @property \Seminar_Perm          $perm
+ * @property bool                   $canModifyCourse
+ * @property bool                   $canJoin
+ * @property string                 $courseId
+ * @property array                  $errors
+ * @property Meeting[]              $meetings
  */
 class IndexController extends StudipController
 {
@@ -72,9 +72,12 @@ class IndexController extends StudipController
             }
         }
 
-        Navigation::activateItem('course/BBBPlugin');
-        $nav = Navigation::getItem('course/BBBPlugin');
-        $nav->setImage('icons/16/black/chat.png');
+        if (Navigation::hasItem('course/'.VideoConferencePlugin::NAVIGATION_ITEM_NAME)) {
+            Navigation::activateItem('course/'.VideoConferencePlugin::NAVIGATION_ITEM_NAME);
+            /** @var Navigation $navItem */
+            $navItem = Navigation::getItem('course/'.VideoConferencePlugin::NAVIGATION_ITEM_NAME);
+            $navItem->setImage('icons/16/black/chat.png');
+        }
 
         $this->canModifyCourse = $this->userCanModifyCourse($this->getCourseId());
 
@@ -223,7 +226,7 @@ class IndexController extends StudipController
         Config::get()->store('BBB_URL', Request::get('bbb_url'));
         Config::get()->store('BBB_SALT', Request::get('bbb_salt'));
 
-        $this->redirect(PluginEngine::getLink('BBBPlugin/index/index'));
+        $this->redirect(PluginEngine::getLink($this->plugin, array(), 'index'));
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -272,7 +275,7 @@ class IndexController extends StudipController
         $layout = $GLOBALS['template_factory']->open('layouts/base');
         $this->set_layout($layout);
 
-        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Big Blue Button'));
+        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Konferenzen'));
         PageLayout::addScript($this->plugin->getAssetsUrl().'/js/meetings.js');
         PageLayout::addStylesheet($this->plugin->getAssetsUrl().'/css/meetings.css');
 

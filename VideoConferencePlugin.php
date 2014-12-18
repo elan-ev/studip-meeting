@@ -1,7 +1,7 @@
 <?php
 
 /*
- * BigBlueButton.class.php - BigBlueButton Stud.IP Integration
+ * Stud.IP Video Conference Services Integration
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -9,15 +9,18 @@
  * the License, or (at your option) any later version.
  *
  * @author      Till Glöggler <till.gloeggler@elan-ev.de>
- * @copyright   2011 ELAN e.V. <http://www.elan-ev.de>
+ * @author      Christian Flothmann <christian.flothmann@uos.de>
+ * @copyright   2011-2014 ELAN e.V. <http://www.elan-ev.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
 
 require_once __DIR__.'/vendor/autoload.php';
 
-class BBBPlugin extends StudipPlugin implements StandardPlugin
+class VideoConferencePlugin extends StudipPlugin implements StandardPlugin
 {
+    const NAVIGATION_ITEM_NAME = 'video-conferences';
+
     private $assetsUrl;
 
     public function __construct() {
@@ -30,7 +33,7 @@ class BBBPlugin extends StudipPlugin implements StandardPlugin
 
         if (!version_compare($GLOBALS['SOFTWARE_VERSION'], '2.3', '>')) {
             $navigation = $this->getTabNavigation(Request::get('cid', $GLOBALS['SessSemName'][1]));
-            Navigation::insertItem('/course/BBBPlugin', $navigation['BBBPlugin'], null); 
+            Navigation::insertItem('/course/'.self::NAVIGATION_ITEM_NAME, $navigation['VideoConference'], null);
         }
 
         $this->assetsUrl = rtrim($this->getPluginURL(), '/').'/assets';
@@ -51,10 +54,11 @@ class BBBPlugin extends StudipPlugin implements StandardPlugin
     }
 
     public function getTabNavigation($course_id) {
-        $main = new Navigation("Konferenzen");
-        $main->setURL(PluginEngine::getURL('BBBPlugin/index'));
-        $main->setImage('icons/16/white/chat.png', array('title', 'Big Blue Button'));
-        return array('BBBPlugin' => $main);
+        $main = new Navigation(_('Konferenzen'));
+        $main->setURL(PluginEngine::getURL($this, array(), 'index'));
+        $main->setImage('icons/16/white/chat.png', array('title', _('Konferenzen')));
+
+        return array(self::NAVIGATION_ITEM_NAME => $main);
     }
 
     //TODO: show error message
@@ -63,14 +67,12 @@ class BBBPlugin extends StudipPlugin implements StandardPlugin
     }
     
     /**
-     * This method dispatches all actions.
-     *
-     * @param string   part of the dispatch path that was not consumed
+     * {@inheritdoc}
      */
     function perform($unconsumed_path)
     {
-        $trails_root = $this->getPluginPath() .'/app';
-        $dispatcher = new Trails_Dispatcher($trails_root, PluginEngine::getUrl('BBBPlugin/index'), 'index');
+        $trails_root = $this->getPluginPath().'/app';
+        $dispatcher = new Trails_Dispatcher($trails_root, PluginEngine::getUrl($this, array(), 'index'), 'index');
         $dispatcher->dispatch($unconsumed_path);
 
     }

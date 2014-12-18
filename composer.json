@@ -1,6 +1,6 @@
 {
-    "name": "elanev/big-blue-button-plugin",
-    "description": "integrate Big Blue Button conferences into the Stud.IP LMS",
+    "name": "elanev/video-conference-plugin",
+    "description": "integrate video conference services into the Stud.IP LMS",
     "require": {
         "guzzle/guzzle": "~3"
     },

@@ -1,5 +1,5 @@
 <?php
-/** @var BBBPlugin $plugin */
+/** @var VideoConferencePlugin $plugin */
 /** @var bool $configured */
 /** @var bool $canModifyCourse */
 /** @var ElanEv\Model\Meeting[] $meetings */
@@ -10,7 +10,7 @@
     <?= MessageBox::info(_('Es wurden noch keine Konferenzverbindungen eingerichtet.')) ?>
 
     <? if ($GLOBALS['perm']->have_perm('root')) : ?>
-        <form method="post" action="<?= PluginEngine::getLink("BBBPlugin/index/saveConfig") ?>">
+        <form method="post" action="<?= PluginEngine::getLink($plugin, array(), 'index/saveConfig') ?>">
             URL des BBB-Servers:<br>
             <input type="text" name="bbb_url" size="50"><br><br>
 
@@ -79,11 +79,11 @@
                     </div>
                 </td>
                 <?php if ($canModifyCourse): ?>
-                    <td><input type="checkbox"<?=$meeting->active ? ' checked="checked"' : ''?> data-meeting-enable-url="<?=PluginEngine::getLink("BBBPlugin/index/enable/".$meeting->id)?>"></td>
+                    <td><input type="checkbox"<?=$meeting->active ? ' checked="checked"' : ''?> data-meeting-enable-url="<?=PluginEngine::getLink($plugin, array(), 'index/enable/'.$meeting->id)?>"></td>
                 <?php endif; ?>
                 <td>
                     <?php if ($canModifyCourse): ?>
-                        <a href="#" title="<?=_('Meeting umbenennen')?>" class="edit-meeting" data-meeting-rename-url="<?=PluginEngine::getLink("BBBPlugin/index/rename/".$meeting->id)?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/edit.png"></a>
+                        <a href="#" title="<?=_('Meeting umbenennen')?>" class="edit-meeting" data-meeting-rename-url="<?=PluginEngine::getLink($plugin, array(), 'index/rename/'.$meeting->id)?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/edit.png"></a>
                         <?php if ($meeting->join_as_moderator): ?>
                             <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('ändern zu: nur DozentInnen und TutorInnen haben Moderationsrechte')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/check-circle.png"></a>
                         <?php else: ?>

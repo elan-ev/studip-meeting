@@ -1,5 +1,5 @@
-BigBlueButton
-=============
+Stud.IP Video Conference Plugin
+===============================
 
 [![Build Status](https://travis-ci.org/virtUOS/studip-bigbluebutton.svg?branch=master)](https://travis-ci.org/virtUOS/studip-bigbluebutton)
 
