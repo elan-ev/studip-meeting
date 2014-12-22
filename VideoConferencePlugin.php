@@ -17,6 +17,8 @@
 
 require_once __DIR__.'/vendor/autoload.php';
 
+use ElanEv\Model\Meeting;
+
 class VideoConferencePlugin extends StudipPlugin implements StandardPlugin
 {
     const NAVIGATION_ITEM_NAME = 'video-conferences';
@@ -43,8 +45,41 @@ class VideoConferencePlugin extends StudipPlugin implements StandardPlugin
         return null;
     }
 
-    public function getIconNavigation($course_id, $last_visit, $user_id = null) {
-        return null;
+    /**
+     * {@inheritdoc}
+     */
+    public function getIconNavigation($courseId, $lastVisit, $userId = null)
+    {
+        /** @var Seminar_Perm $perm */
+        $perm = $GLOBALS['perm'];
+
+        if ($perm->have_studip_perm('tutor', $courseId)) {
+            $courses = Meeting::findByCourseId($courseId);
+        } else {
+            $courses = Meeting::findActiveByCourseId($courseId);
+        }
+
+        $recentMeetings = 0;
+
+        foreach ($courses as $course) {
+            if ($course->mkdate >= $lastVisit) {
+                $recentMeetings++;
+            }
+        }
+
+        $navigation = new Navigation(_('Konferenzen'), PluginEngine::getLink($this, array(), 'index'));
+
+        if ($recentMeetings > 0) {
+            $navigation->setImage('icons/20/red/chat.png', array(
+                'title' => sprintf(_('%d Konferenz(en), %d neue'), count($courses), $recentMeetings),
+            ));
+        } else {
+            $navigation->setImage('icons/20/grey/chat.png', array(
+                'title' => sprintf(_('%d Konferenz(en)'), count($courses)),
+            ));
+        }
+
+        return $navigation;
     }
     
     /* interface method */
