@@ -17,6 +17,7 @@
 
 require_once __DIR__.'/vendor/autoload.php';
 
+use ElanEv\Model\CourseConfig;
 use ElanEv\Model\Meeting;
 
 class VideoConferencePlugin extends StudipPlugin implements StandardPlugin
@@ -67,7 +68,8 @@ class VideoConferencePlugin extends StudipPlugin implements StandardPlugin
             }
         }
 
-        $navigation = new Navigation(_('Konferenzen'), PluginEngine::getLink($this, array(), 'index'));
+        $courseConfig = CourseConfig::findByCourseId($courseId);
+        $navigation = new Navigation($courseConfig->title, PluginEngine::getLink($this, array(), 'index'));
 
         if ($recentMeetings > 0) {
             $navigation->setImage('icons/20/red/chat.png', array(
@@ -88,10 +90,15 @@ class VideoConferencePlugin extends StudipPlugin implements StandardPlugin
         return array();
     }
 
-    public function getTabNavigation($course_id) {
-        $main = new Navigation(_('Konferenzen'));
+    /**
+     * {@inheritdoc}
+     */
+    public function getTabNavigation($courseId)
+    {
+        $courseConfig = CourseConfig::findByCourseId($courseId);
+        $main = new Navigation($courseConfig->title);
         $main->setURL(PluginEngine::getURL($this, array(), 'index'));
-        $main->setImage('icons/16/white/chat.png', array('title', _('Konferenzen')));
+        $main->setImage('icons/16/white/chat.png', array('title', $courseConfig->title));
 
         return array(self::NAVIGATION_ITEM_NAME => $main);
     }

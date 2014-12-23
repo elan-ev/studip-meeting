@@ -19,6 +19,7 @@ require_once 'app/controllers/studip_controller.php';
 
 use ElanEv\Driver\DriverFactory;
 use ElanEv\Driver\JoinParameters;
+use ElanEv\Model\CourseConfig;
 use ElanEv\Model\Join;
 use ElanEv\Model\Meeting;
 
@@ -27,11 +28,14 @@ use ElanEv\Model\Meeting;
  * @property bool                   $configured
  * @property \Seminar_Perm          $perm
  * @property \Flexi_TemplateFactory $templateFactory
+ * @property CourseConfig           $courseConfig
  * @property bool                   $confirmDeleteMeeting
+ * @property bool                   $saved
  * @property string[]               $questionOptions
  * @property bool                   $canModifyCourse
  * @property array                  $errors
  * @property Meeting[]              $meetings
+ * @property CourseConfig           $config
  */
 class IndexController extends StudipController
 {
@@ -73,13 +77,42 @@ class IndexController extends StudipController
         PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Konferenzen'));
         PageLayout::addScript($this->plugin->getAssetsUrl().'/js/meetings.js');
         PageLayout::addStylesheet($this->plugin->getAssetsUrl().'/css/meetings.css');
+
+        if (Navigation::hasItem('course/'.VideoConferencePlugin::NAVIGATION_ITEM_NAME)) {
+            Navigation::activateItem('course/'.VideoConferencePlugin::NAVIGATION_ITEM_NAME);
+            /** @var Navigation $navItem */
+            $navItem = Navigation::getItem('course/'.VideoConferencePlugin::NAVIGATION_ITEM_NAME);
+            $navItem->setImage('icons/16/black/chat.png');
+        }
+
+        $this->courseConfig = CourseConfig::findByCourseId($this->getCourseId());
+
+        $sidebar = Sidebar::Get();
+        $settings = new ActionsWidget();
+        $settings->addCSSClass('sidebar-meeting-info');
+        $settings->setTitle('Informationen');
+        $settings->addLink(_('Alle Informationen anzeigen'), '#', null, array(
+            'class' => 'toggle-info show-info',
+            'data-show-text' => _('Alle Informationen anzeigen'),
+            'data-hide-text' => _('Alle Informationen ausblenden'),
+        ));
+        $sidebar->addWidget($settings);
+
+        if ($this->userCanModifyCourse($this->getCourseId())) {
+            $navigation = new ActionsWidget();
+            $navigation->addCSSClass('sidebar-meeting-navigation');
+            $navigation->setTitle('Navigation');
+            $navigation->addLink($this->courseConfig->title, PluginEngine::getLink($this->plugin, array(), 'index'));
+            $navigation->addLink(_('Konfiguration'), PluginEngine::getLink($this->plugin, array(), 'index/config'));
+            $sidebar->addWidget($navigation);
+        }
     }
 
     public function index_action()
     {
         $this->errors = array();
 
-        if (Request::method() == 'POST') {
+        if (Request::method() === 'POST') {
             if (!Request::get('name')) {
                 $this->errors[] = _('Bitte geben Sie dem Meeting einen Namen.');
             }
@@ -102,13 +135,6 @@ class IndexController extends StudipController
             }
         }
 
-        if (Navigation::hasItem('course/'.VideoConferencePlugin::NAVIGATION_ITEM_NAME)) {
-            Navigation::activateItem('course/'.VideoConferencePlugin::NAVIGATION_ITEM_NAME);
-            /** @var Navigation $navItem */
-            $navItem = Navigation::getItem('course/'.VideoConferencePlugin::NAVIGATION_ITEM_NAME);
-            $navItem->setImage('icons/16/black/chat.png');
-        }
-
         $this->canModifyCourse = $this->userCanModifyCourse($this->getCourseId());
 
         if ($this->canModifyCourse) {
@@ -116,17 +142,6 @@ class IndexController extends StudipController
         } else {
             $this->meetings = \ElanEv\Model\Meeting::findActiveByCourseId($this->getCourseId());
         }
-
-        $sidebar = Sidebar::Get();
-        $settings = new ActionsWidget();
-        $settings->addCSSClass('sidebar-meeting-info');
-        $settings->setTitle('Informationen');
-        $settings->addLink(_('Alle Informationen anzeigen'), '#', null, array(
-            'class' => 'toggle-info show-info',
-            'data-show-text' => _('Alle Informationen anzeigen'),
-            'data-hide-text' => _('Alle Informationen ausblenden'),
-        ));
-        $sidebar->addWidget($settings);
     }
 
     /**
@@ -239,6 +254,24 @@ class IndexController extends StudipController
         $lastJoin->store();
 
         $this->redirect($this->driver->getJoinMeetingUrl($joinParameters));
+    }
+
+    public function config_action()
+    {
+        $courseId = $this->getCourseId();
+
+        if (!$this->userCanModifyCourse($courseId)) {
+            $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
+        }
+
+        if (Request::method() === 'POST') {
+            $this->courseConfig->title = Request::get('title');
+            $this->courseConfig->introduction = Request::get('introduction');
+            $this->courseConfig->store();
+            $this->saved = true;
+
+            $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index/config'));
+        }
     }
 
     public function saveConfig_action()

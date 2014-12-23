@@ -1,5 +1,6 @@
 <?php
 /** @var VideoConferencePlugin $plugin */
+/** @var ElanEv\Model\CourseConfig $courseConfig */
 /** @var Flexi_TemplateFactory $templateFactory */
 /** @var bool $configured */
 /** @var bool $confirmDeleteMeeting */
@@ -24,13 +25,17 @@
         </form>
     <?php endif; ?>
 <?php else: ?>
-    <? if ($confirmDeleteMeeting): ?>
+    <?php if ($confirmDeleteMeeting): ?>
         <?= $templateFactory->render('shared/question', $questionOptions) ?>
     <? endif ?>
 
+    <?php if ($courseConfig->introduction): ?>
+        <div class="vc_introduction"><?= nl2br(htmlReady($courseConfig->introduction)) ?></div>
+    <?php endif ?>
+
     <div>
         <table class="default collapsable tablesorter conference-meetings">
-            <caption><?=_('Konferenzen')?></caption>
+            <caption><?=$courseConfig->title?></caption>
             <colgroup>
                 <col>
                 <col style="width: 100px;">
