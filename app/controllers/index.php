@@ -30,16 +30,11 @@ use ElanEv\Model\Meeting;
  * @property bool                   $confirmDeleteMeeting
  * @property string[]               $questionOptions
  * @property bool                   $canModifyCourse
- * @property bool                   $canJoin
- * @property string                 $courseId
  * @property array                  $errors
  * @property Meeting[]              $meetings
  */
 class IndexController extends StudipController
 {
-    private static $BBB_URL;
-    private static $BBB_SALT;
-
     /**
      * @var ElanEv\Driver\DriverInterface
      */
@@ -70,35 +65,14 @@ class IndexController extends StudipController
 
         parent::before_filter($action, $args);
 
-        $this->flash = Trails_Flash::instance();
-
         // set default layout
-        $layout = $GLOBALS['template_factory']->open('layouts/base');
+        $this->templateFactory = $GLOBALS['template_factory'];
+        $layout = $this->templateFactory->open('layouts/base');
         $this->set_layout($layout);
 
         PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Konferenzen'));
         PageLayout::addScript($this->plugin->getAssetsUrl().'/js/meetings.js');
         PageLayout::addStylesheet($this->plugin->getAssetsUrl().'/css/meetings.css');
-
-        if ($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] && $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] != '/') {
-            $this->picturepath = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] .'/'. $this->dispatcher->trails_root . '/images';
-        } else {
-            $this->picturepath = '/'. $this->dispatcher->trails_root . '/images';
-        }
-
-        self::$BBB_URL  = Config::get()->getValue('BBB_URL');
-        self::$BBB_SALT = Config::get()->getValue('BBB_SALT');
-
-        if ($this->canJoin($this->getCourseId())) {
-            $this->allow_join = true;
-        }
-
-        $this->courseId = $this->getCourseId();
-        $this->modPw = md5($this->courseId . 'modPw');
-        $this->attPw = md5($this->courseId . 'attPw');
-
-        $meetings = Meeting::findByCourseId($this->courseId);
-        $this->meeting_running = count($meetings) > 0 && $this->driver->isMeetingRunning($meetings[0]->getMeetingParameters());
     }
 
     public function index_action()
@@ -119,7 +93,6 @@ class IndexController extends StudipController
             $meeting = new Meeting(Request::get('delete'));
 
             if (!$meeting->isNew()) {
-                $this->templateFactory = $GLOBALS['template_factory'];
                 $this->confirmDeleteMeeting = true;
                 $this->questionOptions = array(
                     'question' => _('Wollen Sie wirklich das Meeting "'.$meeting->name.'" löschen?'),
@@ -162,17 +135,17 @@ class IndexController extends StudipController
     public function createMeeting_action()
     {
         if (!$this->userCanModifyCourse($this->getCourseId())) {
-            $this->error();
+            $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
         }
 
-        $course = Course::find($this->courseId);
+        $course = Course::find($this->getCourseId());
 
         if ($this->createMeeting($course->name)) {
             // get the join url
             $joinParameters = new JoinParameters();
-            $joinParameters->setMeetingId($this->courseId);
+            $joinParameters->setMeetingId($this->getCourseId());
             $joinParameters->setUsername(get_username($GLOBALS['user']->id));
-            $joinParameters->setPassword($this->modPw);
+            $joinParameters->setPassword($this->generateModeratorPassword());
             $joinParameters->setHasModerationPermissions(true);
 
             $this->redirect($this->driver->getJoinMeetingUrl($joinParameters));
@@ -235,8 +208,8 @@ class IndexController extends StudipController
      */
     public function joinMeeting_action($meetingId)
     {
-        if(!$this->meeting_running) {
-            $this->error();
+        if(!$this->hasActiveMeeting()) {
+            $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
         }
 
         /** @var Seminar_User $user */
@@ -253,10 +226,10 @@ class IndexController extends StudipController
         $joinParameters->setLastName($user->Nachname);
 
         if ($this->userCanModifyMeeting($meeting) || $meeting->join_as_moderator) {
-            $joinParameters->setPassword($this->modPw);
+            $joinParameters->setPassword($this->generateModeratorPassword());
             $joinParameters->setHasModerationPermissions(true);
         } else {
-            $joinParameters->setPassword($this->attPw);
+            $joinParameters->setPassword($this->generateAttendeePassword());
             $joinParameters->setHasModerationPermissions(false);
         }
 
@@ -266,12 +239,6 @@ class IndexController extends StudipController
         $lastJoin->store();
 
         $this->redirect($this->driver->getJoinMeetingUrl($joinParameters));
-    }
-
-    public function meetingInfo_action($meetingId, $moderatorPw)
-    {
-        return true;
-        // get details about a currently running meeting
     }
 
     public function saveConfig_action()
@@ -315,12 +282,12 @@ class IndexController extends StudipController
         global $user;
 
         $meeting = new Meeting();
-        $meeting->course_id = $this->courseId;
+        $meeting->course_id = $this->getCourseId();
         $meeting->user_id = $user->cfg->getUserId();
         $meeting->name = $name;
         $meeting->driver = $this->driver->getName();
-        $meeting->attendee_password = $this->attPw;
-        $meeting->moderator_password = $this->modPw;
+        $meeting->attendee_password = $this->generateAttendeePassword();
+        $meeting->moderator_password = $this->generateModeratorPassword();
         $meeting->store();
         $meetingParameters = $meeting->getMeetingParameters();
 
@@ -334,6 +301,13 @@ class IndexController extends StudipController
         return true;
     }
 
+    private function hasActiveMeeting()
+    {
+        $meetings = Meeting::findByCourseId($this->getCourseId());
+
+        return count($meetings) > 0 && $this->driver->isMeetingRunning($meetings[0]->getMeetingParameters());
+    }
+
     private function userCanModifyCourse($courseId)
     {
         return $this->perm->have_studip_perm('tutor', $courseId);
@@ -344,8 +318,13 @@ class IndexController extends StudipController
         return $this->userCanModifyCourse($meeting->course_id);
     }
 
-    private function canJoin($meetingId)
+    private function generateModeratorPassword()
     {
-        return $this->userCanModifyCourse($meetingId) || $this->perm->have_studip_perm('autor', $meetingId);
+        return md5($this->getCourseId().'modPw');
+    }
+
+    private function generateAttendeePassword()
+    {
+        return md5($this->getCourseId().'attPw');
     }
 }
