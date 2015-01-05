@@ -22,8 +22,9 @@ class DfnVcDriverTest extends AbstractDriverTest
     {
         $identifier = md5(uniqid());
         $parameters = new MeetingParameters();
+        $parameters->setMeetingId(3);
         $parameters->setIdentifier($identifier);
-        $parameters->setMeetingName('meeting-name');
+        $parameters->setMeetingName('meeting name');
         $sessionCookie = md5(uniqid());
 
         return array(
@@ -47,7 +48,7 @@ class DfnVcDriverTest extends AbstractDriverTest
                     ),
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=sco-update&type=meeting&name='.$identifier.'&folder-id=383324&session='.$sessionCookie,
+                        'uri' => '/lmsapi/xml?action=sco-update&type=meeting&name=3%20-%20meeting%20name&folder-id=383324&session='.$sessionCookie,
                         'response' => trim($this->createScoUpdateResponse()),
                     ),
                     array(
