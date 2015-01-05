@@ -61,6 +61,46 @@ class IndexController extends StudipController
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    function before_filter(&$action, &$args)
+    {
+        $this->validate_args($args, array('option', 'option'));
+
+        parent::before_filter($action, $args);
+
+        $this->flash = Trails_Flash::instance();
+
+        // set default layout
+        $layout = $GLOBALS['template_factory']->open('layouts/base');
+        $this->set_layout($layout);
+
+        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Konferenzen'));
+        PageLayout::addScript($this->plugin->getAssetsUrl().'/js/meetings.js');
+        PageLayout::addStylesheet($this->plugin->getAssetsUrl().'/css/meetings.css');
+
+        if ($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] && $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] != '/') {
+            $this->picturepath = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] .'/'. $this->dispatcher->trails_root . '/images';
+        } else {
+            $this->picturepath = '/'. $this->dispatcher->trails_root . '/images';
+        }
+
+        self::$BBB_URL  = Config::get()->getValue('BBB_URL');
+        self::$BBB_SALT = Config::get()->getValue('BBB_SALT');
+
+        if ($this->canJoin($this->getCourseId())) {
+            $this->allow_join = true;
+        }
+
+        $this->courseId = $this->getCourseId();
+        $this->modPw = md5($this->courseId . 'modPw');
+        $this->attPw = md5($this->courseId . 'attPw');
+
+        $meetings = Meeting::findByCourseId($this->courseId);
+        $this->meeting_running = count($meetings) > 0 && $this->driver->isMeetingRunning($meetings[0]->getMeetingParameters());
+    }
+
     public function index_action()
     {
         $this->errors = array();
@@ -250,16 +290,6 @@ class IndexController extends StudipController
     /* * * * * H E L P E R   F U N C T I O N S * * * * */
     /* * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    /**
-     * Initiate plugin params:
-     *
-     * 'perm'           => 'mod' has BBB moderator permission
-     *                     'att' has BBB attendee permission
-     * 'allow_join      => true if user is allowed to join
-     * 'meeting_running'=> true if meeting is running
-     * 'path'           => relative path to plugin
-     */
-
     private function getCourseId()
     {
         if (!Request::option('cid')) {
@@ -272,49 +302,6 @@ class IndexController extends StudipController
         }
 
         return Request::option('cid');
-    }
-
-    /**
-     * Common code for all actions: set default layout and page title.
-     *
-     * @param type $action
-     * @param type $args
-     */
-    function before_filter(&$action, &$args)
-    {
-        $this->validate_args($args, array('option', 'option'));
-
-        parent::before_filter($action, $args);
-
-        $this->flash = Trails_Flash::instance();
-
-        // set default layout
-        $layout = $GLOBALS['template_factory']->open('layouts/base');
-        $this->set_layout($layout);
-
-        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Konferenzen'));
-        PageLayout::addScript($this->plugin->getAssetsUrl().'/js/meetings.js');
-        PageLayout::addStylesheet($this->plugin->getAssetsUrl().'/css/meetings.css');
-
-        if ($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] && $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] != '/') {
-            $this->picturepath = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] .'/'. $this->dispatcher->trails_root . '/images';
-        } else {
-            $this->picturepath = '/'. $this->dispatcher->trails_root . '/images';
-        }
-
-        self::$BBB_URL  = Config::get()->getValue('BBB_URL');
-        self::$BBB_SALT = Config::get()->getValue('BBB_SALT');
-
-        if ($this->canJoin($this->getCourseId())) {
-            $this->allow_join = true;
-        }
-
-        $this->courseId = $this->getCourseId();
-        $this->modPw = md5($this->courseId . 'modPw');
-        $this->attPw = md5($this->courseId . 'attPw');
-
-        $meetings = Meeting::findByCourseId($this->courseId);
-        $this->meeting_running = count($meetings) > 0 && $this->driver->isMeetingRunning($meetings[0]->getMeetingParameters());
     }
 
     /**
