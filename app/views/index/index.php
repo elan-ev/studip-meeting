@@ -60,7 +60,6 @@
                     ?>
                     <tr>
                         <td class="meeting-name">
-                            <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/20/grey/info-circle.png" class="info">
                             <a href="<?=$joinUrl?>" title="<?=_('Meeting betreten')?>" target="_blank"><?=htmlReady($meeting->name)?></a>
                             <input type="text" name="name">
                             <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/20/grey/accept.png" class="accept-button" title="<?=_('Änderungen speichern')?>">
