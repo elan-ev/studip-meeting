@@ -88,24 +88,29 @@ class IndexController extends StudipController
         $this->courseConfig = CourseConfig::findByCourseId($this->getCourseId());
 
         $sidebar = Sidebar::Get();
-        $settings = new ActionsWidget();
-        $settings->addCSSClass('sidebar-meeting-info');
-        $settings->setTitle('Informationen');
-        $settings->addLink(_('Alle Informationen anzeigen'), '#', null, array(
-            'class' => 'toggle-info show-info',
-            'data-show-text' => _('Alle Informationen anzeigen'),
-            'data-hide-text' => _('Alle Informationen ausblenden'),
-        ));
-        $sidebar->addWidget($settings);
 
         if ($this->userCanModifyCourse($this->getCourseId())) {
             $navigation = new ActionsWidget();
             $navigation->addCSSClass('sidebar-meeting-navigation');
             $navigation->setTitle('Navigation');
             $navigation->addLink($this->courseConfig->title, PluginEngine::getLink($this->plugin, array(), 'index'));
-            $navigation->addLink(_('Konfiguration'), PluginEngine::getLink($this->plugin, array(), 'index/config'));
             $sidebar->addWidget($navigation);
         }
+
+        $settings = new ActionsWidget();
+        $settings->addCSSClass('sidebar-meeting-info');
+        $settings->setTitle('Aktionen');
+        $settings->addLink(_('Alle Informationen anzeigen'), '#',  'icons/16/blue/info-circle.png', array(
+            'class' => 'toggle-info show-info',
+            'data-show-text' => _('Alle Informationen anzeigen'),
+            'data-hide-text' => _('Alle Informationen ausblenden'),
+        ));
+
+        if ($this->userCanModifyCourse($this->getCourseId())) {
+            $settings->addLink(_('Anpassen'), PluginEngine::getLink($this->plugin, array(), 'index/config'), 'icons/16/blue/edit.png');
+        }
+
+        $sidebar->addWidget($settings);
     }
 
     public function index_action()
