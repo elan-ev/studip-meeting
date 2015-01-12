@@ -14,11 +14,11 @@
     <fieldset style="padding-top: 0;">
         <fieldset>
             <label for="vc_config_title"><?= _('Titel:') ?></label>
-            <input type="text" name="title" id="vc_config_title" value="<?= htmlReady($courseConfig->title) ?>" size="40" autofocus>
+            <input type="text" name="title" id="vc_config_title" value="<?= htmlReady($courseConfig->title) ?>" size="80" autofocus>
         </fieldset>
         <fieldset>
             <label for="vc_config_introduction"><?= _('Einleitungstext:') ?></label>
-            <textarea name="introduction" id="vc_config_introduction" cols="40"><?= htmlReady($courseConfig->introduction) ?></textarea>
+            <textarea name="introduction" id="vc_config_introduction" cols="80" class="add_toolbar"><?= htmlReady($courseConfig->introduction) ?></textarea>
         </fieldset>
     </fieldset>
     <div data-dialog-button>

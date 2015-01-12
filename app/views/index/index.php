@@ -30,7 +30,7 @@
     <? endif ?>
 
     <?php if ($courseConfig->introduction): ?>
-        <div class="vc_introduction"><?= nl2br(htmlReady($courseConfig->introduction)) ?></div>
+        <div class="vc_introduction"><?= $courseConfig->introduction ?></div>
     <?php endif ?>
 
     <div>
