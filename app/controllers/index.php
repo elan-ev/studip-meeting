@@ -102,7 +102,7 @@ class IndexController extends StudipController
         $settings->setTitle('Aktionen');
 
         if ($this->userCanModifyCourse($this->getCourseId())) {
-            $settings->addLink(_('Anpassen'), PluginEngine::getLink($this->plugin, array(), 'index/config'), 'icons/16/blue/edit.png');
+            $settings->addLink(_('Anpassen'), PluginEngine::getLink($this->plugin, array(), 'index/config'), 'icons/16/blue/admin.png');
         }
 
         $settings->addLink(_('Alle Informationen anzeigen'), '#',  'icons/16/blue/info-circle.png', array(
