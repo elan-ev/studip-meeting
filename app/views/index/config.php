@@ -18,7 +18,7 @@
         </fieldset>
         <fieldset>
             <label for="vc_config_introduction"><?= _('Einleitungstext:') ?></label>
-            <textarea name="introduction" id="vc_config_introduction" cols="80" class="add_toolbar"><?= htmlReady($courseConfig->introduction) ?></textarea>
+            <textarea name="introduction" id="vc_config_introduction" cols="80" rows="10" class="add_toolbar"><?= htmlReady($courseConfig->introduction) ?></textarea>
         </fieldset>
     </fieldset>
     <div data-dialog-button>
