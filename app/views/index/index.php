@@ -93,9 +93,9 @@
                             <?php if ($canModifyCourse): ?>
                                 <a href="#" title="<?=_('Meeting umbenennen')?>" class="edit-meeting" data-meeting-rename-url="<?=PluginEngine::getLink($plugin, array(), 'index/rename/'.$meeting->id)?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/20/blue/edit.png"></a>
                                 <?php if ($meeting->join_as_moderator): ?>
-                                    <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('Ändern zu: nur DozentInnen und TutorInnen haben Moderationsrechte')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/moderator-enabled.png"></a>
+                                    <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('Ändern zu: Teilnehmende haben keine Moderationsrechte')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/moderator-enabled.png"></a>
                                 <?php else: ?>
-                                    <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('Ändern zu: alle Teilnehmenden haben Moderationsrechte')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/moderator-disabled.png"></a>
+                                    <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('Ändern zu: Teilnehmende haben Moderationsrechte')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/moderator-disabled.png"></a>
                                 <?php endif; ?>
                                 <a href="<?=$deleteUrl?>" title="<?=_('Meeting löschen')?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/20/blue/trash.png"></a>
                             <?php endif; ?>
