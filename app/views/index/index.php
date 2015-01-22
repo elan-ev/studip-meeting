@@ -30,7 +30,7 @@
     <? endif ?>
 
     <?php if ($courseConfig->introduction): ?>
-        <div class="vc_introduction"><?= $courseConfig->introduction ?></div>
+        <div class="vc_introduction"><?= formatReady($courseConfig->introduction) ?></div>
     <?php endif ?>
 
     <div>
