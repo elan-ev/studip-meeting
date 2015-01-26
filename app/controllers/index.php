@@ -106,7 +106,7 @@ class IndexController extends StudipController
             $settings->addLink(_('Anpassen'), PluginEngine::getLink($this->plugin, array(), 'index/config'), 'icons/16/blue/admin.png');
         }
 
-        $settings->addLink(_('Alle Informationen anzeigen'), '#',  'icons/16/blue/info-circle.png', array(
+        $settings->addLink(_('Informationen anzeigen'), '#',  'icons/16/blue/info-circle.png', array(
             'class' => 'toggle-info show-info',
             'data-show-text' => _('Informationen anzeigen'),
             'data-hide-text' => _('Informationen ausblenden'),
