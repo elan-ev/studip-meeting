@@ -107,8 +107,8 @@ class IndexController extends StudipController
 
         $settings->addLink(_('Alle Informationen anzeigen'), '#',  'icons/16/blue/info-circle.png', array(
             'class' => 'toggle-info show-info',
-            'data-show-text' => _('Alle Informationen anzeigen'),
-            'data-hide-text' => _('Alle Informationen ausblenden'),
+            'data-show-text' => _('Informationen anzeigen'),
+            'data-hide-text' => _('Informationen ausblenden'),
         ));
 
         $sidebar->addWidget($settings);
