@@ -41,6 +41,7 @@ class Meeting extends \SimpleORMap
             'thru_assoc_key' => 'course_id',
             'assoc_foreign_key' => 'seminar_id',
             'on_store' => true,
+            'on_delete' => true,
         );
 
         parent::__construct($id);
