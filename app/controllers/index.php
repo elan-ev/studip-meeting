@@ -93,14 +93,14 @@ class IndexController extends StudipController
         if ($this->userCanModifyCourse($this->getCourseId())) {
             $navigation = new ActionsWidget();
             $navigation->addCSSClass('sidebar-meeting-navigation');
-            $navigation->setTitle('Navigation');
+            $navigation->setTitle(_('Navigation'));
             $navigation->addLink($this->courseConfig->title, PluginEngine::getLink($this->plugin, array(), 'index'));
             $sidebar->addWidget($navigation);
         }
 
         $settings = new ActionsWidget();
         $settings->addCSSClass('sidebar-meeting-info');
-        $settings->setTitle('Aktionen');
+        $settings->setTitle(_('Aktionen'));
 
         if ($this->userCanModifyCourse($this->getCourseId())) {
             $settings->addLink(_('Anpassen'), PluginEngine::getLink($this->plugin, array(), 'index/config'), 'icons/16/blue/admin.png');
@@ -149,7 +149,7 @@ class IndexController extends StudipController
             if (!$meeting->isNew()) {
                 $this->confirmDeleteMeeting = true;
                 $this->questionOptions = array(
-                    'question' => _('Wollen Sie wirklich das Meeting "'.$meeting->name.'" löschen?'),
+                    'question' => _('Wollen Sie wirklich das Meeting "').$meeting->name._('" löschen?'),
                     'approvalLink' => PluginEngine::getLink($this->plugin, array(), 'index/delete/'.$meeting->id),
                     'disapprovalLink' => PluginEngine::getLink($this->plugin, array(), 'index'),
                 );

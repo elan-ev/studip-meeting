@@ -120,7 +120,7 @@
                                         </ul>
                                     <?php endif; ?>
                                     <input type="text" name="name" placeholder="">
-                                    <input type="submit" value="Meeting erstellen">
+                                    <input type="submit" value="<?= _('Meeting erstellen') ?>">
                                 </fieldset>
                             </form>
 
