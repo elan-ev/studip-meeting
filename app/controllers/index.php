@@ -35,6 +35,7 @@ use ElanEv\Model\Meeting;
  * @property bool                   $canModifyCourse
  * @property array                  $errors
  * @property Meeting[]              $meetings
+ * @property Meeting[]              $userMeetings
  * @property CourseConfig           $config
  */
 class IndexController extends StudipController
@@ -116,15 +117,29 @@ class IndexController extends StudipController
 
     public function index_action()
     {
+        /** @var \Seminar_User $user */
+        $user = $GLOBALS['user'];
+        $course = new Course($this->getCourseId());
         $this->errors = array();
 
         if (Request::method() === 'POST') {
-            if (!Request::get('name')) {
-                $this->errors[] = _('Bitte geben Sie dem Meeting einen Namen.');
+            if (Request::get('action') === 'create') {
+                if (!Request::get('name')) {
+                    $this->errors[] = _('Bitte geben Sie dem Meeting einen Namen.');
+                }
+
+                if (count($this->errors) === 0) {
+                    $this->createMeeting(\Request::get('name'));
+                }
             }
 
-            if (count($this->errors) === 0) {
-                $this->createMeeting(\Request::get('name'));
+            if (Request::get('action') === 'link' && ($linkedMeetingId = Request::int('meeting_id')) > 0) {
+                $meeting = new Meeting($linkedMeetingId);
+
+                if ($user->cfg->getUserId() === $meeting->user_id && !$meeting->isAssignedToCourse($course)) {
+                    $meeting->courses[] = new \Course($this->getCourseId());
+                    $meeting->store();
+                }
             }
         }
 
@@ -145,8 +160,10 @@ class IndexController extends StudipController
 
         if ($this->canModifyCourse) {
             $this->meetings = \ElanEv\Model\Meeting::findByCourseId($this->getCourseId());
+            $this->userMeetings = \ElanEv\Model\Meeting::findLinkableByUser($user, $course);
         } else {
             $this->meetings = \ElanEv\Model\Meeting::findActiveByCourseId($this->getCourseId());
+            $this->userMeetings = array();
         }
     }
 

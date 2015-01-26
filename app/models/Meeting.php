@@ -9,20 +9,20 @@ use ElanEv\Driver\MeetingParameters;
  *
  * @author Christian Flothmann <christian.flothmann@uos.de>
  *
- * @property int    $id
- * @property string $identifier
- * @property mixed  $remote_id
- * @property string $course_id
- * @property string $user_id
- * @property string $name
- * @property string $driver
- * @property bool   $active
- * @property string $attendee_password
- * @property string $moderator_password
- * @property bool   $join_as_moderator
- * @property int    $mkdate
- * @property int    $chdate
- * @property Join[] $joins
+ * @property int       $id
+ * @property string    $identifier
+ * @property mixed     $remote_id
+ * @property Meeting[] $courses
+ * @property string    $user_id
+ * @property string    $name
+ * @property string    $driver
+ * @property bool      $active
+ * @property string    $attendee_password
+ * @property string    $moderator_password
+ * @property bool      $join_as_moderator
+ * @property int       $mkdate
+ * @property int       $chdate
+ * @property Join[]    $joins
  */
 class Meeting extends \SimpleORMap
 {
@@ -90,6 +90,25 @@ class Meeting extends \SimpleORMap
     }
 
     /**
+     * Checks if the meeting is associated with a particular course.
+     *
+     * @param \Course $course The course to test
+     *
+     * @return bool True if the meeting and the course are associated, false
+     *              otherwise
+     */
+    public function isAssignedToCourse(\Course $course)
+    {
+        foreach ($this->courses as $assignedCourse) {
+            if ($assignedCourse == $course) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Finds all meetings for a course.
      *
      * @param string $courseId The course id
@@ -141,5 +160,44 @@ class Meeting extends \SimpleORMap
     public static function findActiveByCourse(\Seminar $course)
     {
         return static::findActiveByCourseId($course->id);
+    }
+
+    /**
+     * Finds all meetings that a certain user created.
+     *
+     * @param \Seminar_User $user The user
+     *
+     * @return Meeting[] The meetings
+     */
+    public static function findByUser(\Seminar_User $user)
+    {
+        return static::findBySQL('user_id = :user_id', array('user_id' => $user->cfg->getUserId()));
+    }
+
+    /**
+     * Finds all meetings that a certain user created and that can be linked
+     * to a particular course.
+     *
+     * A course can only be linked if it is not already associated with the
+     * meeting.
+     *
+     * @param \Seminar_User $user   The user
+     * @param \Course       $course The course in which the link should be
+     *                              added
+     *
+     * @return Meeting[] The meetings
+     */
+    public static function findLinkableByUser(\Seminar_User $user, \Course $course)
+    {
+        $meetings = static::findByUser($user);
+        $linkableMeetings = array();
+
+        foreach ($meetings as $meeting) {
+            if (!$meeting->isAssignedToCourse($course)) {
+                $linkableMeetings[] = $meeting;
+            }
+        }
+
+        return $linkableMeetings;
     }
 }
