@@ -146,7 +146,7 @@ class Meeting extends \SimpleORMap
     public static function findActiveByCourseId($courseId)
     {
         return static::findBySQL(
-            'INNER JOIN vc_meeting_course AS mc ON vc_meetings.id = mc.meeting_id WHERE mc.course_id AND active = 1',
+            'INNER JOIN vc_meeting_course AS mc ON vc_meetings.id = mc.meeting_id WHERE mc.course_id = :course_id AND active = 1',
             array('course_id' => $courseId)
         );
     }
