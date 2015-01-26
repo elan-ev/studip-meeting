@@ -337,7 +337,7 @@ class IndexController extends StudipController
         global $user;
 
         $meeting = new Meeting();
-        $meeting->course_id = $this->getCourseId();
+        $meeting->courses[] = new Course($this->getCourseId());
         $meeting->user_id = $user->cfg->getUserId();
         $meeting->name = $name;
         $meeting->driver = $this->driver->getName();
