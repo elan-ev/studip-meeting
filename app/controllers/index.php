@@ -122,24 +122,23 @@ class IndexController extends StudipController
         $course = new Course($this->getCourseId());
         $this->errors = array();
 
-        if (Request::method() === 'POST') {
-            if (Request::get('action') === 'create') {
-                if (!Request::get('name')) {
-                    $this->errors[] = _('Bitte geben Sie dem Meeting einen Namen.');
-                }
-
-                if (count($this->errors) === 0) {
-                    $this->createMeeting(\Request::get('name'));
-                }
+        if (Request::get('action') === 'create' && $this->userCanModifyCourse($this->getCourseId())) {
+            if (!Request::get('name')) {
+                $this->errors[] = _('Bitte geben Sie dem Meeting einen Namen.');
             }
 
-            if (Request::get('action') === 'link' && ($linkedMeetingId = Request::int('meeting_id')) > 0) {
-                $meeting = new Meeting($linkedMeetingId);
+            if (count($this->errors) === 0) {
+                $this->createMeeting(\Request::get('name'));
+            }
+        }
 
-                if ($user->cfg->getUserId() === $meeting->user_id && !$meeting->isAssignedToCourse($course)) {
-                    $meeting->courses[] = new \Course($this->getCourseId());
-                    $meeting->store();
-                }
+        if (Request::get('action') === 'link' && $this->userCanModifyCourse($this->getCourseId())) {
+            $linkedMeetingId = Request::int('meeting_id');
+            $meeting = new Meeting($linkedMeetingId);
+
+            if (!$meeting->isNew() && $user->cfg->getUserId() === $meeting->user_id && !$meeting->isAssignedToCourse($course)) {
+                $meeting->courses[] = new \Course($this->getCourseId());
+                $meeting->store();
             }
         }
 
