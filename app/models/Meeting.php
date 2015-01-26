@@ -34,6 +34,14 @@ class Meeting extends \SimpleORMap
             'assoc_foreign_key' => 'meeting_id',
             'on_delete' => 'delete',
         );
+        $this->has_and_belongs_to_many['courses'] = array(
+            'class_name' => 'Course',
+            'thru_table' => 'vc_meeting_course',
+            'thru_key' => 'meeting_id',
+            'thru_assoc_key' => 'course_id',
+            'assoc_foreign_key' => 'seminar_id',
+            'on_store' => true,
+        );
 
         parent::__construct($id);
 
@@ -90,7 +98,10 @@ class Meeting extends \SimpleORMap
      */
     public static function findByCourseId($courseId)
     {
-        return static::findBySQL('course_id = :course_id', array('course_id' => $courseId));
+        return static::findBySQL(
+            'INNER JOIN vc_meeting_course AS mc ON vc_meetings.id = mc.meeting_id WHERE mc.course_id = :course_id',
+            array('course_id' => $courseId)
+        );
     }
 
     /**
@@ -114,7 +125,10 @@ class Meeting extends \SimpleORMap
      */
     public static function findActiveByCourseId($courseId)
     {
-        return static::findBySQL('course_id = :course_id AND active = 1', array('course_id' => $courseId));
+        return static::findBySQL(
+            'INNER JOIN vc_meeting_course AS mc ON vc_meetings.id = mc.meeting_id WHERE mc.course_id AND active = 1',
+            array('course_id' => $courseId)
+        );
     }
 
     /**
