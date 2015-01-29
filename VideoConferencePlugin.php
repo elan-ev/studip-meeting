@@ -18,9 +18,9 @@
 require_once __DIR__.'/vendor/autoload.php';
 
 use ElanEv\Model\CourseConfig;
-use ElanEv\Model\Meeting;
+use ElanEv\Model\MeetingCourse;
 
-class VideoConferencePlugin extends StudipPlugin implements StandardPlugin
+class VideoConferencePlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
 {
     const NAVIGATION_ITEM_NAME = 'video-conferences';
 
@@ -28,6 +28,25 @@ class VideoConferencePlugin extends StudipPlugin implements StandardPlugin
 
     public function __construct() {
         parent::__construct();
+
+        $this->assetsUrl = rtrim($this->getPluginURL(), '/').'/assets';
+
+        /** @var \Seminar_Perm $perm */
+        $perm = $GLOBALS['perm'];
+        if ($perm->have_perm('root')) {
+            $item = new Navigation(_('Meetings'), PluginEngine::getLink($this, array(), 'index/all'));
+            $item->setImage($GLOBALS['ASSETS_URL'].'/images/icons/16/white/chat.png');
+
+            if (Navigation::hasItem('/admin/locations')) {
+                Navigation::addItem('/admin/locations/meetings', $item);
+            } else {
+                Navigation::addItem('/meetings', $item);
+            }
+        } elseif ($perm->have_perm('dozent')) {
+            $item = new Navigation(_('Meine Meetings'), PluginEngine::getLink($this, array(), 'index/my'));
+            $item->setImage($GLOBALS['ASSETS_URL'].'/images/icons/16/white/chat.png');
+            Navigation::addItem('/meetings', $item);
+        }
 
         // do nothing if plugin is deactivated in this seminar/institute
         if (!$this->isActivated()) {
@@ -38,8 +57,6 @@ class VideoConferencePlugin extends StudipPlugin implements StandardPlugin
             $navigation = $this->getTabNavigation(Request::get('cid', $GLOBALS['SessSemName'][1]));
             Navigation::insertItem('/course/'.self::NAVIGATION_ITEM_NAME, $navigation['VideoConference'], null);
         }
-
-        $this->assetsUrl = rtrim($this->getPluginURL(), '/').'/assets';
     }
 
     public function getInfoTemplate($course_id) {
@@ -55,15 +72,15 @@ class VideoConferencePlugin extends StudipPlugin implements StandardPlugin
         $perm = $GLOBALS['perm'];
 
         if ($perm->have_studip_perm('tutor', $courseId)) {
-            $courses = Meeting::findByCourseId($courseId);
+            $courses = MeetingCourse::findByCourseId($courseId);
         } else {
-            $courses = Meeting::findActiveByCourseId($courseId);
+            $courses = MeetingCourse::findActiveByCourseId($courseId);
         }
 
         $recentMeetings = 0;
 
-        foreach ($courses as $course) {
-            if ($course->mkdate >= $lastVisit) {
+        foreach ($courses as $meetingCourse) {
+            if ($meetingCourse->course->mkdate >= $lastVisit) {
                 $recentMeetings++;
             }
         }

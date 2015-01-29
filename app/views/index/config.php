@@ -13,7 +13,7 @@
     <?= CSRFProtection::tokenTag() ?>
     <fieldset style="padding-top: 0;">
         <fieldset>
-            <label for="vc_config_title"><?= _('Titel:') ?></label>
+            <label for="vc_config_title"><?= _('Reitername:') ?></label>
             <input type="text" name="title" id="vc_config_title" value="<?= htmlReady($courseConfig->title) ?>" size="80" autofocus>
         </fieldset>
         <fieldset>
