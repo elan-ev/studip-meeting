@@ -12,7 +12,7 @@
 ?>
 
 <?php if (!$configured): ?>
-    <?= MessageBox::info(_('Es wurden noch keine Konferenzverbindungen eingerichtet.')) ?>
+    <?= MessageBox::info(_('Es wurden noch keine Meetings eingerichtet.')) ?>
 
     <? if ($GLOBALS['perm']->have_perm('root')) : ?>
         <form method="post" action="<?= PluginEngine::getLink($plugin, array(), 'index/saveConfig') ?>">
@@ -47,8 +47,8 @@
                 <th>Meeting</th>
                 <?php if ($canModifyCourse): ?>
                     <th><?= _('Freigeben') ?></th>
+                    <th><?=_('Aktion')?></th>
                 <?php endif; ?>
-                <th><?=_('Aktion')?></th>
             </tr>
             </thead>
 
@@ -67,40 +67,42 @@
                             <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/20/grey/decline.png" class="decline-button" title="<?=_('Änderungen verwerfen')?>">
                             <img src="<?=$GLOBALS['ASSETS_URL']?>/images/ajax_indicator_small.gif" class="loading-indicator">
 
-                            <ul class="info">
-                                <?php if ($meeting->join_as_moderator): ?>
-                                    <li><?=_('Alle Teilnehmenden haben Moderationsrechte.')?></li>
-                                <?php else: ?>
-                                    <li><?=_('Nur DozentInnen und TutorInnen haben Moderationsrechte.')?></li>
-                                <?php endif; ?>
+                            <?php if ($canModifyCourse): ?>
+                                <ul class="info">
+                                    <li><?= _('Meeting wird in ').count($meeting->courses)._(' Veranstaltung/en verwendet.') ?></li>
 
-                                <?php if (count($meeting->getRecentJoins()) === 1): ?>
-                                    <li><?=_('Eine Person hat das Meeting in den letzten 24 Stunden betreten')?>.</li>
-                                <?php else: ?>
-                                    <li><?=count($meeting->getRecentJoins()).' '._('Personen haben das Meeting in den letzten 24 Stunden betreten')?>.</li>
-                                <?php endif; ?>
+                                    <?php if ($meeting->join_as_moderator): ?>
+                                        <li><?=_('Teilnehmende haben VeranstalterInnen-Rechte (wie Anlegende/r).')?></li>
+                                    <?php else: ?>
+                                        <li><?=_('Teilnehmende haben eingeschränkte Teilnehmenden-Rechte.')?></li>
+                                    <?php endif; ?>
 
-                                <?php if (count($meeting->getAllJoins()) === 1): ?>
-                                    <li><?=_('Eine Person hat das Meeting insgesamt betreten')?>.</li>
-                                <?php else: ?>
-                                    <li><?=count($meeting->getAllJoins()).' '._('Personen haben das Meeting insgesamt betreten')?>.</li>
-                                <?php endif; ?>
-                            </ul>
+                                    <?php if (count($meeting->getRecentJoins()) === 1): ?>
+                                        <li><?=_('Eine Person hat das Meeting in den letzten 24 Stunden betreten')?>.</li>
+                                    <?php else: ?>
+                                        <li><?=count($meeting->getRecentJoins()).' '._('Personen haben das Meeting in den letzten 24 Stunden betreten')?>.</li>
+                                    <?php endif; ?>
+
+                                    <?php if (count($meeting->getAllJoins()) === 1): ?>
+                                        <li><?=_('Eine Person hat das Meeting insgesamt betreten')?>.</li>
+                                    <?php else: ?>
+                                        <li><?=count($meeting->getAllJoins()).' '._('Personen haben das Meeting insgesamt betreten')?>.</li>
+                                    <?php endif; ?>
+                                </ul>
+                            <?php endif ?>
                         </td>
                         <?php if ($canModifyCourse): ?>
                             <td><input type="checkbox"<?=$meeting->active ? ' checked="checked"' : ''?> data-meeting-enable-url="<?=PluginEngine::getLink($plugin, array(), 'index/enable/'.$meeting->id)?>" title="<?=$meeting->active ? _('Meeting für Studierende unsichtbar schalten') : _('Meeting für Studierende sichtbar schalten')?>"></td>
-                        <?php endif; ?>
-                        <td>
-                            <?php if ($canModifyCourse): ?>
+                            <td>
                                 <a href="#" title="<?=_('Meeting umbenennen')?>" class="edit-meeting" data-meeting-rename-url="<?=PluginEngine::getLink($plugin, array(), 'index/rename/'.$meeting->id)?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/20/blue/edit.png"></a>
                                 <?php if ($meeting->join_as_moderator): ?>
-                                    <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('Ändern zu: Teilnehmende haben keine Moderationsrechte')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/moderator-enabled.png"></a>
+                                    <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('Teilnehmende erhalten eingeschränkte Teilnehmenden-Rechte (Standard)')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/moderator-enabled.png"></a>
                                 <?php else: ?>
-                                    <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('Ändern zu: Teilnehmende haben Moderationsrechte')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/moderator-disabled.png"></a>
+                                    <a href="<?=$moderatorPermissionsUrl?>" title="<?=_('Teilnehmende erhalten VeranstalterInnen-Rechte (wie Anlegende/r)')?>"><img src="<?=$plugin->getAssetsUrl()?>/images/moderator-disabled.png"></a>
                                 <?php endif; ?>
                                 <a href="<?=$deleteUrl?>" title="<?=_('Meeting löschen')?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/20/blue/trash.png"></a>
-                            <?php endif; ?>
-                        </td>
+                            </td>
+                        <?php endif; ?>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
