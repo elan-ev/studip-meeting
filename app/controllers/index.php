@@ -75,7 +75,7 @@ class IndexController extends StudipController
         $layout = $this->templateFactory->open('layouts/base');
         $this->set_layout($layout);
 
-        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Konferenzen'));
+        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Meetings'));
         PageLayout::addScript($this->plugin->getAssetsUrl().'/js/meetings.js');
         PageLayout::addStylesheet($this->plugin->getAssetsUrl().'/css/meetings.css');
 
@@ -90,29 +90,29 @@ class IndexController extends StudipController
 
         $sidebar = Sidebar::Get();
 
-        if ($this->userCanModifyCourse($this->getCourseId())) {
-            $navigation = new ActionsWidget();
-            $navigation->addCSSClass('sidebar-meeting-navigation');
-            $navigation->setTitle(_('Navigation'));
-            $navigation->addLink($this->courseConfig->title, PluginEngine::getLink($this->plugin, array(), 'index'));
-            $sidebar->addWidget($navigation);
-        }
-
-        $settings = new ActionsWidget();
-        $settings->addCSSClass('sidebar-meeting-info');
-        $settings->setTitle(_('Aktionen'));
+        $navigation = new ActionsWidget();
+        $navigation->addCSSClass('sidebar-meeting-navigation');
+        $navigation->setTitle(_('Navigation'));
+        $navigation->addLink($this->courseConfig->title, PluginEngine::getLink($this->plugin, array(), 'index'));
+        $sidebar->addWidget($navigation);
 
         if ($this->userCanModifyCourse($this->getCourseId())) {
+            $settings = new ActionsWidget();
+            $settings->addCSSClass('sidebar-meeting-info');
+            $settings->setTitle(_('Aktionen'));
             $settings->addLink(_('Anpassen'), PluginEngine::getLink($this->plugin, array(), 'index/config'), 'icons/16/blue/admin.png');
+            $settings->addLink(_('Informationen anzeigen'), '#',  'icons/16/blue/info-circle.png', array(
+                'class' => 'toggle-info show-info',
+                'data-show-text' => _('Informationen anzeigen'),
+                'data-hide-text' => _('Informationen ausblenden'),
+            ));
+            $sidebar->addWidget($settings);
         }
 
-        $settings->addLink(_('Informationen anzeigen'), '#',  'icons/16/blue/info-circle.png', array(
-            'class' => 'toggle-info show-info',
-            'data-show-text' => _('Informationen anzeigen'),
-            'data-hide-text' => _('Informationen ausblenden'),
-        ));
-
-        $sidebar->addWidget($settings);
+        /** @var \Helpbar $helpBar */
+        $helpText = str_replace("\n", ' ', file_get_contents(__DIR__.'/../resources/help.txt'));
+        $helpBar = Helpbar::get();
+        $helpBar->addPlainText(_('Meetings'), $helpText);
     }
 
     public function index_action()

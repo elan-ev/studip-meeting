@@ -73,11 +73,11 @@ class VideoConferencePlugin extends StudipPlugin implements StandardPlugin
 
         if ($recentMeetings > 0) {
             $navigation->setImage('icons/20/red/chat.png', array(
-                'title' => sprintf(_('%d Konferenz(en), %d neue'), count($courses), $recentMeetings),
+                'title' => sprintf(_('%d Meeting(s), %d neue'), count($courses), $recentMeetings),
             ));
         } else {
             $navigation->setImage('icons/20/grey/chat.png', array(
-                'title' => sprintf(_('%d Konferenz(en)'), count($courses)),
+                'title' => sprintf(_('%d Meeting(s)'), count($courses)),
             ));
         }
 
