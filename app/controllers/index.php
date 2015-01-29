@@ -22,6 +22,7 @@ use ElanEv\Driver\JoinParameters;
 use ElanEv\Model\CourseConfig;
 use ElanEv\Model\Join;
 use ElanEv\Model\Meeting;
+use ElanEv\Model\MeetingCourse;
 
 /**
  * @property \VideoConferencePlugin $plugin
@@ -34,9 +35,11 @@ use ElanEv\Model\Meeting;
  * @property string[]               $questionOptions
  * @property bool                   $canModifyCourse
  * @property array                  $errors
+ * @property \Semester[]            $semesters
  * @property Meeting[]              $meetings
  * @property Meeting[]              $userMeetings
  * @property CourseConfig           $config
+ * @property string                 $deleteAction
  */
 class IndexController extends StudipController
 {
@@ -75,39 +78,20 @@ class IndexController extends StudipController
         $layout = $this->templateFactory->open('layouts/base');
         $this->set_layout($layout);
 
-        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Meetings'));
+        PageLayout::addScript($this->plugin->getAssetsUrl().'/js/jquery.tablesorter.min.js');
         PageLayout::addScript($this->plugin->getAssetsUrl().'/js/meetings.js');
         PageLayout::addStylesheet($this->plugin->getAssetsUrl().'/css/meetings.css');
 
-        if (Navigation::hasItem('course/'.VideoConferencePlugin::NAVIGATION_ITEM_NAME)) {
+        if ($action !== 'my' && Navigation::hasItem('course/'.VideoConferencePlugin::NAVIGATION_ITEM_NAME)) {
             Navigation::activateItem('course/'.VideoConferencePlugin::NAVIGATION_ITEM_NAME);
             /** @var Navigation $navItem */
             $navItem = Navigation::getItem('course/'.VideoConferencePlugin::NAVIGATION_ITEM_NAME);
             $navItem->setImage('icons/16/black/chat.png');
+        } elseif ($action === 'my' && Navigation::hasItem('/meetings')) {
+            Navigation::activateItem('/meetings');
         }
 
         $this->courseConfig = CourseConfig::findByCourseId($this->getCourseId());
-
-        $sidebar = Sidebar::Get();
-
-        $navigation = new ActionsWidget();
-        $navigation->addCSSClass('sidebar-meeting-navigation');
-        $navigation->setTitle(_('Navigation'));
-        $navigation->addLink($this->courseConfig->title, PluginEngine::getLink($this->plugin, array(), 'index'));
-        $sidebar->addWidget($navigation);
-
-        if ($this->userCanModifyCourse($this->getCourseId())) {
-            $settings = new ActionsWidget();
-            $settings->addCSSClass('sidebar-meeting-info');
-            $settings->setTitle(_('Aktionen'));
-            $settings->addLink(_('Anpassen'), PluginEngine::getLink($this->plugin, array(), 'index/config'), 'icons/16/blue/admin.png');
-            $settings->addLink(_('Informationen anzeigen'), '#',  'icons/16/blue/info-circle.png', array(
-                'class' => 'toggle-info show-info',
-                'data-show-text' => _('Informationen anzeigen'),
-                'data-hide-text' => _('Informationen ausblenden'),
-            ));
-            $sidebar->addWidget($settings);
-        }
 
         /** @var \Helpbar $helpBar */
         $helpText = str_replace("\n", ' ', file_get_contents(__DIR__.'/../resources/help.txt'));
@@ -117,10 +101,14 @@ class IndexController extends StudipController
 
     public function index_action()
     {
+        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Meetings'));
+
         /** @var \Seminar_User $user */
         $user = $GLOBALS['user'];
         $course = new Course($this->getCourseId());
         $this->errors = array();
+        $this->deleteAction = PluginEngine::getURL($this->plugin, array(), 'index', true);
+        $this->handleDeletion();
 
         if (Request::get('action') === 'create' && $this->userCanModifyCourse($this->getCourseId())) {
             if (!Request::get('name')) {
@@ -142,28 +130,139 @@ class IndexController extends StudipController
             }
         }
 
-        if (Request::get('delete') > 0) {
-            $meeting = new Meeting(Request::get('delete'));
-
-            if (!$meeting->isNew()) {
-                $this->confirmDeleteMeeting = true;
-                $this->questionOptions = array(
-                    'question' => _('Wollen Sie wirklich das Meeting "').$meeting->name._('" löschen?'),
-                    'approvalLink' => PluginEngine::getLink($this->plugin, array(), 'index/delete/'.$meeting->id),
-                    'disapprovalLink' => PluginEngine::getLink($this->plugin, array(), 'index'),
-                );
-            }
-        }
-
         $this->canModifyCourse = $this->userCanModifyCourse($this->getCourseId());
 
         if ($this->canModifyCourse) {
-            $this->meetings = \ElanEv\Model\Meeting::findByCourseId($this->getCourseId());
-            $this->userMeetings = \ElanEv\Model\Meeting::findLinkableByUser($user, $course);
+            $this->buildSidebar(
+                array(array(
+                    'label' => $this->courseConfig->title,
+                    'url' => PluginEngine::getLink($this->plugin, array(), 'index'),
+                )),
+                array(array(
+                    'label' => _('Informationen anzeigen'),
+                    'url' => '#',
+                    'icon' => 'icons/16/blue/info-circle.png',
+                    'attributes' => array(
+                        'class' => 'toggle-info show-info',
+                        'data-show-text' => _('Informationen anzeigen'),
+                        'data-hide-text' => _('Informationen ausblenden'),
+                    ),
+                )),
+                array(array(
+                    'label' => _('Anpassen'),
+                    'url' => PluginEngine::getLink($this->plugin, array(), 'index/config'),
+                    'icon' => 'icons/16/blue/admin.png',
+                ))
+            );
         } else {
-            $this->meetings = \ElanEv\Model\Meeting::findActiveByCourseId($this->getCourseId());
+            $this->buildSidebar(array(array(
+                    'label' => $this->courseConfig->title,
+                    'url' => PluginEngine::getLink($this->plugin, array(), 'index'),
+            )));
+        }
+
+        if ($this->canModifyCourse) {
+            $this->meetings = MeetingCourse::findByCourseId($this->getCourseId());
+            $this->userMeetings = MeetingCourse::findLinkableByUser($user, $course);
+        } else {
+            $this->meetings = MeetingCourse::findActiveByCourseId($this->getCourseId());
             $this->userMeetings = array();
         }
+    }
+
+    public function my_action($type = null)
+    {
+        global $user;
+
+        PageLayout::setTitle(_('Meine Meetings'));
+
+        $this->deleteAction = PluginEngine::getURL($this->plugin, array(), 'index/my', true);
+        $this->handleDeletion();
+
+        if ($type === 'name') {
+            $this->type = 'name';
+            $viewItem = array(
+                'label' => _('Anzeige nach Semester'),
+                'url' => PluginEngine::getLink($this->plugin, array(), 'index/my'),
+                'active' => $type !== 'name',
+            );
+            $this->meetings = MeetingCourse::findByUser($user);
+        } else {
+            $viewItem = array(
+                'label' => _('Anzeige nach Namen'),
+                'url' => PluginEngine::getLink($this->plugin, array(), 'index/my/name'),
+                'active' => $type === 'name',
+            );
+            $this->buildMeetingBlocks(MeetingCourse::findByUser($user));
+        }
+
+        $this->buildSidebar(
+            array(),
+            array(
+                $viewItem,
+                array(
+                    'label' => _('Informationen anzeigen'),
+                    'url' => '#',
+                    'icon' => 'icons/16/blue/info-circle.png',
+                    'attributes' => array(
+                        'class' => 'toggle-info show-info',
+                        'data-show-text' => _('Informationen anzeigen'),
+                        'data-hide-text' => _('Informationen ausblenden'),
+                    ),
+                )
+            )
+        );
+    }
+
+    public function all_action($type = null)
+    {
+        if (!$GLOBALS['perm']->have_perm('root')) {
+            throw new AccessDeniedException(_('Sie brauchen Administrationsrechte.'));
+        }
+        if (Navigation::hasItem('/admin/locations/meetings')) {
+            Navigation::activateItem('/admin/locations');
+        } elseif (Navigation::hasItem('/meetings')) {
+            Navigation::activateItem('/meetings');
+        }
+
+        PageLayout::setTitle(_('Alle Meetings'));
+
+        $this->deleteAction = PluginEngine::getURL($this->plugin, array(), 'index/all', true);
+        $this->handleDeletion();
+
+        if ($type === 'name') {
+            $this->type = 'name';
+            $viewItem = array(
+                'label' => _('Anzeige nach Semester'),
+                'url' => PluginEngine::getLink($this->plugin, array(), 'index/all'),
+                'active' => $type !== 'name',
+            );
+            $this->meetings = MeetingCourse::findAll();
+        } else {
+            $viewItem = array(
+                'label' => _('Anzeige nach Namen'),
+                'url' => PluginEngine::getLink($this->plugin, array(), 'index/all/name'),
+                'active' => $type === 'name',
+            );
+            $this->buildMeetingBlocks(MeetingCourse::findAll());
+        }
+
+        $this->buildSidebar(
+            array(),
+            array(
+                $viewItem,
+                array(
+                    'label' => _('Informationen anzeigen'),
+                    'url' => '#',
+                    'icon' => 'icons/16/blue/info-circle.png',
+                    'attributes' => array(
+                        'class' => 'toggle-info show-info',
+                        'data-show-text' => _('Informationen anzeigen'),
+                        'data-hide-text' => _('Informationen ausblenden'),
+                    ),
+                )
+            )
+        );
     }
 
     /**
@@ -189,26 +288,28 @@ class IndexController extends StudipController
         }
     }
 
-    public function enable_action($meetingId)
+    public function enable_action($meetingId, $courseId)
     {
-        $meeting = new Meeting($meetingId);
+        $meeting = new MeetingCourse(array($meetingId, $courseId));
 
-        if (!$meeting->isNew() && $this->userCanModifyCourse($this->getCourseId())) {
+        if (!$meeting->isNew() && $this->userCanModifyCourse($meeting->course->id)) {
             $meeting->active = !$meeting->active;
             $meeting->store();
         }
 
-        $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
+        $this->redirect(PluginEngine::getURL($this->plugin, array(), Request::get('destination')));
     }
 
-    public function rename_action($meetingId)
+    public function edit_action($meetingId)
     {
         $meeting = new Meeting($meetingId);
-        $name = Request::get('name');
+        $name = utf8_decode(Request::get('name'));
+        $recordingUrl = utf8_decode(Request::get('recording_url'));
 
         if (!$meeting->isNew() && $this->userCanModifyCourse($this->getCourseId()) && $name) {
             $meeting = new Meeting($meetingId);
             $meeting->name = $name;
+            $meeting->recording_url = $recordingUrl;
             $meeting->store();
         }
 
@@ -224,20 +325,20 @@ class IndexController extends StudipController
             $meeting->store();
         }
 
-        $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
+        $this->redirect(PluginEngine::getURL($this->plugin, array(), Request::get('destination')));
     }
 
-    public function delete_action($meetingId)
+    public function delete_action($meetingId, $courseId)
     {
-        $meeting = new Meeting($meetingId);
+        $this->deleteMeeting($meetingId, $courseId);
 
-        if (!$meeting->isNew() && $this->userCanModifyCourse($this->getCourseId())) {
-            $parameters = $meeting->getMeetingParameters();
-            $this->driver->deleteMeeting($parameters);
-            $meeting->delete();
+        if (Request::get('cid') !== null) {
+            $destination = 'index';
+        } else {
+            $destination = 'index/my';
         }
 
-        $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
+        $this->redirect(PluginEngine::getURL($this->plugin, array(), $destination));
     }
 
     /**
@@ -280,6 +381,8 @@ class IndexController extends StudipController
 
     public function config_action()
     {
+        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Meetings'));
+
         $courseId = $this->getCourseId();
 
         if (!$this->userCanModifyCourse($courseId)) {
@@ -294,6 +397,19 @@ class IndexController extends StudipController
 
             $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index/config'));
         }
+
+        $this->buildSidebar(
+            array(array(
+                'label' => $this->courseConfig->title,
+                'url' => PluginEngine::getLink($this->plugin, array(), 'index'),
+            )),
+            array(),
+            array(array(
+                'label' => _('Anpassen'),
+                'url' => PluginEngine::getLink($this->plugin, array(), 'index/config'),
+                'icon' => 'icons/16/blue/admin.png',
+            ))
+        );
     }
 
     public function saveConfig_action()
@@ -358,9 +474,9 @@ class IndexController extends StudipController
 
     private function hasActiveMeeting()
     {
-        $meetings = Meeting::findByCourseId($this->getCourseId());
+        $meetings = MeetingCourse::findByCourseId($this->getCourseId());
 
-        return count($meetings) > 0 && $this->driver->isMeetingRunning($meetings[0]->getMeetingParameters());
+        return count($meetings) > 0 && $this->driver->isMeetingRunning($meetings[0]->meeting->getMeetingParameters());
     }
 
     private function userCanModifyCourse($courseId)
@@ -376,5 +492,141 @@ class IndexController extends StudipController
     private function generateAttendeePassword()
     {
         return md5($this->getCourseId().'attPw');
+    }
+
+    private function buildSidebar($navigationItems = array(), $viewsItems = array(), $actionsItems = array())
+    {
+        $sidebar = Sidebar::Get();
+
+        $sections = array(
+            array(
+                'label' => _('Navigation'),
+                'class' => 'sidebar-meeting-navigation',
+                'items' => $navigationItems,
+            ),
+            array(
+                'label' => _('Ansichten'),
+                'class' => 'sidebar-meeting-views',
+                'items' => $viewsItems,
+            ),
+            array(
+                'label' => _('Aktionen'),
+                'class' => 'sidebar-meeting-actions',
+                'items' => $actionsItems,
+            ),
+        );
+
+        foreach ($sections as $section) {
+            if (count($section['items']) > 0) {
+                $navigation = new ActionsWidget();
+                $navigation->addCSSClass($section['class']);
+                $navigation->setTitle($section['label']);
+
+                foreach ($section['items'] as $item) {
+                    $link = $navigation->addLink(
+                        $item['label'],
+                        $item['url'],
+                        isset($item['icon']) ? $item['icon'] : null,
+                        isset($item['attributes']) && is_array($item['attributes']) ? $item['attributes'] : array()
+                    );
+
+                    if (isset($item['active']) && $item['active']) {
+                        $link->setActive(true);
+                    }
+                }
+
+                $sidebar->addWidget($navigation);
+            }
+        }
+    }
+
+    private function buildMeetingBlocks(array $meetingCourses)
+    {
+        $this->semesters = array();
+        $this->meetings = array();
+
+        foreach ($meetingCourses as $meetingCourse) {
+            $semester = $meetingCourse->course->start_semester;
+
+            if ($semester === null) {
+                $now = new \DateTime();
+                $semester = \Semester::findByTimestamp($now->getTimestamp());
+            }
+
+            if (!isset($this->semesters[$semester->id])) {
+                $this->semesters[$semester->id] = $semester;
+                $this->meetings[$semester->id] = array();
+            }
+
+            $this->meetings[$semester->id][] = $meetingCourse;
+        }
+
+        usort($this->semesters, function ($semester1, $semester2) {
+            return $semester2->beginn - $semester1->beginn;
+        });
+    }
+
+    private function handleDeletion()
+    {
+        if (Request::get('action') === 'multi-delete') {
+            $this->handleMultiDeletion();
+        } elseif (Request::get('delete') > 0 && Request::get('cid')) {
+            $meeting = new Meeting(Request::get('delete'));
+
+            if (!$meeting->isNew()) {
+                $this->confirmDeleteMeeting = true;
+                $this->questionOptions = array(
+                    'question' => _('Wollen Sie wirklich das Meeting "').$meeting->name._('" löschen?'),
+                    'approvalLink' => PluginEngine::getLink($this->plugin, array(), 'index/delete/'.$meeting->id.'/'.Request::get('cid'), true),
+                    'disapprovalLink' => PluginEngine::getLink($this->plugin, array(),  Request::get('destination')),
+                );
+            }
+        }
+    }
+
+    private function handleMultiDeletion()
+    {
+        $deleteMeetings = array();
+        foreach (Request::getArray('meeting_ids') as $deleteMeetingsId) {
+            list($meetingId, $courseId) = explode('-', $deleteMeetingsId);
+            $meetingCourse = new MeetingCourse(array($meetingId, $courseId));
+            if (!$meetingCourse->isNew()) {
+                $deleteMeetings[] = $meetingCourse;
+            }
+        }
+
+        if (Request::submitted('confirm')) {
+            foreach ($deleteMeetings as $meetingCourse) {
+                $this->deleteMeeting($meetingCourse->meeting->id, $meetingCourse->course->id);
+            }
+        } elseif (!Request::submitted('cancel')) {
+            $this->confirmDeleteMeeting = true;
+            $this->questionOptions = array(
+                'question' => _('Wollen Sie folgende Meetings wirklich löschen?'),
+                'approvalLink' => PluginEngine::getLink($this->plugin, array(), 'index/delete/'.$meeting->id.'/'.Request::get('cid')),
+                'disapprovalLink' => PluginEngine::getLink($this->plugin, array(), Request::get('destination')),
+                'deleteMeetings' => $deleteMeetings,
+                'destination' => $this->deleteAction,
+            );
+        }
+    }
+
+    private function deleteMeeting($meetingId, $courseId)
+    {
+        $meetingCourse = new MeetingCourse(array($meetingId, $courseId));
+
+        if (!$meetingCourse->isNew() && $this->userCanModifyCourse($meetingCourse->course->id)) {
+            // don't associate the meeting and the course any more
+            $meetingId = $meetingCourse->meeting->id;
+            $meetingCourse->delete();
+
+            $meeting = new Meeting($meetingId);
+
+            // if the meeting isn't associated with at least one course at all,
+            // it can be removed entirely
+            if (count($meeting->courses) === 0) {
+                $meeting->delete();
+            }
+        }
     }
 }

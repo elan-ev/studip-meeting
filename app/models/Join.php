@@ -40,7 +40,7 @@ class Join extends \SimpleORMap
     public static function findRecentJoinsForMeeting(Meeting $meeting)
     {
         return static::findBySQL(
-            'meeting_id = :meeting_id AND last_join >= :recent_join_time GROUP BY user_id',
+            'meeting_id = :meeting_id AND last_join >= :recent_join_time GROUP BY user_id ORDER BY last_join',
             array(
                 'meeting_id' => $meeting->id,
                 'recent_join_time' => strtotime('-1day'),
@@ -58,6 +58,6 @@ class Join extends \SimpleORMap
      */
     public static function findAllJoinsForMeeting(Meeting $meeting)
     {
-        return static::findBySQL('meeting_id = :meeting_id GROUP BY user_id', array('meeting_id' => $meeting->id));
+        return static::findBySQL('meeting_id = :meeting_id GROUP BY user_id ORDER BY last_join', array('meeting_id' => $meeting->id));
     }
 }

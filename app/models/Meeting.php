@@ -15,8 +15,8 @@ use ElanEv\Driver\MeetingParameters;
  * @property Meeting[] $courses
  * @property string    $user_id
  * @property string    $name
+ * @property string    $recording_url
  * @property string    $driver
- * @property bool      $active
  * @property string    $attendee_password
  * @property string    $moderator_password
  * @property bool      $join_as_moderator
@@ -107,98 +107,5 @@ class Meeting extends \SimpleORMap
         }
 
         return false;
-    }
-
-    /**
-     * Finds all meetings for a course.
-     *
-     * @param string $courseId The course id
-     *
-     * @return Meeting[] The meetings
-     */
-    public static function findByCourseId($courseId)
-    {
-        return static::findBySQL(
-            'INNER JOIN vc_meeting_course AS mc ON vc_meetings.id = mc.meeting_id WHERE mc.course_id = :course_id',
-            array('course_id' => $courseId)
-        );
-    }
-
-    /**
-     * Finds all meetings for a course.
-     *
-     * @param \Seminar $course The course
-     *
-     * @return Meeting[] The meetings
-     */
-    public static function findByCourse(\Seminar $course)
-    {
-        return static::findByCourseId($course->id);
-    }
-
-    /**
-     * Finds all active meetings for a course.
-     *
-     * @param string $courseId The course id
-     *
-     * @return Meeting[] The meetings
-     */
-    public static function findActiveByCourseId($courseId)
-    {
-        return static::findBySQL(
-            'INNER JOIN vc_meeting_course AS mc ON vc_meetings.id = mc.meeting_id WHERE mc.course_id = :course_id AND active = 1',
-            array('course_id' => $courseId)
-        );
-    }
-
-    /**
-     * Finds all active meetings for a course.
-     *
-     * @param \Seminar $course The course
-     *
-     * @return Meeting[] The meetings
-     */
-    public static function findActiveByCourse(\Seminar $course)
-    {
-        return static::findActiveByCourseId($course->id);
-    }
-
-    /**
-     * Finds all meetings that a certain user created.
-     *
-     * @param \Seminar_User $user The user
-     *
-     * @return Meeting[] The meetings
-     */
-    public static function findByUser(\Seminar_User $user)
-    {
-        return static::findBySQL('user_id = :user_id', array('user_id' => $user->cfg->getUserId()));
-    }
-
-    /**
-     * Finds all meetings that a certain user created and that can be linked
-     * to a particular course.
-     *
-     * A course can only be linked if it is not already associated with the
-     * meeting.
-     *
-     * @param \Seminar_User $user   The user
-     * @param \Course       $course The course in which the link should be
-     *                              added
-     *
-     * @return Meeting[] The meetings
-     */
-    public static function findLinkableByUser(\Seminar_User $user, \Course $course)
-    {
-        $meetings = static::findByUser($user);
-        $linkableMeetings = array();
-
-        foreach ($meetings as $meeting) {
-            if (!$meeting->isAssignedToCourse($course)) {
-                $linkableMeetings[] = $meeting;
-            }
-        }
-
-        return $linkableMeetings;
     }
 }
