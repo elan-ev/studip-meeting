@@ -53,7 +53,7 @@ class DfnVcDriverTest extends AbstractDriverTest
                     ),
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=permissions-update&acl-id=412297&principal-id=public-access&permission-id=denied&session='.$sessionCookie,
+                        'uri' => '/lmsapi/xml?action=permissions-update&acl-id=412297&principal-id=public-access&permission-id=view-hidden&session='.$sessionCookie,
                         'reponse' => '',
                     ),
                 ),

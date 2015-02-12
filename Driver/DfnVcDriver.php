@@ -88,7 +88,7 @@ class DfnVcDriver implements DriverInterface
             'action' => 'permissions-update',
             'acl-id' => (int) $scoIdAttributes[0],
             'principal-id' => 'public-access',
-            'permission-id' => 'denied',
+            'permission-id' => 'view-hidden',
             'session' => $sessionCookie,
         ));
 
