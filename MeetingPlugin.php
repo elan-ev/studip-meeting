@@ -20,7 +20,7 @@ require_once __DIR__.'/vendor/autoload.php';
 use ElanEv\Model\CourseConfig;
 use ElanEv\Model\MeetingCourse;
 
-class VideoConferencePlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
+class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
 {
     const NAVIGATION_ITEM_NAME = 'video-conferences';
 
@@ -100,7 +100,7 @@ class VideoConferencePlugin extends StudipPlugin implements StandardPlugin, Syst
 
         return $navigation;
     }
-    
+
     /* interface method */
     function getNotificationObjects($course_id, $since, $user_id)
     {
@@ -124,7 +124,7 @@ class VideoConferencePlugin extends StudipPlugin implements StandardPlugin, Syst
     public function error(){
         return null;
     }
-    
+
     /**
      * {@inheritdoc}
      */

@@ -1,5 +1,5 @@
-pluginname=VideoConference
-pluginclassname=VideoConferencePlugin
+pluginname=Meetings
+pluginclassname=MeetingPlugin
 origin=elan-ev
 version=1.0-alpha
 studipMinVersion=3.1
