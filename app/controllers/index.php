@@ -25,7 +25,7 @@ use ElanEv\Model\Meeting;
 use ElanEv\Model\MeetingCourse;
 
 /**
- * @property \VideoConferencePlugin $plugin
+ * @property \MeetingPlugin         $plugin
  * @property bool                   $configured
  * @property \Seminar_Perm          $perm
  * @property \Flexi_TemplateFactory $templateFactory
@@ -82,10 +82,10 @@ class IndexController extends StudipController
         PageLayout::addScript($this->plugin->getAssetsUrl().'/js/meetings.js');
         PageLayout::addStylesheet($this->plugin->getAssetsUrl().'/css/meetings.css');
 
-        if ($action !== 'my' && Navigation::hasItem('course/'.VideoConferencePlugin::NAVIGATION_ITEM_NAME)) {
-            Navigation::activateItem('course/'.VideoConferencePlugin::NAVIGATION_ITEM_NAME);
+        if ($action !== 'my' && Navigation::hasItem('course/'.MeetingPlugin::NAVIGATION_ITEM_NAME)) {
+            Navigation::activateItem('course/'.MeetingPlugin::NAVIGATION_ITEM_NAME);
             /** @var Navigation $navItem */
-            $navItem = Navigation::getItem('course/'.VideoConferencePlugin::NAVIGATION_ITEM_NAME);
+            $navItem = Navigation::getItem('course/'.MeetingPlugin::NAVIGATION_ITEM_NAME);
             $navItem->setImage('icons/16/black/chat.png');
         } elseif ($action === 'my' && Navigation::hasItem('/meetings')) {
             Navigation::activateItem('/meetings');

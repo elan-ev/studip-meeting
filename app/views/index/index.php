@@ -1,5 +1,5 @@
 <?php
-/** @var VideoConferencePlugin $plugin */
+/** @var MeetingPlugin $plugin */
 /** @var ElanEv\Model\CourseConfig $courseConfig */
 /** @var bool $configured */
 /** @var bool $canModifyCourse */
