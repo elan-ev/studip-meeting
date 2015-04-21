@@ -328,8 +328,8 @@ class DfnVcDriver implements DriverInterface
     {
         return $this->performRequest(array(
             'action' => 'lms-user-create',
-            'first-name' => $parameters->getFirstName(),
-            'last-name' => $parameters->getLastName(),
+            'first-name' => studip_utf8encode($parameters->getFirstName()),
+            'last-name' => studip_utf8encode($parameters->getLastName()),
             'login' => $parameters->getEmail(),
             'session' => $sessionCookie,
         ));
