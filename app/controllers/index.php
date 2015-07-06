@@ -344,6 +344,7 @@ class IndexController extends StudipController
     {
         if(!$this->hasActiveMeeting()) {
             $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
+            return;
         }
 
         /** @var Seminar_User $user */
