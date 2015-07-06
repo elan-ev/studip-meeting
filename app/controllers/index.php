@@ -87,22 +87,18 @@ class IndexController extends StudipController
             /** @var Navigation $navItem */
             $navItem = Navigation::getItem('course/'.MeetingPlugin::NAVIGATION_ITEM_NAME);
             $navItem->setImage('icons/16/black/chat.png');
-        } elseif ($action === 'my' && Navigation::hasItem('/meetings')) {
-            Navigation::activateItem('/meetings');
+        } elseif ($action === 'my' && Navigation::hasItem('/profile/meetings')) {
+            Navigation::activateItem('/profile/meetings');
         }
 
         $this->courseConfig = CourseConfig::findByCourseId($this->getCourseId());
-
-        /** @var \Helpbar $helpBar */
-        $helpText = str_replace("\n", ' ', file_get_contents(__DIR__.'/../resources/help.txt'));
-        $helpBar = Helpbar::get();
-        $helpBar->addPlainText(_('Meetings'), $helpText);
     }
 
     public function index_action()
     {
-        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Meetings'));
-
+        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Meetings (Betatest)'));
+        $this->getHelpbarContent('main');
+        
         /** @var \Seminar_User $user */
         $user = $GLOBALS['user'];
         $course = new Course($this->getCourseId());
@@ -175,7 +171,7 @@ class IndexController extends StudipController
         global $user;
 
         PageLayout::setTitle(_('Meine Meetings'));
-
+        $this->getHelpbarContent('my');
         $this->deleteAction = PluginEngine::getURL($this->plugin, array(), 'index/my', true);
         $this->handleDeletion();
 
@@ -382,7 +378,7 @@ class IndexController extends StudipController
     public function config_action()
     {
         PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Meetings'));
-
+        $this->getHelpbarContent('config');
         $courseId = $this->getCourseId();
 
         if (!$this->userCanModifyCourse($courseId)) {
@@ -628,5 +624,35 @@ class IndexController extends StudipController
                 $meeting->delete();
             }
         }
+    }
+    
+    private function getHelpbarContent($id)
+    {
+    	/** @var \Helpbar $helpBar */
+    
+    	switch ($id) {
+    
+    		case 'main':
+    			$helpText = _('Durchführung und Verwaltung von Live-Online-Treffen, Webinaren und Videokonferenzen. ').
+    			_('Mit Hilfe der Face-to-Face-Kommunikation können Entfernungen überbrückt, externe Fachleute ').
+    			_('einbezogen und Studierende in Projekten und Praktika begleitet werden.');
+    			$helpBar = Helpbar::get();
+    			$helpBar->addPlainText(_(''), $helpText);
+    			break;
+    
+    		case 'config':
+    			$helpText = _('Auf dieser Seite können Sie den Reiternamen von Meetings ändern und der Meeting-Liste ').
+    			_('einen Text hinzufügen.');
+    			$helpBar = Helpbar::get();
+    			$helpBar->addPlainText(_(''), $helpText);
+    			break;
+    
+    		case 'my':
+    			$helpText = _('Die Seite zeigt eine Gesamtansicht aller von Ihnen erstellten Meetings nach Semestern ').
+    			_('oder nach Namen sortiert.');
+    			$helpBar = Helpbar::get();
+    			$helpBar->addPlainText(_(''), $helpText);
+    			break;
+    	}
     }
 }
