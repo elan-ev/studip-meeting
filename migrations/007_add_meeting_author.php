@@ -24,7 +24,7 @@ class AddMeetingAuthor extends Migration
         $db->exec(
             'ALTER TABLE
               vc_meetings
-            ADD COLUMN user_id VARCHAR(32) NOT NULL AFTER course_id'
+            ADD COLUMN user_id VARCHAR(32) NOT NULL'
         );
 
         SimpleORMap::expireTableScheme();
