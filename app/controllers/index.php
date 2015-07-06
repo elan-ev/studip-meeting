@@ -164,6 +164,8 @@ class IndexController extends StudipController
             $this->meetings = MeetingCourse::findActiveByCourseId($this->getCourseId());
             $this->userMeetings = array();
         }
+
+        $this->vc_driver = Config::get()->getValue('VC_DRIVER');
     }
 
     public function my_action($type = null)
@@ -411,13 +413,15 @@ class IndexController extends StudipController
 
     public function saveConfig_action()
     {
-        if (!$this->perm->have_perm('root')) {
-            die;
+        if ($GLOBALS['perm']->have_perm('root')) {
+            foreach (Request::getArray('config') as $option => $data) {
+                Config::get()->store($option, $data);
+            }
+        } else {
+            throw new AccessDeniedException('You need to be root to perform this action!');
         }
 
-        Config::get()->store('BBB_URL', Request::get('bbb_url'));
-        Config::get()->store('BBB_SALT', Request::get('bbb_salt'));
-
+        // TODO: FIXME -> set correct link main plugin class so there is no need for this hack
         $this->redirect(PluginEngine::getLink($this->plugin, array(), 'index'));
     }
 
