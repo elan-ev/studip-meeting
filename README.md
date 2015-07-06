@@ -3,25 +3,25 @@ Stud.IP Video Conference Plugin
 
 [![Build Status](https://travis-ci.org/virtUOS/studip-bigbluebutton.svg?branch=master)](https://travis-ci.org/virtUOS/studip-bigbluebutton)
 
-Ein Stud.IP-Plugin um BigBlueButton aus einer Veranstaltung heraus starten zu kÃ¶nnen.
-Teilnehmer/innen des Kurses kÃ¶nnen der Konferenz beitreten.
+Ein Stud.IP-Plugin um BigBlueButton aus einer Veranstaltung heraus starten zu können.
+Teilnehmer/innen des Kurses können der Konferenz beitreten.
 
 Einrichtung
 -----------
 
-Ist die Hochschule Mitglied der DFN und soll fÃ¼r das Plugin "Meetings" (Videokonferenzen)
-Adobe Connect Ã¼ber die DFN genutzt werden, mÃ¼sste die Hochschule bei der DFN
+Ist die Hochschule Mitglied der DFN und soll für das Plugin "Meetings" (Videokonferenzen)
+Adobe Connect über die DFN genutzt werden, müsste die Hochschule bei der DFN
 per E-Mail (hotline@vc.dfn.de) anfragen, um eine Hochschul-Kennung zu erhalten.
-Die DFN benÃ¶tigt hierfÃ¼r eine spezielle Funktionsemailadresse und die IP-Adresse
+Die DFN benötigt hierfür eine spezielle Funktionsemailadresse und die IP-Adresse
 des Stud.IP-Servers der Hochschule.
 
 Konfiguration
 -------------
 
-Als Benutzer mit root-Berechtigung mÃ¼ssen in der Konfiguration die folgenden
+Als Benutzer mit root-Berechtigung müssen in der Konfiguration die folgenden
 Optionen konfiguriert werden:
 
-Option            | ErklÃ¤rung
+Option            | Erklärung
 ----------------- | ---------------------------------------------------------
 `VC_DRIVER`       | zu verwendender Treiber (muss auf *dfnvc* gesetzt werden)
 `DFN_VC_URL`      | API-Endpoint des DFN (wird vom DFN mitgeteilt)
