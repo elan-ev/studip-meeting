@@ -228,8 +228,6 @@ class DfnVcDriver implements DriverInterface
     {
         $response = $this->performRequest(array('action' => 'common-info'));
         $xml = new \SimpleXMLElement($response);
-	    file_put_contents($GLOBALS['TMP_PATH'] . '/meetings-' . time() . '.xml', $response);
-	    //echo "<prew>";var_dump($xml);echo"</pre>";die;
 
         return $xml->common->cookie;
     }
