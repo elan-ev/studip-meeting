@@ -81,13 +81,13 @@ class BigBlueButtonDriverTest extends AbstractDriverTest
     {
         $meetingId1 = '788b98f571322bb3a471c8f2926fce9b';
         $parameters1 = new MeetingParameters();
-        $parameters1->setIdentifier($meetingId1);
+        $parameters1->setMeetingId($meetingId1);
         $meetingId2 = '687c258d96bd340c4aa09bfe67842d40';
         $parameters2 = new MeetingParameters();
-        $parameters2->setIdentifier($meetingId2);
+        $parameters2->setMeetingId($meetingId2);
         $meetingId3 = '1b0ac2b59cc262b1651c0b8d7a53c7ba';
         $parameters3 = new MeetingParameters();
-        $parameters3->setIdentifier($meetingId3);
+        $parameters3->setMeetingId($meetingId3);
 
         return array(
             'meeting-running' => array(
