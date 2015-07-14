@@ -330,10 +330,10 @@ class IndexController extends StudipController
     {
         $this->deleteMeeting($meetingId, $courseId);
 
-        if (Request::get('cid') !== null) {
-            $destination = 'index';
-        } else {
+        if (Request::get('destination') == 'index/my') {
             $destination = 'index/my';
+        } else {
+            $destination = 'index';
         }
 
         $this->redirect(PluginEngine::getURL($this->plugin, array(), $destination));
@@ -578,7 +578,7 @@ class IndexController extends StudipController
                 $this->confirmDeleteMeeting = true;
                 $this->questionOptions = array(
                     'question' => _('Wollen Sie wirklich das Meeting "').$meeting->name._('" löschen?'),
-                    'approvalLink' => PluginEngine::getLink($this->plugin, array(), 'index/delete/'.$meeting->id.'/'.Request::get('cid'), true),
+                    'approvalLink' => PluginEngine::getLink($this->plugin, array('destination' => Request::get('destination')), 'index/delete/'.$meeting->id.'/'.Request::get('cid'), true),
                     'disapprovalLink' => PluginEngine::getLink($this->plugin, array(),  Request::get('destination')),
                 );
             }
