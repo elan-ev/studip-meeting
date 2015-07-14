@@ -8,9 +8,13 @@
 <?php if (!$configured): ?>
     <?= MessageBox::info(_('Es wurden noch keine Meetings eingerichtet.')) ?>
 
-    <? if ($GLOBALS['perm']->have_perm('root')) : ?>
-        <?= $this->render_partial('config/' . $vc_driver) ?>
-    <?php endif; ?>
+    <? if (!$vc_driver) : ?>
+        <?= MessageBox::error(_('Bitte setzen Sie erst in der globalen Konfiguration einen Wert für VC_DRIVER!')) ?>
+    <? else : ?>
+        <? if ($GLOBALS['perm']->have_perm('root')) : ?>
+            <?= $this->render_partial('config/' . $vc_driver) ?>
+        <? endif; ?>
+    <? endif; ?>
 <?php else: ?>
     <?= $this->render_partial('index/_confirm_delete') ?>
 
