@@ -4,8 +4,12 @@ class AddConfig extends Migration
 {
     function up()
     {
-        Config::get()->create('BBB_URL');
-        Config::get()->create('BBB_SALT');
+        try {
+            Config::get()->create('BBB_URL');
+            Config::get()->create('BBB_SALT');
+        } catch (InvalidArgumentException $ex) {
+
+        }
     }
     
     function down()
