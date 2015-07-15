@@ -1,6 +1,6 @@
 pluginname=Meetings
 pluginclassname=MeetingPlugin
 origin=elan-ev
-version=1.1.0
+version=1.1.1
 studipMinVersion=3.1
 description=Virtueller Raum, mit dem Live-Online-Treffen, Webinare und Videokonferenzen durchgeführt werden können. Die Teilnehmenden können sich während eines Meetings gegenseitig hören und über eine angeschlossene Webcam - wenn vorhanden - sehen und miteinander arbeiten. Folien können präsentiert und Abfragen durchgeführt werden. Ein Fenster in der Benutzungsoberfläche des eigenen Rechners kann für andere sichtbar geschaltet werden, um zum Beispiel den Teilnehmenden bestimmte Webseiten oder Anwendungen zu zeigen. Außerdem kann die Veranstaltung aufgezeichnet und Interessierten zur Verfügung gestellt werden.
