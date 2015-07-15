@@ -106,7 +106,7 @@ class BigBlueButtonDriverTest extends AbstractDriverTest
                     'uri' => 'api/isMeetingRunning?meetingID='.$meetingId2.'&checksum=6a9941fb0cb3f7df87626dd5d741ca4247ccce6c',
                     'response' => '<response><returncode>SUCCESS</returncode><running>false</running></response>',
                 )),
-                false,
+                true,
             ),
             'checksum-check-failed' => array(
                 $parameters3,
@@ -115,7 +115,7 @@ class BigBlueButtonDriverTest extends AbstractDriverTest
                     'uri' => 'api/isMeetingRunning?meetingID='.$meetingId3.'&checksum=d3f5a816abad3d40f7880b619dc00cbb8170a895',
                     'response' => $this->getChecksumCheckFailedMessage(),
                 )),
-                false,
+                true,
             ),
         );
     }
