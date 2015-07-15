@@ -79,11 +79,12 @@ class BigBlueButtonDriver implements DriverInterface
      */
     public function isMeetingRunning(MeetingParameters $parameters)
     {
-        // workaround for faulty meeting-discovery in BBB
-        return true;
 
         $response = $this->performRequest('isMeetingRunning', array('meetingID' => $parameters->getMeetingId()));
         $xml = new \SimpleXMLElement($response);
+
+        // workaround for faulty meeting-discovery in BBB
+        return true;
 
         if (!$xml instanceof \SimpleXMLElement) {
             return false;
