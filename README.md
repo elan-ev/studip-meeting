@@ -22,8 +22,10 @@ Als Benutzer mit root-Berechtigung müssen in der Konfiguration die folgenden
 Optionen konfiguriert werden:
 
 Option            | Erklärung
------------------ | ---------------------------------------------------------
-`VC_DRIVER`       | zu verwendender Treiber (muss auf *dfnvc* gesetzt werden)
+----------------- | ------------------------------------------------------------------------------
+`VC_DRIVER`       | zu verwendender Treiber (muss auf *dfnvc* oder *bigbluebutton* gesetzt werden)
 `DFN_VC_URL`      | API-Endpoint des DFN (wird vom DFN mitgeteilt)
 `DFN_VC_LOGIN`    | die Funktionsemailadresse
 `DFN_VC_PASSWORD` | Passwort (wird vom DFN mitgeteilt)
+`BBB_URL`         | API-Endpoint des BigBlueButton-Servers
+`BBB_SALT`        | Passwort des API-Endpoints
