@@ -28,7 +28,7 @@ class CourseConfig extends \SimpleORMap
         $value = parent::__get($name);
 
         if ($name === 'title' && ($value === null || trim($value) === '')) {
-            return 'Meetings (Betatest)';
+            return 'Meetings';
         }
 
         return $value;
