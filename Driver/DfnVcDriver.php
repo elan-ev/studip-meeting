@@ -198,7 +198,11 @@ class DfnVcDriver implements DriverInterface
             }
         }
 
-        return $this->client->getBaseUrl().$urlPath.'?session='.$userSessionCookie;
+        // use only the base-url, the join-url does not go to the XML-API
+        $parsed_url = parse_url($this->client->getBaseUrl());
+
+        return $parsed_url['scheme'] .'://'. $parsed_url['host'] .'/'
+               . ltrim($urlPath, '/') .'?session='.$userSessionCookie;
     }
 
     private function performRequest(array $params = array())
