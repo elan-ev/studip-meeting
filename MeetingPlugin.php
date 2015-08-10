@@ -42,6 +42,10 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
             } else {
                 Navigation::addItem('/meetings', $item);
             }
+
+            $item = new Navigation(_('Meetings konfigurieren'), PluginEngine::getLink($this, array(), 'admin/index'));
+            $item->setImage($GLOBALS['ASSETS_URL'].'/images/icons/16/white/chat.png');
+            Navigation::addItem('/admin/config/meetings', $item);
         } elseif ($perm->have_perm('dozent')) {
             $item = new Navigation(_('Meine Meetings'), PluginEngine::getLink($this, array(), 'index/my'));
             //$item->setImage($GLOBALS['ASSETS_URL'].'/images/icons/16/white/chat.png');
