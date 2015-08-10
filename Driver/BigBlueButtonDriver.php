@@ -134,4 +134,15 @@ class BigBlueButtonDriver implements DriverInterface
 
         return implode('&', $segments);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConfigOptions()
+    {
+        return array(
+            new ConfigOption('url',     _('URL des BBB-Servers')),
+            new ConfigOption('api-key', _('Api-Key (Salt)'))
+        );
+    }
 }

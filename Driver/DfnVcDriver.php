@@ -358,4 +358,16 @@ class DfnVcDriver implements DriverInterface
 
         return (string) $xml->cookie;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConfigOptions()
+    {
+        return array(
+            new ConfigOption('url', _('API-Endpoint'), 'https://connect.vc.dfn.de'),
+            new ConfigOption('login', _('Funktionskennung')),
+            new ConfigOption('password', _('Passwort'))
+        );
+    }
 }

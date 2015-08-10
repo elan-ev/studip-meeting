@@ -56,4 +56,13 @@ interface DriverInterface
      * @return string The URL
      */
     public function getJoinMeetingUrl(JoinParameters $parameters);
+
+    /**
+     * Returns a list of config-options this plugins needs to have configured.
+     * The options are stored json-encoed in a global config named
+     * MEETINGS_SETTINGS
+     *
+     * @return array List of ConfigOption-objects
+     */
+    public function getConfigOptions();
 }
