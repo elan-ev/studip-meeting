@@ -19,27 +19,14 @@ require_once 'app/controllers/studip_controller.php';
 
 use ElanEv\Driver\DriverFactory;
 use ElanEv\Driver\JoinParameters;
-use ElanEv\Model\CourseConfig;
 use ElanEv\Model\Join;
-use ElanEv\Model\Meeting;
-use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Driver;
 
 /**
  * @property \MeetingPlugin         $plugin
- * @property bool                   $configured
- * @property \Seminar_Perm          $perm
  * @property \Flexi_TemplateFactory $templateFactory
- * @property CourseConfig           $courseConfig
- * @property bool                   $confirmDeleteMeeting
  * @property bool                   $saved
- * @property string[]               $questionOptions
- * @property bool                   $canModifyCourse
  * @property array                  $errors
- * @property \Semester[]            $semesters
- * @property Meeting[]              $meetings
- * @property Meeting[]              $userMeetings
- * @property CourseConfig           $config
  * @property string                 $deleteAction
  */
 class AdminController extends StudipController
@@ -54,15 +41,6 @@ class AdminController extends StudipController
         parent::__construct($dispatcher);
 
         $this->plugin = $GLOBALS['plugin'];
-        $this->perm = $GLOBALS['perm'];
-        $driverFactory = new DriverFactory(Config::get());
-
-        try {
-            $this->driver = $driverFactory->getDefaultDriver();
-            $this->configured = true;
-        } catch (\LogicException $e) {
-            $this->configured = false;
-        }
     }
 
     /**
@@ -86,7 +64,6 @@ class AdminController extends StudipController
 
         Navigation::activateItem('/admin/config/meetings');
 
-        $this->courseConfig = CourseConfig::findByCourseId($this->getCourseId());
     }
 
     public function index_action()
@@ -113,7 +90,7 @@ class AdminController extends StudipController
                     $config_options[] = $config;
                 }
 
-                Driver::setConfig($driver_name, $config_options);
+                Driver::setConfigByDriver($driver_name, $config_options);
             }
         } else {
             throw new AccessDeniedException('You need to be root to perform this action!');
@@ -127,20 +104,6 @@ class AdminController extends StudipController
     /* * * * * H E L P E R   F U N C T I O N S * * * * */
     /* * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private function getCourseId()
-    {
-        if (!Request::option('cid')) {
-            if ($GLOBALS['SessionSeminar']) {
-                URLHelper::bindLinkParam('cid', $GLOBALS['SessionSeminar']);
-                return $GLOBALS['SessionSeminar'];
-            }
-
-            return false;
-        }
-
-        return Request::option('cid');
-    }
-
     private function getHelpbarContent($id)
     {
         /** @var \Helpbar $helpBar */
@@ -149,19 +112,6 @@ class AdminController extends StudipController
 
             case 'main':
                 $helpText = _('Administrationsseite für das Plugin zur Durchführung und Verwaltung von Live-Online-Treffen, Webinaren und Videokonferenzen.');
-                $helpBar = Helpbar::get();
-                $helpBar->addPlainText('', $helpText);
-                break;
-
-            case 'config':
-                $helpText = _('Arbeitsbereich zum Anpassen der Gesamtansicht der Meetings einer Veranstaltung.');
-                $helpBar = Helpbar::get();
-                $helpBar->addPlainText('', $helpText);
-                break;
-
-            case 'my':
-                $helpText = _('Gesamtansicht aller von Ihnen erstellten Meetings nach '
-                          . 'Semestern oder nach Namen sortiert.');
                 $helpBar = Helpbar::get();
                 $helpBar->addPlainText('', $helpText);
                 break;

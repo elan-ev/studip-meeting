@@ -13,8 +13,6 @@ use Guzzle\Http\ClientInterface;
  */
 class DfnVcDriver implements DriverInterface
 {
-    const NAME = 'dfnvc';
-
     /**
      * @var ClientInterface
      */
@@ -35,19 +33,11 @@ class DfnVcDriver implements DriverInterface
      * @param string          $login
      * @param string          $password
      */
-    public function __construct(ClientInterface $client, $login, $password)
+    public function __construct(ClientInterface $client, $config)
     {
         $this->client = $client;
-        $this->login = $login;
-        $this->password = $password;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return self::NAME;
+        $this->login = $config['login'];
+        $this->password = $config['password'];
     }
 
     /**

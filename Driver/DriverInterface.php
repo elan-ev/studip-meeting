@@ -10,14 +10,6 @@ namespace ElanEv\Driver;
 interface DriverInterface
 {
     /**
-     * Returns the driver name which is used internally to reference certain
-     * drivers.
-     *
-     * @return string The driver name
-     */
-    public function getName();
-
-    /**
      * Creates a new meeting with the given parameters.
      *
      * @param MeetingParameters $parameters Options to configure the meeting
@@ -62,7 +54,7 @@ interface DriverInterface
      * The options are stored json-encoed in a global config named
      * MEETINGS_SETTINGS
      *
-     * @return array List of ConfigOption-objects
+     * @return ConfigOption[] list of ConfigOption-objects
      */
     public function getConfigOptions();
 }

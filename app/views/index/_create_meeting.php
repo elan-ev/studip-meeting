@@ -19,6 +19,19 @@
                             <?php endforeach; ?>
                         </ul>
                     <?php endif; ?>
+                    <? if (sizeof($driver_config) == 1) : ?>
+                        <input type="hidden" name="driver" value="<?= key($driver_config) ?>">
+                    <? else : ?>
+                        <? $first = key($driver_config); ?>
+                        <? foreach ($driver_config as $driver => $config) : ?>
+                            <label>
+                                <input type="radio" name="driver" value="<?= $driver ?>" <?= ($driver === $first) ? 'checked="checked"' : '' ?>>
+                                <?= htmlReady($config['display_name']) ?>
+                            </label>
+                        <? endforeach ?>
+                        <br>
+                    <? endif ?>
+
                     <input type="text" name="name" placeholder="">
                     <input type="submit" value="<?= _('Meeting erstellen') ?>">
                 </fieldset>

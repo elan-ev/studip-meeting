@@ -26,6 +26,8 @@ class NewConfig extends Migration {
         try {
             Config::get()->create('VC_CONFIG');
 
+            // TODO: migrate current settings
+
             Config::get()->delete('BBB_URL');
             Config::get()->delete('BBB_SALT');
             Config::get()->delete('DFN_VC_URL');
