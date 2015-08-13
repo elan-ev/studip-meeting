@@ -9,6 +9,7 @@ use Guzzle\Http\ClientInterface;
 
 /**
  * @author Christian Flothmann <christian.flothmann@uos.de>
+ * @author Till Glöggler <tgloeggl@uos.de>
  */
 class DfnVcDriverTest extends AbstractDriverTest
 {
@@ -131,61 +132,6 @@ class DfnVcDriverTest extends AbstractDriverTest
                 false,
             ),
             'invalid-login' => array(
-                $parameters,
-                array(
-                    array(
-                        'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=common-info',
-                        'response' => trim($this->createSessionCookieResponse($sessionCookie)),
-                    ),
-                    array(
-                        'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
-                        'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="no-data"/></results>',
-                    ),
-                ),
-                false,
-            ),
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIsMeetingRunningData()
-    {
-        $parameters = new MeetingParameters();
-        $parameters->setRemoteId(383324);
-        $sessionCookie = md5(uniqid());
-
-        return array(
-            array(
-                $parameters,
-                array(
-                    array(
-                        'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=common-info',
-                        'response' => trim($this->createSessionCookieResponse($sessionCookie)),
-                    ),
-                    array(
-                        'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
-                        'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="ok"/></results>',
-                    ),
-                    array(
-                        'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=sco-shortcuts&session='.$sessionCookie,
-                        'response' => trim($this->createScoShortcutsResponse()),
-                    ),
-                    array(
-                        'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=sco-contents&sco-id=383324&session='.$sessionCookie,
-                        'response' => trim($this->createScoContentsResponse()),
-                    ),
-                ),
-                true,
-            ),
-            array(
                 $parameters,
                 array(
                     array(

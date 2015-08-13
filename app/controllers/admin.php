@@ -77,6 +77,8 @@ class AdminController extends StudipController
     public function save_action()
     {
         if ($GLOBALS['perm']->have_perm('root')) {
+            Config::get()->setValue('VC_CONFIG', '');
+
             foreach (Request::getArray('config') as $driver_name => $options) {
                 $config_options = array();
 

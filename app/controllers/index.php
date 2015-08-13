@@ -56,6 +56,7 @@ class IndexController extends StudipController
         $this->plugin = $GLOBALS['plugin'];
         $this->perm = $GLOBALS['perm'];
         $this->driver_config = Driver::getConfig();
+        $this->driver_factory = new DriverFactory(Driver::getConfig());
 
         $this->configured = false;
         foreach ($this->driver_config as $driver => $config) {
@@ -265,29 +266,6 @@ class IndexController extends StudipController
         );
     }
 
-    /**
-     * creates meeting and redirects to it.
-     */
-    public function createMeeting_action()
-    {
-        if (!$this->userCanModifyCourse($this->getCourseId())) {
-            $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
-        }
-
-        $course = Course::find($this->getCourseId());
-
-        if ($this->createMeeting($course->name)) {
-            // get the join url
-            $joinParameters = new JoinParameters();
-            $joinParameters->setMeetingId($this->getCourseId());
-            $joinParameters->setUsername(get_username($GLOBALS['user']->id));
-            $joinParameters->setPassword($this->generateModeratorPassword());
-            $joinParameters->setHasModerationPermissions(true);
-
-            $this->redirect($this->driver->getJoinMeetingUrl($joinParameters));
-        }
-    }
-
     public function enable_action($meetingId, $courseId)
     {
         $meeting = new MeetingCourse(array($meetingId, $courseId));
@@ -346,10 +324,13 @@ class IndexController extends StudipController
      */
     public function joinMeeting_action($meetingId)
     {
+        /*
         if(!$this->hasActiveMeeting()) {
             $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
             return;
         }
+         * 
+         */
 
         /** @var Seminar_User $user */
         $user = $GLOBALS['user'];
@@ -364,6 +345,8 @@ class IndexController extends StudipController
         $joinParameters->setFirstName($user->Vorname);
         $joinParameters->setLastName($user->Nachname);
 
+        $driver = $this->driver_factory->getDriver($meeting->driver);
+
         if ($this->userCanModifyCourse($this->getCourseId()) || $meeting->join_as_moderator) {
             $joinParameters->setPassword($this->generateModeratorPassword());
             $joinParameters->setHasModerationPermissions(true);
@@ -377,7 +360,7 @@ class IndexController extends StudipController
         $lastJoin->user_id = $user->cfg->getUserId();
         $lastJoin->store();
 
-        $this->redirect($this->driver->getJoinMeetingUrl($joinParameters));
+        $this->redirect($driver->getJoinMeetingUrl($joinParameters));
     }
 
     public function config_action()
@@ -447,10 +430,11 @@ class IndexController extends StudipController
 
     /**
      * @param string $name
+     * @param string $driver_name
      *
      * @return bool
      */
-    private function createMeeting($name, $driver)
+    private function createMeeting($name, $driver_name)
     {
         /** @var \Seminar_User $user */
         global $user;
@@ -459,13 +443,15 @@ class IndexController extends StudipController
         $meeting->courses[] = new Course($this->getCourseId());
         $meeting->user_id = $user->cfg->getUserId();
         $meeting->name = $name;
-        $meeting->driver = $driver;
+        $meeting->driver = $driver_name;
         $meeting->attendee_password = $this->generateAttendeePassword();
         $meeting->moderator_password = $this->generateModeratorPassword();
         $meeting->store();
         $meetingParameters = $meeting->getMeetingParameters();
 
-        if (!$this->driver->createMeeting($meetingParameters)) {
+        $driver = $this->driver_factory->getDriver($driver_name);
+
+        if (!$driver->createMeeting($meetingParameters)) {
             return false;
         }
 
@@ -473,13 +459,6 @@ class IndexController extends StudipController
         $meeting->store();
 
         return true;
-    }
-
-    private function hasActiveMeeting()
-    {
-        $meetings = MeetingCourse::findByCourseId($this->getCourseId());
-
-        return count($meetings) > 0 && $this->driver->isMeetingRunning($meetings[0]->meeting->getMeetingParameters());
     }
 
     private function userCanModifyCourse($courseId)
@@ -628,6 +607,10 @@ class IndexController extends StudipController
             // if the meeting isn't associated with at least one course at all,
             // it can be removed entirely
             if (count($meeting->courses) === 0) {
+                // inform the driver to delete the meeting as well
+                $driver = $this->driver_factory->getDriver($meeting->driver);
+                $driver->deleteMeeting($meeting->getMeetingParameters());
+
                 $meeting->delete();
             }
         }

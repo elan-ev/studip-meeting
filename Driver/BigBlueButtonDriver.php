@@ -8,6 +8,7 @@ use Guzzle\Http\ClientInterface;
  * Big Blue Button driver implementation.
  *
  * @author Christian Flothmann <christian.flothmann@uos.de>
+ * @author Till Glöggler <tgloeggl@uos.de>
  */
 class BigBlueButtonDriver implements DriverInterface
 {
@@ -62,25 +63,6 @@ class BigBlueButtonDriver implements DriverInterface
         // Big Blue Button meetings are not persistent and therefore cannot
         // be removed
         return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isMeetingRunning(MeetingParameters $parameters)
-    {
-
-        $response = $this->performRequest('isMeetingRunning', array('meetingID' => $parameters->getMeetingId()));
-        $xml = new \SimpleXMLElement($response);
-
-        // workaround for faulty meeting-discovery in BBB
-        return true;
-
-        if (!$xml instanceof \SimpleXMLElement) {
-            return false;
-        }
-
-        return isset($xml->running) && strtolower((string)$xml->running) != 'false';
     }
 
     /**
