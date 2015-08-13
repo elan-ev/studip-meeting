@@ -71,7 +71,7 @@ class DriverFactory
         }
 
         $client = $this->createHttpClient($driver_conf['url']);
-        $class = 'ElanEv\\Driver\\'. $driver .'Driver';
+        $class = 'ElanEv\\Driver\\'. $driver;
         return new $class($client, $driver_conf);
     }
 
