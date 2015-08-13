@@ -9,10 +9,10 @@
 /** @var bool $showUser */
 /** @var bool $showCreateForm */
 
-$colspan = 5;
+$colspan = 2;
 
 if ($canModifyMeetings) {
-    $colspan++;
+    $colspan += 5;
 }
 
 if ($showCourse) {
@@ -30,20 +30,24 @@ if ($showUser) {
     <table class="default collapsable tablesorter conference-meetings<?=$canModifyMeetings ? ' admin': ''?>">
         <caption><?=$title?></caption>
         <colgroup>
-            <?php if ($canModifyMeetings): ?>
+            <? if ($canModifyMeetings): ?>
                 <col style="width: 20px;">
-            <?php endif ?>
+            <? endif ?>
             <col>
             <col style="width: 120px;">
-            <?php if ($showCourse): ?>
+            <? if ($showCourse): ?>
                 <col style="width: 300px;">
-            <?php endif ?>
-            <?php if ($showUser): ?>
+            <? endif ?>
+            <? if ($showUser): ?>
                 <col style="width: 300px;">
-            <?php endif ?>
-            <col style="width: 220px;">
-            <col style="width: 80px;">
-            <col style="width: 100px;">
+            <? endif ?>
+
+            <? if ($canModifyMeetings): ?>
+                <col style="width: 100px;">
+                <col style="width: 220px;">
+                <col style="width: 80px;">
+                <col style="width: 100px;">
+            <? endif ?>
         </colgroup>
         <thead>
         <tr>
@@ -64,6 +68,7 @@ if ($showUser) {
                 <th class="sortable"><?= _('Erstellt von') ?></th>
             <?php endif ?>
             <?php if ($canModifyMeetings): ?>
+                <th class="sortable"><?= _('Treiber') ?></th>
                 <th class="sortable"><?=_('Zuletzt betreten')?></th>
                 <th class="active"><?= _('Freigeben') ?></th>
                 <th><?=_('Aktion')?></th>
@@ -143,6 +148,7 @@ if ($showUser) {
                     </td>
                 <?php endif ?>
                 <?php if ($canModifyMeetings): ?>
+                    <td><?= $this->driver_config[$meetingCourse->meeting->driver]['display_name'] ?></td>
                     <td>
                         <?php $recentJoins = array_reverse($meetingCourse->meeting->getAllJoins()) ?>
                         <?php if (count($recentJoins) > 0): ?>

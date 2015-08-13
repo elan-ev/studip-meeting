@@ -26,7 +26,7 @@ class Driver
             $class = 'ElanEv\\Driver\\' . substr(basename($filename), 0, -4);
             if (in_array('ElanEv\Driver\DriverInterface', class_implements($class)) !== false) {
                 
-                $title          = substr(basename($filename), 0, -10);
+                $title          = substr(basename($filename), 0, -4);
                 $config_options = $class::getConfigOptions();
 
                 array_unshift($config_options, new \ElanEv\Driver\ConfigOption(

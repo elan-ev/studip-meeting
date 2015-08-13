@@ -10,7 +10,7 @@ use Guzzle\Http\ClientInterface;
  * @author Christian Flothmann <christian.flothmann@uos.de>
  * @author Till Glöggler <tgloeggl@uos.de>
  */
-class BigBlueButtonDriver implements DriverInterface
+class BigBlueButton implements DriverInterface
 {
     /**
      * @var \Guzzle\Http\ClientInterface The HTTP client

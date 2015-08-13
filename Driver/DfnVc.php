@@ -11,7 +11,7 @@ use Guzzle\Http\ClientInterface;
  *
  * @author Christian Flothmann
  */
-class DfnVcDriver implements DriverInterface
+class DfnVc implements DriverInterface
 {
     /**
      * @var ClientInterface
