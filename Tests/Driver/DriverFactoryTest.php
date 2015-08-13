@@ -12,20 +12,11 @@ use ElanEv\Driver\DriverFactory;
 class DriverFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @expectedException \LogicException
-     */
-    public function testGetDefaultDriverThrowsExceptionForInvalidDefaultDriver()
-    {
-        $driverFactory = $this->getDriverFactory(array('VC_DRIVER' => 'foo'));
-        $driverFactory->getDefaultDriver();
-    }
-
-    /**
      * @dataProvider getProperlyConfiguredDrivers
      */
     public function testGetDefaultDriverReturnsDriverIfProperlyConfigured($driver, array $configuration, $expectedClass)
     {
-        $configuration['VC_DRIVER'] = $driver;
+        $configuration['VC_CONFIG'] = $driver;
 
         $this->assertInstanceOf($expectedClass, $this->getDriverFactory($configuration)->getDefaultDriver());
     }
@@ -36,7 +27,7 @@ class DriverFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetDefaultDriverThrowsExceptionIfNotProperlyConfigured($driver, array $configuration)
     {
-        $configuration['VC_DRIVER'] = $driver;
+        $configuration['VC_CONFIG'] = $driver;
 
         $this->getDriverFactory($configuration)->getDefaultDriver();
     }
@@ -60,20 +51,18 @@ class DriverFactoryTest extends \PHPUnit_Framework_TestCase
     public function getProperlyConfiguredDrivers()
     {
         return array(
-            'big-blue-button' => array(
-                BigBlueButtonDriver::NAME,
+            'BigBlueButton' => array(
                 array(
-                    'BBB_URL' => 'http://example.com',
-                    'BBB_SALT' => md5(uniqid()),
+                    'url' => 'http://example.com',
+                    'salt' => md5(uniqid()),
                 ),
                 'ElanEv\Driver\BigBlueButtonDriver',
             ),
-            'dfn-vc' => array(
-                DfnVcDriver::NAME,
+            'DfnVc' => array(
                 array(
-                    'DFN_VC_URL' => 'http://example.com',
-                    'DFN_VC_LOGIN' => 'johndoe',
-                    'DFN_VC_PASSWORD' => 'password',
+                    'url' => 'http://example.com',
+                    'login' => 'johndoe',
+                    'password' => 'password',
                 ),
                 'ElanEv\Driver\DfnVcDriver',
             ),
@@ -93,31 +82,26 @@ class DriverFactoryTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             'big-blue-button-without-url' => array(
-                BigBlueButtonDriver::NAME,
                 array('BBB_SALT' => md5(uniqid())),
             ),
             'big-blue-button-without-salt' => array(
-                BigBlueButtonDriver::NAME,
                 array(
                     'BBB_URL' => 'http://example.com',
                 ),
             ),
             'dfn-vc-without-url' => array(
-                DfnVcDriver::NAME,
                 array(
                     'DFN_VC_LOGIN' => 'johndoe',
                     'DFN_VC_PASSWORD' => 'password',
                 ),
             ),
             'dfn-vc-without-login' => array(
-                DfnVcDriver::NAME,
                 array(
                     'DFN_VC_URL' => 'http://example.com',
                     'DFN_VC_PASSWORD' => 'password',
                 ),
             ),
             'dfn-vc-without-password' => array(
-                DfnVcDriver::NAME,
                 array(
                     'DFN_VC_URL' => 'http://example.com',
                     'DFN_VC_LOGIN' => 'johndoe',

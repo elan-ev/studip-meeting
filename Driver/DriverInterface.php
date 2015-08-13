@@ -6,6 +6,7 @@ namespace ElanEv\Driver;
  * Common interface for different conference server API driver implementations.
  *
  * @author Christian Flothmann <christian.flothmann@uos.de>
+ * @author Till Glöggler <tgloeggl@uos.de>
  */
 interface DriverInterface
 {
@@ -29,15 +30,6 @@ interface DriverInterface
      *              otherwise
      */
     public function deleteMeeting(MeetingParameters $parameters);
-
-    /**
-     * Checks if a meeting with a certain id is already running.
-     *
-     * @param MeetingParameters $parameters The parameters describing the meeting
-     *
-     * @return bool True if the meeting is running, false otherwise
-     */
-    public function isMeetingRunning(MeetingParameters $parameters);
 
     /**
      * Returns the URL which can be browsed to join a meeting.

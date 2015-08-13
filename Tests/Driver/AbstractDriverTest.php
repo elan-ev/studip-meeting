@@ -64,21 +64,6 @@ abstract class AbstractDriverTest extends \PHPUnit_Framework_TestCase
     public abstract function getDeleteMeetingData();
 
     /**
-     * @dataProvider getIsMeetingRunningData
-     */
-    public function testIsMeetingRunning($meetingId, array $expectedRequests, $expectedResult)
-    {
-        foreach ($expectedRequests as $request) {
-            $this->validateRequest($request);
-        }
-
-        $this->assertSame($expectedResult, $this->driver->isMeetingRunning($meetingId));
-        $this->assertSame(count($expectedRequests), $this->requestsCount);
-    }
-
-    public abstract function getIsMeetingRunningData();
-
-    /**
      * @dataProvider getGetJoinMeetingUrlData
      */
     public function testGetJoinMeetingUrl(JoinParameters $parameters, array $expectedRequests, $expectedUrl)

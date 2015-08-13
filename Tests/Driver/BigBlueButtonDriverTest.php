@@ -9,6 +9,7 @@ use Guzzle\Http\ClientInterface;
 
 /**
  * @author Christian Flothmann <christian.flothmann@uos.de>
+ * @author Till Glöggler <tgloeggl@uos.de>
  */
 class BigBlueButtonDriverTest extends AbstractDriverTest
 {
@@ -69,52 +70,6 @@ class BigBlueButtonDriverTest extends AbstractDriverTest
             'delete-meeting-not-possible' => array(
                 new MeetingParameters(),
                 array(),
-                true,
-            ),
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIsMeetingRunningData()
-    {
-        $meetingId1 = '788b98f571322bb3a471c8f2926fce9b';
-        $parameters1 = new MeetingParameters();
-        $parameters1->setMeetingId($meetingId1);
-        $meetingId2 = '687c258d96bd340c4aa09bfe67842d40';
-        $parameters2 = new MeetingParameters();
-        $parameters2->setMeetingId($meetingId2);
-        $meetingId3 = '1b0ac2b59cc262b1651c0b8d7a53c7ba';
-        $parameters3 = new MeetingParameters();
-        $parameters3->setMeetingId($meetingId3);
-
-        return array(
-            'meeting-running' => array(
-                $parameters1,
-                array(array(
-                    'method' => 'get',
-                    'uri' => 'api/isMeetingRunning?meetingID='.$meetingId1.'&checksum=2ebbbc94d0ca360b02b2a83ceeed1112b60bd90e',
-                    'response' => '<response><returncode>SUCCESS</returncode><running>true</running></response>',
-                )),
-                true,
-            ),
-            'meeting-not-running' => array(
-                $parameters2,
-                array(array(
-                    'method' => 'get',
-                    'uri' => 'api/isMeetingRunning?meetingID='.$meetingId2.'&checksum=6a9941fb0cb3f7df87626dd5d741ca4247ccce6c',
-                    'response' => '<response><returncode>SUCCESS</returncode><running>false</running></response>',
-                )),
-                true,
-            ),
-            'checksum-check-failed' => array(
-                $parameters3,
-                array(array(
-                    'method' => 'get',
-                    'uri' => 'api/isMeetingRunning?meetingID='.$meetingId3.'&checksum=d3f5a816abad3d40f7880b619dc00cbb8170a895',
-                    'response' => $this->getChecksumCheckFailedMessage(),
-                )),
                 true,
             ),
         );

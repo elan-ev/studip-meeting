@@ -1,7 +1,7 @@
 <?php
 
 /**
- * File - description
+ * Driver.php - class to manage the registerable drivers
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
@@ -35,9 +35,9 @@ class Driver
 
                 $config_options[] = new \ElanEv\Driver\ConfigOption('enable', '');
 
-                $drivers[strtolower($title)] = array(
+                $drivers[$title] = array(
                     'title'  => $title,
-                    'config' => self::getConfigByDriver(strtolower($title), $config_options)
+                    'config' => self::getConfigByDriver($title, $config_options)
                 );
             }
         }

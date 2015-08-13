@@ -25,9 +25,9 @@ class DriverFactory
     /**
      * @param \Config $config The application configuration
      */
-    public function __construct()
+    public function __construct($config)
     {
-        $this->config = Driver::getConfig();
+        $this->config = $config;
     }
 
     /**
@@ -62,7 +62,7 @@ class DriverFactory
         }
 
         $driver_conf = $this->config[$driver];
-        if ($driver_conf['enabled'] == 0) {
+        if (!$driver_conf['enable']) {
             throw new \InvalidArgumentException(sprintf('The driver "%s" is not enabled.', $driver));
         }
 
@@ -70,53 +70,13 @@ class DriverFactory
             throw new \InvalidArgumentException(sprintf('The driver "%s" has not configured the url config option!', $driver));
         }
 
-        var_Dump($driver, $driver_conf);
-
         $client = $this->createHttpClient($driver_conf['url']);
-        #return new BigBlueButtonDriver($client, $driver_conf);
-
-        /*
-        
-        switch ($driver) {
-            case BigBlueButtonDriver::NAME:
-                $config = $this->resolveConfiguration(array('BBB_URL', 'BBB_SALT'));
-                $client = $this->createHttpClient($config['BBB_URL']);
-
-                return new BigBlueButtonDriver($client, $config['BBB_SALT']);
-            case DfnVcDriver::NAME:
-                $config = $this->resolveConfiguration(array('DFN_VC_URL', 'DFN_VC_LOGIN', 'DFN_VC_PASSWORD'));
-                $client = $this->createHttpClient($config['DFN_VC_URL']);
-
-                return new DfnVcDriver($client, $config['DFN_VC_LOGIN'], $config['DFN_VC_PASSWORD']);
-            default:
-                throw new \InvalidArgumentException(sprintf('The driver "%s" does not exist.', $driver));
-        }
-         *
-         */
+        $class = 'ElanEv\\Driver\\'. $driver .'Driver';
+        return new $class($client, $driver_conf);
     }
 
     private function createHttpClient($apiUrl)
     {
         return new Client($apiUrl);
     }
-
-    /*
-    private function resolveConfiguration(array $expectedOptions)
-    {
-        $config = array();
-
-        foreach ($expectedOptions as $option) {
-            $value = $this->config->getValue($option);
-
-            if (!$value) {
-                throw new \LogicException(sprintf('The config option "%s" is not configured.', $option));
-            }
-
-            $config[$option] = $value;
-        }
-
-        return $config;
-    }
-     * 
-     */
 }

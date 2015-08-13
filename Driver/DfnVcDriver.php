@@ -116,34 +116,6 @@ class DfnVcDriver implements DriverInterface
     /**
      * {@inheritdoc}
      */
-    public function isMeetingRunning(MeetingParameters $parameters)
-    {
-        // request the session cookie
-        $sessionCookie = $this->requestSessionCookie();
-
-        // login using the LMS credentials
-        if (!$this->authenticate($sessionCookie)) {
-            return false;
-        }
-
-        // request the folder id
-        $folderId = $this->getFolderId($sessionCookie, 'my-meetings');
-
-        // request all SCOs in the folder
-        $response = $this->performRequest(array(
-            'action' => 'sco-contents',
-            'sco-id' => $folderId,
-            'session' => $sessionCookie,
-        ));
-        $xml = new \SimpleXMLElement($response);
-
-        // check if there is a meeting with the given id
-        return count($xml->xpath('./scos/sco[@sco-id="'.$parameters->getRemoteId().'"]')) > 0;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getJoinMeetingUrl(JoinParameters $parameters)
     {
         // request the session cookie
