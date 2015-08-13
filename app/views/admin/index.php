@@ -11,10 +11,12 @@
         </label>
 
         <? foreach ($driver['config'] as $option) : ?>
-        <label class="caption">
-            <?= $option->getDisplayName() ?>
-            <input type="text" name="config[<?= $name ?>][<?= $option->getName() ?>]" value="<?= $option->getValue() ?>">
-        </label>
+            <? if ($option->getName() != enable) : ?>
+            <label class="caption">
+                <?= $option->getDisplayName() ?>
+                <input type="text" name="config[<?= $name ?>][<?= $option->getName() ?>]" value="<?= $option->getValue() ?>">
+            </label>
+            <? endif ?>
         <? endforeach ?>
 
     </fieldset>

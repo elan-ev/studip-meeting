@@ -22,7 +22,7 @@ class Driver
     {
         $drivers = array();
 
-        foreach (glob(dirname(__FILE__) . '/../../Driver/*.php') as $filename) {
+        foreach (glob(__DIR__ . '/../../Driver/*.php') as $filename) {
             $class = 'ElanEv\\Driver\\' . substr(basename($filename), 0, -4);
             if (in_array('ElanEv\Driver\DriverInterface', class_implements($class)) !== false) {
                 
@@ -35,9 +35,9 @@ class Driver
 
                 $config_options[] = new \ElanEv\Driver\ConfigOption('enable', '');
 
-                $drivers[$class::getName()] = array(
+                $drivers[strtolower($title)] = array(
                     'title'  => $title,
-                    'config' => self::getConfig($class::getName(), $config_options)
+                    'config' => self::getConfigByDriver(strtolower($title), $config_options)
                 );
             }
         }
@@ -52,7 +52,7 @@ class Driver
         }
     }
 
-    static function getConfig($driver_name, $config_options)
+    static function getConfigByDriver($driver_name, $config_options)
     {
         self::loadConfig();
 
@@ -69,7 +69,7 @@ class Driver
         return $new_config;
     }
 
-    static function setConfig($driver_name, $config_options)
+    static function setConfigByDriver($driver_name, $config_options)
     {
         self::loadConfig();
 
@@ -78,5 +78,12 @@ class Driver
         }
 
         \Config::get()->store('VC_CONFIG', json_encode(self::$config));
+    }
+
+    static function getConfig()
+    {
+        self::loadConfig();
+
+        return self::$config;
     }
 }

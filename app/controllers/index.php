@@ -23,6 +23,7 @@ use ElanEv\Model\CourseConfig;
 use ElanEv\Model\Join;
 use ElanEv\Model\Meeting;
 use ElanEv\Model\MeetingCourse;
+use ElanEv\Model\Driver;
 
 /**
  * @property \MeetingPlugin         $plugin
@@ -54,13 +55,15 @@ class IndexController extends StudipController
 
         $this->plugin = $GLOBALS['plugin'];
         $this->perm = $GLOBALS['perm'];
-        $driverFactory = new DriverFactory(Config::get());
+        $this->driver_config = Driver::getConfig();
 
-        try {
-            $this->driver = $driverFactory->getDefaultDriver();
-            $this->configured = true;
-        } catch (\LogicException $e) {
-            $this->configured = false;
+        $this->configured = false;
+        foreach ($this->driver_config as $driver => $config) {
+            if ($config['enable']) {
+                $this->configured = true;
+            } else {
+                unset($this->driver_config[$driver]);
+            }
         }
     }
 
@@ -113,7 +116,7 @@ class IndexController extends StudipController
             }
 
             if (count($this->errors) === 0) {
-                $this->createMeeting(\Request::get('name'));
+                $this->createMeeting(\Request::get('name'), Request::get('driver'));
             }
         }
 
@@ -165,8 +168,6 @@ class IndexController extends StudipController
             $this->meetings = MeetingCourse::findActiveByCourseId($this->getCourseId());
             $this->userMeetings = array();
         }
-
-        $this->vc_driver = Config::get()->getValue('VC_DRIVER');
     }
 
     public function my_action($type = null)
@@ -265,7 +266,7 @@ class IndexController extends StudipController
     }
 
     /**
-     * creates meeting and redirects to BBB meeting.
+     * creates meeting and redirects to it.
      */
     public function createMeeting_action()
     {
@@ -449,7 +450,7 @@ class IndexController extends StudipController
      *
      * @return bool
      */
-    private function createMeeting($name)
+    private function createMeeting($name, $driver)
     {
         /** @var \Seminar_User $user */
         global $user;
@@ -458,7 +459,7 @@ class IndexController extends StudipController
         $meeting->courses[] = new Course($this->getCourseId());
         $meeting->user_id = $user->cfg->getUserId();
         $meeting->name = $name;
-        $meeting->driver = $this->driver->getName();
+        $meeting->driver = $driver;
         $meeting->attendee_password = $this->generateAttendeePassword();
         $meeting->moderator_password = $this->generateModeratorPassword();
         $meeting->store();

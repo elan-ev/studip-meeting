@@ -3,6 +3,7 @@
 namespace ElanEv\Driver;
 
 use Guzzle\Http\Client;
+use ElanEv\Model\Driver;
 
 /**
  * Creates driver instances based on the application configuration.
@@ -11,19 +12,22 @@ use Guzzle\Http\Client;
  */
 class DriverFactory
 {
+    /*
+     * @deprecated
+     */
     const DEFAULT_DRIVER_CONFIG_ID = '3c6bfcf5dd3157f53ab1143af1acc899';
 
     /**
-     * @var \Config
+     * @var array
      */
     private $config;
 
     /**
      * @param \Config $config The application configuration
      */
-    public function __construct(\Config $config)
+    public function __construct()
     {
-        $this->config = $config;
+        $this->config = Driver::getConfig();
     }
 
     /**
@@ -34,9 +38,9 @@ class DriverFactory
      *                         or when the default driver is not configured
      *                         properly
      */
-    public function getDefaultDriver()
+    public function getDriverList()
     {
-        return $this->getDriver($this->config->getValue('VC_DRIVER'));
+        return $this->config;
     }
 
     /**
@@ -53,6 +57,26 @@ class DriverFactory
      */
     public function getDriver($driver)
     {
+        if (empty($this->config[$driver])) {
+            throw new \InvalidArgumentException(sprintf('The driver "%s" does not exist.', $driver));
+        }
+
+        $driver_conf = $this->config[$driver];
+        if ($driver_conf['enabled'] == 0) {
+            throw new \InvalidArgumentException(sprintf('The driver "%s" is not enabled.', $driver));
+        }
+
+        if (!$driver_conf['url']) {
+            throw new \InvalidArgumentException(sprintf('The driver "%s" has not configured the url config option!', $driver));
+        }
+
+        var_Dump($driver, $driver_conf);
+
+        $client = $this->createHttpClient($driver_conf['url']);
+        #return new BigBlueButtonDriver($client, $driver_conf);
+
+        /*
+        
         switch ($driver) {
             case BigBlueButtonDriver::NAME:
                 $config = $this->resolveConfiguration(array('BBB_URL', 'BBB_SALT'));
@@ -67,6 +91,8 @@ class DriverFactory
             default:
                 throw new \InvalidArgumentException(sprintf('The driver "%s" does not exist.', $driver));
         }
+         *
+         */
     }
 
     private function createHttpClient($apiUrl)
@@ -74,6 +100,7 @@ class DriverFactory
         return new Client($apiUrl);
     }
 
+    /*
     private function resolveConfiguration(array $expectedOptions)
     {
         $config = array();
@@ -90,4 +117,6 @@ class DriverFactory
 
         return $config;
     }
+     * 
+     */
 }
