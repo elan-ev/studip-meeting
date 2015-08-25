@@ -103,28 +103,6 @@ if ($showUser) {
                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/20/grey/decline.png" class="decline-button" title="<?=_('Änderungen verwerfen')?>">
                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/ajax_indicator_small.gif" class="loading-indicator">
                     <input type="text" name="recording_url" placeholder="<?=_('URL zur Aufzeichnung')?>">
-
-                    <?php if ($canModifyMeetings): ?>
-                        <ul class="info">
-                            <?php if ($meetingCourse->meeting->join_as_moderator): ?>
-                                <li><?=_('Teilnehmende haben VeranstalterInnen-Rechte (wie Anlegende/r).')?></li>
-                            <?php else: ?>
-                                <li><?=_('Teilnehmende haben eingeschränkte Teilnehmenden-Rechte.')?></li>
-                            <?php endif; ?>
-
-                            <?php if (count($meetingCourse->meeting->getRecentJoins()) === 1): ?>
-                                <li><?=_('Eine Person hat das Meeting in den letzten 24 Stunden betreten')?>.</li>
-                            <?php else: ?>
-                                <li><?=count($meetingCourse->meeting->getRecentJoins()).' '._('Personen haben das Meeting in den letzten 24 Stunden betreten')?>.</li>
-                            <?php endif; ?>
-
-                            <?php if (count($meetingCourse->meeting->getAllJoins()) === 1): ?>
-                                <li><?=_('Eine Person hat das Meeting insgesamt betreten')?>.</li>
-                            <?php else: ?>
-                                <li><?=count($meetingCourse->meeting->getAllJoins()).' '._('Personen haben das Meeting insgesamt betreten')?>.</li>
-                            <?php endif; ?>
-                        </ul>
-                    <?php endif ?>
                 </td>
                 <td class="recording-url">
                     <a href="<?=$meetingCourse->meeting->recording_url?>" target="_blank" class="meeting-recording-url"<?=!$meetingCourse->meeting->recording_url ? ' style="display:none;"' : ''?>>
@@ -175,7 +153,33 @@ if ($showUser) {
                         </a>
                     </td>
                 <?php endif; ?>
-            </tr>
+                </tr>
+
+                <?php if ($canModifyMeetings): ?>
+                <tr class="info">
+                    <td colspan="8">
+                        <ul>
+                            <?php if ($meetingCourse->meeting->join_as_moderator): ?>
+                                <li><?=_('Teilnehmende haben VeranstalterInnen-Rechte (wie Anlegende/r).')?></li>
+                            <?php else: ?>
+                                <li><?=_('Teilnehmende haben eingeschränkte Teilnehmenden-Rechte.')?></li>
+                            <?php endif; ?>
+
+                            <?php if (count($meetingCourse->meeting->getRecentJoins()) === 1): ?>
+                                <li><?=_('Eine Person hat das Meeting in den letzten 24 Stunden betreten')?>.</li>
+                            <?php else: ?>
+                                <li><?=count($meetingCourse->meeting->getRecentJoins()).' '._('Personen haben das Meeting in den letzten 24 Stunden betreten')?>.</li>
+                            <?php endif; ?>
+
+                            <?php if (count($meetingCourse->meeting->getAllJoins()) === 1): ?>
+                                <li><?=_('Eine Person hat das Meeting insgesamt betreten')?>.</li>
+                            <?php else: ?>
+                                <li><?=count($meetingCourse->meeting->getAllJoins()).' '._('Personen haben das Meeting insgesamt betreten')?>.</li>
+                            <?php endif; ?>
+                        </ul>
+                    </td>
+                </tr>
+                <?php endif ?>
         <?php endforeach; ?>
         </tbody>
 

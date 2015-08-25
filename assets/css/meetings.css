@@ -29,7 +29,7 @@ table.conference-meetings img.info {
     cursor: pointer;
 }
 
-table.conference-meetings ul.info {
+table.conference-meetings tr.info {
     display: none;
 }
 
