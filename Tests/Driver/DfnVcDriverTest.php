@@ -2,7 +2,7 @@
 
 namespace ElanEv\Tests\Driver;
 
-use ElanEv\Driver\DfnVcDriver;
+use ElanEv\Driver\DfnVc;
 use ElanEv\Driver\JoinParameters;
 use ElanEv\Driver\MeetingParameters;
 use Guzzle\Http\ClientInterface;
@@ -187,7 +187,10 @@ class DfnVcDriverTest extends AbstractDriverTest
      */
     protected function createDriver(ClientInterface $client)
     {
-        return new DfnVcDriver($this->client, $this->login, $this->password);
+        return new DfnVc($this->client, array(
+            'login'    => $this->login,
+            'password' => $this->password
+        ));
     }
 
     private function createSessionCookieResponse($sessionCookie)
