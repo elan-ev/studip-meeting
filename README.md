@@ -11,8 +11,7 @@ Einrichtung
 
 ### BigBlueButton
 
-
-Entweder Sie setzen sich selbst einen Server auf oder nehmen eines der Hosting-Angebote in Anspruch:
+Entweder Sie setzen sich selbst einen Server auf (http://bigbluebutton.org) oder nehmen eines der Hosting-Angebote in Anspruch:
 http://bigbluebutton.org/commercial-support/
 
 ### DfnVc (Adobe Connect)
