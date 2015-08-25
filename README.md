@@ -9,14 +9,13 @@ Teilnehmer/innen des Kurses können der Konferenz beitreten.
 Einrichtung
 -----------
 
-BigBlueButton
-=============
+### BigBlueButton
+
 
 Entweder Sie setzen sich selbst einen Server auf oder nehmen eines der Hosting-Angebote in Anspruch:
 http://bigbluebutton.org/commercial-support/
 
-DfnVc (Adobe Connect)
-=====================
+### DfnVc (Adobe Connect)
 
 Ist die Hochschule Mitglied der DFN und soll für das Plugin "Meetings" (Videokonferenzen)
 Adobe Connect über die DFN genutzt werden, müsste die Hochschule bei der DFN
