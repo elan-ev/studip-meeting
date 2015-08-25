@@ -25,6 +25,11 @@ class BigBlueButton implements DriverInterface
     public function __construct(ClientInterface $client, array $config)
     {
         $this->client = $client;
+
+        if (!isset($config['api-key'])) {
+            throw new \InvalidArgumentException('Missing api-key in config array!');
+        }
+
         $this->salt = $config['api-key'];
     }
 

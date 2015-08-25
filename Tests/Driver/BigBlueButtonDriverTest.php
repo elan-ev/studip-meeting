@@ -2,7 +2,7 @@
 
 namespace ElanEv\Tests\Driver;
 
-use ElanEv\Driver\BigBlueButtonDriver;
+use ElanEv\Driver\BigBlueButton;
 use ElanEv\Driver\JoinParameters;
 use ElanEv\Driver\MeetingParameters;
 use Guzzle\Http\ClientInterface;
@@ -119,7 +119,7 @@ class BigBlueButtonDriverTest extends AbstractDriverTest
      */
     protected function createDriver(ClientInterface $client)
     {
-        return new BigBlueButtonDriver($client, $this->salt);
+        return new BigBlueButton($client, array('api-key' => $this->salt));
     }
 
     private function getDuplicateWarningMessage()
