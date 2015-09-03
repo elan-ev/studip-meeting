@@ -104,6 +104,10 @@ class IndexController extends StudipController
         PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Meetings'));
         $this->getHelpbarContent('main');
 
+        // get messages from rerouted actions
+        $this->messages = $_SESSION['studip_meetings_messages'];
+        $_SESSION['studip_meetings_messages'] = null;
+
         /** @var \Seminar_User $user */
         $user = $GLOBALS['user'];
         $course = new Course($this->getCourseId());
@@ -360,7 +364,17 @@ class IndexController extends StudipController
         $lastJoin->user_id = $user->cfg->getUserId();
         $lastJoin->store();
 
-        $this->redirect($driver->getJoinMeetingUrl($joinParameters));
+        try {
+            if ($join_url = $driver->getJoinMeetingUrl($joinParameters)) {
+                $this->redirect($driver->getJoinMeetingUrl($joinParameters));
+            } else {
+                $_SESSION['studip_meetings_messages']['error'][] = 'Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server fehlgeschlagen.';
+                $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
+            }
+        } catch (Exception $e) {
+            $_SESSION['studip_meetings_messages']['error'][] = 'Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server fehlgeschlagen. ('. $e->getMessage() .')';
+            $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
+        }
     }
 
     public function config_action()
@@ -451,7 +465,12 @@ class IndexController extends StudipController
 
         $driver = $this->driver_factory->getDriver($driver_name);
 
-        if (!$driver->createMeeting($meetingParameters)) {
+        try {
+            if (!$driver->createMeeting($meetingParameters)) {
+                return false;
+            }
+        } catch (Exception $e) {
+            $_SESSION['studip_meetings_messages']['error'][] = $e->getMessage();
             return false;
         }
 
@@ -609,7 +628,11 @@ class IndexController extends StudipController
             if (count($meeting->courses) === 0) {
                 // inform the driver to delete the meeting as well
                 $driver = $this->driver_factory->getDriver($meeting->driver);
-                $driver->deleteMeeting($meeting->getMeetingParameters());
+                try {
+                    $driver->deleteMeeting($meeting->getMeetingParameters());
+                } catch (Exception $e) {
+                    $_SESSION['studip_meetings_messages']['error'][] = $e->getMessage();
+                }
 
                 $meeting->delete();
             }
