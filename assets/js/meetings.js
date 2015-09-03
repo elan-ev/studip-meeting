@@ -29,7 +29,8 @@
                 window.location.href = url;
             }
         });
-
+        
+        /*
         var tableSorterHeaders = {};
         $('table.conference-meetings.admin thead th').each(function (index, cell) {
             if (!$(cell).hasClass('sortable')) {
@@ -41,6 +42,7 @@
             sortList: [[1, 0]],
             textExtraction: 'complex'
         });
+        */
 
         $('table.conference-meetings a.edit-meeting').click(function (event) {
             event.preventDefault();
