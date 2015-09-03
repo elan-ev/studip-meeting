@@ -11,6 +11,7 @@
 <?php else: ?>
     <?= $this->render_partial('index/_confirm_delete') ?>
 
+    <?= $this->render_partial('index/_messages', compact('messages')) ?>
     <?php if (trim(strip_tags($courseConfig->introduction))): ?>
         <div class="vc_introduction"><?= formatReady($courseConfig->introduction) ?></div>
     <?php endif ?>
