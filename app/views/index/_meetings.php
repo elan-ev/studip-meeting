@@ -98,11 +98,11 @@ if ($showUser) {
                             (<?=count($meetingCourse->meeting->courses)?> <?=_('LV')?>)
                         <?php endif ?>
                     </a>
-                    <input type="text" name="name">
+                    <input type="text" name="name"><br>
+                    <input type="text" name="recording_url" placeholder="<?=_('URL zur Aufzeichnung')?>">
                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/20/grey/accept.png" class="accept-button" title="<?=_('Änderungen speichern')?>">
                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/20/grey/decline.png" class="decline-button" title="<?=_('Änderungen verwerfen')?>">
                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/ajax_indicator_small.gif" class="loading-indicator">
-                    <input type="text" name="recording_url" placeholder="<?=_('URL zur Aufzeichnung')?>">
                 </td>
                 <td class="recording-url">
                     <a href="<?=$meetingCourse->meeting->recording_url?>" target="_blank" class="meeting-recording-url"<?=!$meetingCourse->meeting->recording_url ? ' style="display:none;"' : ''?>>
