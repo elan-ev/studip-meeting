@@ -97,6 +97,8 @@ class IndexController extends StudipController
         }
 
         $this->courseConfig = CourseConfig::findByCourseId($this->getCourseId());
+
+        libxml_use_internal_errors(true);
     }
 
     public function index_action()
