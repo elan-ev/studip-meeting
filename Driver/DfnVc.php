@@ -64,7 +64,7 @@ class DfnVc implements DriverInterface
         $response = $this->performRequest(array(
             'action' => 'sco-update',
             'type' => 'meeting',
-            'name' => $parameters->getMeetingId().' - '.$parameters->getMeetingName(),
+            'name' => $parameters->getMeetingId().' - '.studip_utf8encode($parameters->getMeetingName()),
             'folder-id' => $folderId,
             'session' => $sessionCookie,
         ));
