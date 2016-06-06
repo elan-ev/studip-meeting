@@ -7,6 +7,8 @@ use ElanEv\Driver\JoinParameters;
 use ElanEv\Driver\MeetingParameters;
 use Guzzle\Http\ClientInterface;
 
+require_once('bootstrap.php');
+
 /**
  * @author Christian Flothmann <christian.flothmann@uos.de>
  * @author Till Glöggler <tgloeggl@uos.de>
