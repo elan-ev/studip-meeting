@@ -87,7 +87,7 @@ class AdminController extends StudipController
                 }
 
                 foreach ($options as $name => $value) {
-                    $config = new \ElanEv\Driver\ConfigOption($name);
+                    $config = new \ElanEv\Driver\ConfigOption($name, '');
                     $config->setValue($value);
                     $config_options[] = $config;
                 }
