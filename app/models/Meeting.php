@@ -52,6 +52,30 @@ class Meeting extends \SimpleORMap
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public static function configure($config = array())
+    {
+        $config['db_table'] = 'vc_meetings';
+        $config['has_many']['joins'] = array(
+            'class_name' => 'ElanEv\Model\Join',
+            'assoc_foreign_key' => 'meeting_id',
+            'on_delete' => 'delete',
+        );
+        $config['has_and_belongs_to_many']['courses'] = array(
+            'class_name' => 'Course',
+            'thru_table' => 'vc_meeting_course',
+            'thru_key' => 'meeting_id',
+            'thru_assoc_key' => 'course_id',
+            'assoc_foreign_key' => 'seminar_id',
+            'on_store' => true,
+            'on_delete' => true,
+        );
+
+        parent::configure($config);
+    }
+
+    /**
      * Returns the most recent user joins of the meeting (the users that
      * joined the meeting during the last 24 hours).
      *
