@@ -29,7 +29,7 @@
                 window.location.href = url;
             }
         });
-        
+
         /*
         var tableSorterHeaders = {};
         $('table.conference-meetings.admin thead th').each(function (index, cell) {

@@ -24,6 +24,7 @@ use ElanEv\Model\Join;
 use ElanEv\Model\Meeting;
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Driver;
+use ElanEv\Model\Helper;
 
 /**
  * @property \MeetingPlugin         $plugin
@@ -335,7 +336,7 @@ class IndexController extends StudipController
             $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
             return;
         }
-         * 
+         *
          */
 
         /** @var Seminar_User $user */
@@ -489,12 +490,12 @@ class IndexController extends StudipController
 
     private function generateModeratorPassword()
     {
-        return md5($this->getCourseId().'modPw');
+        return Helper::createPassword();
     }
 
     private function generateAttendeePassword()
     {
-        return md5($this->getCourseId().'attPw');
+        return Helper::createPassword();
     }
 
     private function buildSidebar($navigationItems = array(), $viewsItems = array(), $actionsItems = array())

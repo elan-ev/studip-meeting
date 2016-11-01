@@ -23,6 +23,15 @@ class CourseConfig extends \SimpleORMap
     /**
      * {@inheritdoc}
      */
+    public static function configure($config = array())
+    {
+        $config['db_table'] = 'vc_course_config';
+        parent::configure($config);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function __get($name)
     {
         $value = parent::__get($name);
@@ -35,7 +44,7 @@ class CourseConfig extends \SimpleORMap
     }
 
     /**
-     * TODO: documentation
+     * Get course configuration for passed course
      *
      * @param string $courseId The course id
      *

@@ -29,6 +29,18 @@ class Join extends \SimpleORMap
         }
     }
 
+    public static function configure($config = array())
+    {
+        $config['db_table'] = 'vc_joins';
+
+        $config['belongs_to']['meeting'] = array(
+            'class_name' => 'ElanEv\Model\Meeting',
+            'foreign_key' => 'meeting_id',
+        );
+
+        parent::configure($config);
+    }
+
     /**
      * Finds the most recent joins for a meeting (the number of users that
      * joined a meeting in the last 24 hours).

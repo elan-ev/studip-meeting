@@ -20,6 +20,8 @@ require_once __DIR__.'/vendor/autoload.php';
 use ElanEv\Model\CourseConfig;
 use ElanEv\Model\MeetingCourse;
 
+require_once 'compat/StudipVersion.php';
+
 class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
 {
     const NAVIGATION_ITEM_NAME = 'video-conferences';
@@ -50,7 +52,7 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
             $item = new Navigation(_('Meine Meetings'), PluginEngine::getLink($this, array(), 'index/my'));
             //$item->setImage($GLOBALS['ASSETS_URL'].'/images/icons/16/white/chat.png');
             //Navigation::addItem('/meetings', $item);
-	        Navigation::addItem('/profile/meetings', $item);
+            Navigation::addItem('/profile/meetings', $item);
         }
 
         // do nothing if plugin is deactivated in this seminar/institute
@@ -64,10 +66,10 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
         }
     }
 
-	public function getPluginName()
-	{
-		return _('Meetings (Beta)');
-	}
+    public function getPluginName()
+    {
+        return _('Meetings');
+    }
 
     public function getInfoTemplate($course_id) {
         return null;

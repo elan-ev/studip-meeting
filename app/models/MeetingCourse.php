@@ -31,6 +31,26 @@ class MeetingCourse extends \SimpleORMap
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public static function configure($config = array())
+    {
+        $config['db_table'] = 'vc_meeting_course';
+        $config['has_one']['meeting'] = array(
+            'class_name' => 'ElanEv\Model\Meeting',
+            'foreign_key' => 'meeting_id',
+            'assoc_foreign_key' => 'id',
+        );
+        $config['has_one']['course'] = array(
+            'class_name' => 'Course',
+            'foreign_key' => 'course_id',
+            'assoc_foreign_key' => 'id',
+        );
+
+        parent::configure($config);
+    }
+
+    /**
      * Finds all meetings.
      *
      * @return MeetingCourse[] The meetings
