@@ -92,7 +92,7 @@ class IndexController extends StudipController
             Navigation::activateItem('course/'.MeetingPlugin::NAVIGATION_ITEM_NAME);
             /** @var Navigation $navItem */
             $navItem = Navigation::getItem('course/'.MeetingPlugin::NAVIGATION_ITEM_NAME);
-            $navItem->setImage('icons/16/black/chat.png');
+            $navItem->setImage(MeetingPlugin::getIcon('chat', 'black'));
         } elseif ($action === 'my' && Navigation::hasItem('/meetings')) {
             Navigation::activateItem('/meetings');
         }
@@ -149,7 +149,7 @@ class IndexController extends StudipController
                 array(array(
                     'label' => _('Informationen anzeigen'),
                     'url' => '#',
-                    'icon' => 'icons/16/blue/info-circle.png',
+                    'icon' => MeetingPlugin::getIcon('info-circle', 'blue'),
                     'attributes' => array(
                         'class' => 'toggle-info show-info',
                         'data-show-text' => _('Informationen anzeigen'),
@@ -159,7 +159,7 @@ class IndexController extends StudipController
                 array(array(
                     'label' => _('Anpassen'),
                     'url' => PluginEngine::getLink($this->plugin, array(), 'index/config'),
-                    'icon' => 'icons/16/blue/admin.png',
+                    'icon' => MeetingPlugin::getIcon('admin', 'blue'),
                 ))
             );
         } else {
@@ -211,7 +211,7 @@ class IndexController extends StudipController
                 array(
                     'label' => _('Informationen anzeigen'),
                     'url' => '#',
-                    'icon' => 'icons/16/blue/info-circle.png',
+                    'icon' => MeetingPlugin::getIcon('info-circle', 'blue'),
                     'attributes' => array(
                         'class' => 'toggle-info show-info',
                         'data-show-text' => _('Informationen anzeigen'),
@@ -262,7 +262,7 @@ class IndexController extends StudipController
                 array(
                     'label' => _('Informationen anzeigen'),
                     'url' => '#',
-                    'icon' => 'icons/16/blue/info-circle.png',
+                    'icon' => MeetingPlugin::getIcon('info-circle', 'blue'),
                     'attributes' => array(
                         'class' => 'toggle-info show-info',
                         'data-show-text' => _('Informationen anzeigen'),
@@ -408,7 +408,7 @@ class IndexController extends StudipController
             array(array(
                 'label' => _('Anpassen'),
                 'url' => PluginEngine::getLink($this->plugin, array(), 'index/config'),
-                'icon' => 'icons/16/blue/admin.png',
+                'icon' => MeetingPlugin::getIcon('admin', 'blue'),
             ))
         );
     }
