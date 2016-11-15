@@ -35,9 +35,10 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
 
         /** @var \Seminar_Perm $perm */
         $perm = $GLOBALS['perm'];
+
         if ($perm->have_perm('root')) {
             $item = new Navigation(_('Meetings'), PluginEngine::getLink($this, array(), 'index/all'));
-            $item->setImage($GLOBALS['ASSETS_URL'].'/images/icons/16/white/chat.png');
+            $item->setImage(self::getIcon('chat', 'white'));
 
             if (Navigation::hasItem('/admin/locations')) {
                 Navigation::addItem('/admin/locations/meetings', $item);
@@ -46,12 +47,10 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
             }
 
             $item = new Navigation(_('Meetings konfigurieren'), PluginEngine::getLink($this, array(), 'admin/index'));
-            $item->setImage($GLOBALS['ASSETS_URL'].'/images/icons/16/white/chat.png');
+            $item->setImage(self::getIcon('chat', 'white'));
             Navigation::addItem('/admin/config/meetings', $item);
         } elseif ($perm->have_perm('dozent')) {
             $item = new Navigation(_('Meine Meetings'), PluginEngine::getLink($this, array(), 'index/my'));
-            //$item->setImage($GLOBALS['ASSETS_URL'].'/images/icons/16/white/chat.png');
-            //Navigation::addItem('/meetings', $item);
             Navigation::addItem('/profile/meetings', $item);
         }
 
@@ -63,6 +62,23 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
         if (!version_compare($GLOBALS['SOFTWARE_VERSION'], '2.3', '>')) {
             $navigation = $this->getTabNavigation(Request::get('cid', $GLOBALS['SessSemName'][1]));
             Navigation::insertItem('/course/'.self::NAVIGATION_ITEM_NAME, $navigation['VideoConference'], null);
+        }
+    }
+
+    public static function getIcon($name, $color)
+    {
+        if (StudipVersion::newerThan('3.3')) {
+            $type = 'info';
+            switch ($color) {
+                case 'white': $type = 'info_alt'; break;
+                case 'grey':  $type = 'inactive'; break;
+                case 'blue':  $type = 'clickable';break;
+                case 'red':   $type = 'new';      break;
+                case 'gray':  $type = 'inactive'; break;
+            }
+            return Icon::create($name, $type);
+        } else {
+            return 'icons/16/' . $color .'/' . $name;
         }
     }
 
@@ -101,11 +117,11 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
         $navigation = new Navigation($courseConfig->title, PluginEngine::getLink($this, array(), 'index'));
 
         if ($recentMeetings > 0) {
-            $navigation->setImage('icons/20/red/chat.png', array(
+            $navigation->setImage(self::getIcon('chat', 'red'), array(
                 'title' => sprintf(_('%d Meeting(s), %d neue'), count($courses), $recentMeetings),
             ));
         } else {
-            $navigation->setImage('icons/20/grey/chat.png', array(
+            $navigation->setImage(self::getIcon('chat', 'gray'), array(
                 'title' => sprintf(_('%d Meeting(s)'), count($courses)),
             ));
         }
@@ -127,7 +143,7 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
         $courseConfig = CourseConfig::findByCourseId($courseId);
         $main = new Navigation($courseConfig->title);
         $main->setURL(PluginEngine::getURL($this, array(), 'index'));
-        $main->setImage('icons/16/white/chat.png', array('title', $courseConfig->title));
+        $main->setImage(self::getIcon('chat', 'white'), array('title', $courseConfig->title));
 
         return array(self::NAVIGATION_ITEM_NAME => $main);
     }
