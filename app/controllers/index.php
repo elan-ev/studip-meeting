@@ -355,10 +355,10 @@ class IndexController extends StudipController
         $driver = $this->driver_factory->getDriver($meeting->driver);
 
         if ($this->userCanModifyCourse($this->getCourseId()) || $meeting->join_as_moderator) {
-            $joinParameters->setPassword($this->generateModeratorPassword());
+            $joinParameters->setPassword($meeting->moderator_password);
             $joinParameters->setHasModerationPermissions(true);
         } else {
-            $joinParameters->setPassword($this->generateAttendeePassword());
+            $joinParameters->setPassword($meeting->attendee_password);
             $joinParameters->setHasModerationPermissions(false);
         }
 
