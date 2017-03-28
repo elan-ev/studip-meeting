@@ -183,6 +183,8 @@ class IndexController extends StudipController
         global $user;
 
         PageLayout::setTitle(_('Meine Meetings'));
+        Navigation::activateItem('/profile/meetings');
+
         $this->getHelpbarContent('my');
         $this->deleteAction = PluginEngine::getURL($this->plugin, array(), 'index/my', true);
         $this->handleDeletion();
