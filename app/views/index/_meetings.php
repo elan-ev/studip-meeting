@@ -28,7 +28,7 @@ if ($showUser) {
     <input type="hidden" name="action" value="multi-delete">
 
     <table class="default collapsable tablesorter conference-meetings<?=$canModifyMeetings ? ' admin': ''?>">
-        <caption><?=$title?></caption>
+        <caption><?= htmlReady($title) ?></caption>
         <colgroup>
             <? if ($canModifyMeetings): ?>
                 <col style="width: 20px;">
@@ -131,11 +131,11 @@ if ($showUser) {
                 <?php if ($showUser): ?>
                     <td>
                         <?php $user = new User($meetingCourse->meeting->user_id) ?>
-                        <?= $user->vorname ?> <?= $user->nachname ?> (<?= $user->username ?>)
+                        <?= htmlReady($user->vorname) ?> <?= htmlReady($user->nachname) ?> (<?= htmlReady($user->username) ?>)
                     </td>
                 <?php endif ?>
                 <?php if ($canModifyMeetings): ?>
-                    <td><?= $this->driver_config[$meetingCourse->meeting->driver]['display_name'] ?></td>
+                    <td><?= htmlReady($this->driver_config[$meetingCourse->meeting->driver]['display_name']) ?></td>
                     <td>
                         <?php $recentJoins = array_reverse($meetingCourse->meeting->getAllJoins()) ?>
                         <?php if (count($recentJoins) > 0): ?>
