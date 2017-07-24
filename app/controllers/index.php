@@ -60,11 +60,13 @@ class IndexController extends StudipController
         $this->driver_factory = new DriverFactory(Driver::getConfig());
 
         $this->configured = false;
-        foreach ($this->driver_config as $driver => $config) {
-            if ($config['enable']) {
-                $this->configured = true;
-            } else {
-                unset($this->driver_config[$driver]);
+        if (!empty($this->driver_config)) {
+            foreach ($this->driver_config as $driver => $config) {
+                if ($config['enable']) {
+                    $this->configured = true;
+                } else {
+                    unset($this->driver_config[$driver]);
+                }
             }
         }
     }
@@ -104,7 +106,7 @@ class IndexController extends StudipController
 
     public function index_action()
     {
-        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Meetings'));
+        PageLayout::setTitle(self::getHeaderLine($this->getCourseId()));
         $this->getHelpbarContent('main');
 
         // get messages from rerouted actions
@@ -331,18 +333,19 @@ class IndexController extends StudipController
      */
     public function joinMeeting_action($meetingId)
     {
-        /*
-        if(!$this->hasActiveMeeting()) {
-            $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
-            return;
-        }
-         *
-         */
-
         /** @var Seminar_User $user */
         $user = $GLOBALS['user'];
 
         $meeting = new Meeting($meetingId);
+        $driver = $this->driver_factory->getDriver($meeting->driver);
+
+        // ugly hack for BBB
+        if ($driver instanceof ElanEv\Driver\BigBlueButton) {
+            // TODO: check if recreation is necessary
+            $meetingParameters = $meeting->getMeetingParameters();
+            $driver->createMeeting($meetingParameters);
+        }
+
         $joinParameters = new JoinParameters();
         $joinParameters->setMeetingId($meetingId);
         $joinParameters->setIdentifier($meeting->identifier);
@@ -352,7 +355,7 @@ class IndexController extends StudipController
         $joinParameters->setFirstName($user->Vorname);
         $joinParameters->setLastName($user->Nachname);
 
-        $driver = $this->driver_factory->getDriver($meeting->driver);
+
 
         if ($this->userCanModifyCourse($this->getCourseId()) || $meeting->join_as_moderator) {
             $joinParameters->setPassword($meeting->moderator_password);
@@ -382,7 +385,7 @@ class IndexController extends StudipController
 
     public function config_action()
     {
-        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Meetings'));
+        PageLayout::setTitle(self::getHeaderLine($this->getCourseId()));
         $this->getHelpbarContent('config');
         $courseId = $this->getCourseId();
 
@@ -668,6 +671,20 @@ class IndexController extends StudipController
                 $helpBar = Helpbar::get();
                 $helpBar->addPlainText('', $helpText);
                 break;
+        }
+    }
+
+    /**
+     * Get pagetitle taking care of different Stud.IP versions
+     *
+     * @return string  pagetitle
+     */
+    private static function getHeaderLine($course_id)
+    {
+        if (function_exists('getHeaderLine')) {
+            return getHeaderLine($course_id) .' - '. _('Meetings');
+        } else {
+            return Context::getHeaderLine() .' - '. _('Meetings');
         }
     }
 }
