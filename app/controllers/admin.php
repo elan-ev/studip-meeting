@@ -15,8 +15,6 @@
  * @copyright (c) Authors
  */
 
-require_once 'app/controllers/studip_controller.php';
-
 use ElanEv\Driver\DriverFactory;
 use ElanEv\Driver\JoinParameters;
 use ElanEv\Model\Join;
@@ -29,19 +27,12 @@ use ElanEv\Model\Driver;
  * @property array                  $errors
  * @property string                 $deleteAction
  */
-class AdminController extends StudipController
+class AdminController extends UOL\StudipController
 {
     /**
      * @var ElanEv\Driver\DriverInterface
      */
     private $driver;
-
-    public function __construct($dispatcher)
-    {
-        parent::__construct($dispatcher);
-
-        $this->plugin = $GLOBALS['plugin'];
-    }
 
     /**
      * {@inheritdoc}
@@ -68,7 +59,7 @@ class AdminController extends StudipController
 
     public function index_action()
     {
-        PageLayout::setTitle(_('Meetings Administration'));
+        PageLayout::setTitle($this->_('Meetings Administration'));
         $this->getHelpbarContent('main');
 
         $this->drivers = Driver::discover();
@@ -113,7 +104,7 @@ class AdminController extends StudipController
         switch ($id) {
 
             case 'main':
-                $helpText = _('Administrationsseite für das Plugin zur Durchführung und Verwaltung von Live-Online-Treffen, ***REMOVED***en und Videokonferenzen.');
+                $helpText = $this->_('Administrationsseite für das Plugin zur Durchführung und Verwaltung von Live-Online-Treffen, ***REMOVED***en und Videokonferenzen.');
                 $helpBar = Helpbar::get();
                 $helpBar->addPlainText('', $helpText);
                 break;
