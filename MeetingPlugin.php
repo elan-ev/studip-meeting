@@ -22,7 +22,7 @@ use ElanEv\Model\MeetingCourse;
 
 require_once 'compat/StudipVersion.php';
 
-class MeetingPlugin extends UOL\StudipPlugin implements StandardPlugin, SystemPlugin
+class MeetingPlugin extends UOL\Plugin implements StandardPlugin, SystemPlugin
 {
     const GETTEXT_DOMAIN = 'meetings';
     const NAVIGATION_ITEM_NAME = 'video-conferences';
