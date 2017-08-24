@@ -161,8 +161,8 @@ class MeetingPlugin extends UOL\Plugin implements StandardPlugin, SystemPlugin
     {
         $trails_root = $this->getPluginPath().'/app';
         $dispatcher = new Trails_Dispatcher($trails_root, PluginEngine::getUrl($this, array(), 'index'), 'index');
+        $dispatcher->current_plugin = $this;
         $dispatcher->dispatch($unconsumed_path);
-
     }
 
     public function getAssetsUrl()
