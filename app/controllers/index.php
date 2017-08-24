@@ -15,8 +15,6 @@
  * @copyright (c) Authors
  */
 
-require_once 'app/controllers/studip_controller.php';
-
 use ElanEv\Driver\DriverFactory;
 use ElanEv\Driver\JoinParameters;
 use ElanEv\Model\CourseConfig;
@@ -43,7 +41,7 @@ use ElanEv\Model\Helper;
  * @property CourseConfig           $config
  * @property string                 $deleteAction
  */
-class IndexController extends StudipController
+class IndexController extends UOL\StudipController
 {
     /**
      * @var ElanEv\Driver\DriverInterface
@@ -54,7 +52,6 @@ class IndexController extends StudipController
     {
         parent::__construct($dispatcher);
 
-        $this->plugin = $GLOBALS['plugin'];
         $this->perm = $GLOBALS['perm'];
         $this->driver_config = Driver::getConfig();
         $this->driver_factory = new DriverFactory(Driver::getConfig());
@@ -104,7 +101,7 @@ class IndexController extends StudipController
 
     public function index_action()
     {
-        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Meetings'));
+        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. $this->_('Meetings'));
         $this->getHelpbarContent('main');
 
         // get messages from rerouted actions
@@ -120,7 +117,7 @@ class IndexController extends StudipController
 
         if (Request::get('action') === 'create' && $this->userCanModifyCourse($this->getCourseId())) {
             if (!Request::get('name')) {
-                $this->errors[] = _('Bitte geben Sie dem Meeting einen Namen.');
+                $this->errors[] = $this->_('Bitte geben Sie dem Meeting einen Namen.');
             }
 
             if (count($this->errors) === 0) {
@@ -147,17 +144,17 @@ class IndexController extends StudipController
                     'url' => PluginEngine::getLink($this->plugin, array(), 'index'),
                 )),
                 array(array(
-                    'label' => _('Informationen anzeigen'),
+                    'label' => $this->_('Informationen anzeigen'),
                     'url' => '#',
                     'icon' => MeetingPlugin::getIcon('info-circle', 'blue'),
                     'attributes' => array(
                         'class' => 'toggle-info show-info',
-                        'data-show-text' => _('Informationen anzeigen'),
-                        'data-hide-text' => _('Informationen ausblenden'),
+                        'data-show-text' => $this->_('Informationen anzeigen'),
+                        'data-hide-text' => $this->_('Informationen ausblenden'),
                     ),
                 )),
                 array(array(
-                    'label' => _('Anpassen'),
+                    'label' => $this->_('Anpassen'),
                     'url' => PluginEngine::getLink($this->plugin, array(), 'index/config'),
                     'icon' => MeetingPlugin::getIcon('admin', 'blue'),
                 ))
@@ -182,7 +179,7 @@ class IndexController extends StudipController
     {
         global $user;
 
-        PageLayout::setTitle(_('Meine Meetings'));
+        PageLayout::setTitle($this->_('Meine Meetings'));
         Navigation::activateItem('/profile/meetings');
 
         $this->getHelpbarContent('my');
@@ -192,14 +189,14 @@ class IndexController extends StudipController
         if ($type === 'name') {
             $this->type = 'name';
             $viewItem = array(
-                'label' => _('Anzeige nach Semester'),
+                'label' => $this->_('Anzeige nach Semester'),
                 'url' => PluginEngine::getLink($this->plugin, array(), 'index/my'),
                 'active' => $type !== 'name',
             );
             $this->meetings = MeetingCourse::findByUser($user);
         } else {
             $viewItem = array(
-                'label' => _('Anzeige nach Namen'),
+                'label' => $this->_('Anzeige nach Namen'),
                 'url' => PluginEngine::getLink($this->plugin, array(), 'index/my/name'),
                 'active' => $type === 'name',
             );
@@ -211,13 +208,13 @@ class IndexController extends StudipController
             array(
                 $viewItem,
                 array(
-                    'label' => _('Informationen anzeigen'),
+                    'label' => $this->_('Informationen anzeigen'),
                     'url' => '#',
                     'icon' => MeetingPlugin::getIcon('info-circle', 'blue'),
                     'attributes' => array(
                         'class' => 'toggle-info show-info',
-                        'data-show-text' => _('Informationen anzeigen'),
-                        'data-hide-text' => _('Informationen ausblenden'),
+                        'data-show-text' => $this->_('Informationen anzeigen'),
+                        'data-hide-text' => $this->_('Informationen ausblenden'),
                     ),
                 )
             )
@@ -227,7 +224,7 @@ class IndexController extends StudipController
     public function all_action($type = null)
     {
         if (!$GLOBALS['perm']->have_perm('root')) {
-            throw new AccessDeniedException(_('Sie brauchen Administrationsrechte.'));
+            throw new AccessDeniedException($this->_('Sie brauchen Administrationsrechte.'));
         }
         if (Navigation::hasItem('/admin/locations/meetings')) {
             Navigation::activateItem('/admin/locations');
@@ -235,7 +232,7 @@ class IndexController extends StudipController
             Navigation::activateItem('/meetings');
         }
 
-        PageLayout::setTitle(_('Alle Meetings'));
+        PageLayout::setTitle($this->_('Alle Meetings'));
 
         $this->deleteAction = PluginEngine::getURL($this->plugin, array(), 'index/all', true);
         $this->handleDeletion();
@@ -243,14 +240,14 @@ class IndexController extends StudipController
         if ($type === 'name') {
             $this->type = 'name';
             $viewItem = array(
-                'label' => _('Anzeige nach Semester'),
+                'label' => $this->_('Anzeige nach Semester'),
                 'url' => PluginEngine::getLink($this->plugin, array(), 'index/all'),
                 'active' => $type !== 'name',
             );
             $this->meetings = MeetingCourse::findAll();
         } else {
             $viewItem = array(
-                'label' => _('Anzeige nach Namen'),
+                'label' => $this->_('Anzeige nach Namen'),
                 'url' => PluginEngine::getLink($this->plugin, array(), 'index/all/name'),
                 'active' => $type === 'name',
             );
@@ -262,13 +259,13 @@ class IndexController extends StudipController
             array(
                 $viewItem,
                 array(
-                    'label' => _('Informationen anzeigen'),
+                    'label' => $this->_('Informationen anzeigen'),
                     'url' => '#',
                     'icon' => MeetingPlugin::getIcon('info-circle', 'blue'),
                     'attributes' => array(
                         'class' => 'toggle-info show-info',
-                        'data-show-text' => _('Informationen anzeigen'),
-                        'data-hide-text' => _('Informationen ausblenden'),
+                        'data-show-text' => $this->_('Informationen anzeigen'),
+                        'data-hide-text' => $this->_('Informationen ausblenden'),
                     ),
                 )
             )
@@ -384,7 +381,7 @@ class IndexController extends StudipController
 
     public function config_action()
     {
-        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. _('Meetings'));
+        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. $this->_('Meetings'));
         $this->getHelpbarContent('config');
         $courseId = $this->getCourseId();
 
@@ -408,7 +405,7 @@ class IndexController extends StudipController
             )),
             array(),
             array(array(
-                'label' => _('Anpassen'),
+                'label' => $this->_('Anpassen'),
                 'url' => PluginEngine::getLink($this->plugin, array(), 'index/config'),
                 'icon' => MeetingPlugin::getIcon('admin', 'blue'),
             ))
@@ -506,17 +503,17 @@ class IndexController extends StudipController
 
         $sections = array(
             array(
-                'label' => _('Navigation'),
+                'label' => $this->_('Navigation'),
                 'class' => 'sidebar-meeting-navigation',
                 'items' => $navigationItems,
             ),
             array(
-                'label' => _('Ansichten'),
+                'label' => $this->_('Ansichten'),
                 'class' => 'sidebar-meeting-views',
                 'items' => $viewsItems,
             ),
             array(
-                'label' => _('Aktionen'),
+                'label' => $this->_('Aktionen'),
                 'class' => 'sidebar-meeting-actions',
                 'items' => $actionsItems,
             ),
@@ -582,7 +579,7 @@ class IndexController extends StudipController
             if (!$meeting->isNew()) {
                 $this->confirmDeleteMeeting = true;
                 $this->questionOptions = array(
-                    'question' => _('Wollen Sie wirklich das Meeting "').$meeting->name._('" löschen?'),
+                    'question' => $this->_('Wollen Sie wirklich das Meeting "').$meeting->name.$this->_('" löschen?'),
                     'approvalLink' => PluginEngine::getLink($this->plugin, array('destination' => Request::get('destination')), 'index/delete/'.$meeting->id.'/'.Request::get('cid'), true),
                     'disapprovalLink' => PluginEngine::getLink($this->plugin, array(),  Request::get('destination')),
                 );
@@ -608,7 +605,7 @@ class IndexController extends StudipController
         } elseif (!Request::submitted('cancel')) {
             $this->confirmDeleteMeeting = true;
             $this->questionOptions = array(
-                'question' => _('Wollen Sie folgende Meetings wirklich löschen?'),
+                'question' => $this->_('Wollen Sie folgende Meetings wirklich löschen?'),
                 'approvalLink' => PluginEngine::getLink($this->plugin, array(), 'index/delete/'.$meeting->id.'/'.Request::get('cid')),
                 'disapprovalLink' => PluginEngine::getLink($this->plugin, array(), Request::get('destination')),
                 'deleteMeetings' => $deleteMeetings,
@@ -651,7 +648,7 @@ class IndexController extends StudipController
         switch ($id) {
 
             case 'main':
-                $helpText = _('Durchführung und Verwaltung von Live-Online-Treffen, Webinaren und Videokonferenzen. '
+                $helpText = $this->_('Durchführung und Verwaltung von Live-Online-Treffen, Webinaren und Videokonferenzen. '
                           . 'Mit Hilfe der Face-to-Face-Kommunikation können Entfernungen überbrückt, externe Fachleute '
                           . 'einbezogen und Studierende in Projekten und Praktika begleitet werden.');
                 $helpBar = Helpbar::get();
@@ -659,13 +656,13 @@ class IndexController extends StudipController
                 break;
 
             case 'config':
-                $helpText = _('Arbeitsbereich zum Anpassen der Gesamtansicht der Meetings einer Veranstaltung.');
+                $helpText = $this->_('Arbeitsbereich zum Anpassen der Gesamtansicht der Meetings einer Veranstaltung.');
                 $helpBar = Helpbar::get();
                 $helpBar->addPlainText('', $helpText);
                 break;
 
             case 'my':
-                $helpText = _('Gesamtansicht aller von Ihnen erstellten Meetings nach '
+                $helpText = $this->_('Gesamtansicht aller von Ihnen erstellten Meetings nach '
                           . 'Semestern oder nach Namen sortiert.');
                 $helpBar = Helpbar::get();
                 $helpBar->addPlainText('', $helpText);

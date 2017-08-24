@@ -22,8 +22,8 @@
                         <?php endforeach ?>
                     </ul>
                     <div class="buttons">
-                        <?= Studip\Button::createAccept(_('JA!'), 'confirm') ?>
-                        <?= Studip\Button::createCancel(_('NEIN!'), 'cancel') ?>
+                        <?= Studip\Button::createAccept($_('JA!'), 'confirm') ?>
+                        <?= Studip\Button::createCancel($_('NEIN!'), 'cancel') ?>
                     </div>
                 </div>
             </div>
@@ -35,8 +35,8 @@
                     <?= formatReady($questionOptions['question']) ?>
                 </div>
                 <div class="buttons">
-                    <?= Studip\LinkButton::createAccept(_('JA!'), $questionOptions['approvalLink']) ?>
-                    <?= Studip\LinkButton::createCancel(_('NEIN!'), $questionOptions['disapprovalLink']) ?>
+                    <?= Studip\LinkButton::createAccept($_('JA!'), $questionOptions['approvalLink']) ?>
+                    <?= Studip\LinkButton::createCancel($_('NEIN!'), $questionOptions['disapprovalLink']) ?>
                 </div>
             </div>
         </div>

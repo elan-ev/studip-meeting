@@ -22,8 +22,9 @@ use ElanEv\Model\MeetingCourse;
 
 require_once 'compat/StudipVersion.php';
 
-class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
+class MeetingPlugin extends UOL\StudipPlugin implements StandardPlugin, SystemPlugin
 {
+    const GETTEXT_DOMAIN = 'meetings';
     const NAVIGATION_ITEM_NAME = 'video-conferences';
 
     private $assetsUrl;
@@ -37,7 +38,7 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
         $perm = $GLOBALS['perm'];
 
         if ($perm->have_perm('root')) {
-            $item = new Navigation(_('Meetings'), PluginEngine::getLink($this, array(), 'index/all'));
+            $item = new Navigation($this->_('Meetings'), PluginEngine::getLink($this, array(), 'index/all'));
             $item->setImage(self::getIcon('chat', 'white'));
 
             if (Navigation::hasItem('/admin/locations')) {
@@ -46,11 +47,11 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
                 Navigation::addItem('/meetings', $item);
             }
 
-            $item = new Navigation(_('Meetings konfigurieren'), PluginEngine::getLink($this, array(), 'admin/index'));
+            $item = new Navigation($this->_('Meetings konfigurieren'), PluginEngine::getLink($this, array(), 'admin/index'));
             $item->setImage(self::getIcon('chat', 'white'));
             Navigation::addItem('/admin/config/meetings', $item);
         } elseif ($perm->have_perm('dozent')) {
-            $item = new Navigation(_('Meine Meetings'), PluginEngine::getLink($this, array(), 'index/my'));
+            $item = new Navigation($this->_('Meine Meetings'), PluginEngine::getLink($this, array(), 'index/my'));
             Navigation::addItem('/profile/meetings', $item);
         }
 
@@ -84,7 +85,7 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
 
     public function getPluginName()
     {
-        return _('Meetings');
+        return $this->_('Meetings');
     }
 
     public function getInfoTemplate($course_id) {
@@ -118,11 +119,11 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
 
         if ($recentMeetings > 0) {
             $navigation->setImage(self::getIcon('chat', 'red'), array(
-                'title' => sprintf(_('%d Meeting(s), %d neue'), count($courses), $recentMeetings),
+                'title' => sprintf($this->_('%d Meeting(s), %d neue'), count($courses), $recentMeetings),
             ));
         } else {
             $navigation->setImage(self::getIcon('chat', 'gray'), array(
-                'title' => sprintf(_('%d Meeting(s)'), count($courses)),
+                'title' => sprintf($this->_('%d Meeting(s)'), count($courses)),
             ));
         }
 

@@ -1,0 +1,249 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2017-08-24T13:13:33+02:00\n"
+"PO-Revision-Date: 2017-08-24T13:13:33+02:00\n"
+"Language: \n"
+
+msgid "Meetings Administration"
+msgstr "Meeting administration"
+
+msgid "Administrationsseite für das Plugin zur Durchführung und Verwaltung von Live-Online-Treffen, Webinaren und Videokonferenzen."
+msgstr "Plug-in administration page for holding and managing live online meetings, webinars and video conferences."
+
+msgid "Meetings"
+msgstr "Meetings"
+
+msgid "Bitte geben Sie dem Meeting einen Namen."
+msgstr "Please give the meeting a name."
+
+msgid "Informationen anzeigen"
+msgstr "View information"
+
+msgid "Informationen ausblenden"
+msgstr "Hide information"
+
+msgid "Anpassen"
+msgstr "Customize"
+
+msgid "Meine Meetings"
+msgstr "My meetings"
+
+msgid "Anzeige nach Semester"
+msgstr "View by semester"
+
+msgid "Anzeige nach Namen"
+msgstr "View by name"
+
+msgid "Sie brauchen Administrationsrechte."
+msgstr "You need administration rights."
+
+msgid "Alle Meetings"
+msgstr "All meetings"
+
+msgid "Navigation"
+msgstr "Navigation"
+
+msgid "Ansichten"
+msgstr "Views"
+
+msgid "Aktionen"
+msgstr "Actions"
+
+msgid "Wollen Sie wirklich das Meeting \""
+msgstr "Are you sure you want to"
+
+msgid "\" löschen?"
+msgstr "delete the meeting ???"
+
+msgid "Wollen Sie folgende Meetings wirklich löschen?"
+msgstr "Are you sure you want to delete the following meetings?"
+
+msgid "Durchführung und Verwaltung von Live-Online-Treffen, Webinaren und Videokonferenzen. Mit Hilfe der Face-to-Face-Kommunikation können Entfernungen überbrückt, externe Fachleute einbezogen und Studierende in Projekten und Praktika begleitet werden."
+msgstr "Plug-in for holding and managing live online meetings, webinars and video conferences. With the help of face-to-face communication, distances can be bridged, external experts can be involved and students can be supervised in projects and practicals."
+
+msgid "Arbeitsbereich zum Anpassen der Gesamtansicht der Meetings einer Veranstaltung."
+msgstr "Workspace to customize the overall view of a course meeting."
+
+msgid "Gesamtansicht aller von Ihnen erstellten Meetings nach Semestern oder nach Namen sortiert."
+msgstr "View of all meetings you have created sorted by semester or by name."
+
+msgid "Anzeigename"
+msgstr "Display name"
+
+msgid "Verwenden dieses Treibers zulassen"
+msgstr "Allow this driver to be used."
+
+msgid "Speichern"
+msgstr "Save"
+
+msgid "JA!"
+msgstr "Yes"
+
+msgid "NEIN!"
+msgstr "No"
+
+msgid "Meeting erstellen"
+msgstr "Create meeting"
+
+msgid "oder"
+msgstr "or"
+
+msgid "zu verlinkendes Meeting auswählen"
+msgstr "Select meeting for link"
+
+msgid "Meeting verlinken"
+msgstr "Link meeting"
+
+msgid "Aufzeichnung"
+msgstr "Record"
+
+msgid "Heimat-Einrichtung"
+msgstr "Home faculty"
+
+msgid "Veranstaltung"
+msgstr "Event"
+
+msgid "Erstellt von"
+msgstr "Created by"
+
+msgid "Treiber"
+msgstr "Driver"
+
+msgid "Zuletzt betreten"
+msgstr "Last accessed"
+
+msgid "Freigeben"
+msgstr "Share"
+
+msgid "Aktion"
+msgstr "Action"
+
+msgid "Dieser Meetingraum wird in "
+msgstr "This meeting room"
+
+msgid " LV verwendet."
+msgstr "is used in a course"
+
+msgid "Meeting betreten"
+msgstr "Join meeting"
+
+msgid "LV"
+msgstr "course"
+
+msgid "URL zur Aufzeichnung"
+msgstr "URL for recording"
+
+msgid "Änderungen speichern"
+msgstr "Save changes"
+
+msgid "Änderungen verwerfen"
+msgstr "Discard changes"
+
+msgid "zur Aufzeichnung"
+msgstr "Recording"
+
+msgid "um"
+msgstr "at"
+
+msgid "Uhr"
+msgstr "h"
+
+msgid "Raum wurde noch nie betreten"
+msgstr "Meeting has never been accessed."
+
+msgid "Meeting für Teilnehmende unsichtbar schalten"
+msgstr "Hide meeting for participants"
+
+msgid "Meeting für Teilnehmende sichtbar schalten"
+msgstr "Show meeting for participants"
+
+msgid "Meeting bearbeiten"
+msgstr "Edit meeting"
+
+msgid "Teilnehmende haben VeranstalterInnen-Rechte"
+msgstr "Participants have organizer rights"
+
+msgid "Teilnehmende haben eingeschränkte Rechte"
+msgstr "Participants have restricted rights"
+
+msgid "Zuordnung löschen"
+msgstr "Delete assignment"
+
+msgid "Meeting löschen"
+msgstr "Delete meeting"
+
+msgid "Teilnehmende haben VeranstalterInnen-Rechte (wie Anlegende/r)."
+msgstr "Participants have organizer rights (same rights as meeting creator)."
+
+msgid "Teilnehmende haben eingeschränkte Teilnehmenden-Rechte."
+msgstr "Participants have restricted rights."
+
+msgid "Eine Person hat das Meeting in den letzten 24 Stunden betreten"
+msgstr "One person joined the meeting in the last 24 hours."
+
+msgid "Personen haben das Meeting in den letzten 24 Stunden betreten"
+msgstr "people joined the meeting in the last 24 hours."
+
+msgid "Eine Person hat das Meeting insgesamt betreten"
+msgstr "One person has joined the meeting in total."
+
+msgid "Personen haben das Meeting insgesamt betreten"
+msgstr "people have joined the meeting in total."
+
+msgid "Alle Meetings auswählen"
+msgstr "Select all meetings"
+
+msgid "Löschen"
+msgstr "Delete"
+
+msgid "Alle ausgewählten Meetings löschen"
+msgstr "Delete all selected meetings"
+
+msgid "Die Änderungen wurden gespeichert."
+msgstr "Your changes have been saved."
+
+msgid "Reitername:"
+msgstr "Tab name:"
+
+msgid "Einleitungstext:"
+msgstr "Introductory text:"
+
+msgid "Abbrechen"
+msgstr "Cancel"
+
+msgid "Es wurde noch kein Videokonferenzsystem konfiguriert. Bitte wenden Sie sich an eine/n Systemadministrator/in!"
+msgstr "A video conferencing system has not been configured yet. Please contact a system administrator."
+
+msgid "Es sind keine Meetings vorhanden. Meetings können nur innerhalb einer Veranstaltung über das \"+\"-Icon aktiviert und anschließend über den Reiter \"Meetings\" verwaltet werden."
+msgstr "There are no meetings available. Meetings can only be activated within a course via the ?+? icon and managed via the ?Meetings? tab."
+
+msgid "URL des BBB-Servers"
+msgstr "URL of the BBB server"
+
+msgid "Api-Key (Salt)"
+msgstr "API key (salt)"
+
+msgid "API-Endpoint"
+msgstr "API endpoint"
+
+msgid "Funktionskennung"
+msgstr "Function ID"
+
+msgid "Passwort"
+msgstr "Password"
+
+msgid "Meetings konfigurieren"
+msgstr "Configure meetings"
+
+msgid "%d Meeting(s), %d neue"
+msgstr "%d meeting(s), %d new"
+
+msgid "%d Meeting(s)"
+msgstr "%d meeting(s)"

@@ -6,7 +6,7 @@
 ?>
 
 <?php if (!$configured): ?>
-    <?= MessageBox::info(_('Es wurde noch kein Videokonferenzsystem konfiguriert. '
+    <?= MessageBox::info($_('Es wurde noch kein Videokonferenzsystem konfiguriert. '
             . 'Bitte wenden Sie sich an eine/n Systemadministrator/in!')) ?>
 <?php else: ?>
     <?= $this->render_partial('index/_confirm_delete') ?>
