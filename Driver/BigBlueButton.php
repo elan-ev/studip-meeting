@@ -47,7 +47,7 @@ class BigBlueButton implements DriverInterface
             'webVoice' => '',
             'logoutURL' => '',
             'maxParticipants' => '-1',
-            'record' => 'false',
+            'record' => 'true',
             'duration' => '0',
         );
         $response = $this->performRequest('create', $params);
