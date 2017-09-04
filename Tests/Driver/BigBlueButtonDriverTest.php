@@ -34,7 +34,7 @@ class BigBlueButtonDriverTest extends AbstractDriverTest
             'webVoice' => '',
             'logoutURL' => '',
             'maxParticipants' => '-1',
-            'record' => 'false',
+            'record' => 'true',
             'duration' => '0',
             'checksum' => '219b59cb12295d446af67a38cfd02b7451b28adc',
         );
