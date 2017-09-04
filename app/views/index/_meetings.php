@@ -78,6 +78,8 @@ if ($showUser) {
 
         <tbody>
         <?php foreach ($meetings as $meetingCourse): ?>
+            <? $driver = $driver_factory->getDriver($meetingCourse->meeting->driver); ?>
+
             <?php
             $joinUrl = PluginEngine::getLink($plugin, array('cid' => $meetingCourse->course->id), 'index/joinMeeting/'.$meetingCourse->meeting->id);
             $moderatorPermissionsUrl = PluginEngine::getLink($plugin, array('destination' => $destination), 'index/moderator_permissions/'.$meetingCourse->meeting->id);
@@ -110,6 +112,20 @@ if ($showUser) {
                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/ajax_indicator_small.gif" class="loading-indicator">
                 </td>
                 <td class="recording-url">
+                    <? if (class_implements($driver, 'RecordingInterface')) : ?>
+                        <? foreach ($driver->getRecordings($meetingCourse->meeting->getMeetingParameters()) as $recording) : ?>
+                        <a href="<?= $recording->playback->format->url ?>" target="_blank" class="meeting-recording-url">
+                            <? $title = sprintf(_('zur Aufzeichnung vom %s'), date('d.m.Y, H:i:s', (int)$recording->startTime / 1000)) ?>
+                            <? if (StudipVersion::newerThan('3.3')) : ?>
+                                <?= Icon::create('video', 'clickable', array('title' => $title)) ?>
+                            <? else: ?>
+                                <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/video.png" title="<?= $title ?>">
+                            <? endif ?>
+                        </a>
+                        <? endforeach ?>
+
+                    <? else : ?>
+
                     <a href="<?=$meetingCourse->meeting->recording_url?>" target="_blank" class="meeting-recording-url"<?=!$meetingCourse->meeting->recording_url ? ' style="display:none;"' : ''?>>
                         <? if (StudipVersion::newerThan('3.3')) : ?>
                             <?= Icon::create('video', 'clickable', array('title' => _('zur Aufzeichnung'))) ?>
@@ -117,6 +133,7 @@ if ($showUser) {
                             <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/video.png" title="<?=_('zur Aufzeichnung')?>">
                         <? endif ?>
                     </a>
+                    <? endif ?>
                 </td>
                 <?php if ($showCourse): ?>
                     <td>
