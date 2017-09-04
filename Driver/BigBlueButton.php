@@ -10,7 +10,7 @@ use Guzzle\Http\ClientInterface;
  * @author Christian Flothmann <christian.flothmann@uos.de>
  * @author Till Glöggler <tgloeggl@uos.de>
  */
-class BigBlueButton implements DriverInterface
+class BigBlueButton implements DriverInterface, RecordingInterface
 {
     /**
      * @var \Guzzle\Http\ClientInterface The HTTP client
@@ -85,6 +85,25 @@ class BigBlueButton implements DriverInterface
         $params['checksum'] = $this->createSignature('join', $params);
 
         return sprintf('%s/api/join?%s', rtrim($this->client->getBaseUrl(), '/'), $this->buildQueryString($params));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRecordings(MeetingParameters $parameters)
+    {
+        $params = array(
+            'meetingID' => $parameters->getMeetingId()
+        );
+        $response = $this->performRequest('getRecordings', $params);
+
+        $xml = new \SimpleXMLElement($response);
+
+        if (!$xml instanceof \SimpleXMLElement) {
+            return false;
+        }
+
+        return $xml->recordings->recording;
     }
 
     private function performRequest($endpoint, array $params = array())
