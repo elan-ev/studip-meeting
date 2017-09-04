@@ -36,7 +36,7 @@ class BigBlueButtonDriverTest extends AbstractDriverTest
             'maxParticipants' => '-1',
             'record' => 'true',
             'duration' => '0',
-            'checksum' => '219b59cb12295d446af67a38cfd02b7451b28adc',
+            'checksum' => 'c3b7cde9aacde4f6df6189c97d82304b9c8ccf41',
         );
 
         return array(
