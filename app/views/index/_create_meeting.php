@@ -43,7 +43,7 @@
                 <input type="hidden" name="action" value="link">
                 <fieldset name="Meeting erstellen">
                     <select name="meeting_id" size="1">
-                        <option><?= _('zu verlinkendes Meeting auswählen') ?></option>
+                        <option><?= _('zu verlinkendes Meeting auswÃ¤hlen') ?></option>
                         <?php foreach ($userMeetings as $meetingCourse): ?>
                             <option value="<?=$meetingCourse->meeting->id ?>">
                                 <?=htmlReady($meetingCourse->meeting->name) ?> (<?=htmlReady($meetingCourse->course->name)?>, <?=htmlReady($meetingCourse->course->start_semester->name)?>)

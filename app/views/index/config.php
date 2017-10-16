@@ -6,7 +6,7 @@
 ?>
 
 <?php if ($saved): ?>
-    <?= $templateFactory->render('shared/message_box', array('class' => 'success', 'message' => _('Die Änderungen wurden gespeichert.'))) ?>
+    <?= $templateFactory->render('shared/message_box', array('class' => 'success', 'message' => _('Die Ã„nderungen wurden gespeichert.'))) ?>
 <?php endif ?>
 
 <form action="<?= PluginEngine::getLink($plugin, array(), 'index/config') ?>" method="post" class="studip_form default">
