@@ -5,7 +5,7 @@ msgstr ""
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2017-08-24T13:13:33+02:00\n"
 "PO-Revision-Date: 2017-08-24T13:13:33+02:00\n"
@@ -14,7 +14,7 @@ msgstr ""
 msgid "Meetings Administration"
 msgstr "Meeting administration"
 
-msgid "Administrationsseite für das Plugin zur Durchführung und Verwaltung von Live-Online-Treffen, ***REMOVED***en und Videokonferenzen."
+msgid "Administrationsseite fÃ¼r das Plugin zur DurchfÃ¼hrung und Verwaltung von Live-Online-Treffen, ***REMOVED***en und Videokonferenzen."
 msgstr "Plug-in administration page for holding and managing live online meetings, ***REMOVED***s and video conferences."
 
 msgid "Meetings"
@@ -59,13 +59,13 @@ msgstr "Actions"
 msgid "Wollen Sie wirklich das Meeting \""
 msgstr "Are you sure you want to"
 
-msgid "\" löschen?"
+msgid "\" lÃ¶schen?"
 msgstr "delete the meeting ???"
 
-msgid "Wollen Sie folgende Meetings wirklich löschen?"
+msgid "Wollen Sie folgende Meetings wirklich lÃ¶schen?"
 msgstr "Are you sure you want to delete the following meetings?"
 
-msgid "Durchführung und Verwaltung von Live-Online-Treffen, ***REMOVED***en und Videokonferenzen. Mit Hilfe der Face-to-Face-Kommunikation können Entfernungen überbrückt, externe Fachleute einbezogen und Studierende in Projekten und Praktika begleitet werden."
+msgid "DurchfÃ¼hrung und Verwaltung von Live-Online-Treffen, ***REMOVED***en und Videokonferenzen. Mit Hilfe der Face-to-Face-Kommunikation kÃ¶nnen Entfernungen Ã¼berbrÃ¼ckt, externe Fachleute einbezogen und Studierende in Projekten und Praktika begleitet werden."
 msgstr "Plug-in for holding and managing live online meetings, ***REMOVED***s and video conferences. With the help of face-to-face communication, distances can be bridged, external experts can be involved and students can be supervised in projects and practicals."
 
 msgid "Arbeitsbereich zum Anpassen der Gesamtansicht der Meetings einer Veranstaltung."
@@ -95,7 +95,7 @@ msgstr "Create meeting"
 msgid "oder"
 msgstr "or"
 
-msgid "zu verlinkendes Meeting auswählen"
+msgid "zu verlinkendes Meeting auswÃ¤hlen"
 msgstr "Select meeting for link"
 
 msgid "Meeting verlinken"
@@ -140,10 +140,10 @@ msgstr "course"
 msgid "URL zur Aufzeichnung"
 msgstr "URL for recording"
 
-msgid "Änderungen speichern"
+msgid "Ã„nderungen speichern"
 msgstr "Save changes"
 
-msgid "Änderungen verwerfen"
+msgid "Ã„nderungen verwerfen"
 msgstr "Discard changes"
 
 msgid "zur Aufzeichnung"
@@ -158,10 +158,10 @@ msgstr "h"
 msgid "Raum wurde noch nie betreten"
 msgstr "Meeting has never been accessed."
 
-msgid "Meeting für Teilnehmende unsichtbar schalten"
+msgid "Meeting fÃ¼r Teilnehmende unsichtbar schalten"
 msgstr "Hide meeting for participants"
 
-msgid "Meeting für Teilnehmende sichtbar schalten"
+msgid "Meeting fÃ¼r Teilnehmende sichtbar schalten"
 msgstr "Show meeting for participants"
 
 msgid "Meeting bearbeiten"
@@ -170,19 +170,19 @@ msgstr "Edit meeting"
 msgid "Teilnehmende haben VeranstalterInnen-Rechte"
 msgstr "Participants have organizer rights"
 
-msgid "Teilnehmende haben eingeschränkte Rechte"
+msgid "Teilnehmende haben eingeschrÃ¤nkte Rechte"
 msgstr "Participants have restricted rights"
 
-msgid "Zuordnung löschen"
+msgid "Zuordnung lÃ¶schen"
 msgstr "Delete assignment"
 
-msgid "Meeting löschen"
+msgid "Meeting lÃ¶schen"
 msgstr "Delete meeting"
 
 msgid "Teilnehmende haben VeranstalterInnen-Rechte (wie Anlegende/r)."
 msgstr "Participants have organizer rights (same rights as meeting creator)."
 
-msgid "Teilnehmende haben eingeschränkte Teilnehmenden-Rechte."
+msgid "Teilnehmende haben eingeschrÃ¤nkte Teilnehmenden-Rechte."
 msgstr "Participants have restricted rights."
 
 msgid "Eine Person hat das Meeting in den letzten 24 Stunden betreten"
@@ -197,16 +197,16 @@ msgstr "One person has joined the meeting in total."
 msgid "Personen haben das Meeting insgesamt betreten"
 msgstr "people have joined the meeting in total."
 
-msgid "Alle Meetings auswählen"
+msgid "Alle Meetings auswÃ¤hlen"
 msgstr "Select all meetings"
 
-msgid "Löschen"
+msgid "LÃ¶schen"
 msgstr "Delete"
 
-msgid "Alle ausgewählten Meetings löschen"
+msgid "Alle ausgewÃ¤hlten Meetings lÃ¶schen"
 msgstr "Delete all selected meetings"
 
-msgid "Die Änderungen wurden gespeichert."
+msgid "Die Ã„nderungen wurden gespeichert."
 msgstr "Your changes have been saved."
 
 msgid "Reitername:"
@@ -221,7 +221,7 @@ msgstr "Cancel"
 msgid "Es wurde noch kein Videokonferenzsystem konfiguriert. Bitte wenden Sie sich an eine/n Systemadministrator/in!"
 msgstr "A video conferencing system has not been configured yet. Please contact a system administrator."
 
-msgid "Es sind keine Meetings vorhanden. Meetings können nur innerhalb einer Veranstaltung über das \"+\"-Icon aktiviert und anschließend über den Reiter \"Meetings\" verwaltet werden."
+msgid "Es sind keine Meetings vorhanden. Meetings kÃ¶nnen nur innerhalb einer Veranstaltung Ã¼ber das \"+\"-Icon aktiviert und anschlieÃŸend Ã¼ber den Reiter \"Meetings\" verwaltet werden."
 msgstr "There are no meetings available. Meetings can only be activated within a course via the ?+? icon and managed via the ?Meetings? tab."
 
 msgid "URL des BBB-Servers"

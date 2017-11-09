@@ -5,7 +5,7 @@ require __DIR__.'/../vendor/autoload.php';
 /**
  * Remove old config options and add a new one, holding all config data
  *
- * @author Till Glöggler <tgloeggl@uos.de>
+ * @author Till GlÃ¶ggler <tgloeggl@uos.de>
  */
 
 class NewConfig extends Migration {

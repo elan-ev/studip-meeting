@@ -9,7 +9,7 @@ use Guzzle\Http\ClientInterface;
 
 /**
  * @author Christian Flothmann <christian.flothmann@uos.de>
- * @author Till Glöggler <tgloeggl@uos.de>
+ * @author Till GlÃ¶ggler <tgloeggl@uos.de>
  */
 class BigBlueButtonDriverTest extends AbstractDriverTest
 {

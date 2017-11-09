@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (C) 2012 - Till Glˆggler     <tgloeggl@uos.de>
+ * Copyright (C) 2012 - Till Gl√∂ggler     <tgloeggl@uos.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -615,7 +615,7 @@ class IndexController extends StudipController
             if (!$meeting->isNew()) {
                 $this->confirmDeleteMeeting = true;
                 $this->questionOptions = array(
-                    'question' => $this->_('Wollen Sie wirklich das Meeting "').$meeting->name.$this->_('" lˆschen?'),
+                    'question' => $this->_('Wollen Sie wirklich das Meeting "').$meeting->name.$this->_('" l√∂schen?'),
                     'approvalLink' => PluginEngine::getLink($this->plugin, array('destination' => Request::get('destination')), 'index/delete/'.$meeting->id.'/'.Request::get('cid'), true),
                     'disapprovalLink' => PluginEngine::getLink($this->plugin, array(),  Request::get('destination')),
                 );
@@ -641,7 +641,7 @@ class IndexController extends StudipController
         } elseif (!Request::submitted('cancel')) {
             $this->confirmDeleteMeeting = true;
             $this->questionOptions = array(
-                'question' => $this->_('Wollen Sie folgende Meetings wirklich lˆschen?'),
+                'question' => $this->_('Wollen Sie folgende Meetings wirklich l√∂schen?'),
                 'approvalLink' => PluginEngine::getLink($this->plugin, array(), 'index/delete/'.$meeting->id.'/'.Request::get('cid')),
                 'disapprovalLink' => PluginEngine::getLink($this->plugin, array(), Request::get('destination')),
                 'deleteMeetings' => $deleteMeetings,
@@ -684,8 +684,8 @@ class IndexController extends StudipController
         switch ($id) {
 
             case 'main':
-                $helpText = $this->_('Durchf¸hrung und Verwaltung von Live-Online-Treffen, ***REMOVED***en und Videokonferenzen. '
-                          . 'Mit Hilfe der Face-to-Face-Kommunikation kˆnnen Entfernungen ¸berbr¸ckt, externe Fachleute '
+                $helpText = $this->_('Durchf√ºhrung und Verwaltung von Live-Online-Treffen, ***REMOVED***en und Videokonferenzen. '
+                          . 'Mit Hilfe der Face-to-Face-Kommunikation k√∂nnen Entfernungen √ºberbr√ºckt, externe Fachleute '
                           . 'einbezogen und Studierende in Projekten und Praktika begleitet werden.');
                 $helpBar = Helpbar::get();
                 $helpBar->addPlainText('', $helpText);

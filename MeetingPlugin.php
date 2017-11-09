@@ -8,7 +8,7 @@
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
- * @author      Till Glöggler <till.gloeggler@elan-ev.de>
+ * @author      Till GlÃ¶ggler <till.gloeggler@elan-ev.de>
  * @author      Christian Flothmann <christian.flothmann@uos.de>
  * @copyright   2011-2014 ELAN e.V. <http://www.elan-ev.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2

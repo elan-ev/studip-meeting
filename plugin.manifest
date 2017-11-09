@@ -1,10 +1,8 @@
 pluginname=Meetings
 pluginclassname=MeetingPlugin
 origin=elan-ev
-version=1.3
-studipMinVersion=3.5
-studipMaxVersion=4.0.99
-description=Virtueller Raum, mit dem Live-Online-Treffen, ***REMOVED***e und Videokonferenzen durchgeführt werden können.
+version=2.0
+description=Virtueller Raum, mit dem Live-Online-Treffen, ***REMOVED***e und Videokonferenzen durchgefÃ¼hrt werden kÃ¶nnen.
 
 screenshot = images/screenshots/Der_Meeting-Raum_mit_Adobe_Connect.jpg
 screenshot = images/screenshots/Der_Reiter_Meeting.jpg
@@ -15,6 +13,6 @@ category = Kommunikation und Zusammenarbeit
 displayname = Meetings
 descriptionshort = Face-to-face-Kommunikation mit Adobe Connect oder BigBlueButton
 
-descriptionlong = Virtueller Raum, mit dem Live-Online-Treffen, ***REMOVED***e und Videokonferenzen durchgeführt werden können. Die Teilnehmenden können sich während eines Meetings gegenseitig hören und über eine angeschlossene Webcam - wenn vorhanden - sehen und miteinander arbeiten. Folien können präsentiert und Abfragen durchgeführt werden. Ein Fenster in der Benutzungsoberfläche des eigenen Rechners kann für andere sichtbar geschaltet werden, um zum Beispiel den Teilnehmenden bestimmte Webseiten oder Anwendungen zu zeigen. Außerdem kann die Veranstaltung aufgezeichnet und Interessierten zur Verfügung gestellt werden.
+descriptionlong = Virtueller Raum, mit dem Live-Online-Treffen, ***REMOVED***e und Videokonferenzen durchgefÃ¼hrt werden kÃ¶nnen. Die Teilnehmenden kÃ¶nnen sich wÃ¤hrend eines Meetings gegenseitig hÃ¶ren und Ã¼ber eine angeschlossene Webcam - wenn vorhanden - sehen und miteinander arbeiten. Folien kÃ¶nnen prÃ¤sentiert und Abfragen durchgefÃ¼hrt werden. Ein Fenster in der BenutzungsoberflÃ¤che des eigenen Rechners kann fÃ¼r andere sichtbar geschaltet werden, um zum Beispiel den Teilnehmenden bestimmte Webseiten oder Anwendungen zu zeigen. AuÃŸerdem kann die Veranstaltung aufgezeichnet und Interessierten zur VerfÃ¼gung gestellt werden.
 
-keywords = Videokonferenz- und ***REMOVED***möglichkeit;Live im Netz präsentieren sowie gemeinsam zeichnen und arbeiten;Kommunikation über Mikrofon und Kamera;Ideal für dezentrale Lern- und Arbeitsgruppen;Verlinkung zu bereits bestehenden eigenen Räumen
+keywords = Videokonferenz- und ***REMOVED***mÃ¶glichkeit;Live im Netz prÃ¤sentieren sowie gemeinsam zeichnen und arbeiten;Kommunikation Ã¼ber Mikrofon und Kamera;Ideal fÃ¼r dezentrale Lern- und Arbeitsgruppen;Verlinkung zu bereits bestehenden eigenen RÃ¤umenstudipMinVersion=4.0
