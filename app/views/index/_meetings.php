@@ -101,11 +101,11 @@ if ($showUser) {
                     <input type="text" name="name"><br>
                     <input type="text" name="recording_url" placeholder="<?=$_('URL zur Aufzeichnung')?>">
                     <? if (StudipVersion::newerThan('3.3')) : ?>
-                        <?= Icon::create('accept', 'clickable', array('class' => 'accept-button', 'title' => $_('Änderungen speichern'))) ?>
-                        <?= Icon::create('decline', 'clickable', array('class' => 'decline-button', 'title' => $_('Änderungen verwerfen'))) ?>
+                        <?= Icon::create('accept', 'clickable', array('class' => 'accept-button', 'title' => $_('Ã„nderungen speichern'))) ?>
+                        <?= Icon::create('decline', 'clickable', array('class' => 'decline-button', 'title' => $_('Ã„nderungen verwerfen'))) ?>
                     <? else: ?>
-                        <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/accept.png" class="accept-button" title="<?=$_('Änderungen speichern')?>">
-                        <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/decline.png" class="decline-button" title="<?=$_('Änderungen verwerfen')?>">
+                        <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/accept.png" class="accept-button" title="<?=$_('Ã„nderungen speichern')?>">
+                        <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/decline.png" class="decline-button" title="<?=$_('Ã„nderungen verwerfen')?>">
                     <? endif ?>
                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/ajax_indicator_small.gif" class="loading-indicator">
                 </td>
@@ -144,7 +144,7 @@ if ($showUser) {
                             <?=$_('Raum wurde noch nie betreten')?>
                         <?php endif ?>
                     </td>
-                    <td class="active"><input type="checkbox"<?=$meetingCourse->active ? ' checked="checked"' : ''?> data-meeting-enable-url="<?=PluginEngine::getLink($plugin, array('destination' => $destination), 'index/enable/'.$meetingCourse->meeting->id.'/'.$meetingCourse->course->id)?>" title="<?=$meetingCourse->active ? $_('Meeting für Teilnehmende unsichtbar schalten') : $_('Meeting für Teilnehmende sichtbar schalten')?>"></td>
+                    <td class="active"><input type="checkbox"<?=$meetingCourse->active ? ' checked="checked"' : ''?> data-meeting-enable-url="<?=PluginEngine::getLink($plugin, array('destination' => $destination), 'index/enable/'.$meetingCourse->meeting->id.'/'.$meetingCourse->course->id)?>" title="<?=$meetingCourse->active ? $_('Meeting fÃ¼r Teilnehmende unsichtbar schalten') : $_('Meeting fÃ¼r Teilnehmende sichtbar schalten')?>"></td>
                     <td>
                         <? if (StudipVersion::newerThan('3.3')) : ?>
                             <?= Icon::create('info-circle', 'clickable', array('class' => 'info')) ?>
@@ -156,12 +156,12 @@ if ($showUser) {
                                     <?= Icon::create('admin') ?>
                                 </a>
                             <? else: ?>
-                                <a href="<?= $moderatorPermissionsUrl ?>" title="<?=$_('Teilnehmende haben eingeschränkte Rechte')?>">
+                                <a href="<?= $moderatorPermissionsUrl ?>" title="<?=$_('Teilnehmende haben eingeschrÃ¤nkte Rechte')?>">
                                     <?= Icon::create('admin+decline') ?>
                                 </a>
                             <? endif; ?>
 
-                            <a href="<?= $deleteUrl ?>" title="<?= count($meetingCourse->meeting->courses) > 1 ? $_('Zuordnung löschen') : $_('Meeting löschen') ?>">
+                            <a href="<?= $deleteUrl ?>" title="<?= count($meetingCourse->meeting->courses) > 1 ? $_('Zuordnung lÃ¶schen') : $_('Meeting lÃ¶schen') ?>">
                                 <? if (count($meetingCourse->meeting->courses) > 1): ?>
                                     <?= Icon::create('remove') ?>
                                 <? else: ?>
@@ -179,12 +179,12 @@ if ($showUser) {
                                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/admin.png">
                                 </a>
                             <? else: ?>
-                                <a href="<?= $moderatorPermissionsUrl ?>" title="<?=$_('Teilnehmende haben eingeschränkte Rechte')?>">
+                                <a href="<?= $moderatorPermissionsUrl ?>" title="<?=$_('Teilnehmende haben eingeschrÃ¤nkte Rechte')?>">
                                     <img src="<?=$plugin->getAssetsUrl()?>/images/admin-decline.png">
                                 </a>
                             <? endif; ?>
 
-                            <a href="<?= $deleteUrl ?>" title="<?= count($meetingCourse->meeting->courses) > 1 ? $_('Zuordnung löschen') : $_('Meeting löschen') ?>">
+                            <a href="<?= $deleteUrl ?>" title="<?= count($meetingCourse->meeting->courses) > 1 ? $_('Zuordnung lÃ¶schen') : $_('Meeting lÃ¶schen') ?>">
                                 <? if (count($meetingCourse->meeting->courses) > 1): ?>
                                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/remove.png">
                                 <? else: ?>
@@ -203,7 +203,7 @@ if ($showUser) {
                             <?php if ($meetingCourse->meeting->join_as_moderator): ?>
                                 <li><?=$_('Teilnehmende haben VeranstalterInnen-Rechte (wie Anlegende/r).')?></li>
                             <?php else: ?>
-                                <li><?=$_('Teilnehmende haben eingeschränkte Teilnehmenden-Rechte.')?></li>
+                                <li><?=$_('Teilnehmende haben eingeschrÃ¤nkte Teilnehmenden-Rechte.')?></li>
                             <?php endif; ?>
 
                             <?php if (count($meetingCourse->meeting->getRecentJoins()) === 1): ?>
@@ -228,8 +228,8 @@ if ($showUser) {
             <tfoot>
             <tr>
                 <td colspan="<?= $colspan ?>">
-                    <input class="middle" type="checkbox" name="check_all" title="<?= $_('Alle Meetings auswählen') ?>">
-                    <?= Studip\Button::create($_('Löschen'), array('title' => $_('Alle ausgewählten Meetings löschen'))) ?>
+                    <input class="middle" type="checkbox" name="check_all" title="<?= $_('Alle Meetings auswÃ¤hlen') ?>">
+                    <?= Studip\Button::create($_('LÃ¶schen'), array('title' => $_('Alle ausgewÃ¤hlten Meetings lÃ¶schen'))) ?>
                 </td>
             </tr>
             </tfoot>

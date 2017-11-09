@@ -2,7 +2,7 @@
 /**
  * Helper.php - helper functions
  *
- * @author      Till Glöggler <tgloeggl@uos.de>
+ * @author      Till GlÃ¶ggler <tgloeggl@uos.de>
  */
 
 namespace ElanEv\Model;

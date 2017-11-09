@@ -7,7 +7,7 @@
  * modify it under the terms of the GNU Affero General Public License
  * version 3 as published by the Free Software Foundation.
  *
- * @author      Till Glöggler <tgloeggl@uos.de>
+ * @author      Till GlÃ¶ggler <tgloeggl@uos.de>
  * @license     https://www.gnu.org/licenses/agpl-3.0.html AGPL version 3
  */
 

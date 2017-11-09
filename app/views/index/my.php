@@ -7,7 +7,7 @@
 <?= $this->render_partial('index/_confirm_delete') ?>
 
 <?php if (empty($meetings)): ?>
-	<?= MessageBox::info($_('Es sind keine Meetings vorhanden. Meetings können nur innerhalb einer Veranstaltung über das "+"-Icon aktiviert und anschließend über den Reiter "Meetings" verwaltet werden.')) ?>
+	<?= MessageBox::info($_('Es sind keine Meetings vorhanden. Meetings kÃ¶nnen nur innerhalb einer Veranstaltung Ã¼ber das "+"-Icon aktiviert und anschlieÃŸend Ã¼ber den Reiter "Meetings" verwaltet werden.')) ?>
 <?php endif; ?>
 
 <?php if ($type === 'name'): ?>

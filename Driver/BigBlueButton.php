@@ -8,7 +8,7 @@ use Guzzle\Http\ClientInterface;
  * Big Blue Button driver implementation.
  *
  * @author Christian Flothmann <christian.flothmann@uos.de>
- * @author Till Glöggler <tgloeggl@uos.de>
+ * @author Till GlÃ¶ggler <tgloeggl@uos.de>
  */
 class BigBlueButton implements DriverInterface
 {
