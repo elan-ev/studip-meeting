@@ -134,7 +134,7 @@ class IndexController extends StudipController
             $linkedMeetingId = Request::int('meeting_id');
             $meeting = new Meeting($linkedMeetingId);
 
-            if (!$meeting->isNew() && $user->cfg->getUserId() === $meeting->user_id && !$meeting->isAssignedToCourse($course)) {
+            if (!$meeting->isNew() && $user->id === $meeting->user_id && !$meeting->isAssignedToCourse($course)) {
                 $meeting->courses[] = new \Course($this->getCourseId());
                 $meeting->store();
             }
@@ -369,7 +369,7 @@ class IndexController extends StudipController
 
         $lastJoin = new Join();
         $lastJoin->meeting_id = $meetingId;
-        $lastJoin->user_id = $user->cfg->getUserId();
+        $lastJoin->user_id = $user->id;
         $lastJoin->last_join = time();
         $lastJoin->store();
 
@@ -465,7 +465,7 @@ class IndexController extends StudipController
 
         $meeting = new Meeting();
         $meeting->courses[] = new Course($this->getCourseId());
-        $meeting->user_id = $user->cfg->getUserId();
+        $meeting->user_id = $user->id;
         $meeting->name = $name;
         $meeting->driver = $driver_name;
         $meeting->attendee_password = $this->generateAttendeePassword();

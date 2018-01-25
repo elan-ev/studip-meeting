@@ -101,7 +101,7 @@ class MeetingCourse extends \SimpleORMap
     {
         return static::findBySQL(
             'INNER JOIN vc_meetings AS m ON meeting_id = m.id WHERE m.user_id = :user_id ORDER BY m.name',
-            array('user_id' => $user->cfg->getUserId())
+            array('user_id' => $user->id)
         );
     }
 
