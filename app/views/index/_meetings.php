@@ -78,7 +78,13 @@ if ($showUser) {
 
         <tbody>
         <?php foreach ($meetings as $meetingCourse): ?>
-            <? $driver = $driver_factory->getDriver($meetingCourse->meeting->driver); ?>
+            <? try {
+                $driver = $driver_factory->getDriver($meetingCourse->meeting->driver);
+            } catch (InvalidArgumentException $e) {
+                // skip non-existent/deactivated drivers or otherwise bogus meeting-entries
+                continue;
+            }
+            ?>
 
             <?php
             $joinUrl = PluginEngine::getLink($plugin, array('cid' => $meetingCourse->course->id), 'index/joinMeeting/'.$meetingCourse->meeting->id);
