@@ -722,9 +722,9 @@ class IndexController extends StudipController
     private static function getHeaderLine($course_id)
     {
         if (function_exists('getHeaderLine')) {
-            return getHeaderLine($course_id) .' - '. $this->_('Meetings');
+            return getHeaderLine($course_id) .' - '. dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Meetings');
         } else {
-            return Context::getHeaderLine() .' - '. $this->_('Meetings');
+            return Context::getHeaderLine() .' - '. dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Meetings');
         }
     }
 }
