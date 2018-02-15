@@ -27,7 +27,10 @@ class DriverFactory
      */
     public function __construct($config)
     {
-        $this->config = $config;
+        foreach ($config as $driver_class => $driver_cfg) {
+            $this->config[strtolower($driver_class)] = $driver_cfg;
+            $this->config[strtolower($driver_class)]['class'] = $driver_class;
+        }
     }
 
     /**
@@ -57,6 +60,8 @@ class DriverFactory
      */
     public function getDriver($driver)
     {
+        $driver = strtolower($driver);
+
         if (empty($this->config[$driver])) {
             throw new \InvalidArgumentException(sprintf('The driver "%s" does not exist.', $driver));
         }
@@ -71,7 +76,7 @@ class DriverFactory
         }
 
         $client = $this->createHttpClient($driver_conf['url']);
-        $class = 'ElanEv\\Driver\\'. $driver;
+        $class = 'ElanEv\\Driver\\'. $driver_conf['class'];
         return new $class($client, $driver_conf);
     }
 

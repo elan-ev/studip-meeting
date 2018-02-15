@@ -5,20 +5,20 @@
 /** @var int $colspan */
 ?>
 
-<?php if ($canModifyMeetings): ?>
+<? if ($canModifyMeetings): ?>
     <tfoot>
     <tr>
         <td colspan="<?=$colspan?>">
             <form method="post" action="<?=PluginEngine::getURL($GLOBALS['plugin'], array(), 'index')?>" class="create-conference-meeting">
                 <input type="hidden" name="action" value="create">
                 <fieldset name="Meeting erstellen">
-                    <?php if (count($errors) > 0): ?>
+                    <? if (count($errors) > 0): ?>
                         <ul>
-                            <?php foreach ($errors as $error): ?>
-                                <li><?php echo htmlReady($error); ?></li>
-                            <?php endforeach; ?>
+                            <? foreach ($errors as $error): ?>
+                                <li><? echo htmlReady($error); ?></li>
+                            <? endforeach; ?>
                         </ul>
-                    <?php endif; ?>
+                    <? endif; ?>
                     <? if (sizeof($driver_config) == 1) : ?>
                         <input type="hidden" name="driver" value="<?= key($driver_config) ?>">
                     <? else : ?>
@@ -43,12 +43,12 @@
                 <input type="hidden" name="action" value="link">
                 <fieldset name="Meeting erstellen">
                     <select name="meeting_id" size="1">
-                        <option><?= $_('zu verlinkendes Meeting auswählen') ?></option>
-                        <?php foreach ($userMeetings as $meetingCourse): ?>
+                        <option><?= $_('zu verlinkendes Meeting auswÃ¤hlen') ?></option>
+                        <? foreach ($userMeetings as $meetingCourse): ?>
                             <option value="<?=$meetingCourse->meeting->id ?>">
                                 <?=htmlReady($meetingCourse->meeting->name) ?> (<?=htmlReady($meetingCourse->course->name)?>, <?=htmlReady($meetingCourse->course->start_semester->name)?>)
                             </option>
-                        <?php endforeach ?>
+                        <? endforeach ?>
                     </select>
                     <input type="submit" value="<?= $_('Meeting verlinken') ?>">
                 </fieldset>
@@ -56,4 +56,4 @@
         </td>
     </tr>
     </tfoot>
-<?php endif ?>
+<? endif ?>

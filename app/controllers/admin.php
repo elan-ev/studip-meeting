@@ -1,7 +1,6 @@
 <?php
-
 /*
- * Copyright (C) 2012 - Till Glˆggler     <tgloeggl@uos.de>
+ * Copyright (C) 2012 - Till Gl√∂ggler     <tgloeggl@uos.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -151,7 +150,7 @@ class AdminController extends StudipController
         switch ($id) {
 
             case 'main':
-                $helpText = $this->_('Administrationsseite f¸r das Plugin zur Durchf¸hrung und Verwaltung von Live-Online-Treffen, Webinaren und Videokonferenzen.');
+                $helpText = $this->_('Administrationsseite f√ºr das Plugin zur Durchf√ºhrung und Verwaltung von Live-Online-Treffen, Webinaren und Videokonferenzen.');
                 $helpBar = Helpbar::get();
                 $helpBar->addPlainText('', $helpText);
                 break;

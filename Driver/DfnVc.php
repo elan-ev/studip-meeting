@@ -2,6 +2,7 @@
 
 namespace ElanEv\Driver;
 
+use MeetingPlugin;
 use Guzzle\Http\ClientInterface;
 
 /**
@@ -327,9 +328,9 @@ class DfnVc implements DriverInterface
     public function getConfigOptions()
     {
         return array(
-            new ConfigOption('url', _('API-Endpoint'), 'https://connect.vc.dfn.de'),
-            new ConfigOption('login', _('Funktionskennung')),
-            new ConfigOption('password', _('Passwort'))
+            new ConfigOption('url', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'API-Endpoint'), 'https://connect.vc.dfn.de'),
+            new ConfigOption('login', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Funktionskennung')),
+            new ConfigOption('password', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Passwort'))
         );
     }
 }
