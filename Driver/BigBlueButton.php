@@ -2,6 +2,7 @@
 
 namespace ElanEv\Driver;
 
+use MeetingPlugin;
 use Guzzle\Http\ClientInterface;
 
 /**
@@ -10,7 +11,7 @@ use Guzzle\Http\ClientInterface;
  * @author Christian Flothmann <christian.flothmann@uos.de>
  * @author Till Glöggler <tgloeggl@uos.de>
  */
-class BigBlueButton implements DriverInterface
+class BigBlueButton implements DriverInterface, RecordingInterface
 {
     /**
      * @var \Guzzle\Http\ClientInterface The HTTP client
@@ -47,7 +48,7 @@ class BigBlueButton implements DriverInterface
             'webVoice' => '',
             'logoutURL' => '',
             'maxParticipants' => '-1',
-            'record' => 'false',
+            'record' => 'true',
             'duration' => '0',
         );
         $response = $this->performRequest('create', $params);
@@ -87,6 +88,25 @@ class BigBlueButton implements DriverInterface
         return sprintf('%s/api/join?%s', rtrim($this->client->getBaseUrl(), '/'), $this->buildQueryString($params));
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getRecordings(MeetingParameters $parameters)
+    {
+        $params = array(
+            'meetingID' => $parameters->getMeetingId()
+        );
+        $response = $this->performRequest('getRecordings', $params);
+
+        $xml = new \SimpleXMLElement($response);
+
+        if (!$xml instanceof \SimpleXMLElement) {
+            return false;
+        }
+
+        return $xml->recordings->recording;
+    }
+
     private function performRequest($endpoint, array $params = array())
     {
         $params['checksum'] = $this->createSignature($endpoint, $params);
@@ -118,8 +138,8 @@ class BigBlueButton implements DriverInterface
     public function getConfigOptions()
     {
         return array(
-            new ConfigOption('url',     _('URL des BBB-Servers')),
-            new ConfigOption('api-key', _('Api-Key (Salt)'))
+            new ConfigOption('url',     dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'URL des BBB-Servers')),
+            new ConfigOption('api-key', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Api-Key (Salt)'))
         );
     }
 }

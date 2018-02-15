@@ -13,6 +13,8 @@
 
 namespace ElanEv\Model;
 
+use MeetingPlugin;
+
 class Driver
 {
     static
@@ -25,13 +27,15 @@ class Driver
         foreach (glob(__DIR__ . '/../../Driver/*.php') as $filename) {
             $class = 'ElanEv\\Driver\\' . substr(basename($filename), 0, -4);
             if (in_array('ElanEv\Driver\DriverInterface', class_implements($class)) !== false) {
-                
+
                 $title          = substr(basename($filename), 0, -4);
                 $config_options = $class::getConfigOptions();
 
                 array_unshift($config_options, new \ElanEv\Driver\ConfigOption(
-                        'display_name', _('Anzeigename'), $title)
-                );
+                        'display_name',
+                        dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Anzeigename'),
+                        $title
+                ));
 
                 $config_options[] = new \ElanEv\Driver\ConfigOption('enable', '');
 

@@ -10,98 +10,96 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-15 16:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Jan-Hendrik Willms <tleilax@gmail.com>, 2017\n"
-"Language-Team: English (https://www.transifex.com/uol-it/teams/52597/en/)\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: en\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: MeetingPlugin.php:45 MeetingPlugin.php:148 app/controllers/index.php:725
 #: app/controllers/index.php:727
 msgid "Meetings"
-msgstr "Meetings"
+msgstr ""
 
 #: MeetingPlugin.php:54
 msgid "Meetings konfigurieren"
-msgstr "Configure meetings"
+msgstr ""
 
-#: MeetingPlugin.php:58 app/controllers/index.php:220
-#: app/views/index/my.php:14
+#: MeetingPlugin.php:58 app/controllers/index.php:220 app/views/index/my.php:14
 msgid "Meine Meetings"
-msgstr "My meetings"
+msgstr ""
 
 #: MeetingPlugin.php:182
 #, php-format
 msgid "%d Meeting(s), %d neue"
-msgstr "%d meeting(s), %d new"
+msgstr ""
 
 #: MeetingPlugin.php:186
 #, php-format
 msgid "%d Meeting(s)"
-msgstr "%d meeting(s)"
+msgstr ""
 
 #: app/models/Driver.php:36
 msgid "Anzeigename"
-msgstr "Display name"
+msgstr ""
 
 #: app/controllers/index.php:158
 msgid "Bitte geben Sie dem Meeting einen Namen."
-msgstr "Please give the meeting a name."
+msgstr ""
 
 #: app/controllers/index.php:185 app/controllers/index.php:190
 #: app/controllers/index.php:249 app/controllers/index.php:254
 #: app/controllers/index.php:300 app/controllers/index.php:305
 #: app/views/index/_meetings.php:195
 msgid "Informationen anzeigen"
-msgstr "View information"
+msgstr ""
 
 #: app/controllers/index.php:191 app/controllers/index.php:255
 #: app/controllers/index.php:306
 msgid "Informationen ausblenden"
-msgstr "Hide information"
+msgstr ""
 
 #: app/controllers/index.php:195 app/controllers/index.php:449
 msgid "Anpassen"
-msgstr "Customize"
+msgstr ""
 
 #: app/controllers/index.php:230 app/controllers/index.php:281
 msgid "Anzeige nach Semester"
-msgstr "View by semester"
+msgstr ""
 
 #: app/controllers/index.php:237 app/controllers/index.php:288
 msgid "Anzeige nach Namen"
-msgstr "View by name"
+msgstr ""
 
 #: app/controllers/index.php:265
 msgid "Sie brauchen Administrationsrechte."
-msgstr "You need administration rights."
+msgstr ""
 
 #: app/controllers/index.php:273 app/views/index/all.php:10
 msgid "Alle Meetings"
-msgstr "All meetings"
+msgstr ""
 
 #: app/controllers/index.php:547
 msgid "Navigation"
-msgstr "Navigation"
+msgstr ""
 
 #: app/controllers/index.php:552
 msgid "Ansichten"
-msgstr "Views"
+msgstr ""
 
 #: app/controllers/index.php:557
 msgid "Aktionen"
-msgstr "Actions"
+msgstr ""
 
 #: app/controllers/index.php:624
 #, php-format
 msgid "Wollen Sie wirklich das Meeting \"%s\" löschen?"
-msgstr "Are you sure you want to delete the meeting \"%s\"?"
+msgstr ""
 
 #: app/controllers/index.php:652
 msgid "Wollen Sie folgende Meetings wirklich löschen?"
-msgstr "Are you sure you want to delete the following meetings?"
+msgstr ""
 
 #: app/controllers/index.php:695
 msgid ""
@@ -110,263 +108,253 @@ msgid ""
 "Entfernungen überbrückt, externe Fachleute einbezogen und Studierende in "
 "Projekten und Praktika begleitet werden."
 msgstr ""
-"Plug-in for holding and managing live online meetings, ***REMOVED***s and video "
-"conferences. With the help of face-to-face communication, distances can be "
-"bridged, external experts can be involved and students can be supervised in "
-"projects and practicals."
 
 #: app/controllers/index.php:703
 msgid ""
 "Arbeitsbereich zum Anpassen der Gesamtansicht der Meetings einer "
 "Veranstaltung."
-msgstr "Workspace to customize the overall view of a course meeting."
+msgstr ""
 
 #: app/controllers/index.php:709
 msgid ""
 "Gesamtansicht aller von Ihnen erstellten Meetings nach Semestern oder nach "
 "Namen sortiert."
-msgstr "View of all meetings you have created sorted by semester or by name."
+msgstr ""
 
 #: app/controllers/admin.php:108
 msgid "Meetings Administration"
-msgstr "Meeting administration"
+msgstr ""
 
 #: app/controllers/admin.php:153
 msgid ""
-"Administrationsseite für das Plugin zur Durchführung und Verwaltung von "
-"Live-Online-Treffen, ***REMOVED***en und Videokonferenzen."
+"Administrationsseite für das Plugin zur Durchführung und Verwaltung von Live-"
+"Online-Treffen, ***REMOVED***en und Videokonferenzen."
 msgstr ""
-"Plug-in administration page for holding and managing live online meetings, "
-"***REMOVED***s and video conferences."
 
 #: app/views/admin/index.php:10
 msgid "Verwenden dieses Treibers zulassen"
-msgstr "Allow this driver to be used."
+msgstr ""
 
 #: app/views/admin/index.php:26 app/views/index/config.php:22
 msgid "Speichern"
-msgstr "Save"
+msgstr ""
 
 #: app/views/index/_confirm_delete.php:25
 #: app/views/index/_confirm_delete.php:38
 msgid "JA!"
-msgstr "Yes"
+msgstr ""
 
 #: app/views/index/_confirm_delete.php:26
 #: app/views/index/_confirm_delete.php:39
 msgid "NEIN!"
-msgstr "No"
+msgstr ""
 
 #: app/views/index/index.php:9
 msgid ""
 "Es wurde noch kein Videokonferenzsystem konfiguriert. Bitte wenden Sie sich "
 "an eine/n Systemadministrator/in!"
 msgstr ""
-"A video conferencing system has not been configured yet. Please contact a "
-"system administrator."
 
 #: app/views/index/_create_meeting.php:36
 msgid "Meeting erstellen"
-msgstr "Create meeting"
+msgstr ""
 
 #: app/views/index/_create_meeting.php:40
 msgid "oder"
-msgstr "or"
+msgstr ""
 
 #: app/views/index/_create_meeting.php:46
 msgid "zu verlinkendes Meeting auswählen"
-msgstr "Select meeting for link"
+msgstr ""
 
 #: app/views/index/_create_meeting.php:53
 msgid "Meeting verlinken"
-msgstr "Link meeting"
+msgstr ""
 
 #: app/views/index/config.php:9
 msgid "Die Änderungen wurden gespeichert."
-msgstr "Your changes have been saved."
+msgstr ""
 
 #: app/views/index/config.php:15
 msgid "Reitername:"
-msgstr "Tab name:"
+msgstr ""
 
 #: app/views/index/config.php:18
 msgid "Einleitungstext:"
-msgstr "Introductory text:"
+msgstr ""
 
 #: app/views/index/config.php:23
 msgid "Abbrechen"
-msgstr "Cancel"
+msgstr ""
 
 #: app/views/index/_meetings.php:58
 msgid "Aufzeichnung"
-msgstr "Record"
+msgstr ""
 
 #: app/views/index/_meetings.php:62
 msgid "Heimat-Einrichtung"
-msgstr "Home faculty"
+msgstr ""
 
 #: app/views/index/_meetings.php:64
 msgid "Veranstaltung"
-msgstr "Event"
+msgstr ""
 
 #: app/views/index/_meetings.php:68
 msgid "Erstellt von"
-msgstr "Created by"
+msgstr ""
 
 #: app/views/index/_meetings.php:71
 msgid "Treiber"
-msgstr "Driver"
+msgstr ""
 
 #: app/views/index/_meetings.php:72
 msgid "Zuletzt betreten"
-msgstr "Last accessed"
+msgstr ""
 
 #: app/views/index/_meetings.php:73
 msgid "Freigeben"
-msgstr "Share"
+msgstr ""
 
 #: app/views/index/_meetings.php:74
 msgid "Aktion"
-msgstr "Action"
+msgstr ""
 
 #: app/views/index/_meetings.php:103
 msgid "Dieser Meetingraum wird in "
-msgstr "This meeting room"
+msgstr ""
 
 #: app/views/index/_meetings.php:103
 msgid " LV verwendet."
-msgstr "is used in a course"
+msgstr ""
 
 #: app/views/index/_meetings.php:103
 msgid "Meeting betreten"
-msgstr "Join meeting"
+msgstr ""
 
 #: app/views/index/_meetings.php:106
 msgid "LV"
-msgstr "course"
+msgstr ""
 
 #: app/views/index/_meetings.php:110
 msgid "URL zur Aufzeichnung"
-msgstr "URL for recording"
+msgstr ""
 
 #: app/views/index/_meetings.php:112 app/views/index/_meetings.php:115
 msgid "Änderungen speichern"
-msgstr "Save changes"
+msgstr ""
 
 #: app/views/index/_meetings.php:113 app/views/index/_meetings.php:116
 msgid "Änderungen verwerfen"
-msgstr "Discard changes"
+msgstr ""
 
 #: app/views/index/_meetings.php:124
 #, php-format
 msgid "zur Aufzeichnung vom %s"
-msgstr "Show recording from %s"
+msgstr ""
 
 #: app/views/index/_meetings.php:137 app/views/index/_meetings.php:139
 msgid "zur Aufzeichnung"
-msgstr "Recording"
+msgstr ""
 
 #: app/views/index/_meetings.php:165
 msgid "um"
-msgstr "at"
+msgstr ""
 
 #: app/views/index/_meetings.php:165
 msgid "Uhr"
-msgstr "h"
+msgstr ""
 
 #: app/views/index/_meetings.php:167
 msgid "Raum wurde noch nie betreten"
-msgstr "Meeting has never been accessed."
+msgstr ""
 
 #: app/views/index/_meetings.php:170
 msgid "Meeting für Teilnehmende unsichtbar schalten"
-msgstr "Hide meeting for participants"
+msgstr ""
 
 #: app/views/index/_meetings.php:170
 msgid "Meeting für Teilnehmende sichtbar schalten"
-msgstr "Show meeting for participants"
+msgstr ""
 
 #: app/views/index/_meetings.php:174 app/views/index/_meetings.php:196
 msgid "Meeting bearbeiten"
-msgstr "Edit meeting"
+msgstr ""
 
 #: app/views/index/_meetings.php:178 app/views/index/_meetings.php:201
 msgid "Teilnehmende haben VeranstalterInnen-Rechte"
-msgstr "Participants have organizer rights"
+msgstr ""
 
 #: app/views/index/_meetings.php:182 app/views/index/_meetings.php:205
 msgid "Teilnehmende haben eingeschränkte Rechte"
-msgstr "Participants have restricted rights"
+msgstr ""
 
 #: app/views/index/_meetings.php:187 app/views/index/_meetings.php:210
 msgid "Zuordnung löschen"
-msgstr "Delete assignment"
+msgstr ""
 
 #: app/views/index/_meetings.php:187 app/views/index/_meetings.php:210
 msgid "Meeting löschen"
-msgstr "Delete meeting"
+msgstr ""
 
 #: app/views/index/_meetings.php:227
 msgid "Teilnehmende haben VeranstalterInnen-Rechte (wie Anlegende/r)."
-msgstr "Participants have organizer rights (same rights as meeting creator)."
+msgstr ""
 
 #: app/views/index/_meetings.php:229
 msgid "Teilnehmende haben eingeschränkte Teilnehmenden-Rechte."
-msgstr "Participants have restricted rights."
+msgstr ""
 
 #: app/views/index/_meetings.php:233
 msgid "Eine Person hat das Meeting in den letzten 24 Stunden betreten"
-msgstr "One person joined the meeting in the last 24 hours."
+msgstr ""
 
 #: app/views/index/_meetings.php:235
 msgid "Personen haben das Meeting in den letzten 24 Stunden betreten"
-msgstr "people joined the meeting in the last 24 hours."
+msgstr ""
 
 #: app/views/index/_meetings.php:239
 msgid "Eine Person hat das Meeting insgesamt betreten"
-msgstr "One person has joined the meeting in total."
+msgstr ""
 
 #: app/views/index/_meetings.php:241
 msgid "Personen haben das Meeting insgesamt betreten"
-msgstr "people have joined the meeting in total."
+msgstr ""
 
 #: app/views/index/_meetings.php:254
 msgid "Alle Meetings auswählen"
-msgstr "Select all meetings"
+msgstr ""
 
 #: app/views/index/_meetings.php:255
 msgid "Löschen"
-msgstr "Delete"
+msgstr ""
 
 #: app/views/index/_meetings.php:255
 msgid "Alle ausgewählten Meetings löschen"
-msgstr "Delete all selected meetings"
+msgstr ""
 
 #: app/views/index/my.php:10
 msgid ""
 "Es sind keine Meetings vorhanden. Meetings können nur innerhalb einer "
-"Veranstaltung über das \"+\"-Icon aktiviert und anschließend über den Reiter"
-" \"Meetings\" verwaltet werden."
+"Veranstaltung über das \"+\"-Icon aktiviert und anschließend über den Reiter "
+"\"Meetings\" verwaltet werden."
 msgstr ""
-"There are no meetings available. Meetings can only be activated within a "
-"course via the ?+? icon and managed via the ?Meetings? tab."
 
 #: Driver/BigBlueButton.php:141
 msgid "URL des BBB-Servers"
-msgstr "URL of the BBB server"
+msgstr ""
 
 #: Driver/BigBlueButton.php:142
 msgid "Api-Key (Salt)"
-msgstr "API key (salt)"
+msgstr ""
 
 #: Driver/DfnVc.php:331
 msgid "API-Endpoint"
-msgstr "API endpoint"
+msgstr ""
 
 #: Driver/DfnVc.php:332
 msgid "Funktionskennung"
-msgstr "Function ID"
+msgstr ""
 
 #: Driver/DfnVc.php:333
 msgid "Passwort"
-msgstr "Password"
+msgstr ""

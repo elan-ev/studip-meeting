@@ -1,13 +1,15 @@
 pluginname=Meetings
 pluginclassname=MeetingPlugin
 origin=elan-ev
-version=2.0
+version=1.4.3
+studipMinVersion=4.0.alpha.svn
+studipMaxVersion=4.0
 description=Virtueller Raum, mit dem Live-Online-Treffen, ***REMOVED***e und Videokonferenzen durchgeführt werden können.
 
 screenshot = images/screenshots/Der_Meeting-Raum_mit_Adobe_Connect.jpg
 screenshot = images/screenshots/Der_Reiter_Meeting.jpg
 
-icon = ../../../assets/images/icons/16/black/chat.png
+icon = ../../../assets/images/icons/black/chat.svg
 
 category = Kommunikation und Zusammenarbeit
 displayname = Meetings
@@ -15,4 +17,4 @@ descriptionshort = Face-to-face-Kommunikation mit Adobe Connect oder BigBlueButt
 
 descriptionlong = Virtueller Raum, mit dem Live-Online-Treffen, ***REMOVED***e und Videokonferenzen durchgeführt werden können. Die Teilnehmenden können sich während eines Meetings gegenseitig hören und über eine angeschlossene Webcam - wenn vorhanden - sehen und miteinander arbeiten. Folien können präsentiert und Abfragen durchgeführt werden. Ein Fenster in der Benutzungsoberfläche des eigenen Rechners kann für andere sichtbar geschaltet werden, um zum Beispiel den Teilnehmenden bestimmte Webseiten oder Anwendungen zu zeigen. Außerdem kann die Veranstaltung aufgezeichnet und Interessierten zur Verfügung gestellt werden.
 
-keywords = Videokonferenz- und ***REMOVED***möglichkeit;Live im Netz präsentieren sowie gemeinsam zeichnen und arbeiten;Kommunikation über Mikrofon und Kamera;Ideal für dezentrale Lern- und Arbeitsgruppen;Verlinkung zu bereits bestehenden eigenen RäumenstudipMinVersion=4.0
+keywords = Videokonferenz- und ***REMOVED***möglichkeit;Live im Netz präsentieren sowie gemeinsam zeichnen und arbeiten;Kommunikation über Mikrofon und Kamera;Ideal für dezentrale Lern- und Arbeitsgruppen;Verlinkung zu bereits bestehenden eigenen Räumen

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright (C) 2012 - Till Glöggler     <tgloeggl@uos.de>
  *
