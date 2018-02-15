@@ -57,3 +57,7 @@ form.create-conference-meeting input[type="text"] {
     width: 400px;
     display: inline;
 }
+
+.meeting-recording-url {
+    margin-right: 5px;
+}

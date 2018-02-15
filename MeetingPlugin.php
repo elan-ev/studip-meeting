@@ -34,7 +34,7 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
         parent::__construct();
 
         bindtextdomain(static::GETTEXT_DOMAIN, $this->getPluginPath() . '/locale');
-        bind_textdomain_codeset(static::GETTEXT_DOMAIN, 'ISO-8859-1');
+        bind_textdomain_codeset(static::GETTEXT_DOMAIN, 'UTF-8');
 
         $this->assetsUrl = rtrim($this->getPluginURL(), '/').'/assets';
 
