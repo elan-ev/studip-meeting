@@ -7,11 +7,13 @@
  * modify it under the terms of the GNU Affero General Public License
  * version 3 as published by the Free Software Foundation.
  *
- * @author      Till Glöggler <tgloeggl@uos.de>
+ * @author      Till GlÃ¶ggler <tgloeggl@uos.de>
  * @license     https://www.gnu.org/licenses/agpl-3.0.html AGPL version 3
  */
 
 namespace ElanEv\Model;
+
+use MeetingPlugin;
 
 class Driver
 {
@@ -25,13 +27,15 @@ class Driver
         foreach (glob(__DIR__ . '/../../Driver/*.php') as $filename) {
             $class = 'ElanEv\\Driver\\' . substr(basename($filename), 0, -4);
             if (in_array('ElanEv\Driver\DriverInterface', class_implements($class)) !== false) {
-                
+
                 $title          = substr(basename($filename), 0, -4);
                 $config_options = $class::getConfigOptions();
 
                 array_unshift($config_options, new \ElanEv\Driver\ConfigOption(
-                        'display_name', _('Anzeigename'), $title)
-                );
+                        'display_name',
+                        dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Anzeigename'),
+                        $title
+                ));
 
                 $config_options[] = new \ElanEv\Driver\ConfigOption('enable', '');
 

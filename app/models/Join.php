@@ -70,6 +70,6 @@ class Join extends \SimpleORMap
      */
     public static function findAllJoinsForMeeting(Meeting $meeting)
     {
-        return static::findBySQL('meeting_id = :meeting_id GROUP BY user_id ORDER BY last_join', array('meeting_id' => $meeting->id));
+        return static::findBySQL('meeting_id = :meeting_id ORDER BY last_join ASC', array('meeting_id' => $meeting->id));
     }
 }

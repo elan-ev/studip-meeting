@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (C) 2012 - Till Glˆggler     <tgloeggl@uos.de>
+ * Copyright (C) 2012 - Till Gl√∂ggler     <tgloeggl@uos.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -57,11 +57,13 @@ class IndexController extends StudipController
         $this->driver_factory = new DriverFactory(Driver::getConfig());
 
         $this->configured = false;
-        foreach ($this->driver_config as $driver => $config) {
-            if ($config['enable']) {
-                $this->configured = true;
-            } else {
-                unset($this->driver_config[$driver]);
+        if (!empty($this->driver_config)) {
+            foreach ($this->driver_config as $driver => $config) {
+                if ($config['enable']) {
+                    $this->configured = true;
+                } else {
+                    unset($this->driver_config[$driver]);
+                }
             }
         }
 
@@ -137,7 +139,7 @@ class IndexController extends StudipController
 
     public function index_action()
     {
-        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. $this->_('Meetings'));
+        PageLayout::setTitle(self::getHeaderLine($this->getCourseId()));
         $this->getHelpbarContent('main');
 
         // get messages from rerouted actions
@@ -165,7 +167,7 @@ class IndexController extends StudipController
             $linkedMeetingId = Request::int('meeting_id');
             $meeting = new Meeting($linkedMeetingId);
 
-            if (!$meeting->isNew() && $user->cfg->getUserId() === $meeting->user_id && !$meeting->isAssignedToCourse($course)) {
+            if (!$meeting->isNew() && $user->id === $meeting->user_id && !$meeting->isAssignedToCourse($course)) {
                 $meeting->courses[] = new \Course($this->getCourseId());
                 $meeting->store();
             }
@@ -366,18 +368,19 @@ class IndexController extends StudipController
      */
     public function joinMeeting_action($meetingId)
     {
-        /*
-        if(!$this->hasActiveMeeting()) {
-            $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
-            return;
-        }
-         *
-         */
-
         /** @var Seminar_User $user */
         $user = $GLOBALS['user'];
 
         $meeting = new Meeting($meetingId);
+        $driver = $this->driver_factory->getDriver($meeting->driver);
+
+        // ugly hack for BBB
+        if ($driver instanceof ElanEv\Driver\BigBlueButton) {
+            // TODO: check if recreation is necessary
+            $meetingParameters = $meeting->getMeetingParameters();
+            $driver->createMeeting($meetingParameters);
+        }
+
         $joinParameters = new JoinParameters();
         $joinParameters->setMeetingId($meetingId);
         $joinParameters->setIdentifier($meeting->identifier);
@@ -387,7 +390,7 @@ class IndexController extends StudipController
         $joinParameters->setFirstName($user->Vorname);
         $joinParameters->setLastName($user->Nachname);
 
-        $driver = $this->driver_factory->getDriver($meeting->driver);
+
 
         if ($this->userCanModifyCourse($this->getCourseId()) || $meeting->join_as_moderator) {
             $joinParameters->setPassword($meeting->moderator_password);
@@ -399,8 +402,10 @@ class IndexController extends StudipController
 
         $lastJoin = new Join();
         $lastJoin->meeting_id = $meetingId;
-        $lastJoin->user_id = $user->cfg->getUserId();
+        $lastJoin->user_id = $user->id;
+        $lastJoin->last_join = time();
         $lastJoin->store();
+
 
         try {
             if ($join_url = $driver->getJoinMeetingUrl($joinParameters)) {
@@ -417,7 +422,7 @@ class IndexController extends StudipController
 
     public function config_action()
     {
-        PageLayout::setTitle(getHeaderLine($this->getCourseId()) .' - '. $this->_('Meetings'));
+        PageLayout::setTitle(self::getHeaderLine($this->getCourseId()));
         $this->getHelpbarContent('config');
         $courseId = $this->getCourseId();
 
@@ -493,7 +498,7 @@ class IndexController extends StudipController
 
         $meeting = new Meeting();
         $meeting->courses[] = new Course($this->getCourseId());
-        $meeting->user_id = $user->cfg->getUserId();
+        $meeting->user_id = $user->id;
         $meeting->name = $name;
         $meeting->driver = $driver_name;
         $meeting->attendee_password = $this->generateAttendeePassword();
@@ -615,7 +620,10 @@ class IndexController extends StudipController
             if (!$meeting->isNew()) {
                 $this->confirmDeleteMeeting = true;
                 $this->questionOptions = array(
-                    'question' => $this->_('Wollen Sie wirklich das Meeting "').$meeting->name.$this->_('" lˆschen?'),
+                    'question' => sprintf(
+                        $this->_('Wollen Sie wirklich das Meeting "%s" l√∂schen?'),
+                        $meeting->name
+                    ),
                     'approvalLink' => PluginEngine::getLink($this->plugin, array('destination' => Request::get('destination')), 'index/delete/'.$meeting->id.'/'.Request::get('cid'), true),
                     'disapprovalLink' => PluginEngine::getLink($this->plugin, array(),  Request::get('destination')),
                 );
@@ -641,7 +649,7 @@ class IndexController extends StudipController
         } elseif (!Request::submitted('cancel')) {
             $this->confirmDeleteMeeting = true;
             $this->questionOptions = array(
-                'question' => $this->_('Wollen Sie folgende Meetings wirklich lˆschen?'),
+                'question' => $this->_('Wollen Sie folgende Meetings wirklich l√∂schen?'),
                 'approvalLink' => PluginEngine::getLink($this->plugin, array(), 'index/delete/'.$meeting->id.'/'.Request::get('cid')),
                 'disapprovalLink' => PluginEngine::getLink($this->plugin, array(), Request::get('destination')),
                 'deleteMeetings' => $deleteMeetings,
@@ -684,8 +692,8 @@ class IndexController extends StudipController
         switch ($id) {
 
             case 'main':
-                $helpText = $this->_('Durchf¸hrung und Verwaltung von Live-Online-Treffen, ***REMOVED***en und Videokonferenzen. '
-                          . 'Mit Hilfe der Face-to-Face-Kommunikation kˆnnen Entfernungen ¸berbr¸ckt, externe Fachleute '
+                $helpText = $this->_('Durchf√ºhrung und Verwaltung von Live-Online-Treffen, ***REMOVED***en und Videokonferenzen. '
+                          . 'Mit Hilfe der Face-to-Face-Kommunikation k√∂nnen Entfernungen √ºberbr√ºckt, externe Fachleute '
                           . 'einbezogen und Studierende in Projekten und Praktika begleitet werden.');
                 $helpBar = Helpbar::get();
                 $helpBar->addPlainText('', $helpText);
@@ -703,6 +711,20 @@ class IndexController extends StudipController
                 $helpBar = Helpbar::get();
                 $helpBar->addPlainText('', $helpText);
                 break;
+        }
+    }
+
+    /**
+     * Get pagetitle taking care of different Stud.IP versions
+     *
+     * @return string  pagetitle
+     */
+    private static function getHeaderLine($course_id)
+    {
+        if (function_exists('getHeaderLine')) {
+            return getHeaderLine($course_id) .' - '. $this->_('Meetings');
+        } else {
+            return Context::getHeaderLine() .' - '. $this->_('Meetings');
         }
     }
 }

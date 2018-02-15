@@ -5,9 +5,9 @@
 /** @var bool $saved */
 ?>
 
-<?php if ($saved): ?>
-    <?= $templateFactory->render('shared/message_box', array('class' => 'success', 'message' => $_('Die Änderungen wurden gespeichert.'))) ?>
-<?php endif ?>
+<? if ($saved): ?>
+    <?= $templateFactory->render('shared/message_box', array('class' => 'success', 'message' => $_('Die Ã„nderungen wurden gespeichert.'))) ?>
+<? endif ?>
 
 <form action="<?= PluginEngine::getLink($plugin, array(), 'index/config') ?>" method="post" class="studip_form default">
     <?= CSRFProtection::tokenTag() ?>

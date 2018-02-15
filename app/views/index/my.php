@@ -6,14 +6,14 @@
 
 <?= $this->render_partial('index/_confirm_delete') ?>
 
-<?php if (empty($meetings)): ?>
-	<?= MessageBox::info($_('Es sind keine Meetings vorhanden. Meetings können nur innerhalb einer Veranstaltung über das "+"-Icon aktiviert und anschließend über den Reiter "Meetings" verwaltet werden.')) ?>
-<?php endif; ?>
+<? if (empty($meetings)): ?>
+    <?= MessageBox::info($_('Es sind keine Meetings vorhanden. Meetings kÃ¶nnen nur innerhalb einer Veranstaltung Ã¼ber das "+"-Icon aktiviert und anschlieÃŸend Ã¼ber den Reiter "Meetings" verwaltet werden.')) ?>
+<? endif; ?>
 
-<?php if ($type === 'name'): ?>
+<? if ($type === 'name'): ?>
     <?=$this->render_partial('index/_meetings', array('title' => $_('Meine Meetings'), 'canModifyMeetings' => true, 'destination' => 'index/my/name', 'showCourse' => true)) ?>
-<?php else: ?>
-    <?php foreach ($semesters as $semester): ?>
+<? else: ?>
+    <? foreach ($semesters as $semester): ?>
         <?=$this->render_partial('index/_meetings', array('title' => $semester->name, 'canModifyMeetings' => true, 'meetings' => $meetings[$semester->id], 'destination' => 'index/my', 'showCourse' => true)) ?>
-    <?php endforeach ?>
-<?php endif ?>
+    <? endforeach ?>
+<? endif ?>

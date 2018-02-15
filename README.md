@@ -3,8 +3,8 @@ Stud.IP Video Conference Plugin
 
 [![Build Status](https://travis-ci.org/virtUOS/studip-meeting.svg?branch=master)](https://travis-ci.org/virtUOS/studip-meeting)
 
-Ein Stud.IP-Plugin um Konferenzen aus einer Veranstaltung heraus starten zu kˆnnen.
-Teilnehmer/innen des Kurses kˆnnen der Konferenz beitreten.
+Ein Stud.IP-Plugin um Konferenzen aus einer Veranstaltung heraus starten zu k√∂nnen.
+Teilnehmer/innen des Kurses k√∂nnen der Konferenz beitreten.
 
 Einrichtung
 -----------
@@ -16,10 +16,10 @@ http://bigbluebutton.org/commercial-support/
 
 ### DfnVc (Adobe Connect)
 
-Ist die Hochschule Mitglied der DFN und soll f¸r das Plugin "Meetings" (Videokonferenzen)
-Adobe Connect ¸ber die DFN genutzt werden, m¸sste die Hochschule bei der DFN
+Ist die Hochschule Mitglied der DFN und soll f√ºr das Plugin "Meetings" (Videokonferenzen)
+Adobe Connect √ºber die DFN genutzt werden, m√ºsste die Hochschule bei der DFN
 per E-Mail (hotline@vc.dfn.de) anfragen, um eine Hochschul-Kennung zu erhalten.
-Die DFN benˆtigt hierf¸r eine spezielle Funktionsemailadresse und die IP-Adresse
+Die DFN ben√∂tigt hierf√ºr eine spezielle Funktionsemailadresse und die IP-Adresse
 des Stud.IP-Servers der Hochschule.
 
 Konfiguration
@@ -28,6 +28,6 @@ Konfiguration
 Als Benutzer mit root-Berechtigung muss unter "Admin" -> "System" -> "Meetings konfigurieren"
 die Konfiguration der einzelnen Konnektoren vorgenommen werden.
 
-Standardm‰ﬂig gibt es zwei Konnektoren:
+Standardm√§√üig gibt es zwei Konnektoren:
 * BigBlueButton
 * DfnVC (Adobe Connect)
