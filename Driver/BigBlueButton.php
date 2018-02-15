@@ -2,13 +2,14 @@
 
 namespace ElanEv\Driver;
 
+use MeetingPlugin;
 use Guzzle\Http\ClientInterface;
 
 /**
  * Big Blue Button driver implementation.
  *
  * @author Christian Flothmann <christian.flothmann@uos.de>
- * @author Till Glöggler <tgloeggl@uos.de>
+ * @author Till GlÃ¶ggler <tgloeggl@uos.de>
  */
 class BigBlueButton implements DriverInterface, RecordingInterface
 {
@@ -137,8 +138,8 @@ class BigBlueButton implements DriverInterface, RecordingInterface
     public function getConfigOptions()
     {
         return array(
-            new ConfigOption('url',     _('URL des BBB-Servers')),
-            new ConfigOption('api-key', _('Api-Key (Salt)'))
+            new ConfigOption('url',     dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'URL des BBB-Servers')),
+            new ConfigOption('api-key', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Api-Key (Salt)'))
         );
     }
 }

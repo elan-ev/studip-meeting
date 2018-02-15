@@ -6,7 +6,7 @@ namespace ElanEv\Driver;
  * Common interface for different conference server API driver implementations.
  *
  * @author Christian Flothmann <christian.flothmann@uos.de>
- * @author Till Glöggler <tgloeggl@uos.de>
+ * @author Till GlÃ¶ggler <tgloeggl@uos.de>
  */
 interface DriverInterface
 {
