@@ -6,10 +6,12 @@ use ElanEv\Driver\JoinParameters;
 use ElanEv\Driver\MeetingParameters;
 use Guzzle\Http\ClientInterface;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @author Christian Flothmann <christian.flothmann@uos.de>
  */
-abstract class AbstractDriverTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractDriverTest extends TestCase
 {
     protected $apiUrl = 'http://example.com';
 
@@ -83,7 +85,10 @@ abstract class AbstractDriverTest extends \PHPUnit_Framework_TestCase
      */
     protected function createClientMock()
     {
-        $client = $this->getMock('\Guzzle\Http\Client');
+        $client = $this
+            ->getMockBuilder('\Guzzle\Http\Client')
+            ->getMock();
+
         $client
             ->expects($this->any())
             ->method('getBaseUrl')
@@ -135,7 +140,9 @@ abstract class AbstractDriverTest extends \PHPUnit_Framework_TestCase
      */
     private function createRequestMock()
     {
-        return $this->getMock('\Guzzle\Http\Message\RequestInterface');
+        return $this
+            ->getMockBuilder('\Guzzle\Http\Message\RequestInterface')
+            ->getMock();
     }
 
     /**
