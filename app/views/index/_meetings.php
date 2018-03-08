@@ -51,33 +51,33 @@ if ($showUser) {
         </colgroup>
         <thead>
         <tr>
-            <?php if ($canModifyMeetings): ?>
+            <? if ($canModifyMeetings): ?>
                 <th>&nbsp;</th>
-            <?php endif ?>
+            <? endif ?>
             <th class="sortable">Meeting</th>
-            <th class="recording-url"><?=_('Aufzeichnung')?></th>
-            <?php if ($showCourse): ?>
+            <th class="recording-url"><?=$_('Aufzeichnung')?></th>
+            <? if ($showCourse): ?>
                 <th class="sortable">
-                    <?php if ($showInstitute): ?>
-                        <?=_('Heimat-Einrichtung')?><br>
-                    <?php endif ?>
-                    <?= _('Veranstaltung') ?>
+                    <? if ($showInstitute): ?>
+                        <?=$_('Heimat-Einrichtung')?><br>
+                    <? endif ?>
+                    <?= $_('Veranstaltung') ?>
                 </th>
-            <?php endif ?>
-            <?php if ($showUser): ?>
-                <th class="sortable"><?= _('Erstellt von') ?></th>
-            <?php endif ?>
-            <?php if ($canModifyMeetings): ?>
-                <th class="sortable"><?= _('Treiber') ?></th>
-                <th class="sortable"><?=_('Zuletzt betreten')?></th>
-                <th class="active"><?= _('Freigeben') ?></th>
-                <th><?=_('Aktion')?></th>
-            <?php endif; ?>
+            <? endif ?>
+            <? if ($showUser): ?>
+                <th class="sortable"><?= $_('Erstellt von') ?></th>
+            <? endif ?>
+            <? if ($canModifyMeetings): ?>
+                <th class="sortable"><?= $_('Treiber') ?></th>
+                <th class="sortable"><?=$_('Zuletzt betreten')?></th>
+                <th class="active"><?= $_('Freigeben') ?></th>
+                <th><?=$_('Aktion')?></th>
+            <? endif; ?>
         </tr>
         </thead>
 
         <tbody>
-        <?php foreach ($meetings as $meetingCourse): ?>
+        <? foreach ($meetings as $meetingCourse): ?>
             <? try {
                 $driver = $driver_factory->getDriver($meetingCourse->meeting->driver);
             } catch (InvalidArgumentException $e) {
@@ -86,34 +86,34 @@ if ($showUser) {
             }
             ?>
 
-            <?php
+            <?
             $joinUrl = PluginEngine::getLink($plugin, array('cid' => $meetingCourse->course->id), 'index/joinMeeting/'.$meetingCourse->meeting->id);
             $moderatorPermissionsUrl = PluginEngine::getLink($plugin, array('destination' => $destination), 'index/moderator_permissions/'.$meetingCourse->meeting->id);
             $deleteUrl = PluginEngine::getLink($plugin, array('delete' => $meetingCourse->meeting->id, 'cid' => $meetingCourse->course->id, 'destination' => $destination), $destination);
             ?>
             <tr data-meeting-id="<?=$meetingCourse->meeting->id?>">
-                <?php if ($canModifyMeetings): ?>
+                <? if ($canModifyMeetings): ?>
                     <td>
                         <input class="check_all" type="checkbox" name="meeting_ids[]" value="<?=$meetingCourse->meeting->id?>-<?=$meetingCourse->course->id?>">
                     </td>
-                <?php endif ?>
+                <? endif ?>
                 <td class="meeting-name">
                     <a href="<?=$joinUrl?>"
                         target="_blank"
-                        title="<?=$canModifyMeetings ? _('Dieser Meetingraum wird in ').count($meetingCourse->meeting->courses)._(' LV verwendet.') : _('Meeting betreten')?>">
+                        title="<?=$canModifyMeetings ? $_('Dieser Meetingraum wird in ').count($meetingCourse->meeting->courses).$_(' LV verwendet.') : $_('Meeting betreten')?>">
                         <span><?=htmlReady($meetingCourse->meeting->name)?></span>
-                        <?php if (count($meetingCourse->meeting->courses) > 1): ?>
-                            (<?=count($meetingCourse->meeting->courses)?> <?=_('LV')?>)
-                        <?php endif ?>
+                        <? if (count($meetingCourse->meeting->courses) > 1): ?>
+                            (<?=count($meetingCourse->meeting->courses)?> <?=$_('LV')?>)
+                        <? endif ?>
                     </a>
                     <input type="text" name="name"><br>
-                    <input type="text" name="recording_url" placeholder="<?=_('URL zur Aufzeichnung')?>">
+                    <input type="text" name="recording_url" placeholder="<?=$_('URL zur Aufzeichnung')?>">
                     <? if (StudipVersion::newerThan('3.3')) : ?>
-                        <?= Icon::create('accept', 'clickable', array('class' => 'accept-button', 'title' => _('Änderungen speichern'))) ?>
-                        <?= Icon::create('decline', 'clickable', array('class' => 'decline-button', 'title' => _('Änderungen verwerfen'))) ?>
+                        <?= Icon::create('accept', 'clickable', array('class' => 'accept-button', 'title' => $_('Änderungen speichern'))) ?>
+                        <?= Icon::create('decline', 'clickable', array('class' => 'decline-button', 'title' => $_('Änderungen verwerfen'))) ?>
                     <? else: ?>
-                        <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/accept.png" class="accept-button" title="<?=_('Änderungen speichern')?>">
-                        <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/decline.png" class="decline-button" title="<?=_('Änderungen verwerfen')?>">
+                        <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/accept.png" class="accept-button" title="<?=$_('Änderungen speichern')?>">
+                        <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/decline.png" class="decline-button" title="<?=$_('Änderungen verwerfen')?>">
                     <? endif ?>
                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/ajax_indicator_small.gif" class="loading-indicator">
                 </td>
@@ -121,7 +121,7 @@ if ($showUser) {
                     <? if (class_implements($driver, 'RecordingInterface')) : ?>
                         <? foreach ($driver->getRecordings($meetingCourse->meeting->getMeetingParameters()) as $recording) : ?>
                         <a href="<?= $recording->playback->format->url ?>" target="_blank" class="meeting-recording-url">
-                            <? $title = sprintf(_('zur Aufzeichnung vom %s'), date('d.m.Y, H:i:s', (int)$recording->startTime / 1000)) ?>
+                            <? $title = sprintf($_('zur Aufzeichnung vom %s'), date('d.m.Y, H:i:s', (int)$recording->startTime / 1000)) ?>
                             <? if (StudipVersion::newerThan('3.3')) : ?>
                                 <?= Icon::create('video', 'clickable', array('title' => $title)) ?>
                             <? else: ?>
@@ -134,57 +134,57 @@ if ($showUser) {
 
                     <a href="<?=$meetingCourse->meeting->recording_url?>" target="_blank" class="meeting-recording-url"<?=!$meetingCourse->meeting->recording_url ? ' style="display:none;"' : ''?>>
                         <? if (StudipVersion::newerThan('3.3')) : ?>
-                            <?= Icon::create('video', 'clickable', array('title' => _('zur Aufzeichnung'))) ?>
+                            <?= Icon::create('video', 'clickable', array('title' => $_('zur Aufzeichnung'))) ?>
                         <? else: ?>
-                            <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/video.png" title="<?=_('zur Aufzeichnung')?>">
+                            <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/video.png" title="<?=$_('zur Aufzeichnung')?>">
                         <? endif ?>
                     </a>
                     <? endif ?>
                 </td>
-                <?php if ($showCourse): ?>
+                <? if ($showCourse): ?>
                     <td>
-                        <?php if ($showInstitute): ?>
+                        <? if ($showInstitute): ?>
                             <?=htmlReady($meetingCourse->course->home_institut->name)?><br>
-                        <?php endif ?>
+                        <? endif ?>
                         <a href="<?=PluginEngine::getURL($plugin, array('cid' => $meetingCourse->course->id), 'index')?>">
                             <?=htmlReady($meetingCourse->course->name)?>
                         </a>
                     </td>
-                <?php endif ?>
-                <?php if ($showUser): ?>
+                <? endif ?>
+                <? if ($showUser): ?>
                     <td>
-                        <?php $user = new User($meetingCourse->meeting->user_id) ?>
+                        <? $user = new User($meetingCourse->meeting->user_id) ?>
                         <?= htmlReady($user->vorname) ?> <?= htmlReady($user->nachname) ?> (<?= htmlReady($user->username) ?>)
                     </td>
-                <?php endif ?>
-                <?php if ($canModifyMeetings): ?>
+                <? endif ?>
+                <? if ($canModifyMeetings): ?>
                     <td><?= htmlReady($this->driver_config[$meetingCourse->meeting->driver]['display_name']) ?></td>
                     <td>
-                        <?php $recentJoins = array_reverse($meetingCourse->meeting->getAllJoins()) ?>
-                        <?php if (count($recentJoins) > 0): ?>
-                            <?=date('d.m.Y', $recentJoins[0]->last_join)?> <?=_('um')?> <?=date('H:i', $recentJoins[0]->last_join)?> <?=_('Uhr')?>
-                        <?php else: ?>
-                            <?=_('Raum wurde noch nie betreten')?>
-                        <?php endif ?>
+                        <? $recentJoins = array_reverse($meetingCourse->meeting->getAllJoins()) ?>
+                        <? if (count($recentJoins) > 0): ?>
+                            <?=date('d.m.Y', $recentJoins[0]->last_join)?> <?=$_('um')?> <?=date('H:i', $recentJoins[0]->last_join)?> <?=$_('Uhr')?>
+                        <? else: ?>
+                            <?=$_('Raum wurde noch nie betreten')?>
+                        <? endif ?>
                     </td>
-                    <td class="active"><input type="checkbox"<?=$meetingCourse->active ? ' checked="checked"' : ''?> data-meeting-enable-url="<?=PluginEngine::getLink($plugin, array('destination' => $destination), 'index/enable/'.$meetingCourse->meeting->id.'/'.$meetingCourse->course->id)?>" title="<?=$meetingCourse->active ? _('Meeting für Teilnehmende unsichtbar schalten') : _('Meeting für Teilnehmende sichtbar schalten')?>"></td>
+                    <td class="active"><input type="checkbox"<?=$meetingCourse->active ? ' checked="checked"' : ''?> data-meeting-enable-url="<?=PluginEngine::getLink($plugin, array('destination' => $destination), 'index/enable/'.$meetingCourse->meeting->id.'/'.$meetingCourse->course->id)?>" title="<?=$meetingCourse->active ? $_('Meeting für Teilnehmende unsichtbar schalten') : $_('Meeting für Teilnehmende sichtbar schalten')?>"></td>
                     <td>
                         <? if (StudipVersion::newerThan('3.3')) : ?>
                             <?= Icon::create('info-circle', 'clickable', array('class' => 'info')) ?>
-                            <a href="#" title="<?=_('Meeting bearbeiten')?>" class="edit-meeting" data-meeting-edit-url="<?=PluginEngine::getLink($plugin, array(), 'index/edit/'.$meetingCourse->meeting->id)?>">
+                            <a href="#" title="<?=$_('Meeting bearbeiten')?>" class="edit-meeting" data-meeting-edit-url="<?=PluginEngine::getLink($plugin, array(), 'index/edit/'.$meetingCourse->meeting->id)?>">
                                 <?= Icon::create('edit') ?>
                             </a>
                             <? if ($meetingCourse->meeting->join_as_moderator): ?>
-                                <a href="<?= $moderatorPermissionsUrl ?>" title="<?=_('Teilnehmende haben VeranstalterInnen-Rechte')?>">
+                                <a href="<?= $moderatorPermissionsUrl ?>" title="<?=$_('Teilnehmende haben VeranstalterInnen-Rechte')?>">
                                     <?= Icon::create('admin') ?>
                                 </a>
                             <? else: ?>
-                                <a href="<?= $moderatorPermissionsUrl ?>" title="<?=_('Teilnehmende haben eingeschränkte Rechte')?>">
+                                <a href="<?= $moderatorPermissionsUrl ?>" title="<?=$_('Teilnehmende haben eingeschränkte Rechte')?>">
                                     <?= Icon::create('admin+decline') ?>
                                 </a>
                             <? endif; ?>
 
-                            <a href="<?= $deleteUrl ?>" title="<?= count($meetingCourse->meeting->courses) > 1 ? _('Zuordnung löschen') : _('Meeting löschen') ?>">
+                            <a href="<?= $deleteUrl ?>" title="<?= count($meetingCourse->meeting->courses) > 1 ? $_('Zuordnung löschen') : $_('Meeting löschen') ?>">
                                 <? if (count($meetingCourse->meeting->courses) > 1): ?>
                                     <?= Icon::create('remove') ?>
                                 <? else: ?>
@@ -192,22 +192,22 @@ if ($showUser) {
                                 <? endif ?>
                             </a>
                         <? else : ?>
-                            <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/info-circle.png" title="<?=_('Informationen anzeigen')?>" class="info">
-                            <a href="#" title="<?=_('Meeting bearbeiten')?>" class="edit-meeting" data-meeting-edit-url="<?=PluginEngine::getLink($plugin, array(), 'index/edit/'.$meetingCourse->meeting->id)?>">
+                            <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/info-circle.png" title="<?=$_('Informationen anzeigen')?>" class="info">
+                            <a href="#" title="<?=$_('Meeting bearbeiten')?>" class="edit-meeting" data-meeting-edit-url="<?=PluginEngine::getLink($plugin, array(), 'index/edit/'.$meetingCourse->meeting->id)?>">
                                 <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/edit.png">
                             </a>
 
                             <? if ($meetingCourse->meeting->join_as_moderator): ?>
-                                <a href="<?= $moderatorPermissionsUrl ?>" title="<?=_('Teilnehmende haben VeranstalterInnen-Rechte')?>">
+                                <a href="<?= $moderatorPermissionsUrl ?>" title="<?=$_('Teilnehmende haben VeranstalterInnen-Rechte')?>">
                                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/admin.png">
                                 </a>
                             <? else: ?>
-                                <a href="<?= $moderatorPermissionsUrl ?>" title="<?=_('Teilnehmende haben eingeschränkte Rechte')?>">
+                                <a href="<?= $moderatorPermissionsUrl ?>" title="<?=$_('Teilnehmende haben eingeschränkte Rechte')?>">
                                     <img src="<?=$plugin->getAssetsUrl()?>/images/admin-decline.png">
                                 </a>
                             <? endif; ?>
 
-                            <a href="<?= $deleteUrl ?>" title="<?= count($meetingCourse->meeting->courses) > 1 ? _('Zuordnung löschen') : _('Meeting löschen') ?>">
+                            <a href="<?= $deleteUrl ?>" title="<?= count($meetingCourse->meeting->courses) > 1 ? $_('Zuordnung löschen') : $_('Meeting löschen') ?>">
                                 <? if (count($meetingCourse->meeting->courses) > 1): ?>
                                     <img src="<?=$GLOBALS['ASSETS_URL']?>/images/icons/16/blue/remove.png">
                                 <? else: ?>
@@ -219,49 +219,49 @@ if ($showUser) {
                 <? endif; ?>
                 </tr>
 
-                <?php if ($canModifyMeetings): ?>
+                <? if ($canModifyMeetings): ?>
                 <tr class="info">
                     <td colspan="8">
                         <ul>
-                            <?php if ($meetingCourse->meeting->join_as_moderator): ?>
-                                <li><?=_('Teilnehmende haben VeranstalterInnen-Rechte (wie Anlegende/r).')?></li>
-                            <?php else: ?>
-                                <li><?=_('Teilnehmende haben eingeschränkte Teilnehmenden-Rechte.')?></li>
-                            <?php endif; ?>
+                            <? if ($meetingCourse->meeting->join_as_moderator): ?>
+                                <li><?=$_('Teilnehmende haben VeranstalterInnen-Rechte (wie Anlegende/r).')?></li>
+                            <? else: ?>
+                                <li><?=$_('Teilnehmende haben eingeschränkte Teilnehmenden-Rechte.')?></li>
+                            <? endif; ?>
 
-                            <?php if (count($meetingCourse->meeting->getRecentJoins()) === 1): ?>
-                                <li><?=_('Eine Person hat das Meeting in den letzten 24 Stunden betreten')?>.</li>
-                            <?php else: ?>
-                                <li><?=count($meetingCourse->meeting->getRecentJoins()).' '._('Personen haben das Meeting in den letzten 24 Stunden betreten')?>.</li>
-                            <?php endif; ?>
+                            <? if (count($meetingCourse->meeting->getRecentJoins()) === 1): ?>
+                                <li><?=$_('Eine Person hat das Meeting in den letzten 24 Stunden betreten')?>.</li>
+                            <? else: ?>
+                                <li><?=count($meetingCourse->meeting->getRecentJoins()).' '.$_('Personen haben das Meeting in den letzten 24 Stunden betreten')?>.</li>
+                            <? endif; ?>
 
-                            <?php if (count($meetingCourse->meeting->getAllJoins()) === 1): ?>
-                                <li><?=_('Eine Person hat das Meeting insgesamt betreten')?>.</li>
-                            <?php else: ?>
-                                <li><?=count($meetingCourse->meeting->getAllJoins()).' '._('Personen haben das Meeting insgesamt betreten')?>.</li>
-                            <?php endif; ?>
+                            <? if (count($meetingCourse->meeting->getAllJoins()) === 1): ?>
+                                <li><?=$_('Eine Person hat das Meeting insgesamt betreten')?>.</li>
+                            <? else: ?>
+                                <li><?=count($meetingCourse->meeting->getAllJoins()).' '.$_('Personen haben das Meeting insgesamt betreten')?>.</li>
+                            <? endif; ?>
                         </ul>
                     </td>
                 </tr>
-                <?php endif ?>
-        <?php endforeach; ?>
+                <? endif ?>
+        <? endforeach; ?>
         </tbody>
 
-        <?php if ($canModifyMeetings): ?>
+        <? if ($canModifyMeetings): ?>
             <tfoot>
             <tr>
                 <td colspan="<?= $colspan ?>">
-                    <input class="middle" type="checkbox" name="check_all" title="<?= _('Alle Meetings auswählen') ?>">
-                    <?= Studip\Button::create(_('Löschen'), array('title' => _('Alle ausgewählten Meetings löschen'))) ?>
+                    <input class="middle" type="checkbox" name="check_all" title="<?= $_('Alle Meetings auswählen') ?>">
+                    <?= Studip\Button::create($_('Löschen'), array('title' => $_('Alle ausgewählten Meetings löschen'))) ?>
                 </td>
             </tr>
             </tfoot>
-        <?php endif ?>
+        <? endif ?>
     </table>
 </form>
 
 <table class="default collapsable tablesorter conference-meetings">
-<?php if ($showCreateForm): ?>
+<? if ($showCreateForm): ?>
     <?= $this->render_partial('index/_create_meeting', array('colspan' => $colspan)) ?>
-<?php endif; ?>
+<? endif; ?>
 </table>

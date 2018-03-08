@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright (C) 2012 - Till Glöggler     <tgloeggl@uos.de>
  *
@@ -14,8 +13,6 @@
  * @author    tgloeggl@uos.de
  * @copyright (c) Authors
  */
-
-require_once 'app/controllers/studip_controller.php';
 
 use ElanEv\Driver\DriverFactory;
 use ElanEv\Driver\JoinParameters;
@@ -36,11 +33,51 @@ class AdminController extends StudipController
      */
     private $driver;
 
+    /**
+     * Constructs the controller and provide translations methods.
+     *
+     * @param object $dispatcher
+     * @see https://stackoverflow.com/a/12583603/982902 if you need to overwrite
+     *      the constructor of the controller
+     */
     public function __construct($dispatcher)
     {
         parent::__construct($dispatcher);
 
-        $this->plugin = $GLOBALS['plugin'];
+        $this->plugin = $dispatcher->current_plugin;
+
+        // Localization
+        $this->_ = function ($string) use ($dispatcher) {
+            return call_user_func_array(
+                [$dispatcher->current_plugin, '_'],
+                func_get_args()
+            );
+        };
+
+        $this->_n = function ($string0, $tring1, $n) use ($dispatcher) {
+            return call_user_func_array(
+                [$dispatcher->current_plugin, '_n'],
+                func_get_args()
+            );
+        };
+    }
+
+    /**
+     * Intercepts all non-resolvable method calls in order to correctly handle
+     * calls to _ and _n.
+     *
+     * @param string $method
+     * @param array  $arguments
+     * @return mixed
+     * @throws RuntimeException when method is not found
+     */
+    public function __call($method, $arguments)
+    {
+        $variables = get_object_vars($this);
+        if (isset($variables[$method]) && is_callable($variables[$method])) {
+            return call_user_func_array($variables[$method], $arguments);
+        }
+        throw new RuntimeException("Method {$method} does not exist");
     }
 
     /**
@@ -68,7 +105,7 @@ class AdminController extends StudipController
 
     public function index_action()
     {
-        PageLayout::setTitle(_('Meetings Administration'));
+        PageLayout::setTitle($this->_('Meetings Administration'));
         $this->getHelpbarContent('main');
 
         $this->drivers = Driver::discover();
@@ -113,7 +150,7 @@ class AdminController extends StudipController
         switch ($id) {
 
             case 'main':
-                $helpText = _('Administrationsseite für das Plugin zur Durchführung und Verwaltung von Live-Online-Treffen, ***REMOVED***en und Videokonferenzen.');
+                $helpText = $this->_('Administrationsseite für das Plugin zur Durchführung und Verwaltung von Live-Online-Treffen, ***REMOVED***en und Videokonferenzen.');
                 $helpBar = Helpbar::get();
                 $helpBar->addPlainText('', $helpText);
                 break;

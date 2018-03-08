@@ -8,7 +8,7 @@
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
- * @author      Till Glöggler <till.gloeggler@elan-ev.de>
+ * @author      Till GlÃ¶ggler <till.gloeggler@elan-ev.de>
  * @author      Christian Flothmann <christian.flothmann@uos.de>
  * @copyright   2011-2014 ELAN e.V. <http://www.elan-ev.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
@@ -22,14 +22,19 @@ use ElanEv\Model\MeetingCourse;
 
 require_once 'compat/StudipVersion.php';
 
-class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
+class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
 {
+    const GETTEXT_DOMAIN = 'meetings';
     const NAVIGATION_ITEM_NAME = 'video-conferences';
 
     private $assetsUrl;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
+
+        bindtextdomain(static::GETTEXT_DOMAIN, $this->getPluginPath() . '/locale');
+        bind_textdomain_codeset(static::GETTEXT_DOMAIN, 'UTF-8');
 
         $this->assetsUrl = rtrim($this->getPluginURL(), '/').'/assets';
 
@@ -37,7 +42,7 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
         $perm = $GLOBALS['perm'];
 
         if ($perm->have_perm('root')) {
-            $item = new Navigation(_('Meetings'), PluginEngine::getLink($this, array(), 'index/all'));
+            $item = new Navigation($this->_('Meetings'), PluginEngine::getLink($this, array(), 'index/all'));
             $item->setImage(self::getIcon('chat', 'white'));
 
             if (Navigation::hasItem('/admin/locations')) {
@@ -46,11 +51,11 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
                 Navigation::addItem('/meetings', $item);
             }
 
-            $item = new Navigation(_('Meetings konfigurieren'), PluginEngine::getLink($this, array(), 'admin/index'));
+            $item = new Navigation($this->_('Meetings konfigurieren'), PluginEngine::getLink($this, array(), 'admin/index'));
             $item->setImage(self::getIcon('chat', 'white'));
             Navigation::addItem('/admin/config/meetings', $item);
         } elseif ($perm->have_perm('dozent')) {
-            $item = new Navigation(_('Meine Meetings'), PluginEngine::getLink($this, array(), 'index/my'));
+            $item = new Navigation($this->_('Meine Meetings'), PluginEngine::getLink($this, array(), 'index/my'));
             Navigation::addItem('/profile/meetings', $item);
         }
 
@@ -63,6 +68,62 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
             $navigation = $this->getTabNavigation(Request::get('cid', $GLOBALS['SessSemName'][1]));
             Navigation::insertItem('/course/'.self::NAVIGATION_ITEM_NAME, $navigation['VideoConference'], null);
         }
+    }
+
+    /**
+     * Plugin localization for a single string.
+     * This method supports sprintf()-like execution if you pass additional
+     * parameters.
+     *
+     * @param String $string String to translate
+     * @return translated string
+     */
+    public function _($string)
+    {
+        $result = static::GETTEXT_DOMAIN === null
+                ? $string
+                : dcgettext(static::GETTEXT_DOMAIN, $string, LC_MESSAGES);
+        if ($result === $string) {
+            $result = _($string);
+        }
+
+        if (func_num_args() > 1) {
+            $arguments = array_slice(func_get_args(), 1);
+            $result = vsprintf($result, $arguments);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Plugin localization for plural strings.
+     * This method supports sprintf()-like execution if you pass additional
+     * parameters.
+     *
+     * @param String $string0 String to translate (singular)
+     * @param String $string1 String to translate (plural)
+     * @param mixed  $n       Quantity factor (may be an array or array-like)
+     * @return translated string
+     */
+    public function _n($string0, $string1, $n)
+    {
+        if (is_array($n)) {
+            $n = count($n);
+        }
+
+        $result = static::GETTEXT_DOMAIN === null
+                ? $string0
+                : dngettext(static::GETTEXT_DOMAIN, $string0, $string1, $n);
+        if ($result === $string0 || $result === $string1) {
+            $result = ngettext($string0, $string1, $n);
+        }
+
+        if (func_num_args() > 3) {
+            $arguments = array_slice(func_get_args(), 3);
+            $result = vsprintf($result, $arguments);
+        }
+
+        return $result;
     }
 
     public static function getIcon($name, $color)
@@ -84,7 +145,7 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
 
     public function getPluginName()
     {
-        return _('Meetings');
+        return $this->_('Meetings');
     }
 
     public function getInfoTemplate($course_id) {
@@ -118,11 +179,11 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
 
         if ($recentMeetings > 0) {
             $navigation->setImage(self::getIcon('chat', 'red'), array(
-                'title' => sprintf(_('%d Meeting(s), %d neue'), count($courses), $recentMeetings),
+                'title' => sprintf($this->_('%d Meeting(s), %d neue'), count($courses), $recentMeetings),
             ));
         } else {
             $navigation->setImage(self::getIcon('chat', 'gray'), array(
-                'title' => sprintf(_('%d Meeting(s)'), count($courses)),
+                'title' => sprintf($this->_('%d Meeting(s)'), count($courses)),
             ));
         }
 
@@ -160,8 +221,8 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
     {
         $trails_root = $this->getPluginPath().'/app';
         $dispatcher = new Trails_Dispatcher($trails_root, PluginEngine::getUrl($this, array(), 'index'), 'index');
+        $dispatcher->current_plugin = $this;
         $dispatcher->dispatch($unconsumed_path);
-
     }
 
     public function getAssetsUrl()
