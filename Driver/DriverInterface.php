@@ -49,4 +49,15 @@ interface DriverInterface
      * @return ConfigOption[] list of ConfigOption-objects
      */
     public function getConfigOptions();
+
+    /**
+     * Returns a list of recordings for the passed room or false,
+     * if no recordings are found or if the driver does not support
+     * recordings.
+     *
+     * @param  MeetingParameters $parameters Parameters describing the meeting
+     * @return array | bool
+     */
+    public function getRecordings(MeetingParameters $parameters);
+
 }

@@ -168,6 +168,14 @@ class DfnVc implements DriverInterface
                . ltrim($urlPath, '/') .'?session='.$userSessionCookie;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getRecordings(MeetingParameters $parameters)
+    {
+        return false;
+    }
+
     private function performRequest(array $params = array())
     {
         $request = $this->client->get('/lmsapi/xml?'.$this->buildQueryString($params));
