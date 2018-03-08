@@ -5,7 +5,7 @@ namespace ElanEv\Driver;
 /**
  * Interface for conference server APIs which provide api-access to recordings
  *
- * @author Till Glöggler <tgloeggl@uos.de>
+ * @author Till GlÃ¶ggler <tgloeggl@uos.de>
  */
 interface RecordingInterface
 {

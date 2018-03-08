@@ -7,7 +7,7 @@
 
         <label class="caption">
             <input type="checkbox" name="config[<?= $name ?>][enable]" value="1" <?= $driver['config']['enable']->getValue() ? 'checked="checked"' : '' ?>>
-            <?= _('Verwenden dieses Treibers zulassen') ?>
+            <?= $_('Verwenden dieses Treibers zulassen') ?>
         </label>
 
         <? foreach ($driver['config'] as $option) : ?>
@@ -23,7 +23,7 @@
 <? endforeach ?>
 
     <div class="button-group">
-        <?= \Studip\Button::createAccept(_('Speichern')) ?>
+        <?= \Studip\Button::createAccept($_('Speichern')) ?>
     </div>
 
 </form>
