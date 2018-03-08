@@ -6,10 +6,12 @@ use ElanEv\Driver\BigBlueButtonDriver;
 use ElanEv\Driver\DfnVcDriver;
 use ElanEv\Driver\DriverFactory;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @author Christian Flothmann <christian.flothmann@uos.de>
  */
-class DriverFactoryTest extends \PHPUnit_Framework_TestCase
+class DriverFactoryTest extends TestCase
 {
     /**
      * @expectedException \InvalidArgumentException
