@@ -47,26 +47,25 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
 
             if (Navigation::hasItem('/admin/locations')) {
                 Navigation::addItem('/admin/locations/meetings', $item);
-            } else {
+            } elseif (Navigation::hasItem('/meetings')) {
                 Navigation::addItem('/meetings', $item);
             }
 
             $item = new Navigation($this->_('Meetings konfigurieren'), PluginEngine::getLink($this, array(), 'admin/index'));
             $item->setImage(self::getIcon('chat', 'white'));
-            Navigation::addItem('/admin/config/meetings', $item);
+            if (Navigation::hasItem('/admin/config/meetings')) {
+                Navigation::addItem('/admin/config/meetings', $item);
+            }
         } elseif ($perm->have_perm('dozent')) {
             $item = new Navigation($this->_('Meine Meetings'), PluginEngine::getLink($this, array(), 'index/my'));
-            Navigation::addItem('/profile/meetings', $item);
+            if (Navigation::hasItem('/profile/meetings')) {
+                Navigation::addItem('/profile/meetings', $item);
+            }
         }
 
         // do nothing if plugin is deactivated in this seminar/institute
         if (!$this->isActivated()) {
             return;
-        }
-
-        if (!version_compare($GLOBALS['SOFTWARE_VERSION'], '2.3', '>')) {
-            $navigation = $this->getTabNavigation(Request::get('cid', $GLOBALS['SessSemName'][1]));
-            Navigation::insertItem('/course/'.self::NAVIGATION_ITEM_NAME, $navigation['VideoConference'], null);
         }
     }
 
