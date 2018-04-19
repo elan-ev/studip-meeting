@@ -122,7 +122,7 @@
             var $controlCheckbox = $(this);
             var $checkboxesToChange = $('.check_all', $(this).closest('table'));
 
-            if ($controlCheckbox.attr('checked')) {
+            if ($controlCheckbox.is(':checked')) {
                 $checkboxesToChange.attr('checked', 'checked');
             } else {
                 $checkboxesToChange.removeAttr('checked');
