@@ -24,11 +24,19 @@ class NewConfig extends Migration {
     public function up()
     {
         try {
-            $query = "REPLACE INTO `config`
-               (`config_id`, `field`, `value`, `is_default`, `type`, `range`, `section`,
-                `mkdate`, `chdate`, `description`)
-             VALUES (MD5(:field), :field, :value, 1, :type, 'global', 'meetings',
-                     UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), :description)";
+            if (StudipVersion::olderThan('4.1')) {
+                $query = "REPLACE INTO `config`
+                   (`field`, `value`, `type`, `range`, `section`,
+                    `mkdate`, `chdate`, `description`, `comment`)
+                 VALUES (:field, :value, :type, 'global', 'meetings',
+                         UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), :description, '')";
+            } else {
+                $query = "REPLACE INTO `config`
+                   (`field`, `value`, `type`, `range`, `section`,
+                    `mkdate`, `chdate`, `description`)
+                 VALUES (:field, :value, :type, 'global', 'meetings',
+                         UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), :description)";
+             }
 
              $statement = DBManager::get()->prepare($query);
 
