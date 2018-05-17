@@ -23,18 +23,16 @@ class CreateDefaultDriverOption extends Migration
     function up()
     {
         $db = DBManager::get();
-        $db->exec(sprintf(
-            'INSERT INTO
+        $db->exec('INSERT INTO
               config
             SET
-              config_id = "%s",
               field = "VC_DRIVER",
               type = "string",
+              value = "",
               mkdate = UNIX_TIMESTAMP(NOW()),
               chdate = UNIX_TIMESTAMP(NOW()),
-              description = "bigbluebutton oder dfnvc"',
-            \ElanEv\Driver\DriverFactory::DEFAULT_DRIVER_CONFIG_ID
-        ));
+              description = "bigbluebutton oder dfnvc"'
+        );
 
         SimpleORMap::expireTableScheme();
     }
@@ -45,13 +43,7 @@ class CreateDefaultDriverOption extends Migration
     function down()
     {
         $db = DBManager::get();
-        $db->exec(sprintf(
-            'DELETE FROM
-              config
-            WHERE
-              config_id = "%s"',
-            \ElanEv\Driver\DriverFactory::DEFAULT_DRIVER_CONFIG_ID
-        ));
+        $db->exec('DELETE FROM config WHERE field = "VC_DRIVER"');
 
         SimpleORMap::expireTableScheme();
     }

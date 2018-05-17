@@ -624,7 +624,7 @@ class IndexController extends StudipController
                         $this->_('Wollen Sie wirklich das Meeting "%s" löschen?'),
                         $meeting->name
                     ),
-                    'approvalLink' => PluginEngine::getLink($this->plugin, array('destination' => Request::get('destination')), 'index/delete/'.$meeting->id.'/'.Request::get('cid'), true),
+                    'approvalLink' => PluginEngine::getLink($this->plugin, array('destination' => Request::get('destination')), 'index/delete/'.$meeting->id .'/'. Request::get('cid') .'?cid='. Request::get('cid'), true),
                     'disapprovalLink' => PluginEngine::getLink($this->plugin, array(),  Request::get('destination')),
                 );
             }
