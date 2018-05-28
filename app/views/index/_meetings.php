@@ -252,6 +252,7 @@ if ($showUser) {
             <tr>
                 <td colspan="<?= $colspan ?>">
                     <input class="middle" type="checkbox" name="check_all" title="<?= $_('Alle Meetings auswählen') ?>">
+                    <input type="hidden" name="cid" value="<?= Context::getId() ?>">
                     <?= Studip\Button::create($_('Löschen'), array('title' => $_('Alle ausgewählten Meetings löschen'))) ?>
                 </td>
             </tr>
