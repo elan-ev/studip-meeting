@@ -2,7 +2,7 @@
 
 namespace ElanEv\Driver;
 
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
 use ElanEv\Model\Driver;
 
 /**
@@ -75,13 +75,15 @@ class DriverFactory
             throw new \InvalidArgumentException(sprintf('The driver "%s" has not configured the url config option!', $driver));
         }
 
-        $client = $this->createHttpClient($driver_conf['url']);
+        $driver_conf['url'] = rtrim($driver_conf['url'], '/');
+
+        $client = $this->createHttpClient();
         $class = 'ElanEv\\Driver\\'. $driver_conf['class'];
         return new $class($client, $driver_conf);
     }
 
-    private function createHttpClient($apiUrl)
+    private function createHttpClient()
     {
-        return new Client($apiUrl);
+        return new Client();
     }
 }

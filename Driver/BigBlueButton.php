@@ -3,7 +3,7 @@
 namespace ElanEv\Driver;
 
 use MeetingPlugin;
-use Guzzle\Http\ClientInterface;
+use GuzzleHttp\ClientInterface;
 
 /**
  * Big Blue Button driver implementation.
@@ -32,6 +32,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
         }
 
         $this->salt = $config['api-key'];
+        $this->url  = $config['url'];
     }
 
     /**
@@ -85,7 +86,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
         );
         $params['checksum'] = $this->createSignature('join', $params);
 
-        return sprintf('%s/api/join?%s', rtrim($this->client->getBaseUrl(), '/'), $this->buildQueryString($params));
+        return sprintf('%s/api/join?%s', rtrim($this->url, '/'), $this->buildQueryString($params));
     }
 
     /**
@@ -96,6 +97,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
         $params = array(
             'meetingID' => $parameters->getMeetingId()
         );
+
         $response = $this->performRequest('getRecordings', $params);
 
         $xml = new \SimpleXMLElement($response);
@@ -111,15 +113,14 @@ class BigBlueButton implements DriverInterface, RecordingInterface
     {
         $params['checksum'] = $this->createSignature($endpoint, $params);
         $uri = 'api/'.$endpoint.'?'.$this->buildQueryString($params);
-        $request = $this->client->get($uri);
-        $response = $request->send();
+        $request = $this->client->request('GET', $this->url .'/'. $uri);
 
-        return $response->getBody(true);
+        return $request->getBody(true);
     }
 
     private function createSignature($prefix, array $params = array())
     {
-        return sha1($prefix.$this->buildQueryString($params).$this->salt);
+        return sha1($prefix . $this->buildQueryString($params) . $this->salt);
     }
 
     private function buildQueryString($params)
