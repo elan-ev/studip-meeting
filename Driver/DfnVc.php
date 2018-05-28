@@ -3,7 +3,7 @@
 namespace ElanEv\Driver;
 
 use MeetingPlugin;
-use Guzzle\Http\ClientInterface;
+use GuzzleHttp\ClientInterface;
 
 /**
  * DFN video conference driver implementation.
@@ -36,9 +36,10 @@ class DfnVc implements DriverInterface
      */
     public function __construct(ClientInterface $client, $config)
     {
-        $this->client = $client;
-        $this->login = $config['login'];
+        $this->client   = $client;
+        $this->login    = $config['login'];
         $this->password = $config['password'];
+        $this->url      = $config['url'];
     }
 
     /**
@@ -162,7 +163,7 @@ class DfnVc implements DriverInterface
         }
 
         // use only the base-url, the join-url does not go to the XML-API
-        $parsed_url = parse_url($this->client->getBaseUrl());
+        $parsed_url = parse_url($this->url);
 
         return $parsed_url['scheme'] .'://'. $parsed_url['host'] .'/'
                . ltrim($urlPath, '/') .'?session='.$userSessionCookie;
@@ -178,10 +179,9 @@ class DfnVc implements DriverInterface
 
     private function performRequest(array $params = array())
     {
-        $request = $this->client->get('/lmsapi/xml?'.$this->buildQueryString($params));
-        $response = $request->send();
+        $request = $this->client->request('GET', $this->url . '/lmsapi/xml?'.$this->buildQueryString($params));
 
-        return $response->getBody(true);
+        return $request->getBody(true);
     }
 
     private function buildQueryString($params)

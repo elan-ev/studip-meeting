@@ -1,3 +1,9 @@
+# 1.5
+* Update to guzzlehttp
+
+# 1.4.6
+* Update plugin to work with Stud.IP 4.0 and Stud.IP 4.1
+
 # 1.2.2
 * Plugin kompatibel mit Stud.IP 4.0
 * Designverbesserungen und passender Aktionsicons
@@ -32,4 +38,3 @@
 * changes navigation-position of "my" from header to profile
 * sets plugin-title to "Meetings (Betatest)"
 * adds MessageBox with helping information in /views/index/my.php
-
