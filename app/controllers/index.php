@@ -132,14 +132,14 @@ class IndexController extends StudipController
             Navigation::activateItem('/meetings');
         }
 
-        $this->courseConfig = CourseConfig::findByCourseId($this->getCourseId());
+        $this->courseConfig = CourseConfig::findByCourseId(Context::getId());
 
         libxml_use_internal_errors(true);
     }
 
     public function index_action()
     {
-        PageLayout::setTitle(self::getHeaderLine($this->getCourseId()));
+        PageLayout::setTitle(self::getHeaderLine(Context::getId()));
         $this->getHelpbarContent('main');
 
         // get messages from rerouted actions
@@ -148,12 +148,12 @@ class IndexController extends StudipController
 
         /** @var \Seminar_User $user */
         $user = $GLOBALS['user'];
-        $course = new Course($this->getCourseId());
+        $course = new Course(Context::getId());
         $this->errors = array();
-        $this->deleteAction = PluginEngine::getURL($this->plugin, array(), 'index', true);
+        $this->deleteAction = PluginEngine::getURL($this->plugin, array('cid' => Context::getId()), 'index', true);
         $this->handleDeletion();
 
-        if (Request::get('action') === 'create' && $this->userCanModifyCourse($this->getCourseId())) {
+        if (Request::get('action') === 'create' && $this->userCanModifyCourse(Context::getId())) {
             if (!Request::get('name')) {
                 $this->errors[] = $this->_('Bitte geben Sie dem Meeting einen Namen.');
             }
@@ -163,17 +163,17 @@ class IndexController extends StudipController
             }
         }
 
-        if (Request::get('action') === 'link' && $this->userCanModifyCourse($this->getCourseId())) {
+        if (Request::get('action') === 'link' && $this->userCanModifyCourse(Context::getId())) {
             $linkedMeetingId = Request::int('meeting_id');
             $meeting = new Meeting($linkedMeetingId);
 
             if (!$meeting->isNew() && $user->id === $meeting->user_id && !$meeting->isAssignedToCourse($course)) {
-                $meeting->courses[] = new \Course($this->getCourseId());
+                $meeting->courses[] = new \Course(Context::getId());
                 $meeting->store();
             }
         }
 
-        $this->canModifyCourse = $this->userCanModifyCourse($this->getCourseId());
+        $this->canModifyCourse = $this->userCanModifyCourse(Context::getId());
 
         if ($this->canModifyCourse) {
             $this->buildSidebar(
@@ -205,10 +205,10 @@ class IndexController extends StudipController
         }
 
         if ($this->canModifyCourse) {
-            $this->meetings = MeetingCourse::findByCourseId($this->getCourseId());
+            $this->meetings = MeetingCourse::findByCourseId(Context::getId());
             $this->userMeetings = MeetingCourse::findLinkableByUser($user, $course);
         } else {
-            $this->meetings = MeetingCourse::findActiveByCourseId($this->getCourseId());
+            $this->meetings = MeetingCourse::findActiveByCourseId(Context::getId());
             $this->userMeetings = array();
         }
     }
@@ -328,7 +328,7 @@ class IndexController extends StudipController
         $name = utf8_decode(Request::get('name'));
         $recordingUrl = utf8_decode(Request::get('recording_url'));
 
-        if (!$meeting->isNew() && $this->userCanModifyCourse($this->getCourseId()) && $name) {
+        if (!$meeting->isNew() && $this->userCanModifyCourse(Context::getId()) && $name) {
             $meeting = new Meeting($meetingId);
             $meeting->name = $name;
             $meeting->recording_url = $recordingUrl;
@@ -342,7 +342,7 @@ class IndexController extends StudipController
     {
         $meeting = new Meeting($meetingId);
 
-        if (!$meeting->isNew() && $this->userCanModifyCourse($this->getCourseId())) {
+        if (!$meeting->isNew() && $this->userCanModifyCourse(Context::getId())) {
             $meeting->join_as_moderator = !$meeting->join_as_moderator;
             $meeting->store();
         }
@@ -392,7 +392,7 @@ class IndexController extends StudipController
 
 
 
-        if ($this->userCanModifyCourse($this->getCourseId()) || $meeting->join_as_moderator) {
+        if ($this->userCanModifyCourse(Context::getId()) || $meeting->join_as_moderator) {
             $joinParameters->setPassword($meeting->moderator_password);
             $joinParameters->setHasModerationPermissions(true);
         } else {
@@ -422,9 +422,9 @@ class IndexController extends StudipController
 
     public function config_action()
     {
-        PageLayout::setTitle(self::getHeaderLine($this->getCourseId()));
+        PageLayout::setTitle(self::getHeaderLine(Context::getId()));
         $this->getHelpbarContent('config');
-        $courseId = $this->getCourseId();
+        $courseId = Context::getId();
 
         if (!$this->userCanModifyCourse($courseId)) {
             $this->redirect(PluginEngine::getURL($this->plugin, array(), 'index'));
@@ -471,20 +471,6 @@ class IndexController extends StudipController
     /* * * * * H E L P E R   F U N C T I O N S * * * * */
     /* * * * * * * * * * * * * * * * * * * * * * * * * */
 
-    private function getCourseId()
-    {
-        if (!Request::option('cid')) {
-            if ($GLOBALS['SessionSeminar']) {
-                URLHelper::bindLinkParam('cid', $GLOBALS['SessionSeminar']);
-                return $GLOBALS['SessionSeminar'];
-            }
-
-            return false;
-        }
-
-        return Request::option('cid');
-    }
-
     /**
      * @param string $name
      * @param string $driver_name
@@ -497,7 +483,7 @@ class IndexController extends StudipController
         global $user;
 
         $meeting = new Meeting();
-        $meeting->courses[] = new Course($this->getCourseId());
+        $meeting->courses[] = new Course(Context::getId());
         $meeting->user_id = $user->id;
         $meeting->name = $name;
         $meeting->driver = $driver_name;
