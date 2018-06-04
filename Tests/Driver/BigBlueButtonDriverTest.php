@@ -5,7 +5,7 @@ namespace ElanEv\Tests\Driver;
 use ElanEv\Driver\BigBlueButton;
 use ElanEv\Driver\JoinParameters;
 use ElanEv\Driver\MeetingParameters;
-use Guzzle\Http\ClientInterface;
+use GuzzleHttp\ClientInterface;
 
 /**
  * @author Christian Flothmann <christian.flothmann@uos.de>
@@ -44,7 +44,7 @@ class BigBlueButtonDriverTest extends AbstractDriverTest
                 $parameters,
                 array(array(
                     'method' => 'get',
-                    'uri' => 'api/create?'.http_build_query($urlParameters),
+                    'uri' => 'http://example.com/api/create?'.http_build_query($urlParameters),
                     'response' => $this->getDuplicateWarningMessage(),
                 )),
                 true,
@@ -53,7 +53,7 @@ class BigBlueButtonDriverTest extends AbstractDriverTest
                 $parameters,
                 array(array(
                     'method' => 'get',
-                    'uri' => 'api/create?'.http_build_query($urlParameters),
+                    'uri' => 'http://example.com/api/create?'.http_build_query($urlParameters),
                     'response' => $this->getChecksumCheckFailedMessage(),
                 )),
                 false,
@@ -119,7 +119,10 @@ class BigBlueButtonDriverTest extends AbstractDriverTest
      */
     protected function createDriver(ClientInterface $client)
     {
-        return new BigBlueButton($client, array('api-key' => $this->salt));
+        return new BigBlueButton($client, [
+            'api-key' => $this->salt,
+            'url' => 'http://example.com'
+        ]);
     }
 
     private function getDuplicateWarningMessage()

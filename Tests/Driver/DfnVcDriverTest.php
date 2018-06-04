@@ -5,7 +5,7 @@ namespace ElanEv\Tests\Driver;
 use ElanEv\Driver\DfnVc;
 use ElanEv\Driver\JoinParameters;
 use ElanEv\Driver\MeetingParameters;
-use Guzzle\Http\ClientInterface;
+use GuzzleHttp\ClientInterface;
 
 require_once('bootstrap.php');
 
@@ -36,27 +36,27 @@ class DfnVcDriverTest extends AbstractDriverTest
                 array(
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=common-info',
+                        'uri' => 'http://example.com/lmsapi/xml?action=common-info',
                         'response' => trim($this->createSessionCookieResponse($sessionCookie)),
                     ),
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
+                        'uri' => 'http://example.com/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
                         'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="ok"/></results>',
                     ),
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=sco-shortcuts&session='.$sessionCookie,
+                        'uri' => 'http://example.com/lmsapi/xml?action=sco-shortcuts&session='.$sessionCookie,
                         'response' => trim($this->createScoShortcutsResponse()),
                     ),
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=sco-update&type=meeting&name=3%20-%20meeting%20name&folder-id=383324&session='.$sessionCookie,
+                        'uri' => 'http://example.com/lmsapi/xml?action=sco-update&type=meeting&name=3%20-%20meeting%20name&folder-id=383324&session='.$sessionCookie,
                         'response' => trim($this->createScoUpdateResponse()),
                     ),
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=permissions-update&acl-id=412297&principal-id=public-access&permission-id=view-hidden&session='.$sessionCookie,
+                        'uri' => 'http://example.com/lmsapi/xml?action=permissions-update&acl-id=412297&principal-id=public-access&permission-id=view-hidden&session='.$sessionCookie,
                         'reponse' => '',
                     ),
                 ),
@@ -67,12 +67,12 @@ class DfnVcDriverTest extends AbstractDriverTest
                 array(
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=common-info',
+                        'uri' => 'http://example.com/lmsapi/xml?action=common-info',
                         'response' => trim($this->createSessionCookieResponse($sessionCookie)),
                     ),
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
+                        'uri' => 'http://example.com/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
                         'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="no-data"/></results>',
                     ),
                 ),
@@ -96,17 +96,17 @@ class DfnVcDriverTest extends AbstractDriverTest
                 array(
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=common-info',
+                        'uri' => 'http://example.com/lmsapi/xml?action=common-info',
                         'response' => trim($this->createSessionCookieResponse($sessionCookie)),
                     ),
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
+                        'uri' => 'http://example.com/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
                         'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="ok"/></results>',
                     ),
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=sco-delete&sco-id=383324&session='.$sessionCookie,
+                        'uri' => 'http://example.com/lmsapi/xml?action=sco-delete&sco-id=383324&session='.$sessionCookie,
                         'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="ok"/></results>',
                     ),
                 ),
@@ -117,17 +117,17 @@ class DfnVcDriverTest extends AbstractDriverTest
                 array(
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=common-info',
+                        'uri' => 'http://example.com/lmsapi/xml?action=common-info',
                         'response' => trim($this->createSessionCookieResponse($sessionCookie)),
                     ),
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
+                        'uri' => 'http://example.com/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
                         'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="ok"/></results>',
                     ),
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=sco-delete&sco-id=383324&session='.$sessionCookie,
+                        'uri' => 'http://example.com/lmsapi/xml?action=sco-delete&sco-id=383324&session='.$sessionCookie,
                         'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="no-data"/></results> ',
                     ),
                 ),
@@ -138,12 +138,12 @@ class DfnVcDriverTest extends AbstractDriverTest
                 array(
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=common-info',
+                        'uri' => 'http://example.com/lmsapi/xml?action=common-info',
                         'response' => trim($this->createSessionCookieResponse($sessionCookie)),
                     ),
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
+                        'uri' => 'http://example.com/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
                         'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="no-data"/></results>',
                     ),
                 ),
@@ -170,12 +170,12 @@ class DfnVcDriverTest extends AbstractDriverTest
                 array(
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=common-info',
+                        'uri' => 'http://example.com/lmsapi/xml?action=common-info',
                         'response' => trim($this->createSessionCookieResponse($sessionCookie)),
                     ),
                     array(
                         'method' => 'get',
-                        'uri' => '/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
+                        'uri' => 'http://example.com/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
                         'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="no-data"/></results>',
                     ),
                 ),
@@ -191,7 +191,8 @@ class DfnVcDriverTest extends AbstractDriverTest
     {
         return new DfnVc($this->client, array(
             'login'    => $this->login,
-            'password' => $this->password
+            'password' => $this->password,
+            'url'      => 'http://example.com'
         ));
     }
 
@@ -329,36 +330,36 @@ EOT;
             array(
                 array(
                     'method' => 'get',
-                    'uri' => '/lmsapi/xml?action=common-info',
+                    'uri' => 'http://example.com/lmsapi/xml?action=common-info',
                     'response' => trim($this->createSessionCookieResponse($sessionCookie)),
                 ),
                 array(
                     'method' => 'get',
-                    'uri' => '/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
+                    'uri' => 'http://example.com/lmsapi/xml?action=login&login=user%40example.com&password=password&session='.$sessionCookie,
                     'response' => '<?xml version="1.0" encoding="utf-8"?> <results><status code="ok"/></results>',
                 ),
                 array(
                     'method' => 'get',
-                    'uri' => '/lmsapi/xml?action=sco-shortcuts&session='.$sessionCookie,
+                    'uri' => 'http://example.com/lmsapi/xml?action=sco-shortcuts&session='.$sessionCookie,
                     'response' => trim($this->createScoShortcutsResponse()),
                 ),
                 array(
                     'method' => 'get',
-                    'uri' => '/lmsapi/xml?action=lms-user-exists&login=user%40example.com&session='.$sessionCookie,
+                    'uri' => 'http://example.com/lmsapi/xml?action=lms-user-exists&login=user%40example.com&session='.$sessionCookie,
                     'response' => trim($this->createUserExistsWithExistingUserResponse(12345, 'user@example.com')),
                 ),
                 array(
                     'method' => 'get',
-                    'uri' => '/lmsapi/xml?action=permissions-update&acl-id=383324&principal-id=12345&permission-id='.$permissionId.'&session='.$sessionCookie,
+                    'uri' => 'http://example.com/lmsapi/xml?action=permissions-update&acl-id=383324&principal-id=12345&permission-id='.$permissionId.'&session='.$sessionCookie,
                 ),
                 array(
                     'method' => 'get',
-                    'uri' => '/lmsapi/xml?action=lms-user-login&login=user%40example.com&session='.$sessionCookie,
+                    'uri' => 'http://example.com/lmsapi/xml?action=lms-user-login&login=user%40example.com&session='.$sessionCookie,
                     'response' => trim($this->createUserSessionCookieResponse($userSessionCookie)),
                 ),
                 array(
                     'method' => 'get',
-                    'uri' => '/lmsapi/xml?action=sco-contents&sco-id=383324&session='.$sessionCookie,
+                    'uri' => 'http://example.com/lmsapi/xml?action=sco-contents&sco-id=383324&session='.$sessionCookie,
                     'response' => trim($this->createScoContentsResponse()),
                 ),
             ),
