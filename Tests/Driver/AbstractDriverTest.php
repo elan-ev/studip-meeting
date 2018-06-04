@@ -4,7 +4,7 @@ namespace ElanEv\Tests\Driver;
 
 use ElanEv\Driver\JoinParameters;
 use ElanEv\Driver\MeetingParameters;
-use Guzzle\Http\ClientInterface;
+use GuzzleHttp\ClientInterface;
 
 use PHPUnit\Framework\TestCase;
 
@@ -16,7 +16,7 @@ abstract class AbstractDriverTest extends TestCase
     protected $apiUrl = 'http://example.com';
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Guzzle\Http\Client
+     * @var \PHPUnit_Framework_MockObject_MockObject|\GuzzleHttp\Client
      */
     protected $client;
 
@@ -81,18 +81,13 @@ abstract class AbstractDriverTest extends TestCase
     public abstract function getGetJoinMeetingUrlData();
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Guzzle\Http\ClientInterface
+     * @return \PHPUnit_Framework_MockObject_MockObject|\GuzzleHttp\ClientInterface
      */
     protected function createClientMock()
     {
         $client = $this
-            ->getMockBuilder('\Guzzle\Http\Client')
+            ->getMockBuilder('\GuzzleHttp\Client')
             ->getMock();
-
-        $client
-            ->expects($this->any())
-            ->method('getBaseUrl')
-            ->will($this->returnValue($this->apiUrl));
 
         return $client;
     }
@@ -109,53 +104,56 @@ abstract class AbstractDriverTest extends TestCase
                 $this
                     ->client
                     ->expects($this->at($this->getIndex++))
-                    ->method('get')
-                    ->with($requestData['uri'])
+                    ->method('request')
+                    ->with('GET', $requestData['uri'])
                     ->will($this->returnValue($request));
                 break;
             case 'post':
                 $this
                     ->client
                     ->expects($this->at($this->postIndex++))
-                    ->method('post')
-                    ->with($requestData['uri'])
+                    ->method('request')
+                    ->with('POST', $requestData['uri'])
                     ->will($this->returnValue($request));
                 break;
         }
 
         $requestsCount = &$this->requestsCount;
         $response = $this->createResponseMock(isset($requestData['response']) ? $requestData['response'] : '');
+
         $request
             ->expects($this->once())
-            ->method('send')
+            ->method('getBody')
             ->will($this->returnCallback(function () use ($response, &$requestsCount) {
                 $requestsCount++;
 
-                return $response;
+                return $response->getBody();
             }));
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Guzzle\Http\Message\RequestInterface
+     * @return \PHPUnit_Framework_MockObject_MockObject|\GuzzleHttp\Psr7\Request
      */
     private function createRequestMock()
     {
         return $this
-            ->getMockBuilder('\Guzzle\Http\Message\RequestInterface')
+            ->getMockBuilder('\GuzzleHttp\Psr7\Request')
+            ->disableOriginalConstructor()
             ->getMock();
     }
 
     /**
      * @param string $body
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Guzzle\Http\Message\Response
+     * @return \PHPUnit_Framework_MockObject_MockObject|\GuzzleHttp\Psr7\Response
      */
     private function createResponseMock($body)
     {
         $response = $this
-            ->getMockBuilder('\Guzzle\Http\Message\Response')
+            ->getMockBuilder('\GuzzleHttp\Psr7\Response')
             ->disableOriginalConstructor()
             ->getMock();
+
         $response
             ->expects($this->any())
             ->method('getBody')

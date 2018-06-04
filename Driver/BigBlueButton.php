@@ -14,7 +14,7 @@ use GuzzleHttp\ClientInterface;
 class BigBlueButton implements DriverInterface, RecordingInterface
 {
     /**
-     * @var \Guzzle\Http\ClientInterface The HTTP client
+     * @var \GuzzleHttp\ClientInterface The HTTP client
      */
     private $client;
 
