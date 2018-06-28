@@ -42,7 +42,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
     {
         $params = array(
             'name' => $parameters->getMeetingName(),
-            'meetingID' => $parameters->getMeetingId(),
+            'meetingID' => $parameters->getRemoteId() ?: $parameters->getMeetingId(),
             'attendeePW' => $parameters->getAttendeePassword(),
             'moderatorPW' => $parameters->getModeratorPassword(),
             'dialNumber' => '',
@@ -78,7 +78,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
     public function getJoinMeetingUrl(JoinParameters $parameters)
     {
         $params = array(
-            'meetingID' => $parameters->getMeetingId(),
+            'meetingID' => $parameters->getRemoteId() ?: $parameters->getMeetingId(),
             'fullName' => $parameters->getUsername(),
             'password' => $parameters->getPassword(),
             'userID' => '',
@@ -95,7 +95,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
     public function getRecordings(MeetingParameters $parameters)
     {
         $params = array(
-            'meetingID' => $parameters->getMeetingId()
+            'meetingID' => $parameters->getRemoteId() ?: $parameters->getMeetingId()
         );
 
         $response = $this->performRequest('getRecordings', $params);
