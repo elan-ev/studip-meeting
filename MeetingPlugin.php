@@ -209,10 +209,12 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
             PluginEngine::getURL($this, [], 'index')
         ));
 
-        $main->addSubNavigation('config', new Navigation(
-            _('Anpassen'),
-            PluginEngine::getLink($this, [], 'index/config')
-        ));
+        if ($GLOBALS['perm']->have_studip_perm('dozent', $courseId)) {
+            $main->addSubNavigation('config', new Navigation(
+                _('Anpassen'),
+                PluginEngine::getLink($this, [], 'index/config')
+            ));
+        }
 
         return array(self::NAVIGATION_ITEM_NAME => $main);
     }
