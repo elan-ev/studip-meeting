@@ -31,7 +31,8 @@ class CreateDefaultDriverOption extends Migration
               value = "",
               mkdate = UNIX_TIMESTAMP(NOW()),
               chdate = UNIX_TIMESTAMP(NOW()),
-              description = "bigbluebutton oder dfnvc"'
+              description = "bigbluebutton oder dfnvc",
+              comment = ""'
         );
 
         SimpleORMap::expireTableScheme();

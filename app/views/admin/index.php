@@ -1,3 +1,5 @@
+<?= $this->render_partial('index/_messages', compact('messages')) ?>
+
 <form method="post" action="<?= PluginEngine::getLink($plugin, array(), 'admin/save') ?>" class="studip_form <?= StudipVersion::newerThan('3.5') ? 'default' : '' ?>">
 <? foreach ($drivers as $name => $driver) : ?>
     <fieldset>

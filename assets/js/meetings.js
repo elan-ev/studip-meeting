@@ -1,6 +1,6 @@
 (function ($) {
     $(document).ready(function() {
-        $('ul.sidebar-meeting-views a.toggle-info').on('click', function (event) {
+        $('ul.sidebar-meeting-actions a.toggle-info').on('click', function (event) {
             event.preventDefault();
             var $el = $(this);
 

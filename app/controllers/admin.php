@@ -101,6 +101,8 @@ class AdminController extends StudipController
 
         Navigation::activateItem('/admin/config/meetings');
 
+        $this->flash = Trails_Flash::instance();
+
     }
 
     public function index_action()
@@ -131,6 +133,11 @@ class AdminController extends StudipController
 
                 Driver::setConfigByDriver($driver_name, $config_options);
             }
+
+            $this->flash['messages']= [
+                'success' => [$this->_('Konfiguration wurde gespeichert')]
+            ];
+
         } else {
             throw new AccessDeniedException('You need to be root to perform this action!');
         }
