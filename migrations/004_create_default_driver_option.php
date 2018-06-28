@@ -23,7 +23,7 @@ class CreateDefaultDriverOption extends Migration
     function up()
     {
         $db = DBManager::get();
-        $db->exec('INSERT INTO
+        $db->exec('INSERT IGNORE INTO
               config
             SET
               field = "VC_DRIVER",
