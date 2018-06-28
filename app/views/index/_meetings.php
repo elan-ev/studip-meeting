@@ -24,6 +24,7 @@ if ($showUser) {
 }
 ?>
 
+<? if (!empty($meetings)) : ?>
 <form action="<?=$deleteAction?>" method="post">
     <input type="hidden" name="action" value="multi-delete">
 
@@ -119,7 +120,8 @@ if ($showUser) {
                 </td>
                 <td class="recording-url">
                     <? if (class_implements($driver, 'RecordingInterface')) : ?>
-                        <? foreach ($driver->getRecordings($meetingCourse->meeting->getMeetingParameters()) as $recording) : ?>
+                        <? $recordings = $driver->getRecordings($meetingCourse->meeting->getMeetingParameters()) ?>
+                        <? if (!empty($recordings)) foreach ($recordings as $recording) : ?>
                         <a href="<?= $recording->playback->format->url ?>" target="_blank" class="meeting-recording-url">
                             <? $title = sprintf($_('zur Aufzeichnung vom %s'), date('d.m.Y, H:i:s', (int)$recording->startTime / 1000)) ?>
                             <? if (StudipVersion::newerThan('3.3')) : ?>
@@ -260,9 +262,8 @@ if ($showUser) {
         <? endif ?>
     </table>
 </form>
+<? endif ?>
 
-<table class="default collapsable tablesorter conference-meetings">
 <? if ($showCreateForm): ?>
-    <?= $this->render_partial('index/_create_meeting', array('colspan' => $colspan)) ?>
+    <?= $this->render_partial('index/_create_meeting') ?>
 <? endif; ?>
-</table>

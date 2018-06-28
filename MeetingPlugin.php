@@ -202,8 +202,17 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
     {
         $courseConfig = CourseConfig::findByCourseId($courseId);
         $main = new Navigation($courseConfig->title);
-        $main->setURL(PluginEngine::getURL($this, array(), 'index'));
-        $main->setImage(self::getIcon('chat', 'white'), array('title', $courseConfig->title));
+        $main->setURL(PluginEngine::getURL($this, [], 'index'));
+
+        $main->addSubNavigation('meetings', new Navigation(
+            $courseConfig->title,
+            PluginEngine::getURL($this, [], 'index')
+        ));
+
+        $main->addSubNavigation('config', new Navigation(
+            _('Anpassen'),
+            PluginEngine::getLink($this, [], 'index/config')
+        ));
 
         return array(self::NAVIGATION_ITEM_NAME => $main);
     }

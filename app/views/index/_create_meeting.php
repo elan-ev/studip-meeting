@@ -6,54 +6,67 @@
 ?>
 
 <? if ($canModifyMeetings): ?>
-    <tfoot>
-    <tr>
-        <td colspan="<?=$colspan?>">
-            <form method="post" action="<?=PluginEngine::getURL($GLOBALS['plugin'], array(), 'index')?>" class="create-conference-meeting">
-                <input type="hidden" name="action" value="create">
-                <fieldset name="Meeting erstellen">
-                    <? if (count($errors) > 0): ?>
-                        <ul>
-                            <? foreach ($errors as $error): ?>
-                                <li><? echo htmlReady($error); ?></li>
-                            <? endforeach; ?>
-                        </ul>
-                    <? endif; ?>
-                    <? if (sizeof($driver_config) == 1) : ?>
-                        <input type="hidden" name="driver" value="<?= key($driver_config) ?>">
-                    <? else : ?>
-                        <? $first = key($driver_config); ?>
-                        <? foreach ($driver_config as $driver => $config) : ?>
-                            <label>
-                                <input type="radio" name="driver" value="<?= $driver ?>" <?= ($driver === $first) ? 'checked="checked"' : '' ?>>
-                                <?= htmlReady($config['display_name']) ?>
-                            </label>
-                        <? endforeach ?>
-                        <br>
-                    <? endif ?>
+<form method="post" action="<?=PluginEngine::getURL($GLOBALS['plugin'], array(), 'index')?>" class="default">
+    <input type="hidden" name="action" value="create">
 
-                    <input type="text" name="name" placeholder="">
-                    <input type="submit" value="<?= $_('Meeting erstellen') ?>">
-                </fieldset>
-            </form>
+    <fieldset>
+        <legend>
+            <?= $_('Meeting erstellen') ?>
+        </legend>
 
-            <p><?= $_('oder') ?></p>
+        <? if (count($errors) > 0): ?>
+            <ul>
+                <? foreach ($errors as $error): ?>
+                    <li><? echo htmlReady($error); ?></li>
+                <? endforeach; ?>
+            </ul>
+        <? endif; ?>
 
-            <form method="post" action="<?=PluginEngine::getURL($GLOBALS['plugin'], array(), 'index')?>" class="create-conference-meeting">
-                <input type="hidden" name="action" value="link">
-                <fieldset name="Meeting erstellen">
-                    <select name="meeting_id" size="1">
-                        <option><?= $_('zu verlinkendes Meeting auswählen') ?></option>
-                        <? foreach ($userMeetings as $meetingCourse): ?>
-                            <option value="<?=$meetingCourse->meeting->id ?>">
-                                <?=htmlReady($meetingCourse->meeting->name) ?> (<?=htmlReady($meetingCourse->course->name)?>, <?=htmlReady($meetingCourse->course->start_semester->name)?>)
-                            </option>
-                        <? endforeach ?>
-                    </select>
-                    <input type="submit" value="<?= $_('Meeting verlinken') ?>">
-                </fieldset>
-            </form>
-        </td>
-    </tr>
-    </tfoot>
+        <? if (sizeof($driver_config) == 1) : ?>
+            <input type="hidden" name="driver" value="<?= key($driver_config) ?>">
+        <? else : ?>
+            <? $first = key($driver_config); ?>
+            <? foreach ($driver_config as $driver => $config) : ?>
+                <label>
+                    <input type="radio" name="driver" value="<?= $driver ?>" <?= ($driver === $first) ? 'checked="checked"' : '' ?>>
+                    <?= htmlReady($config['display_name']) ?>
+                </label>
+            <? endforeach ?>
+        <? endif ?>
+
+        <label>
+            <?= $_('Name') ?>
+            <input type="text" name="name" placeholder="<?= $_('Name des Meetings') ?>">
+        </label>
+    </fieldset>
+
+    <footer>
+        <?= Studip\Button::createAccept($_('Meeting erstellen')) ?>
+    </footer>
+</form>
+<br>
+<form method="post" action="<?=PluginEngine::getURL($GLOBALS['plugin'], array(), 'index')?>" class="default">
+    <input type="hidden" name="action" value="link">
+    <fieldset>
+        <legend>
+            <?= $_('Meeting verlinken') ?>
+        </legend>
+
+        <label>
+            <?= $_('Meeting auswählen') ?>
+            <select name="meeting_id" size="1">
+                <option><?= $_('zu verlinkendes Meeting auswählen') ?></option>
+                <? foreach ($userMeetings as $meetingCourse): ?>
+                    <option value="<?=$meetingCourse->meeting->id ?>">
+                        <?=htmlReady($meetingCourse->meeting->name) ?> (<?=htmlReady($meetingCourse->course->name)?>, <?=htmlReady($meetingCourse->course->start_semester->name)?>)
+                    </option>
+                <? endforeach ?>
+            </select>
+        </label>
+    </fieldset>
+
+    <footer>
+        <?= Studip\Button::createAccept($_('Meeting verlinken')) ?>
+    </footer>
+</form>
 <? endif ?>

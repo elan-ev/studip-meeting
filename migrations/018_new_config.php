@@ -24,7 +24,7 @@ class NewConfig extends Migration {
     public function up()
     {
         try {
-            if (StudipVersion::olderThan('4.1')) {
+            if (StudipVersion::olderThan('4.2')) {
                 $query = "REPLACE INTO `config`
                    (`field`, `value`, `type`, `range`, `section`,
                     `mkdate`, `chdate`, `description`, `comment`)
