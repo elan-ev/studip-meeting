@@ -50,8 +50,14 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
             $item->setImage(self::getIcon('chat', 'white'));
             Navigation::addItem('/admin/config/meetings', $item);
         } elseif ($perm->have_perm('dozent')) {
-            $item = new Navigation(_('Meine Meetings'), PluginEngine::getLink($this, array(), 'index/my'));
-            Navigation::addItem('/profile/meetings', $item);
+            if (Navigation::hasItem('/profile') && !Navigation::hasItem('/profile/meetings')) {
+                $current_user = User::findByUsername(Request::username('username', $GLOBALS['user']->username));
+
+                if ($current_user->id == $GLOBALS['user']->id) {
+                    $item = new Navigation($this->_('Meine Meetings'), PluginEngine::getLink($this, array(), 'index/my'));
+                    Navigation::addItem('/profile/meetings', $item);
+                }
+            }
         }
 
         // do nothing if plugin is deactivated in this seminar/institute
