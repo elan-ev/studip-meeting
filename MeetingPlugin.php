@@ -57,9 +57,13 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
                 Navigation::addItem('/admin/config/meetings', $item);
             }
         } elseif ($perm->have_perm('dozent')) {
-            $item = new Navigation($this->_('Meine Meetings'), PluginEngine::getLink($this, array(), 'index/my'));
             if (Navigation::hasItem('/profile') && !Navigation::hasItem('/profile/meetings')) {
-                Navigation::addItem('/profile/meetings', $item);
+                $current_user = User::findByUsername(Request::username('username', $GLOBALS['user']->username));
+
+                if ($current_user->id == $GLOBALS['user']->id) {
+                    $item = new Navigation($this->_('Meine Meetings'), PluginEngine::getLink($this, array(), 'index/my'));
+                    Navigation::addItem('/profile/meetings', $item);
+                }
             }
         }
 
