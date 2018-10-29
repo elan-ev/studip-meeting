@@ -95,6 +95,8 @@ class IndexController extends StudipController
             $navItem->setImage(MeetingPlugin::getIcon('chat', 'black'));
         } elseif ($action === 'my' && Navigation::hasItem('/meetings')) {
             Navigation::activateItem('/meetings');
+        } elseif ($action === 'my' && Navigation::hasItem('/profile/meetings')) {
+            Navigation::activateItem('/profile/meetings');
         }
 
         $this->courseConfig = CourseConfig::findByCourseId($this->getCourseId());

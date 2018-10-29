@@ -54,7 +54,7 @@ class MeetingPlugin extends StudipPlugin implements StandardPlugin, SystemPlugin
                 $current_user = User::findByUsername(Request::username('username', $GLOBALS['user']->username));
 
                 if ($current_user->id == $GLOBALS['user']->id) {
-                    $item = new Navigation($this->_('Meine Meetings'), PluginEngine::getLink($this, array(), 'index/my'));
+                    $item = new Navigation(_('Meine Meetings'), PluginEngine::getLink($this, array(), 'index/my'));
                     Navigation::addItem('/profile/meetings', $item);
                 }
             }
