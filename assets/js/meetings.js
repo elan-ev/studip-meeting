@@ -30,20 +30,6 @@
             }
         });
 
-        /*
-        var tableSorterHeaders = {};
-        $('table.conference-meetings.admin thead th').each(function (index, cell) {
-            if (!$(cell).hasClass('sortable')) {
-                tableSorterHeaders[index] = { sorter: false };
-            }
-        });
-        $('table.conference-meetings.admin').tablesorter({
-            headers: tableSorterHeaders,
-            sortList: [[1, 0]],
-            textExtraction: 'complex'
-        });
-        */
-
         $('table.conference-meetings a.edit-meeting').click(function (event) {
             event.preventDefault();
             var $editAnchor = $(this);
