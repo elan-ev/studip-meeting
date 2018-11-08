@@ -370,6 +370,7 @@ class IndexController extends StudipController
         $lastJoin = new Join();
         $lastJoin->meeting_id = $meetingId;
         $lastJoin->user_id = $user->cfg->getUserId();
+        $lastJoin->last_join = time();
         $lastJoin->store();
 
         try {
