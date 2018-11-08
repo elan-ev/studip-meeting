@@ -147,19 +147,11 @@ class IndexController extends StudipController
         /** @var \Seminar_User $user */
         $user = $GLOBALS['user'];
         $course = new Course(Context::getId());
-        $this->errors = [];
+
+        $this->errors = $this->flash['errors'] ?: [];
+
         $this->deleteAction = PluginEngine::getURL($this->plugin, ['cid' => Context::getId()], 'index', true);
         $this->handleDeletion();
-
-        if (Request::get('action') === 'create' && $this->userCanModifyCourse(Context::getId())) {
-            if (!Request::get('name')) {
-                $this->errors[] = $this->_('Bitte geben Sie dem Meeting einen Namen.');
-            }
-
-            if (count($this->errors) === 0) {
-                $this->createMeeting(\Request::get('name'), Request::get('driver'));
-            }
-        }
 
         if (Request::get('action') === 'link' && $this->userCanModifyCourse(Context::getId())) {
             $linkedMeetingId = Request::int('meeting_id');
@@ -204,6 +196,19 @@ class IndexController extends StudipController
             $this->meetings = MeetingCourse::findActiveByCourseId(Context::getId());
             $this->userMeetings = [];
         }
+    }
+
+    public function create_action()
+    {
+        if ($this->userCanModifyCourse(Context::getId())) {
+            if (!Request::get('name')) {
+                $this->flash['errors'] = [$this->_('Bitte geben Sie dem Meeting einen Namen.')];
+            } else {
+                $this->createMeeting(\Request::get('name'), Request::get('driver'));
+            }
+        }
+
+        $this->redirect(PluginEngine::getURL($this->plugin, [], 'index'));
     }
 
     public function my_action($type = null)

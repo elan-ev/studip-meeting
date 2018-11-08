@@ -6,7 +6,7 @@
 ?>
 
 <? if ($canModifyMeetings): ?>
-<form method="post" action="<?=PluginEngine::getURL($GLOBALS['plugin'], array(), 'index')?>" class="default">
+<form method="post" action="<?= PluginEngine::getURL($GLOBALS['plugin'], array(), 'index/create')?>" class="default">
     <input type="hidden" name="action" value="create">
 
     <fieldset>
@@ -15,11 +15,7 @@
         </legend>
 
         <? if (count($errors) > 0): ?>
-            <ul>
-                <? foreach ($errors as $error): ?>
-                    <li><? echo htmlReady($error); ?></li>
-                <? endforeach; ?>
-            </ul>
+            <?= MessageBox::error(implode('<br>', $errors)); ?>
         <? endif; ?>
 
         <? if (sizeof($driver_config) == 1) : ?>
