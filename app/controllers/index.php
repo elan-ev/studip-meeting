@@ -450,7 +450,7 @@ class IndexController extends MeetingsController
         $this->buildSidebar(
             [[
                 'label' => $this->courseConfig->title,
-                'url' => $this->controller->url_for('index/index'),
+                'url' => $this->url_for('index/index'),
             ]],
             []
         );
