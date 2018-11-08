@@ -9,15 +9,11 @@
     <tfoot>
     <tr>
         <td colspan="<?=$colspan?>">
-            <form method="post" action="<?=PluginEngine::getURL($GLOBALS['plugin'], array(), 'index')?>" class="create-conference-meeting">
+            <form method="post" action="<?=PluginEngine::getURL($GLOBALS['plugin'], array(), 'index/create')?>" class="create-conference-meeting">
                 <input type="hidden" name="action" value="create">
                 <fieldset name="Meeting erstellen">
                     <?php if (count($errors) > 0): ?>
-                        <ul>
-                            <?php foreach ($errors as $error): ?>
-                                <li><?php echo htmlReady($error); ?></li>
-                            <?php endforeach; ?>
-                        </ul>
+                        <?= MessageBox::error(implode('<br>', $errors)); ?>
                     <?php endif; ?>
                     <? if (sizeof($driver_config) == 1) : ?>
                         <input type="hidden" name="driver" value="<?= key($driver_config) ?>">
