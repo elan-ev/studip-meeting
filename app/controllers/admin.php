@@ -26,7 +26,7 @@ use ElanEv\Model\Driver;
  * @property array                  $errors
  * @property string                 $deleteAction
  */
-class AdminController extends StudipController
+class AdminController extends MeetingsController
 {
     /**
      * @var ElanEv\Driver\DriverInterface
@@ -142,8 +142,7 @@ class AdminController extends StudipController
             throw new AccessDeniedException('You need to be root to perform this action!');
         }
 
-        // TODO: FIXME -> set correct link main plugin class so there is no need for this hack
-        $this->redirect(PluginEngine::getLink($this->plugin, array(), 'admin'));
+        $this->redirect('admin/index');
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * */

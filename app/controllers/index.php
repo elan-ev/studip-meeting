@@ -41,7 +41,7 @@ use ElanEv\Model\Helper;
  * @property CourseConfig           $config
  * @property string                 $deleteAction
  */
-class IndexController extends StudipController
+class IndexController extends MeetingsController
 {
     /**
      * @var ElanEv\Driver\DriverInterface
@@ -208,7 +208,7 @@ class IndexController extends StudipController
             }
         }
 
-        $this->redirect(PluginEngine::getURL($this->plugin, [], 'index'));
+        $this->redirect('index/index');
     }
 
     public function my_action($type = null)
@@ -318,7 +318,7 @@ class IndexController extends StudipController
             $meeting->store();
         }
 
-        $this->redirect(PluginEngine::getURL($this->plugin, [], Request::get('destination')));
+        $this->redirect(Request::get('destination'));
     }
 
     public function edit_action($meetingId)
@@ -334,7 +334,11 @@ class IndexController extends StudipController
             $meeting->store();
         }
 
-        $this->redirect(PluginEngine::getURL($this->plugin, [], 'index'));
+        if (!Request::isXhr()) {
+            $this->redirect('index/index');
+        } else {
+            $this->render_nothing();
+        }
     }
 
     public function moderator_permissions_action($meetingId)
@@ -346,7 +350,7 @@ class IndexController extends StudipController
             $meeting->store();
         }
 
-        $this->redirect(PluginEngine::getURL($this->plugin, [], Request::get('destination')));
+        $this->redirect(Request::get('destination'));
     }
 
     public function delete_action($meetingId, $courseId)
@@ -363,7 +367,7 @@ class IndexController extends StudipController
             $destination = 'index';
         }
 
-        $this->redirect(PluginEngine::getURL($this->plugin, [], $destination));
+        $this->redirect($destination);
     }
 
     /**
@@ -415,11 +419,11 @@ class IndexController extends StudipController
                 $this->redirect($driver->getJoinMeetingUrl($joinParameters));
             } else {
                 $this->flash['messages'] = ['error' => ['Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server fehlgeschlagen.']];
-                $this->redirect(PluginEngine::getURL($this->plugin, [], 'index'));
+                $this->redirect('index/index');
             }
         } catch (Exception $e) {
             $this->flash['messages']= ['error' => ['Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server fehlgeschlagen. ('. $e->getMessage() .')']];
-            $this->redirect(PluginEngine::getURL($this->plugin, [], 'index'));
+            $this->redirect('index/index');
         }
     }
 
@@ -431,7 +435,7 @@ class IndexController extends StudipController
         $courseId = Context::getId();
 
         if (!$this->userCanModifyCourse($courseId)) {
-            $this->redirect(PluginEngine::getURL($this->plugin, [], 'index'));
+            $this->redirect('index/index');
         }
 
         if (Request::method() === 'POST') {
@@ -440,13 +444,13 @@ class IndexController extends StudipController
             $this->courseConfig->store();
             $this->saved = true;
 
-            $this->redirect(PluginEngine::getURL($this->plugin, [], 'index/config'));
+            $this->redirect('index/config');
         }
 
         $this->buildSidebar(
             [[
                 'label' => $this->courseConfig->title,
-                'url' => PluginEngine::getLink($this->plugin, [], 'index'),
+                'url' => $this->controller->url_for('index/index'),
             ]],
             []
         );
@@ -462,8 +466,7 @@ class IndexController extends StudipController
             throw new AccessDeniedException('You need to be root to perform this action!');
         }
 
-        // TODO: FIXME -> set correct link main plugin class so there is no need for this hack
-        $this->redirect(PluginEngine::getLink($this->plugin, [], 'index'));
+        $this->redirect('index/index');
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * */
