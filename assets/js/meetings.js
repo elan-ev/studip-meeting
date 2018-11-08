@@ -109,11 +109,15 @@
                 }
             });
 
-            $acceptButton.click(function () {
+            // remove any old handlers
+            $acceptButton.off('click');
+            $declineButton.off('click');
+
+            $acceptButton.on('click', function () {
                 submitRenameForm();
             });
 
-            $declineButton.click(function () {
+            $declineButton.on('click', function () {
                 hideRenameForm();
             });
         });
