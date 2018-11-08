@@ -15,7 +15,7 @@
  * @category    Stud.IP
  */
 
-require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__.'/bootstrap.php';
 
 use ElanEv\Model\CourseConfig;
 use ElanEv\Model\MeetingCourse;
@@ -233,8 +233,11 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
      */
     function perform($unconsumed_path)
     {
-        $trails_root = $this->getPluginPath().'/app';
-        $dispatcher = new Trails_Dispatcher($trails_root, PluginEngine::getUrl($this, array(), 'index'), 'index');
+        $trails_root = $this->getPluginPath() . '/app';
+        $dispatcher  = new Trails_Dispatcher($trails_root,
+            PluginEngine::getURL($this, null, ''),
+            'index');
+
         $dispatcher->current_plugin = $this;
         $dispatcher->dispatch($unconsumed_path);
     }
