@@ -2,18 +2,19 @@
 
 namespace ElanEv\Driver;
 
-use Guzzle\Http\ClientInterface;
+use MeetingPlugin;
+use GuzzleHttp\ClientInterface;
 
 /**
  * Big Blue Button driver implementation.
  *
  * @author Christian Flothmann <christian.flothmann@uos.de>
- * @author Till Glöggler <tgloeggl@uos.de>
+ * @author Till GlÃ¶ggler <tgloeggl@uos.de>
  */
-class BigBlueButton implements DriverInterface
+class BigBlueButton implements DriverInterface, RecordingInterface
 {
     /**
-     * @var \Guzzle\Http\ClientInterface The HTTP client
+     * @var \GuzzleHttp\ClientInterface The HTTP client
      */
     private $client;
 
@@ -31,6 +32,7 @@ class BigBlueButton implements DriverInterface
         }
 
         $this->salt = $config['api-key'];
+        $this->url  = $config['url'];
     }
 
     /**
@@ -40,14 +42,14 @@ class BigBlueButton implements DriverInterface
     {
         $params = array(
             'name' => $parameters->getMeetingName(),
-            'meetingID' => $parameters->getMeetingId(),
+            'meetingID' => $parameters->getRemoteId() ?: $parameters->getMeetingId(),
             'attendeePW' => $parameters->getAttendeePassword(),
             'moderatorPW' => $parameters->getModeratorPassword(),
             'dialNumber' => '',
             'webVoice' => '',
             'logoutURL' => '',
             'maxParticipants' => '-1',
-            'record' => 'false',
+            'record' => 'true',
             'duration' => '0',
         );
         $response = $this->performRequest('create', $params);
@@ -76,7 +78,7 @@ class BigBlueButton implements DriverInterface
     public function getJoinMeetingUrl(JoinParameters $parameters)
     {
         $params = array(
-            'meetingID' => $parameters->getMeetingId(),
+            'meetingID' => $parameters->getRemoteId() ?: $parameters->getMeetingId(),
             'fullName' => $parameters->getUsername(),
             'password' => $parameters->getPassword(),
             'userID' => '',
@@ -84,22 +86,41 @@ class BigBlueButton implements DriverInterface
         );
         $params['checksum'] = $this->createSignature('join', $params);
 
-        return sprintf('%s/api/join?%s', rtrim($this->client->getBaseUrl(), '/'), $this->buildQueryString($params));
+        return sprintf('%s/api/join?%s', rtrim($this->url, '/'), $this->buildQueryString($params));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRecordings(MeetingParameters $parameters)
+    {
+        $params = array(
+            'meetingID' => $parameters->getRemoteId() ?: $parameters->getMeetingId()
+        );
+
+        $response = $this->performRequest('getRecordings', $params);
+
+        $xml = new \SimpleXMLElement($response);
+
+        if (!$xml instanceof \SimpleXMLElement) {
+            return false;
+        }
+
+        return $xml->recordings->recording;
     }
 
     private function performRequest($endpoint, array $params = array())
     {
         $params['checksum'] = $this->createSignature($endpoint, $params);
         $uri = 'api/'.$endpoint.'?'.$this->buildQueryString($params);
-        $request = $this->client->get($uri);
-        $response = $request->send();
+        $request = $this->client->request('GET', $this->url .'/'. $uri);
 
-        return $response->getBody(true);
+        return $request->getBody(true);
     }
 
     private function createSignature($prefix, array $params = array())
     {
-        return sha1($prefix.$this->buildQueryString($params).$this->salt);
+        return sha1($prefix . $this->buildQueryString($params) . $this->salt);
     }
 
     private function buildQueryString($params)
@@ -118,8 +139,8 @@ class BigBlueButton implements DriverInterface
     public function getConfigOptions()
     {
         return array(
-            new ConfigOption('url',     _('URL des BBB-Servers')),
-            new ConfigOption('api-key', _('Api-Key (Salt)'))
+            new ConfigOption('url',     dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'URL des BBB-Servers')),
+            new ConfigOption('api-key', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Api-Key (Salt)'))
         );
     }
 }

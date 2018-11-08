@@ -172,7 +172,7 @@ class IndexController extends StudipController
 
     public function create_action()
     {
-        if ($this->userCanModifyCourse(Context::getId())) {
+        if ($this->userCanModifyCourse($this->getCourseId())) {
             if (!Request::get('name')) {
                 $this->flash['errors'] = [$this->_('Bitte geben Sie dem Meeting einen Namen.')];
             } else {
