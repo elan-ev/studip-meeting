@@ -27,9 +27,9 @@ class NewConfig extends Migration {
             if (StudipVersion::olderThan('4.2')) {
                 $query = "REPLACE INTO `config`
                    (`field`, `value`, `type`, `range`, `section`,
-                    `mkdate`, `chdate`, `description`, `comment`)
+                    `mkdate`, `chdate`, `description`)
                  VALUES (:field, :value, :type, 'global', 'meetings',
-                         UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), :description, '')";
+                         UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), :description)";
             } else {
                 $query = "REPLACE INTO `config`
                    (`field`, `value`, `type`, `range`, `section`,
