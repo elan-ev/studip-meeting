@@ -233,6 +233,8 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
      */
     function perform($unconsumed_path)
     {
+        require_once __DIR__ . '/vendor/autoload.php';
+
         $trails_root = $this->getPluginPath() . '/app';
         $dispatcher  = new Trails_Dispatcher($trails_root,
             PluginEngine::getURL($this, null, ''),
