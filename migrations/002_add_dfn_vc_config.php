@@ -20,9 +20,17 @@ class AddDfnVcConfig extends Migration
      */
     public function up()
     {
-        Config::get()->create('DFN_VC_URL');
-        Config::get()->create('DFN_VC_LOGIN');
-        Config::get()->create('DFN_VC_PASSWORD');
+        try {
+            Config::get()->create('DFN_VC_URL');
+        } catch (InvalidArgumentException $e) {}
+
+        try {
+            Config::get()->create('DFN_VC_LOGIN');
+        } catch (InvalidArgumentException $e) {}
+
+        try {
+            Config::get()->create('DFN_VC_PASSWORD');
+        } catch (InvalidArgumentException $e) {}
     }
 
     /**
