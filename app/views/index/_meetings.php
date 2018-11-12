@@ -119,7 +119,7 @@ if ($showUser) {
                 </td>
 
                 <td class="recording-url">
-                    <? if (class_implements($driver, 'RecordingInterface') && !$meetingCourse->meeting->recording_url) : ?>
+                    <? if (class_implements($driver, 'RecordingInterface')) : ?>
                         <? $recordings = $driver->getRecordings($meetingCourse->meeting->getMeetingParameters()) ?>
                         <? if (!empty($recordings)) foreach ($recordings as $recording) : ?>
                         <a href="<?= $recording->playback->format->url ?>" target="_blank" class="meeting-recording-url">
@@ -127,14 +127,13 @@ if ($showUser) {
                             <?= Icon::create('video', 'clickable', array('title' => $title)) ?>
                         </a>
                         <? endforeach ?>
-
-                    <? else: ?>
-                        <a href="<?= $meetingCourse->meeting->recording_url ?>" target="_blank" class="meeting-recording-url"
-                                <?= !$meetingCourse->meeting->recording_url ? ' style="display:none;"' : ''?>
-                        >
-                            <?= Icon::create('video', 'clickable', array('title' => $_('zur Aufzeichnung'))) ?>
-                        </a>
                     <? endif ?>
+
+                    <a href="<?= $meetingCourse->meeting->recording_url ?>" target="_blank" class="meeting-recording-url"
+                            <?= !$meetingCourse->meeting->recording_url ? ' style="display:none;"' : ''?>
+                    >
+                        <?= Icon::create('video', 'clickable', array('title' => $_('zur Aufzeichnung'))) ?>
+                    </a>
                 </td>
 
                 <? if ($showCourse): ?>
