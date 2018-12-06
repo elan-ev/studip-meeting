@@ -1,7 +1,7 @@
 <?php
 class MeetingsController extends StudipController
 {
-    public function url_for($to)
+    public function url_for($to = '')
     {
         $args = func_get_args();
 
