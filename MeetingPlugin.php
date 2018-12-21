@@ -204,6 +204,8 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
      */
     public function getTabNavigation($courseId)
     {
+        require_once __DIR__ . '/vendor/autoload.php';
+
         $courseConfig = CourseConfig::findByCourseId($courseId);
         $main = new Navigation($courseConfig->title);
         $main->setURL(PluginEngine::getURL($this, [], 'index'));
