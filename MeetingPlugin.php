@@ -160,6 +160,8 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
      */
     public function getIconNavigation($courseId, $lastVisit, $userId = null)
     {
+        require_once __DIR__ . '/vendor/autoload.php';
+
         /** @var Seminar_Perm $perm */
         $perm = $GLOBALS['perm'];
 
