@@ -13,7 +13,7 @@
         </label>
 
         <? foreach ($driver['config'] as $option) : ?>
-            <? if ($option->getName() != enable) : ?>
+            <? if ($option->getName() != 'enable') : ?>
             <label class="caption">
                 <?= $option->getDisplayName() ?>
                 <input type="text" name="config[<?= $name ?>][<?= $option->getName() ?>]" value="<?= $option->getValue() ?>">
