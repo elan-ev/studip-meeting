@@ -20,6 +20,9 @@ require_once __DIR__.'/bootstrap.php';
 use ElanEv\Model\CourseConfig;
 use ElanEv\Model\MeetingCourse;
 
+use Meetings\AppFactory;
+use Meetings\RouteMap;
+
 require_once 'compat/StudipVersion.php';
 
 class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
@@ -237,7 +240,7 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
         if (substr($unconsumed_path, 0, 3) == 'api') {
             $appFactory = new AppFactory();
             $app = $appFactory->makeApp($this);
-            $app->group('/opencast/api', new RouteMap($app));
+            $app->group('/meetingplugin/api', new RouteMap($app));
             $app->run();
         } else {
             PageLayout::addScript($this->getPluginUrl() . '/static/bundle.js');
