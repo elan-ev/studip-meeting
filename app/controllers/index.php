@@ -378,7 +378,10 @@ class IndexController extends MeetingsController
         /** @var Seminar_User $user */
         $user = $GLOBALS['user'];
 
-        $meeting = new Meeting($meetingId);
+        $meeting = Meeting::find($meetingId);
+        if (!($meeting && $meeting->courses->find(Context::getId()))) {
+            throw new Trails_Exception(400);
+        }
         $driver = $this->driver_factory->getDriver($meeting->driver);
 
         // ugly hack for BBB
