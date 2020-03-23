@@ -22,6 +22,12 @@ export default new Router({
                     props: true
                 }
             ]
+        },
+
+        {
+            name: "course",
+            path: "/course",
+            component: () => import("@/views/Course"),
         }
     ]
 });

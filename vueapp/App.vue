@@ -28,7 +28,7 @@ export default {
             console.log('redirecting to admin');
             this.$router.push({ name: 'admin' });
         } else {
-            this.$router.push('home');
+            this.$router.push('course');
         }
     }
 
