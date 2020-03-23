@@ -51,7 +51,7 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
                 Navigation::addItem('/meetings', $item);
             }
 
-            $item = new Navigation($this->_('Meetings konfigurieren'), PluginEngine::getLink($this, array(), 'admin/index'));
+            $item = new Navigation($this->_('Meetings konfigurieren'), PluginEngine::getLink($this, array(), 'admin'));
             $item->setImage(self::getIcon('chat', 'white'));
             if (Navigation::hasItem('/admin/config') && !Navigation::hasItem('/admin/config/meetings')) {
                 Navigation::addItem('/admin/config/meetings', $item);
