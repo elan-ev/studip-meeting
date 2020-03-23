@@ -77,8 +77,8 @@ class Driver
     {
         self::loadConfig();
 
-        foreach ($config_options as $config) {
-            self::$config[$driver_name][$config->getName()] = $config->getValue();
+        foreach ($config_options as $key => $value) {
+            self::$config[$driver_name][$key] = $value;
         }
 
         \Config::get()->store('VC_CONFIG', json_encode(self::$config));

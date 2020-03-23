@@ -19,11 +19,19 @@ import {
 const initialState = {
     config_list: [],
     config: {
-        'url' :      null,
-        'user':      null,
-        'password':  null,
-        'ltikey':    null,
-        'ltisecret': null
+        "BigBlueButton": {
+            "enable":"1",
+            "display_name":"BigBlueButton",
+            "url":"",
+            "api-key":""
+        },
+        "DfnVc":{
+            "enable":"1",
+            "display_name":"Adobe Connect VC",
+            "url":"",
+            "login":"",
+            "password":""
+        }
     }
 };
 
@@ -40,13 +48,10 @@ export const state = { ...initialState };
 
 export const actions = {
     async [CONFIG_LIST_READ](context) {
-        return new Promise(resolve => {
-          ApiService.get('config')
+        return ApiService.get('config')
             .then(({ data }) => {
-                context.commit(CONFIG_LIST_SET, data);
-                resolve(data);
+                context.commit(CONFIG_SET, data.config);
             });
-        });
     },
 
     async [CONFIG_READ](context, id) {

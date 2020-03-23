@@ -8,7 +8,7 @@ use Meetings\Errors\AuthorizationFailedException;
 use Meetings\Errors\Error;
 use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
-use Meetings\Models\Config;
+use ElanEv\Model\Driver;
 
 class ConfigList extends MeetingsController
 {
@@ -16,10 +16,10 @@ class ConfigList extends MeetingsController
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        $config = Config::all()->toArray();
+        $config = Driver::getConfig();
 
         if (!empty($config)) {
-            return $this->createResponse($config, $response);
+            return $this->createResponse(['config' => $config], $response);
         }
 
         return $this->createResponse([], $response);

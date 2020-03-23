@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Opencast Konfigurationsassistent</h1>
+        <h1>{{ "Meetings konfigurieren" | i18n }}</h1>
         <router-view></router-view>
     </div>
 
