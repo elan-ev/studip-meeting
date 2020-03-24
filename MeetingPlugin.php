@@ -244,7 +244,7 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
             $app->run();
         } else {
             PageLayout::addScript($this->getPluginUrl() . '/static/bundle.js');
-            PageLayout::addScript($this->getPluginUrl() . '/static/styles.css');
+            PageLayout::addStylesheet($this->getPluginUrl() . '/static/styles.css');
 
             $trails_root = $this->getPluginPath() . '/app';
             $dispatcher  = new Trails_Dispatcher($trails_root,
