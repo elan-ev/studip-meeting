@@ -50,7 +50,9 @@ export const actions = {
     async [CONFIG_LIST_READ](context) {
         return ApiService.get('config')
             .then(({ data }) => {
-                context.commit(CONFIG_SET, data.config);
+                if (data == []) {
+                    context.commit(CONFIG_SET, data.config);
+                }
             });
     },
 
