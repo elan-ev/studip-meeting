@@ -94,9 +94,6 @@ class AdminController extends MeetingsController
         $layout = $this->templateFactory->open('layouts/base');
         $this->set_layout($layout);
 
-        PageLayout::addScript($this->plugin->getAssetsUrl().'/js/jquery.tablesorter.min.js');
-        PageLayout::addScript($this->plugin->getAssetsUrl().'/js/meetings.js');
-        PageLayout::addStylesheet($this->plugin->getAssetsUrl().'/css/meetings.css');
         PageLayout::setHelpKeyword('Basis.Meetings');
 
         Navigation::activateItem('/admin/config/meetings');
