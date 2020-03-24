@@ -118,9 +118,6 @@ class IndexController extends MeetingsController
         $layout = $this->templateFactory->open('layouts/base');
         $this->set_layout($layout);
 
-        PageLayout::addScript($this->plugin->getAssetsUrl().'/js/jquery.tablesorter.min.js');
-        PageLayout::addScript($this->plugin->getAssetsUrl().'/js/meetings.js');
-        PageLayout::addStylesheet($this->plugin->getAssetsUrl().'/css/meetings.css');
         PageLayout::setHelpKeyword('Basis.Meetings');
 
         if ($action !== 'my' && $action != 'config' && Navigation::hasItem('course/'.MeetingPlugin::NAVIGATION_ITEM_NAME)) {
