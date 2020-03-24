@@ -14,12 +14,6 @@ export default new Router({
                     name: "admin",
                     path: "step1",
                     component: () => import("@/views/AdminBasic")
-                },
-                {
-                    name: "admin_step2",
-                    path: "step2",
-                    component: () => import("@/views/AdminOptions"),
-                    props: true
                 }
             ]
         },
