@@ -8,39 +8,43 @@ import {
     CONFIG_DELETE,
     CONFIG_CLEAR,
     CONFIG_LIST_READ,
-    CONFIG_LIST_CLEAR
 } from "./actions.type";
 
 import {
     CONFIG_SET,
-    CONFIG_LIST_SET
 } from "./mutations.type";
 
 const initialState = {
-    config_list: [],
     config: {
         "BigBlueButton": {
-            "enable":"1",
-            "display_name":"BigBlueButton",
-            "url":"",
-            "api-key":""
+            "enable": "1",
+            "display_name": "",
+            "servers": []
         },
-        "DfnVc":{
-            "enable":"1",
-            "display_name":"Adobe Connect VC",
-            "url":"",
-            "login":"",
-            "password":""
+        "DfnVc": {
+            "enable": "1",
+            "display_name": "",
+            "servers": []
         }
+    },
+    drivers: {
+        "BigBlueButton": {
+            "title":"BigBlueButton",
+            "config": []
+        },
+        "DfnVc": {
+            "title":"DfnVc",
+            "config": []
+        },
     }
 };
 
 const getters = {
-    config_list(state) {
-        return state.config_list;
-    },
     config(state) {
         return state.config;
+    },
+    drivers(state) {
+        return state.drivers;
     }
 };
 
@@ -50,8 +54,8 @@ export const actions = {
     async [CONFIG_LIST_READ](context) {
         return ApiService.get('config')
             .then(({ data }) => {
-                if (data == []) {
-                    context.commit(CONFIG_SET, data.config);
+                if (data != []) {
+                    context.commit(CONFIG_SET, data);
                 }
             });
     },
@@ -84,20 +88,18 @@ export const actions = {
         context.commit(CONFIG_SET, {});
     },
 
-    [CONFIG_LIST_CLEAR](context) {
-        context.commit(CONFIG_LIST_SET, {});
-    },
 };
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
 export const mutations = {
-    [CONFIG_LIST_SET](state, data) {
-        state.config_list = data;
-    },
-
     [CONFIG_SET](state, data) {
-        state.config = data;
-    }
+        if (data.config) {
+            state.config = data.config;
+        }
+        if (data.drivers) {
+            state.drivers = data.drivers;
+        }
+    },
 };
 
 export default {

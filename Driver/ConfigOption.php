@@ -45,4 +45,12 @@ class ConfigOption
     {
         $this->value = $value;
     }
+
+    public function toArray() {
+        return [
+            'name' => $this->getName(),
+            'display_name' => $this->getDisplayName(),
+            'value' => $this->getValue()
+        ];
+    }
 }
