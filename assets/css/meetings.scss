@@ -61,3 +61,6 @@ form.create-conference-meeting input[type="text"] {
 .meeting-recording-url {
     margin-right: 5px;
 }
+table.conference-meetings tr.active {
+    background-color: #e2e3e4;
+}

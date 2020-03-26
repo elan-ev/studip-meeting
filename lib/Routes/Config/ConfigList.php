@@ -16,10 +16,12 @@ class ConfigList extends MeetingsController
 
     public function __invoke(Request $request, Response $response, $args)
     {
+        $drivers = Driver::discover(true);
+
         $config = Driver::getConfig();
 
         if (!empty($config)) {
-            return $this->createResponse(['config' => $config], $response);
+            return $this->createResponse(['config' => $config, 'drivers' => $drivers], $response);
         }
 
         return $this->createResponse([], $response);
