@@ -4,6 +4,7 @@ namespace ElanEv\Driver;
 
 use GuzzleHttp\Client;
 use ElanEv\Model\Driver;
+use Meetings\Errors\Error;
 
 /**
  * Creates driver instances based on the application configuration.
@@ -58,21 +59,27 @@ class DriverFactory
      * @throws \LogicException           if a required configuration option
      *                                   is missing
      */
-    public function getDriver($driver)
+    public function getDriver($driver, $server_index)
     {
         $driver = strtolower($driver);
 
         if (empty($this->config[$driver])) {
-            throw new \InvalidArgumentException(sprintf('The driver "%s" does not exist.', $driver));
+            throw new Error(sprintf('The driver "%s" does not exist.', $driver), 404);
         }
 
         $driver_conf = $this->config[$driver];
         if (!$driver_conf['enable']) {
-            throw new \InvalidArgumentException(sprintf('The driver "%s" is not enabled.', $driver));
+            throw new Error(sprintf('The driver "%s" is not enabled.', $driver), 404);
         }
 
+        //resolve selected server
+        foreach ($driver_conf['servers'][$server_index] as $key => $val) {
+            $driver_conf[$key] = $val;
+        }
+        unset($driver_conf['servers']);
+
         if (!$driver_conf['url']) {
-            throw new \InvalidArgumentException(sprintf('The driver "%s" has not configured the url config option!', $driver));
+            throw new Error(sprintf('The driver "%s" has not configured the url config option!', $driver), 404);
         }
 
         $driver_conf['url'] = rtrim($driver_conf['url'], '/');
