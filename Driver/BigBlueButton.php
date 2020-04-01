@@ -77,9 +77,22 @@ class BigBlueButton implements DriverInterface, RecordingInterface
      */
     public function getJoinMeetingUrl(JoinParameters $parameters)
     {
+        $fullname = "";
+        $firstName = $parameters->getFirstName();
+        $lastName = $parameters->getLastName();
+        if ( !empty($firstName) ) {
+            $fullname = $firstName;
+        }
+        if ( !empty($lastName) ) {
+            $fullname = $fullname . " " . $lastName;
+        }
+        if ( empty($fullname) ) {
+              $fullname = $parameters->getUsername();
+        }
+ 
         $params = array(
             'meetingID' => $parameters->getRemoteId() ?: $parameters->getMeetingId(),
-            'fullName' => $parameters->getUsername(),
+            'fullName' => $fullname,
             'password' => $parameters->getPassword(),
             'userID' => '',
             'webVoiceConf' => '',
