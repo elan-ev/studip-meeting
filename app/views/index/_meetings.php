@@ -80,7 +80,7 @@ if ($showUser) {
         <tbody>
         <? foreach ($meetings as $meetingCourse): ?>
             <? try {
-                $driver = $driver_factory->getDriver($meetingCourse->meeting->driver);
+                $driver = $driver_factory->getDriver($meetingCourse->meeting->driver, $meetingCourse->meeting->server_index);
             } catch (InvalidArgumentException $e) {
                 // skip non-existent/deactivated drivers or otherwise bogus meeting-entries
                 continue;

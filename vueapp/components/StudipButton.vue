@@ -1,5 +1,5 @@
 <template>
-    <button class="button" :class="[icon]" type="submit" :name="name" @click="onClick">
+    <button class="button" :class="[icon]" :type="type" :name="name" @click="onClick">
         <slot>ButtonLabel</slot>
     </button>
 </template>
@@ -17,6 +17,11 @@ export default {
                 return ['', 'accept', 'cancel', 'edit', 'move-up', 'move-down', 'add', 'download', 'search'].includes(value)
             },
             default: ''
+        },
+        type: {
+            type: String,
+            required: false,
+            default: "submit"
         }
     },
     methods: {
