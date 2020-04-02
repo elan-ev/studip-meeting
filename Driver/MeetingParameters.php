@@ -53,4 +53,16 @@ class MeetingParameters extends Parameters
     {
         return $this->attendeePassword;
     }
+
+    public function toArray() {
+        return [
+            'meetingName' => self::getMeetingName(),
+            'moderatorPassword' => self::getModeratorPassword(),
+            'attendeePassword' => self::getAttendeePassword(),
+            'attendeePassword' => self::getAttendeePassword(),
+            'meetingId' => self::getMeetingId(),
+            'identifier' => self::getIdentifier(),
+            'remoteId' => self::getRemoteId()
+        ];
+    }
 }
