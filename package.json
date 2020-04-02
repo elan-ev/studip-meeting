@@ -1,0 +1,37 @@
+{
+    "name": "Meetings",
+    "version": "2.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build:dev": "webpack --watch --mode=\"development\"",
+        "build:prod": "webpack --mode=\"production\"",
+        "prezip": "npm install && npm run build:prod",
+        "zip": "zip -r Meetings-V$npm_package_version.zip app assets compat Driver images lib locale migrations LICENSE README.md bootstrap.php MeetingPlugin.php plugin.manifest"
+    },
+    "author": "ELAN e.V. (tgloeggl@uos.de)",
+    "dependencies": {
+        "install": "^0.12.2",
+        "npm": "^6.9.2"
+    },
+    "devDependencies": {
+        "axios": "^0.18.1",
+        "clean-terminal-webpack-plugin": "^3.0.0",
+        "css-loader": "^2.1.1",
+        "date-fns": "^2.0.0-beta.2",
+        "extract-loader": "^2.0.1",
+        "file-loader": "^2.0.0",
+        "jquery": "^3.4.1",
+        "node-sass": "^4.12.0",
+        "popper.js": "^1.15.0",
+        "sass-loader": "^7.3.1",
+        "vue": "^2.6.10",
+        "vue-axios": "^2.1.4",
+        "vue-loader": "^15.7.0",
+        "vue-router": "^3.0.6",
+        "vue-template-compiler": "^2.6.10",
+        "vuex": "^3.1.1",
+        "webpack": "^4.35.2",
+        "webpack-cli": "^3.3.5"
+    }
+}

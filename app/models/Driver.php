@@ -20,7 +20,7 @@ class Driver
     static
         $config;
 
-    static function discover()
+    static function discover($toArray = false)
     {
         $drivers = array();
 
@@ -31,17 +31,11 @@ class Driver
                 $title          = substr(basename($filename), 0, -4);
                 $config_options = $class::getConfigOptions();
 
-                array_unshift($config_options, new \ElanEv\Driver\ConfigOption(
-                        'display_name',
-                        dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Anzeigename'),
-                        $title
-                ));
-
-                $config_options[] = new \ElanEv\Driver\ConfigOption('enable', '');
+                // $config_options[] = new \ElanEv\Driver\ConfigOption('enable', '');
 
                 $drivers[$title] = array(
                     'title'  => $title,
-                    'config' => self::getConfigByDriver($title, $config_options)
+                    'config' => $toArray ? self::convertDriverConfigToArray($config_options) : $config_options
                 );
             }
         }
@@ -56,6 +50,15 @@ class Driver
         }
     }
 
+    static function convertDriverConfigToArray($config_options)
+    {
+        $array = [];
+        foreach ($config_options as $option) {
+            $array[] = $option->toArray();
+        }
+        return $array;
+    }
+
     static function getConfigByDriver($driver_name, $config_options)
     {
         self::loadConfig();
@@ -63,7 +66,7 @@ class Driver
         $new_config = array();
 
         foreach ($config_options as $config) {
-            if ($value = self::$config[$driver_name][$config->getName()]) {
+            if ($value = self::$config[$driver_name][0][$config->getName()]) {
                 $config->setValue($value);
             }
 
@@ -77,8 +80,8 @@ class Driver
     {
         self::loadConfig();
 
-        foreach ($config_options as $config) {
-            self::$config[$driver_name][$config->getName()] = $config->getValue();
+        foreach ($config_options as $key => $value) {
+            self::$config[$driver_name][$key] = $value;
         }
 
         \Config::get()->store('VC_CONFIG', json_encode(self::$config));
