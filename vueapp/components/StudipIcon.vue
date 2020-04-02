@@ -1,5 +1,5 @@
 <template>
-    <img :src="path">
+    <img :src="path" :width="size" :height="size">
 </template>
 
 <script>
@@ -17,6 +17,11 @@ export default {
                     'sort', 'status-yellow'].includes(value)
             },
             default: ''
+        },
+        size: {
+            type: String,
+            required: false,
+            default: "16"
         }
     },
 
@@ -41,7 +46,8 @@ export default {
 
     computed: {
         path() {
-            return ICON_URL + this.role_to_color[this.role] + '/' + this.icon + '.svg';
+            var path = this.icon.split('+').reverse().join('/');
+            return ICON_URL + this.role_to_color[this.role] + '/' + path + '.svg';
         }
     }
 }

@@ -3,6 +3,7 @@
 </div>
 
 <script type="text/javascript">
-    let API_URL  = '<?= PluginEngine::getURL('meetingplugin', [], 'api') ?>';
+    let API_URL  = '<?= PluginEngine::getURL('meetingplugin', [], 'api', true) ?>';
+    let CID      = '<?= $cid ?>';
     let ICON_URL = '<?= Assets::url('images/icons/') ?>';
 </script>

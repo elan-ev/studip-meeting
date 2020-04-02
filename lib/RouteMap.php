@@ -39,11 +39,14 @@ class RouteMap
         $this->app->delete('/config/{id}', Routes\Config\ConfigDelete::class);
 
         //Routes for rooms in seminar
-        $this->app->get('/course/{course_id}/rooms', Routes\Rooms\RoomsList::class);
+        $this->app->get('/course/{cid}/rooms', Routes\Rooms\RoomsList::class);
         $this->app->get('/rooms/{room_id}', Routes\Rooms\RoomShow::class);
         $this->app->post('/rooms', Routes\Rooms\RoomAdd::class);
         $this->app->put('/rooms/{room_id}', Routes\Rooms\RoomEdit::class);
-        $this->app->delete('/rooms/{room_id}', Routes\Rooms\RoomDelete::class);
+        $this->app->delete('/rooms/{cid}/{room_id}', Routes\Rooms\RoomDelete::class);
+
+        //Route for joining a meeting
+        $this->app->get('/rooms/join/{cid}/{room_id}', Routes\Rooms\RoomJoin::class);
     }
 
     public function adminRoutes()

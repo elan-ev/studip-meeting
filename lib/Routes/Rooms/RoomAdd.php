@@ -23,8 +23,7 @@ class RoomAdd extends MeetingsController
     /**
      * Create meeting room in a course with specific driver
      *
-     * @param string $json['course_id'] course id
-     * @param string $json['user_id'] user id
+     * @param string $json['cid'] course id
      * @param string $json['name'] meeting room name
      * @param string $json['driver_name'] name of driver
      * @param string $json['server_index'] driver server index
@@ -39,38 +38,101 @@ class RoomAdd extends MeetingsController
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        $driver_factory = new DriverFactory(Driver::getConfig());
-
-        $json = $this->getRequestData($request);
-
-        $meeting = new Meeting();
-        $meeting->courses[] = new \Course($json['course_id']);
-        $meeting->user_id = $json['user_id'];
-        $meeting->name = $json['name'];
-        $meeting->driver = $json['driver_name'];
-        $meeting->server_index = $json['server_index'];
-        $meeting->attendee_password = Helper::createPassword();
-        $meeting->moderator_password = Helper::createPassword();
-        $meeting->join_as_moderator = $json['join_as_moderator'];
-        $meeting->remote_id = md5(uniqid());
-        $meeting->store();
-        $meetingParameters = $meeting->getMeetingParameters();
-
-        $driver = $driver_factory->getDriver($json['driver_name'], $json['server_index']);
-
         try {
-            if (!$driver->createMeeting($meetingParameters)) {
-                throw new Error(sprintf('unable to create meeting with driver %s', $json['driver_name']), 404);
+            $user = $GLOBALS['user'];
+            $driver_factory = new DriverFactory(Driver::getConfig());
+            $json = $this->getRequestData($request);
+
+            $exists = false;
+            foreach (MeetingCourse::findByUser($user) as $meetingCourse) {
+                if (self::meeting_exists($meetingCourse, $json)) {
+                    $exists = true;
+                }
             }
+            
+            if (!$exists) {
+                $meeting = new Meeting();
+                $meeting->courses[] = new \Course($json['cid']);
+                $meeting->user_id = $user->id;
+                $meeting->name = $json['name'];
+                $meeting->driver = $json['driver_name'];
+                $meeting->server_index = $json['server_index'];
+                $meeting->attendee_password = Helper::createPassword();
+                $meeting->moderator_password = Helper::createPassword();
+                $meeting->join_as_moderator = $json['join_as_moderator'];
+                $meeting->remote_id = md5(uniqid());
+                $meeting->store();
+                $meetingParameters = $meeting->getMeetingParameters();
+
+                $driver = $driver_factory->getDriver($json['driver_name'], $json['server_index']);
+
+                try {
+                    if (!$driver->createMeeting($meetingParameters)) {
+                        self::revert_on_fail($meeting, $json['cid']);
+                        throw new Error(sprintf('unable to create meeting with driver %s', $json['driver_name']), 404);
+                    }
+                } catch (Exception $e) {
+                    self::revert_on_fail($meeting, $json['cid']);
+                    throw new Error($e->getMessage(), 404);
+                }
+
+                $meeting->remote_id = $meetingParameters->getRemoteId();
+                $meeting->store();
+
+                $message = [
+                    'text' => _('Room created!'),
+                    'type' => 'success'
+                ];
+                
+            } else {
+                $message = [
+                    'text' => _('meeting already exists!'),
+                    'type' => 'error'
+                ];
+            }
+
         } catch (Exception $e) {
             throw new Error($e->getMessage(), 404);
         }
-
-        $meeting->remote_id = $meetingParameters->getRemoteId();
-        $meeting->store();
         
         return $this->createResponse([
-            'success'=> _('Room created!'),
+            'message'=> $message,
         ], $response);
     }
+
+    /**
+     * Checks if a meeting is identically exists
+     *
+     * @param \MeetingCourse $meetingCourse user defined course meeting
+     * 
+     * @param array $data request data
+     * 
+     * @return boolean
+     */
+    function meeting_exists($meetingCourse, $data)
+    {
+        if ($meetingCourse->course_id == $data['cid']
+            && $meetingCourse->meeting->name == $data['name']
+            && $meetingCourse->meeting->driver == $data['driver_name']
+            && $meetingCourse->meeting->server_index == $data['server_index']) {
+                return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Delete the meeting on failure
+     *
+     * @param \Meeting $meeting
+     * @param string $cid course id
+     * 
+     */
+    function revert_on_fail($meeting, $cid)
+    {
+        $meetingCourse = new MeetingCourse([$meeting->id, $cid ]);
+        $meetingCourse->delete();
+        $meeting->delete();
+    }
+
 }

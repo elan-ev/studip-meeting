@@ -9,3 +9,13 @@ export const CONFIG_CLEAR      = "configClear";
 
 export const CONFIG_LIST_READ  = "configListRead";
 export const CONFIG_LIST_CLEAR = "configListClear";
+
+export const ROOM_LIST      = "roomList";
+export const ROOM_READ       = "roomRead";
+export const ROOM_UPDATE     = "roomUpdate";
+export const ROOM_CREATE     = "roomCreate";
+export const ROOM_DELETE     = "roomDelete";
+
+
+export const ROOM_JOIN     = "roomJoin";
+
