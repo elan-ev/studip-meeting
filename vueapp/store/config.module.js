@@ -36,6 +36,10 @@ const initialState = {
             "title":"DfnVc",
             "config": []
         },
+    },
+    course_config: {
+        "title": "",
+        "introduction": ""
     }
 };
 
@@ -45,14 +49,17 @@ const getters = {
     },
     drivers(state) {
         return state.drivers;
+    },
+    course_config(state) {
+        return state.course_config;
     }
 };
 
 export const state = { ...initialState };
 
 export const actions = {
-    async [CONFIG_LIST_READ](context) {
-        return ApiService.get('config')
+    async [CONFIG_LIST_READ](context, cid = false) {
+        return ApiService.get('config' + (cid ? '?cid=' + CID : ''))
             .then(({ data }) => {
                 if (data != []) {
                     context.commit(CONFIG_SET, data);
@@ -98,6 +105,9 @@ export const mutations = {
         }
         if (data.drivers) {
             state.drivers = data.drivers;
+        }
+        if (data.course_config) {
+            state.course_config = data.course_config;
         }
     },
 };

@@ -14,6 +14,10 @@ use Meetings\Models\I18N as _;
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
 
+use ElanEv\Model\Helper;
+use ElanEv\Driver\DriverFactory;
+use ElanEv\Model\Driver;
+
 class RoomsList extends MeetingsController
 {
     use MeetingsTrait;
@@ -31,19 +35,26 @@ class RoomsList extends MeetingsController
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        $course_id = $args['course_id'];
+        $driver_factory = new DriverFactory(Driver::getConfig());
 
-        $course_rooms_list_raw = MeetingCourse::findByCourseId($course_id);
+        $cid = $args['cid'];
+
+        $meeting_course_list_raw = MeetingCourse::findByCourseId($cid);
 
         $course_rooms_list = [];
-        foreach ($course_rooms_list_raw as $room) {
-            $course_rooms_list[] = $room->toArray();
+        foreach ($meeting_course_list_raw as $meetingCourse) {
+            try {
+                $driver = $driver_factory->getDriver($meetingCourse->meeting->driver, $meetingCourse->meeting->server_index);
+                $meeting = $meetingCourse->meeting->toArray();
+                $meeting = array_merge($meetingCourse->toArray(), $meeting);
+                $meeting['joins'] = count(array_reverse($meetingCourse->meeting->getAllJoins()));
+                $meeting['aufzeichnungen'] = $driver->getRecordings($meetingCourse->meeting->getMeetingParameters());
+                $meeting['details'] = ['creator' => \User::find($meetingCourse->meeting->user_id)->getFullname(), 'date' => date('d.m.Y H:m', $meetingCourse->meeting->mkdate)];
+                $course_rooms_list[] = $meeting;
+            } catch (Exception $e) {
+                $error_message = "There are meetings that are not currently reachable!";
+            }
         }
-
-        if ($course_rooms_list) {
-            return $this->createResponse(['list' => $course_rooms_list], $response);
-        }
-
-        throw new Error('Rooms not found', 404);
+        return $this->createResponse($course_rooms_list, $response);
     }
 }

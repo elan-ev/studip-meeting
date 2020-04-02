@@ -16,11 +16,28 @@
 <script>
 export default {
     name: "MessageBox",
-    props: ['type'],
+    props: {
+        type: {
+            type: String,
+        },
+        timer: {
+            type: Number,
+            required: false,
+            default: 0
+        }
+    },
     methods: {
         hide() {
             this.$emit('hide');
         }
+    },
+    created() {
+        if (this.timer) {
+            var self = this;
+            setTimeout(function() {
+                self.hide();
+            }, this.timer); 
+        } 
     }
 };
 </script>

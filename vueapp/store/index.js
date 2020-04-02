@@ -3,12 +3,14 @@ import Vuex from "vuex";
 
 import error from "./error.module";
 import config from "./config.module";
+import rooms_list from "./room.module";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
     error,
-    config
+    config,
+    rooms_list
   }
 });
