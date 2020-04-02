@@ -47,6 +47,11 @@ class RouteMap
 
         //Route for joining a meeting
         $this->app->get('/rooms/join/{cid}/{room_id}', Routes\Rooms\RoomJoin::class);
+
+        //Routes for recordings
+        $this->app->get('/rooms/{cid}/{room_id}/recordings/', Routes\Recordings\RecordingList::class);
+        $this->app->get('/recordings/{recordings_id}', Routes\Recordings\RecordingShow::class);
+        $this->app->delete('/recordings/{recordings_id}', Routes\Recordings\RecordingDelete::class);
     }
 
     public function adminRoutes()
