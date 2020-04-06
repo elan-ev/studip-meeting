@@ -23,8 +23,9 @@ class RoomEdit extends MeetingsController
      * @param string $room_id room id
      * @param string $json['name'] meeting room name
      * @param string $json['recording_url'] recording url of the room
-     * @param string $json['course_id'] course id
+     * @param string $json['cid'] course id
      * @param boolean $json['join_as_moderator'] moderator permission
+     * @param boolean $json['active'] moderator permission
      *
      * @return json message 
      *
@@ -35,12 +36,14 @@ class RoomEdit extends MeetingsController
         $room_id = $args['room_id'];
         $json = $this->getRequestData($request);
         
-        $meeting = new Meeting($room_id);
+        $meetingCourse = new MeetingCourse([$room_id, $json['cid']]);
         $name = utf8_decode($json['name']);
         $recordingUrl = utf8_decode($json['recording_url']);
 
         $message = [];
-        if (!$meeting->isNew() && $perm->have_studip_perm('tutor', $json['course_id']) && $name) {
+        if (!$meetingCourse->isNew() && $perm->have_studip_perm('tutor', $json['course_id']) && $name) {
+            $meetingCourse->active = $json['active'];
+            $meetingCourse->store();
             $meeting = new Meeting($room_id);
             $meeting->name = $name;
             $meeting->recording_url = $recordingUrl;
