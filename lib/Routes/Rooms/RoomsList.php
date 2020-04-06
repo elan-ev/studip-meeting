@@ -48,7 +48,7 @@ class RoomsList extends MeetingsController
                 $meeting = $meetingCourse->meeting->toArray();
                 $meeting = array_merge($meetingCourse->toArray(), $meeting);
                 $meeting['joins'] = count(array_reverse($meetingCourse->meeting->getAllJoins()));
-                $meeting['aufzeichnungen'] = $driver->getRecordings($meetingCourse->meeting->getMeetingParameters());
+                $meeting['recordings_count'] = count($driver->getRecordings($meetingCourse->meeting->getMeetingParameters()));
                 $meeting['details'] = ['creator' => \User::find($meetingCourse->meeting->user_id)->getFullname(), 'date' => date('d.m.Y H:m', $meetingCourse->meeting->mkdate)];
                 $course_rooms_list[] = $meeting;
             } catch (Exception $e) {
