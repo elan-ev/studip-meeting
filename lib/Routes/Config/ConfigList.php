@@ -9,6 +9,7 @@ use Meetings\Errors\Error;
 use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use ElanEv\Model\Driver;
+use ElanEv\Model\CourseConfig;
 
 class ConfigList extends MeetingsController
 {
@@ -20,8 +21,18 @@ class ConfigList extends MeetingsController
 
         $config = Driver::getConfig();
 
+        $course_config = [];
+        $cid =  filter_var(str_replace('cid=','', rtrim($request->getUri()->getQuery(), '/')), FILTER_SANITIZE_STRING);
+        if ($cid) {
+            $course_config = CourseConfig::findByCourseId($cid);
+        }
+        $response_result = [];
+        !$drivers           ?: $response_result['drivers'] = $drivers;
+        !$config            ?: $response_result['config'] = $config;
+        !$course_config     ?: $response_result['course_config'] = $course_config->toArray();
+
         if (!empty($config)) {
-            return $this->createResponse(['config' => $config, 'drivers' => $drivers], $response);
+            return $this->createResponse($response_result, $response);
         }
 
         return $this->createResponse([], $response);

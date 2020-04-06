@@ -64,3 +64,91 @@ form.create-conference-meeting input[type="text"] {
 table.conference-meetings tr.active {
     background-color: #e2e3e4;
 }
+
+form.conference-meeting {
+    fieldset legend {
+        margin: 0 -12px;
+        width: calc(100% + 23px);
+        a img{
+            position: relative;
+            top: 3px;
+        }
+    }
+}
+div.meeting-item-header {
+    .right {
+        float: right;
+        a {
+            margin-right: 10px;
+            padding: 0 0px;
+            line-height: 1em;
+
+            img {
+                margin-top: 5px;
+            }
+            &[data-badge]:not([data-badge="0"]) {
+                position: relative;
+    
+                &::before {
+                    position: absolute;
+                    left: 50%;
+                    top: -10px;
+
+                    margin-left: 5px;
+    
+                    background-clip: content-box;
+                    background-color: #D60000;
+                    border-radius: 50%;
+                    color: white;
+                    content: attr(data-badge);
+                    display: inline-block;
+                    font-size: 10px;
+                    text-indent: 5px;
+                    z-index: 2;
+                    width: 16px;
+                    height: 16px;
+                }
+            }
+        }
+    }
+    .left {
+        float: left;
+        span {
+            margin-left: 20px;
+            font-size: 14px;
+            font-weight: 200;
+        }
+    }
+}
+
+label#details {
+    img {
+        position: relative;
+        top: 12px;
+    }
+    span.red {
+        color: #D60000;
+    }
+    span.creator-date {
+        color: #636971;
+        font-size: 12px;
+        float: right;
+        font-style: italic;
+        margin: 10px 0;
+    }
+}
+div.meeting-item-btns {
+    clear: both;
+    button.delete {
+        float:left;
+        border-color: #D60000;
+        color: #D60000;
+        &:hover, &:active {
+            color: white;
+            background-color: #D60000;
+        }
+    }
+    button.join {
+        float:right;
+    }
+}

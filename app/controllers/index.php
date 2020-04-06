@@ -144,6 +144,7 @@ class IndexController extends MeetingsController
         /** @var \Seminar_User $user */
         $user = $GLOBALS['user'];
         $course = new Course(Context::getId());
+        $this->cid = Context::getId();
 
         $this->errors = $this->flash['errors'] ?: [];
 
