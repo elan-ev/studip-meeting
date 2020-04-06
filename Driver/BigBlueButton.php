@@ -109,6 +109,49 @@ class BigBlueButton implements DriverInterface, RecordingInterface
         return $xml->recordings->recording;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    function deleteRecordings($recordID)
+    {
+        $params = [
+            'recordID' => is_array($recordID) ? implode(',', $recordID) : $recordID
+        ];
+
+        $response = $this->performRequest('deleteRecordings', $params);
+
+        $xml = new \SimpleXMLElement($response);
+
+        if (!$xml instanceof \SimpleXMLElement) {
+            return false;
+        }
+
+        return $xml->response->deleted;
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    function isMeetingRunning(MeetingParameters $parameters)
+    {
+        $params = array(
+            'meetingID' => $parameters->getRemoteId() ?: $parameters->getMeetingId()
+        );
+
+        $response = $this->performRequest('isMeetingRunning', $params);
+
+        $xml = new \SimpleXMLElement($response);
+
+        if (!$xml instanceof \SimpleXMLElement) {
+            return false;
+        }
+
+        return (string)$xml->running;
+
+    }
+    
+
     private function performRequest($endpoint, array $params = array())
     {
         $params['checksum'] = $this->createSignature($endpoint, $params);

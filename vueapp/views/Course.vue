@@ -28,8 +28,8 @@
                                      role="clickable" size="20"></StudipIcon>
                                 </a>
                                 <a style="cursor: pointer;" :title=" 'Die vorhandenen Aufzeichnungen' | i18n " 
-                                        :data-badge="Object.keys(room.aufzeichnungen).length" 
-                                        @click.prevent="showRecording()">
+                                        :data-badge="room.recordings_count" 
+                                        @click.prevent="showRecording(room)">
                                     <StudipIcon icon="video2" role="clickable" size="20"></StudipIcon>
                                 </a>
                                 <a style="cursor: pointer;" 
@@ -46,9 +46,7 @@
                                    'Teilnehmende haben Administrations-Rechte' : 
                                    'Teilnehmende haben eingeschränkte Rechte' | i18n  }}
                         </span>
-                        <!-- <br>
-                        <StudipIcon icon="video2" role="attention" size=36></StudipIcon> 
-                        <span class="red">{{ "Dieser Raum wird momentan aufgezeichnet! ( Q:Where to get data for live recording? )" | i18n }}</span> -->
+                        <MeetingStatus :room_id="room.id"></MeetingStatus>
                         <br>
                         <span v-if="room.details" class="creator-date">
                             {{ `Erstellt von: ${room.details['creator']}, ${room.details['date']}` | i18n }}
@@ -120,6 +118,43 @@
                 </fieldset>
             </form>
         </div>
+        <div id="recording-modal" style="display: none;">
+            <table v-if="Object.keys(recording_list).length" class="default collapsable">
+                <thead>
+                    <tr>
+                        <th>{{ "Datum" | i18n }}</th>
+                        <th>{{ "Aktionen" | i18n }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(recording, index) in recording_list" :key="index">
+                        <td style="width: 60%">{{ recording['startTime'] }}</td>
+                        <td style="width: 40%">
+                            <div style="display: inline-block;width:80%;">
+                                <div v-if="Array.isArray(recording['playback']['format'])" style="display: flex; flex-direction: column; ">
+                                    <a v-for="(format, index) in recording['playback']['format']" :key="index"
+                                    class="meeting-recording-url" target="_blank"
+                                    :href="format['url']">
+                                        {{ `Aufzeichnung ansehen (${format['type']})`  | i18n}}
+                                    </a>
+                                </div>
+                                <div v-else>
+                                    <a class="meeting-recording-url" target="_blank"
+                                    :href="recording['playback']['format']['url']">
+                                        {{ `Aufzeichnung ansehen`  | i18n}}
+                                    </a>
+                                </div>
+                            </div>
+                            <div style="display: inline-block;width:15%; text-align: right;">
+                                <a style="cursor: pointer;" @click.prevent="deleteRecording(recording)">
+                                    <StudipIcon icon="trash" role="attention"></StudipIcon>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </template>
 
@@ -130,6 +165,7 @@ import store from "@/store";
 import StudipButton from "@/components/StudipButton";
 import StudipIcon from "@/components/StudipIcon";
 import MessageBox from "@/components/MessageBox";
+import MeetingStatus from "@/components/MeetingStatus";
 
 import {
     CONFIG_LIST_READ,
@@ -138,11 +174,15 @@ import {
     ROOM_UPDATE,
     ROOM_CREATE,
     ROOM_DELETE,
-    ROOM_JOIN
+    ROOM_JOIN,
+    RECORDING_LIST,
+    RECORDING_SHOW,
+    RECORDING_DELETE,
 } from "@/store/actions.type";
 
 import {
     ROOM_CLEAR,
+    RECORDING_LIST_SET
 } from "@/store/mutations.type";
 
 export default {
@@ -151,9 +191,10 @@ export default {
         StudipButton, 
         StudipIcon,
         MessageBox,
+        MeetingStatus
     },
     computed: {
-        ...mapGetters(['config', 'room', 'rooms_list', 'course_config'])
+        ...mapGetters(['config', 'room', 'rooms_list', 'course_config', 'recording_list', 'recording'])
     },
     data() {
         return {
@@ -224,8 +265,26 @@ export default {
                 }
             });
         },
-        showRecording() {
-            alert('Aufzeichnungen must be shown here!');
+        showRecording(room) {
+            this.$store.dispatch(RECORDING_LIST, room.id).then(({ data }) => {
+                if (data.length) {
+                    this.$store.commit(RECORDING_LIST_SET, data);
+                    $('#recording-modal')
+                    .dialog({
+                        width: '70%',
+                        modal: true,
+                        title: `Aufzeichnungen für Raum "${room.name}"`.toLocaleString()
+                    });
+                } else {
+                    this.message = {
+                        type: 'info',
+                        text: `Keine Aufzeichnungen für Raum "${room.name}"`.toLocaleString()
+                    };
+                }
+            });
+        },
+        deleteRecording(recording) {
+            this.$store.dispatch(RECORDING_DELETE, recording);
         },
         editRights(room) {
             room.join_as_moderator = room.join_as_moderator == 1 ? 0 : 1;

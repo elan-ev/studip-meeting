@@ -1,6 +1,6 @@
 <?php
 
-namespace Meetings\Routes\Recordings;
+namespace Meetings\Routes\Rooms;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -16,48 +16,35 @@ use ElanEv\Model\Meeting;
 use ElanEv\Driver\DriverFactory;
 use ElanEv\Model\Driver;
 
-class RecordingDelete extends MeetingsController
+class RoomRunning extends MeetingsController
 {
     use MeetingsTrait;
     /**
-     * Delete specific recording of a room
+     * Determines whether a room is running or not
      *
-     * @param string $recordings_id recordings id
      * @param string $room_id room id
      * @param string $cid course id
      *
      *
-     * @throws \Error if there is problem
+     * @return bool room running status
+     *
+     * @throws \Error if error occurs
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        
         try {
-            $recordings_id = $args['recordings_id'];
+            $driver_factory = new DriverFactory(Driver::getConfig());
+
             $room_id = $args['room_id'];
             $cid = $args['cid'];
-            $driver_factory = new DriverFactory(Driver::getConfig());
+
             $meetingCourse = new MeetingCourse([$room_id, $cid ]);
+
             if (!$meetingCourse->isNew()) {
                 $driver = $driver_factory->getDriver($meetingCourse->meeting->driver, $meetingCourse->meeting->server_index);
-                $delete_result = $driver->deleteRecordings($recordings_id);
-                $message = [
-                    'text' => _('Recording wurde gelöscht.'),
-                    'type' => 'success'
-                ];
-                if (!$delete_result) {
-                    $message = [
-                        'text' => _('Unable to delete recording'),
-                        'type' => 'error'
-                    ];
-                }
-                return $this->createResponse([
-                    'message'=> $message,
-                ], $response);
-            } else {
-                throw new Error('Room not found', 404);
+                $status = $driver->isMeetingRunning($meetingCourse->meeting->getMeetingParameters()) === 'true' ? true : false;
+                return $this->createResponse(['status' => $status], $response);
             }
-
         } catch (Exception $e) {
             throw new Error($e->getMessage(), 404);
         }

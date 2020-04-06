@@ -51,13 +51,10 @@ interface DriverInterface
     public function getConfigOptions();
 
     /**
-     * Returns a list of recordings for the passed room or false,
-     * if no recordings are found or if the driver does not support
-     * recordings.
+     * Return true when a meeting is running
      *
      * @param  MeetingParameters $parameters Parameters describing the meeting
-     * @return array | bool
+     * @return bool
      */
-    public function getRecordings(MeetingParameters $parameters);
-
+    public function isMeetingRunning(MeetingParameters $parameters);
 }
