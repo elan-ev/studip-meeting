@@ -324,8 +324,8 @@ class IndexController extends MeetingsController
     public function edit_action($meetingId)
     {
         $meeting = new Meeting($meetingId);
-        $name = utf8_decode(Request::get('name'));
-        $recordingUrl = utf8_decode(Request::get('recording_url'));
+        $name = Request::get('name');
+        $recordingUrl = Request::get('recording_url');
 
         if (!$meeting->isNew() && $this->userCanModifyCourse(Context::getId()) && $name) {
             $meeting = new Meeting($meetingId);
