@@ -57,4 +57,12 @@ interface DriverInterface
      * @return bool
      */
     public function isMeetingRunning(MeetingParameters $parameters);
+
+    /**
+     * Return meeting info
+     *
+     * @param  MeetingParameters $parameters Parameters describing the meeting
+     * @return array
+     */
+    public function getMeetingInfo(MeetingParameters $parameters);
 }

@@ -193,6 +193,14 @@ class DfnVc implements DriverInterface
         return false;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    function getMeetingInfo(MeetingParameters $parameters)
+    {
+        return false;
+    }
+
     private function performRequest(array $params = array())
     {
         $request = $this->client->request('GET', $this->url . '/lmsapi/xml?'.$this->buildQueryString($params));

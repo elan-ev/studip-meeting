@@ -42,6 +42,7 @@ class RouteMap
         $this->app->get('/course/{cid}/rooms', Routes\Rooms\RoomsList::class);
         $this->app->get('/rooms/{room_id}', Routes\Rooms\RoomShow::class);
         $this->app->get('/rooms/{cid}/{room_id}/status', Routes\Rooms\RoomRunning::class);
+        $this->app->get('/rooms/{cid}/{room_id}/info', Routes\Rooms\RoomInfo::class);
         $this->app->post('/rooms', Routes\Rooms\RoomAdd::class);
         $this->app->put('/rooms/{room_id}', Routes\Rooms\RoomEdit::class);
         $this->app->delete('/rooms/{cid}/{room_id}', Routes\Rooms\RoomDelete::class);
