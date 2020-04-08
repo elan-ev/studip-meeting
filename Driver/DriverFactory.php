@@ -76,14 +76,17 @@ class DriverFactory
         }
 
         $driver_conf['url'] = rtrim($driver_conf['url'], '/');
-
-        $client = $this->createHttpClient();
+        $client_options = [];
+        if ($driver_conf['proxy']) {
+            $client_options['proxy'] = $driver_conf['proxy'];
+        }
+        $client = $this->createHttpClient($client_options);
         $class = 'ElanEv\\Driver\\'. $driver_conf['class'];
         return new $class($client, $driver_conf);
     }
 
-    private function createHttpClient()
+    private function createHttpClient($client_options = [])
     {
-        return new Client();
+        return new Client($client_options);
     }
 }
