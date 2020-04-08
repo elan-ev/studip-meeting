@@ -79,7 +79,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
     {
         $params = array(
             'meetingID' => $parameters->getRemoteId() ?: $parameters->getMeetingId(),
-            'fullName' => $parameters->getUsername(),
+            'fullName' => sprintf('%s %s', $parameters->getFirstName(), $parameters->getLastName()),
             'password' => $parameters->getPassword(),
             'userID' => '',
             'webVoiceConf' => '',
