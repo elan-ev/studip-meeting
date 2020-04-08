@@ -12,57 +12,8 @@
                         <StudipIcon icon="add" role="clickable" ></StudipIcon>
                     </a>
                 </legend>
-                <fieldset v-for="(room, index) in rooms_list" :key="index">
-                    <legend>
-                        <div class="meeting-item-header">
-                            <div class="left">
-                                {{room.name}}  
-                                <span v-if="room.joins">{{ room.joins }} {{ 'Teilnehmende aktiv' | i18n }}</span>
-                            </div>
-                            <div class="right">
-                                <a style="cursor: pointer;" 
-                                 :title="room.active == 1 ? 'Meeting für Teilnehmende sichtbar schalten' 
-                                                : 'Meeting für Teilnehmende unsichtbar schalten' | i18n " 
-                                 @click.prevent="editVisibility(room)">
-                                    <StudipIcon :icon="room.active == 1 ? 'visibility-visible' : 'visibility-invisible'"
-                                     role="clickable" size="20"></StudipIcon>
-                                </a>
-                                <a style="cursor: pointer;" :title=" 'Die vorhandenen Aufzeichnungen' | i18n " 
-                                        :data-badge="room.recordings_count" 
-                                        @click.prevent="showRecording(room)">
-                                    <StudipIcon icon="video2" role="clickable" size="20"></StudipIcon>
-                                </a>
-                                <a style="cursor: pointer;" 
-                                 :title=" room.join_as_moderator == 1 ? 
-                                   'Teilnehmende haben Administrations-Rechte' : 'Teilnehmende haben eingeschränkte Rechte' | i18n " 
-                                 @click.prevent="editRights(room)">
-                                    <StudipIcon :icon="room.join_as_moderator == 1 ? 'key+accept' : 'key+decline'" role="clickable" size="20"></StudipIcon>
-                                </a>
-                            </div>
-                        </div>
-                    </legend>
-                    <label id="details">
-                        <span>{{ room.join_as_moderator == 1 ? 
-                                   'Teilnehmende haben Administrations-Rechte' : 
-                                   'Teilnehmende haben eingeschränkte Rechte' | i18n  }}
-                        </span>
-                        <MeetingStatus :room_id="room.id"></MeetingStatus>
-                        <br>
-                        <span v-if="room.details" class="creator-date">
-                            {{ `Erstellt von: ${room.details['creator']}, ${room.details['date']}` | i18n }}
-                        </span>
-                        <br>
-                    </label>
-                    <div class="meeting-item-btns">
-                        <StudipButton icon="" class="delete" type="button" v-on:click="deleteRoom($event, room)">
-                            {{ "Raum löschen" | i18n}}
-                        </StudipButton>
-                        <StudipButton icon="" class="join" type="button" v-on:click="joinRoom($event, room)">
-                            {{ "Teilnehmen" | i18n}}
-                        </StudipButton>
-                    </div>
-                </fieldset>
-            </fieldset>
+                <MeetingComponent v-for="(room, index) in rooms_list" :key="index" :room="room" v-on:getRecording="showRecording"></MeetingComponent>
+            </fieldset> 
         </form>
         <div v-if="config" id="conference-meeting-create" style="display: none">
             <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
@@ -166,6 +117,7 @@ import StudipButton from "@/components/StudipButton";
 import StudipIcon from "@/components/StudipIcon";
 import MessageBox from "@/components/MessageBox";
 import MeetingStatus from "@/components/MeetingStatus";
+import MeetingComponent from "@/components/MeetingComponent";
 
 import {
     CONFIG_LIST_READ,
@@ -191,7 +143,8 @@ export default {
         StudipButton, 
         StudipIcon,
         MessageBox,
-        MeetingStatus
+        MeetingStatus,
+        MeetingComponent
     },
     computed: {
         ...mapGetters(['config', 'room', 'rooms_list', 'course_config', 'recording_list', 'recording'])
@@ -255,16 +208,6 @@ export default {
             $('button.ui-dialog-titlebar-close').trigger('click');
             this.$store.commit(ROOM_CLEAR);
         },
-        editVisibility(room) {
-            room.active = room.active == 1 ? 0 : 1;
-            this.$store.dispatch(ROOM_UPDATE, room)
-            .then(({ data }) => {
-                if (data.message.type == 'error') {
-                    room.active = !room.active;
-                    this.message = data.message;
-                }
-            });
-        },
         showRecording(room) {
             this.$store.dispatch(RECORDING_LIST, room.id).then(({ data }) => {
                 if (data.length) {
@@ -286,34 +229,6 @@ export default {
         deleteRecording(recording) {
             this.$store.dispatch(RECORDING_DELETE, recording);
         },
-        editRights(room) {
-            room.join_as_moderator = room.join_as_moderator == 1 ? 0 : 1;
-            this.$store.dispatch(ROOM_UPDATE, room)
-            .then(({ data }) => {
-                if (data.message.type == 'error') {
-                    room.join_as_moderator = !room.join_as_moderator;
-                    this.message = data.message;
-                }
-            });
-        },
-        deleteRoom(event, room) {
-            if (event) {
-                event.preventDefault();
-            }
-            this.$store.dispatch(ROOM_DELETE, room.id)
-        },
-        joinRoom(event, room) {
-            if (event) {
-                event.preventDefault();
-            }
-            this.$store.dispatch(ROOM_JOIN, room.id)
-            .then(({ data }) => {
-                if (data.join_url != '') {
-                    window.open(data.join_url, '_blank');
-                    room.joins++;
-                }
-            });
-        }
     },
     mounted() {
         store.dispatch(CONFIG_LIST_READ, true);

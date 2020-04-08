@@ -150,7 +150,27 @@ class BigBlueButton implements DriverInterface, RecordingInterface
         return (string)$xml->running;
 
     }
-    
+
+    /**
+     * {@inheritdoc}
+     */
+    function getMeetingInfo(MeetingParameters $parameters)
+    {
+        $params = array(
+            'meetingID' => $parameters->getRemoteId() ?: $parameters->getMeetingId()
+        );
+
+        $response = $this->performRequest('getMeetingInfo', $params);
+
+        $xml = new \SimpleXMLElement($response);
+
+        if (!$xml instanceof \SimpleXMLElement) {
+            return false;
+        }
+
+        return $xml;
+
+    }
 
     private function performRequest($endpoint, array $params = array())
     {
