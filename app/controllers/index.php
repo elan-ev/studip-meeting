@@ -390,7 +390,7 @@ class IndexController extends MeetingsController
         $joinParameters->setMeetingId($meetingId);
         $joinParameters->setIdentifier($meeting->identifier);
         $joinParameters->setRemoteId($meeting->remote_id);
-        $joinParameters->setUsername(get_username($user->id));
+        $joinParameters->setUsername($user->getFullName());
         $joinParameters->setEmail($user->Email);
         $joinParameters->setFirstName($user->Vorname);
         $joinParameters->setLastName($user->Nachname);
