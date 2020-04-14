@@ -55,7 +55,7 @@ class RoomJoin extends MeetingsController
         $joinParameters->setMeetingId($room_id);
         $joinParameters->setIdentifier($meeting->identifier);
         $joinParameters->setRemoteId($meeting->remote_id);
-        $joinParameters->setUsername(\get_username($user->id));
+        $joinParameters->setUsername($user->getFullName());
         $joinParameters->setEmail($user->Email);
         $joinParameters->setFirstName($user->Vorname);
         $joinParameters->setLastName($user->Nachname);

@@ -7,7 +7,9 @@ import {
     ROOM_UPDATE,
     ROOM_CREATE,
     ROOM_DELETE,
-    ROOM_JOIN
+    ROOM_JOIN,
+    ROOM_STATUS,
+    ROOM_INFO
 } from "./actions.type";
 
 import {
@@ -75,6 +77,14 @@ export const actions = {
 
     async [ROOM_JOIN](context, id) {
         return ApiService.get('rooms/join/' + CID + '/' + id);
+    },
+
+    async [ROOM_STATUS](context, id) {
+        return ApiService.get('rooms/' + CID + '/' + id + '/status');
+    },
+
+    async [ROOM_INFO](context, id) {
+        return ApiService.get('rooms/' + CID + '/' + id + '/info');
     },
 };
 

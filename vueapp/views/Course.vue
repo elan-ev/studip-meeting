@@ -12,59 +12,8 @@
                         <StudipIcon icon="add" role="clickable" ></StudipIcon>
                     </a>
                 </legend>
-                <fieldset v-for="(room, index) in rooms_list" :key="index">
-                    <legend>
-                        <div class="meeting-item-header">
-                            <div class="left">
-                                {{room.name}}  
-                                <span v-if="room.joins">{{ room.joins }} {{ 'Teilnehmende aktiv' | i18n }}</span>
-                            </div>
-                            <div class="right">
-                                <a style="cursor: pointer;" 
-                                 :title="room.active == 1 ? 'Meeting für Teilnehmende sichtbar schalten' 
-                                                : 'Meeting für Teilnehmende unsichtbar schalten' | i18n " 
-                                 @click.prevent="editVisibility(room)">
-                                    <StudipIcon :icon="room.active == 1 ? 'visibility-visible' : 'visibility-invisible'"
-                                     role="clickable" size="20"></StudipIcon>
-                                </a>
-                                <a style="cursor: pointer;" :title=" 'Die vorhandenen Aufzeichnungen' | i18n " 
-                                        :data-badge="Object.keys(room.aufzeichnungen).length" 
-                                        @click.prevent="showRecording()">
-                                    <StudipIcon icon="video2" role="clickable" size="20"></StudipIcon>
-                                </a>
-                                <a style="cursor: pointer;" 
-                                 :title=" room.join_as_moderator == 1 ? 
-                                   'Teilnehmende haben Administrations-Rechte' : 'Teilnehmende haben eingeschränkte Rechte' | i18n " 
-                                 @click.prevent="editRights(room)">
-                                    <StudipIcon :icon="room.join_as_moderator == 1 ? 'key+accept' : 'key+decline'" role="clickable" size="20"></StudipIcon>
-                                </a>
-                            </div>
-                        </div>
-                    </legend>
-                    <label id="details">
-                        <span>{{ room.join_as_moderator == 1 ? 
-                                   'Teilnehmende haben Administrations-Rechte' : 
-                                   'Teilnehmende haben eingeschränkte Rechte' | i18n  }}
-                        </span>
-                        <!-- <br>
-                        <StudipIcon icon="video2" role="attention" size=36></StudipIcon> 
-                        <span class="red">{{ "Dieser Raum wird momentan aufgezeichnet! ( Q:Where to get data for live recording? )" | i18n }}</span> -->
-                        <br>
-                        <span v-if="room.details" class="creator-date">
-                            {{ `Erstellt von: ${room.details['creator']}, ${room.details['date']}` | i18n }}
-                        </span>
-                        <br>
-                    </label>
-                    <div class="meeting-item-btns">
-                        <StudipButton icon="" class="delete" type="button" v-on:click="deleteRoom($event, room)">
-                            {{ "Raum löschen" | i18n}}
-                        </StudipButton>
-                        <StudipButton icon="" class="join" type="button" v-on:click="joinRoom($event, room)">
-                            {{ "Teilnehmen" | i18n}}
-                        </StudipButton>
-                    </div>
-                </fieldset>
-            </fieldset>
+                <MeetingComponent v-for="(room, index) in rooms_list" :key="index" :room="room" v-on:getRecording="showRecording"></MeetingComponent>
+            </fieldset> 
         </form>
         <div v-if="config" id="conference-meeting-create" style="display: none">
             <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
@@ -120,6 +69,43 @@
                 </fieldset>
             </form>
         </div>
+        <div id="recording-modal" style="display: none;">
+            <table v-if="Object.keys(recording_list).length" class="default collapsable">
+                <thead>
+                    <tr>
+                        <th>{{ "Datum" | i18n }}</th>
+                        <th>{{ "Aktionen" | i18n }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(recording, index) in recording_list" :key="index">
+                        <td style="width: 60%">{{ recording['startTime'] }}</td>
+                        <td style="width: 40%">
+                            <div style="display: inline-block;width:80%;">
+                                <div v-if="Array.isArray(recording['playback']['format'])" style="display: flex; flex-direction: column; ">
+                                    <a v-for="(format, index) in recording['playback']['format']" :key="index"
+                                    class="meeting-recording-url" target="_blank"
+                                    :href="format['url']">
+                                        {{ `Aufzeichnung ansehen (${format['type']})`  | i18n}}
+                                    </a>
+                                </div>
+                                <div v-else>
+                                    <a class="meeting-recording-url" target="_blank"
+                                    :href="recording['playback']['format']['url']">
+                                        {{ `Aufzeichnung ansehen`  | i18n}}
+                                    </a>
+                                </div>
+                            </div>
+                            <div style="display: inline-block;width:15%; text-align: right;">
+                                <a style="cursor: pointer;" @click.prevent="deleteRecording(recording)">
+                                    <StudipIcon icon="trash" role="attention"></StudipIcon>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </template>
 
@@ -130,6 +116,8 @@ import store from "@/store";
 import StudipButton from "@/components/StudipButton";
 import StudipIcon from "@/components/StudipIcon";
 import MessageBox from "@/components/MessageBox";
+import MeetingStatus from "@/components/MeetingStatus";
+import MeetingComponent from "@/components/MeetingComponent";
 
 import {
     CONFIG_LIST_READ,
@@ -138,11 +126,15 @@ import {
     ROOM_UPDATE,
     ROOM_CREATE,
     ROOM_DELETE,
-    ROOM_JOIN
+    ROOM_JOIN,
+    RECORDING_LIST,
+    RECORDING_SHOW,
+    RECORDING_DELETE,
 } from "@/store/actions.type";
 
 import {
     ROOM_CLEAR,
+    RECORDING_LIST_SET
 } from "@/store/mutations.type";
 
 export default {
@@ -151,9 +143,11 @@ export default {
         StudipButton, 
         StudipIcon,
         MessageBox,
+        MeetingStatus,
+        MeetingComponent
     },
     computed: {
-        ...mapGetters(['config', 'room', 'rooms_list', 'course_config'])
+        ...mapGetters(['config', 'room', 'rooms_list', 'course_config', 'recording_list', 'recording'])
     },
     data() {
         return {
@@ -214,47 +208,27 @@ export default {
             $('button.ui-dialog-titlebar-close').trigger('click');
             this.$store.commit(ROOM_CLEAR);
         },
-        editVisibility(room) {
-            room.active = room.active == 1 ? 0 : 1;
-            this.$store.dispatch(ROOM_UPDATE, room)
-            .then(({ data }) => {
-                if (data.message.type == 'error') {
-                    room.active = !room.active;
-                    this.message = data.message;
+        showRecording(room) {
+            this.$store.dispatch(RECORDING_LIST, room.id).then(({ data }) => {
+                if (data.length) {
+                    this.$store.commit(RECORDING_LIST_SET, data);
+                    $('#recording-modal')
+                    .dialog({
+                        width: '70%',
+                        modal: true,
+                        title: `Aufzeichnungen für Raum "${room.name}"`.toLocaleString()
+                    });
+                } else {
+                    this.message = {
+                        type: 'info',
+                        text: `Keine Aufzeichnungen für Raum "${room.name}"`.toLocaleString()
+                    };
                 }
             });
         },
-        showRecording() {
-            alert('Aufzeichnungen must be shown here!');
+        deleteRecording(recording) {
+            this.$store.dispatch(RECORDING_DELETE, recording);
         },
-        editRights(room) {
-            room.join_as_moderator = room.join_as_moderator == 1 ? 0 : 1;
-            this.$store.dispatch(ROOM_UPDATE, room)
-            .then(({ data }) => {
-                if (data.message.type == 'error') {
-                    room.join_as_moderator = !room.join_as_moderator;
-                    this.message = data.message;
-                }
-            });
-        },
-        deleteRoom(event, room) {
-            if (event) {
-                event.preventDefault();
-            }
-            this.$store.dispatch(ROOM_DELETE, room.id)
-        },
-        joinRoom(event, room) {
-            if (event) {
-                event.preventDefault();
-            }
-            this.$store.dispatch(ROOM_JOIN, room.id)
-            .then(({ data }) => {
-                if (data.join_url != '') {
-                    window.open(data.join_url, '_blank');
-                    room.joins++;
-                }
-            });
-        }
     },
     mounted() {
         store.dispatch(CONFIG_LIST_READ, true);

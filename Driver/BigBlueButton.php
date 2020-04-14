@@ -79,7 +79,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
     {
         $params = array(
             'meetingID' => $parameters->getRemoteId() ?: $parameters->getMeetingId(),
-            'fullName' => $parameters->getUsername(),
+            'fullName' => sprintf('%s %s', $parameters->getFirstName(), $parameters->getLastName()),
             'password' => $parameters->getPassword(),
             'userID' => '',
             'webVoiceConf' => '',
@@ -107,6 +107,69 @@ class BigBlueButton implements DriverInterface, RecordingInterface
         }
 
         return $xml->recordings->recording;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    function deleteRecordings($recordID)
+    {
+        $params = [
+            'recordID' => is_array($recordID) ? implode(',', $recordID) : $recordID
+        ];
+
+        $response = $this->performRequest('deleteRecordings', $params);
+
+        $xml = new \SimpleXMLElement($response);
+
+        if (!$xml instanceof \SimpleXMLElement) {
+            return false;
+        }
+
+        return $xml->response->deleted;
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    function isMeetingRunning(MeetingParameters $parameters)
+    {
+        $params = array(
+            'meetingID' => $parameters->getRemoteId() ?: $parameters->getMeetingId()
+        );
+
+        $response = $this->performRequest('isMeetingRunning', $params);
+
+        $xml = new \SimpleXMLElement($response);
+
+        if (!$xml instanceof \SimpleXMLElement) {
+            return false;
+        }
+
+        return (string)$xml->running;
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    function getMeetingInfo(MeetingParameters $parameters)
+    {
+        $params = array(
+            'meetingID' => $parameters->getRemoteId() ?: $parameters->getMeetingId()
+        );
+
+        $response = $this->performRequest('getMeetingInfo', $params);
+
+        $xml = new \SimpleXMLElement($response);
+
+        if (!$xml instanceof \SimpleXMLElement) {
+            return false;
+        }
+
+        return $xml;
+
     }
 
     private function performRequest($endpoint, array $params = array())
