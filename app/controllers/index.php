@@ -376,9 +376,12 @@ class IndexController extends MeetingsController
         /** @var Seminar_User $user */
         $user = $GLOBALS['user'];
 
-        $meeting = new Meeting($meetingId);
+        $meeting = Meeting::find($meetingId);
+        if (!($meeting && $meeting->courses->find(Context::getId()))) {
+            throw new Trails_Exception(400);
+        }
         $driver = $this->driver_factory->getDriver($meeting->driver);
-
+    
         // ugly hack for BBB
         if ($driver instanceof ElanEv\Driver\BigBlueButton) {
             // TODO: check if recreation is necessary
@@ -390,7 +393,7 @@ class IndexController extends MeetingsController
         $joinParameters->setMeetingId($meetingId);
         $joinParameters->setIdentifier($meeting->identifier);
         $joinParameters->setRemoteId($meeting->remote_id);
-        $joinParameters->setUsername($user->getFullName());
+        $joinParameters->setUsername(get_username($user->id));
         $joinParameters->setEmail($user->Email);
         $joinParameters->setFirstName($user->Vorname);
         $joinParameters->setLastName($user->Nachname);
