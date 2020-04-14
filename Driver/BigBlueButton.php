@@ -126,8 +126,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
             return false;
         }
 
-        return $xml->response->deleted;
-
+        return (string) $xml->returncode == 'SUCCESS';
     }
 
     /**

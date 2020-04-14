@@ -40,7 +40,10 @@ class RoomJoin extends MeetingsController
         $room_id = $args['room_id'];
         $cid = $args['cid'];
 
-        $meeting = new Meeting($room_id);
+        $meeting = Meeting::find($room_id);
+        if (!($meeting && $meeting->courses->find($cid))) {
+            throw new Error(_('Dieser Raum in diesem Kurs kann nicht gefunden werden!'), 404);
+        }
 
         $driver = $driver_factory->getDriver($meeting->driver, $meeting->server_index);
 
@@ -55,7 +58,7 @@ class RoomJoin extends MeetingsController
         $joinParameters->setMeetingId($room_id);
         $joinParameters->setIdentifier($meeting->identifier);
         $joinParameters->setRemoteId($meeting->remote_id);
-        $joinParameters->setUsername($user->getFullName());
+        $joinParameters->setUsername(\get_username($user->id));
         $joinParameters->setEmail($user->Email);
         $joinParameters->setFirstName($user->Vorname);
         $joinParameters->setLastName($user->Nachname);
