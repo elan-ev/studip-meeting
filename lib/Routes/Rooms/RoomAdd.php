@@ -109,7 +109,7 @@ class RoomAdd extends MeetingsController
      * 
      * @return boolean
      */
-    function meeting_exists($meetingCourse, $data)
+    private function meeting_exists($meetingCourse, $data)
     {
         if ($meetingCourse->course_id == $data['cid']
             && $meetingCourse->meeting->name == $data['name']
@@ -128,7 +128,7 @@ class RoomAdd extends MeetingsController
      * @param string $cid course id
      * 
      */
-    function revert_on_fail($meeting, $cid)
+    private function revert_on_fail($meeting, $cid)
     {
         $meetingCourse = new MeetingCourse([$meeting->id, $cid ]);
         $meetingCourse->delete();

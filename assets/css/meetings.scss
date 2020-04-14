@@ -60,6 +60,11 @@ form.create-conference-meeting input[type="text"] {
 
 .meeting-recording-url {
     margin-right: 5px;
+    color: #28497c !important;
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline !important;
+    }
 }
 table.conference-meetings tr.active {
     background-color: #e2e3e4;
@@ -67,8 +72,6 @@ table.conference-meetings tr.active {
 
 form.conference-meeting {
     fieldset legend {
-        margin: 0 -12px;
-        width: calc(100% + 23px);
         a img{
             position: relative;
             top: 3px;

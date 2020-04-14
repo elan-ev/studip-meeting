@@ -40,14 +40,23 @@ class RecordingList extends MeetingsController
         if (!$meetingCourse->isNew()) {
             $recordings_list = [];
             try {
-                $driver = $driver_factory->getDriver($meetingCourse->meeting->driver_name, $meetingCourse->meeting->server_index);
-                $recordings_list = $driver->getRecordings($meetingCourse->meeting->getMeetingParameters());
+                $driver = $driver_factory->getDriver($meetingCourse->meeting->driver, $meetingCourse->meeting->server_index);
+                $recordings = $driver->getRecordings($meetingCourse->meeting->getMeetingParameters());
+                if (!empty($recordings)) {
+                    foreach ($recordings as $recording) {
+                        //Converting datetimes here in php, becasue Vuejs date filter does not act normally !!!
+                        $recording->startTime =  date('d.m.Y, H:i:s', (int)$recording->startTime / 1000);
+                        $recording->endTime =  date('d.m.Y, H:i:s', (int)$recording->endTime / 1000);
+                        $recording->room_id = $room_id;
+                        $recordings_list[] = $recording;
+                    }
+                }
             } catch (Exception $e) {
                 throw new Error('Error in recording list (' . $e->getMessage() . ')', 404);
             }
         }
 
-        return $this->createResponse(['recordings_list' => $recordings_list], $response);
+        return $this->createResponse($recordings_list, $response);
 
     }
 }

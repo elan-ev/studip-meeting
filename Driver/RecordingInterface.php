@@ -18,4 +18,12 @@ interface RecordingInterface
      *              otherwise
      */
     public function getRecordings(MeetingParameters $parameters);
+
+    /**
+     * Deletes single or multi recordings 
+     *
+     * @param  array | string  $recordID recording ID
+     * @return bool
+     */
+    public function deleteRecordings($recordID);
 }
