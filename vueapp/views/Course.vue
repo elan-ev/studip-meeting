@@ -228,6 +228,16 @@ export default {
         },
         deleteRecording(recording) {
             this.$store.dispatch(RECORDING_DELETE, recording);
+            this.$store.dispatch(RECORDING_LIST, recording.room_id).then(({ data }) => {
+                this.$store.commit(RECORDING_LIST_SET, data);
+                if (!data.length) {
+                    $('button.ui-dialog-titlebar-close').trigger('click');
+                }
+                var room = this.rooms_list.find(m => m.meeting_id == recording.room_id);
+                if (room) {
+                    room.recordings_count = data.length;
+                }
+            });
         },
     },
     mounted() {
