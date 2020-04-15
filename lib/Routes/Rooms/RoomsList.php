@@ -35,11 +35,16 @@ class RoomsList extends MeetingsController
 
     public function __invoke(Request $request, Response $response, $args)
     {
+        global $perm;
         $driver_factory = new DriverFactory(Driver::getConfig());
 
         $cid = $args['cid'];
 
-        $meeting_course_list_raw = MeetingCourse::findByCourseId($cid);
+        if ($perm->have_studip_perm('tutor', $cid)) {
+            $meeting_course_list_raw = MeetingCourse::findByCourseId($cid);
+        } else {
+            $meeting_course_list_raw = MeetingCourse::findActiveByCourseId($cid);
+        }
 
         $course_rooms_list = [];
         foreach ($meeting_course_list_raw as $meetingCourse) {
@@ -51,10 +56,10 @@ class RoomsList extends MeetingsController
                 if (is_subclass_of($driver, 'ElanEv\Driver\RecordingInterface')) {
                     $meeting['recordings_count'] = count($driver->getRecordings($meetingCourse->meeting->getMeetingParameters()));
                 }
-                $meeting['details'] = ['creator' => \User::find($meetingCourse->meeting->user_id)->getFullname(), 'date' => date('d.m.Y H:m', $meetingCourse->meeting->mkdate)];
+                $meeting['details'] = ['creator' => \User::find($meetingCourse->meeting->user_id)->getFullname(), 'date' => date('d.m.Y H:i', $meetingCourse->meeting->mkdate)];
                 $course_rooms_list[] = $meeting;
             } catch (Exception $e) {
-                $error_message = "There are meetings that are not currently reachable!";
+                // $error_message = "There are meetings that are not currently reachable!";
             }
         }
         return $this->createResponse($course_rooms_list, $response);
