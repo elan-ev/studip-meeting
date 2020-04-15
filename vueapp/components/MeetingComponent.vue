@@ -12,16 +12,16 @@
                             <StudipIcon icon="exclaim-circle" role="status-yellow" size="20"></StudipIcon>
                         </a>
                         <a style="cursor: pointer;" 
-                            :title="room.active == 1 ? 'Meeting für Teilnehmende sichtbar schalten' 
-                                        : 'Meeting für Teilnehmende unsichtbar schalten' | i18n " 
-                            @click.prevent="editVisibility">
+                            :title="room.active == 1 ? 'Meeting für Teilnehmende unsichtbar schalten' 
+                                        : 'Meeting für Teilnehmende sichtbar schalten' | i18n " 
+                            @click.prevent="editVisibility()">
                             <StudipIcon :icon="room.active == 1 ? 'visibility-visible' : 'visibility-invisible'"
                                 role="clickable" size="20"></StudipIcon>
                         </a>
                         <a style="cursor: pointer;" :title=" 'Die vorhandenen Aufzeichnungen' | i18n " 
                                 :data-badge="room.recordings_count" 
                                 @click.prevent="getRecording()">
-                            <StudipIcon :icon="info.returncode == 'FAILED' ? 'video2+decline' : 'video2'" role="clickable" size="20"></StudipIcon>
+                            <StudipIcon icon="video2" role="clickable" size="20"></StudipIcon>
                         </a>
                         <a :title=" room.join_as_moderator == 1 ? 
                             'Teilnehmende haben Administrations-Rechte' : 'Teilnehmende haben eingeschränkte Rechte' | i18n " >
@@ -37,7 +37,7 @@
                 </span>
                 <div v-if="info.returncode == 'FAILED'">
                     <StudipIcon icon="decline-circle" role="attention" size=28></StudipIcon> 
-                    <span class="red">{{ "Dieser Raum nicht gefunden!" | i18n }}</span>
+                    <span class="red">{{ "Dieser Raum ist nicht mehr erreichbar!" | i18n }}</span>
                 </div>
                 <div v-if="info.running == 'true'">
                     <StudipIcon icon="check-circle" role="accept" size=28></StudipIcon> 
@@ -58,9 +58,7 @@
                 </StudipButton>
                 <StudipButton icon="" 
                  class="join"
-                 :class="{disabled: info.returncode == 'FAILED'}"
                  type="button" 
-                 :disabled="info.returncode == 'FAILED'"
                  v-on:click="joinRoom($event)">
                     {{ "Teilnehmen" | i18n}}
                 </StudipButton>
@@ -104,9 +102,9 @@ export default {
     },
     methods: {
         editVisibility() {
-            if (this.info.returncode == 'FAILED') {
-                return false;
-            }
+            // if (this.info.returncode == 'FAILED') {
+            //     return false;
+            // }
             this.room.active = this.room.active == 1 ? 0 : 1;
             this.$store.dispatch(ROOM_UPDATE, this.room)
             .then(({ data }) => {
@@ -117,9 +115,6 @@ export default {
             });
         },
         getRecording() {
-            if (this.info.returncode == 'FAILED') {
-                return false;
-            }
             this.$emit('getRecording', this.room);
         },
         deleteRoom(event) {
@@ -131,9 +126,6 @@ export default {
         joinRoom(event) {
             if (event) {
                 event.preventDefault();
-            }
-            if (this.info.returncode == 'FAILED') {
-                return false;
             }
             this.$store.dispatch(ROOM_JOIN, this.room.id)
             .then(({ data }) => {
