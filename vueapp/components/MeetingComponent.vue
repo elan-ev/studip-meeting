@@ -36,11 +36,11 @@
                             'Teilnehmende haben eingeschränkte Rechte' | i18n  }}
                 </span>
                 <div v-if="info.returncode == 'FAILED'">
-                    <StudipIcon icon="decline-circle" role="attention" size=28></StudipIcon> 
-                    <span class="red">{{ "Dieser Raum ist nicht mehr erreichbar!" | i18n }}</span>
+                    <StudipIcon icon="pause" role="status-yellow" size=28></StudipIcon> 
+                    <span>{{ "Dieser Raum läuft derzeit nicht!" | i18n }}</span>
                 </div>
                 <div v-if="info.running == 'true'">
-                    <StudipIcon icon="check-circle" role="accept" size=28></StudipIcon> 
+                    <StudipIcon icon="play" role="accept" size=28></StudipIcon> 
                     <span>{{ "Dieser Raum läuft gerade!" | i18n }}</span>
                 </div>
                 <!-- <div v-if="info.recording == 'true'">
