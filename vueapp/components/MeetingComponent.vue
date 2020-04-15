@@ -23,8 +23,9 @@
                                 @click.prevent="getRecording()">
                             <StudipIcon icon="video2" role="clickable" size="20"></StudipIcon>
                         </a>
-                        <a :title=" room.join_as_moderator == 1 ? 
-                            'Teilnehmende haben Administrations-Rechte' : 'Teilnehmende haben eingeschränkte Rechte' | i18n " >
+                        <a v-if="course_config.display.editRoom" style="cursor: pointer;" :title=" room.join_as_moderator == 1 ? 
+                            'Teilnehmende bekommen eingeschränkte Rechte' : 'Teilnehmende bekommen Administrations-Rechte' | i18n " 
+                            @click.prevent="editRights()">
                             <StudipIcon :icon="room.join_as_moderator == 1 ? 'lock-unlocked' : 'lock-locked'" role="clickable" size="20"></StudipIcon>
                         </a>
                     </div>
@@ -102,10 +103,17 @@ export default {
         }
     },
     methods: {
+        editRights() {
+            this.room.join_as_moderator = this.room.join_as_moderator == 1 ? 0 : 1;
+            this.$store.dispatch(ROOM_UPDATE, this.room)
+            .then(({ data }) => {
+                if (data.message.type == 'error') {
+                    this.room.join_as_moderator = !this.room.join_as_moderator;
+                    this.message = data.message;
+                }
+            });
+        },
         editVisibility() {
-            // if (this.info.returncode == 'FAILED') {
-            //     return false;
-            // }
             this.room.active = this.room.active == 1 ? 0 : 1;
             this.$store.dispatch(ROOM_UPDATE, this.room)
             .then(({ data }) => {
@@ -140,6 +148,9 @@ export default {
             this.$store.dispatch(ROOM_INFO, this.room.id)
             .then(({ data }) => {
                 this.info = data.info;
+                if (this.info.chdate != this.room.chdate) {
+                    this.$emit('renewRoomList');
+                }
             });
         }
     },
