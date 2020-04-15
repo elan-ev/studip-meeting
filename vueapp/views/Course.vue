@@ -7,7 +7,7 @@
             <fieldset>
                 <legend>
                     {{ (course_config.title ? course_config.title : "Meetings") | i18n }}
-                    <a v-if="config" style="cursor: pointer;" :title=" 'Raum hinzufügen' | i18n " 
+                    <a v-if="config && course_config.display.addRoom" style="cursor: pointer;" :title=" 'Raum hinzufügen' | i18n " 
                         @click.prevent="showAddMetting()">
                         <StudipIcon icon="add" role="clickable" ></StudipIcon>
                     </a>
