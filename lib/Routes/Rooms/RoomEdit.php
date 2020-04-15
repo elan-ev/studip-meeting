@@ -2,6 +2,7 @@
 
 namespace Meetings\Routes\Rooms;
 
+use DateTime;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Meetings\Errors\AuthorizationFailedException;
@@ -42,12 +43,14 @@ class RoomEdit extends MeetingsController
 
         $message = [];
         if (!$meetingCourse->isNew() && $perm->have_studip_perm('tutor', $json['course_id']) && $name) {
+            $change_date = new \DateTime();
             $meetingCourse->active = $json['active'];
             $meetingCourse->store();
             $meeting = new Meeting($room_id);
             $meeting->name = $name;
             $meeting->recording_url = $recordingUrl;
             $meeting->join_as_moderator = $json['join_as_moderator'];
+            $meeting->chdate = $change_date->getTimestamp();
             $meeting->store();
             $message = [
                 'text' => _('Erledigt'),
