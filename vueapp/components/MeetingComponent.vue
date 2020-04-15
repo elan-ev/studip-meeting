@@ -11,7 +11,7 @@
                         <a v-if="info.recording == 'true'" :title=" 'Dieser Raum kann aufgezeichnet werden!' | i18n " >
                             <StudipIcon icon="exclaim-circle" role="status-yellow" size="20"></StudipIcon>
                         </a>
-                        <a style="cursor: pointer;" 
+                        <a v-if="course_config.display.editRoom" style="cursor: pointer;" 
                             :title="room.active == 1 ? 'Meeting für Teilnehmende unsichtbar schalten' 
                                         : 'Meeting für Teilnehmende sichtbar schalten' | i18n " 
                             @click.prevent="editVisibility()">
@@ -31,10 +31,12 @@
                 </div>
             </legend>
             <label id="details">
-                <span>{{ room.join_as_moderator == 1 ? 
-                            'Teilnehmende haben Administrations-Rechte' : 
-                            'Teilnehmende haben eingeschränkte Rechte' | i18n  }}
-                </span>
+                <div>
+                    <span>{{ room.join_as_moderator == 1 ? 
+                                'Teilnehmende haben Administrations-Rechte' : 
+                                'Teilnehmende haben eingeschränkte Rechte' | i18n  }}
+                    </span>
+                </div>
                 <div v-if="info.returncode == 'FAILED'">
                     <StudipIcon icon="pause" role="status-yellow" size=28></StudipIcon> 
                     <span>{{ "Dieser Raum läuft derzeit nicht!" | i18n }}</span>
@@ -43,17 +45,13 @@
                     <StudipIcon icon="play" role="accept" size=28></StudipIcon> 
                     <span>{{ "Dieser Raum läuft gerade!" | i18n }}</span>
                 </div>
-                <!-- <div v-if="info.recording == 'true'">
-                    <StudipIcon icon="video2" role="attention" size=28></StudipIcon> 
-                    <span>{{ "Dieser Raum kann aufgezeichnet werden!" | i18n }}</span>
-                </div> -->
                 <span v-if="room.details" class="creator-date">
                     {{ `Erstellt von: ${room.details['creator']}, ${room.details['date']}` | i18n }}
                 </span>
                 <br>
             </label>
             <div class="meeting-item-btns">
-                <StudipButton icon="" class="delete" type="button" v-on:click="deleteRoom($event)">
+                <StudipButton v-if="course_config.display.deleteRoom" icon="" class="delete" type="button" v-on:click="deleteRoom($event)">
                     {{ "Raum löschen" | i18n}}
                 </StudipButton>
                 <StudipButton icon="" 
@@ -87,6 +85,9 @@ export default {
         StudipButton, 
         StudipIcon,
         MessageBox,
+    },
+    computed: {
+        ...mapGetters(['course_config'])
     },
     props: {
         room: {
