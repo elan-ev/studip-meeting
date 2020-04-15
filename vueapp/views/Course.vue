@@ -12,7 +12,8 @@
                         <StudipIcon icon="add" role="clickable" ></StudipIcon>
                     </a>
                 </legend>
-                <MeetingComponent v-for="(room, index) in rooms_list" :key="index" :room="room" v-on:getRecording="showRecording"></MeetingComponent>
+                <MeetingComponent v-for="(room, index) in rooms_list" :key="index" :room="room" v-on:getRecording="showRecording"
+                     v-on:renewRoomList="getRoomList"></MeetingComponent>
             </fieldset> 
         </form>
         <div v-if="config" id="conference-meeting-create" style="display: none">
@@ -239,10 +240,13 @@ export default {
                 }
             });
         },
+        getRoomList() {
+            this.$store.dispatch(ROOM_LIST);
+        }
     },
     mounted() {
         store.dispatch(CONFIG_LIST_READ, true);
-        store.dispatch(ROOM_LIST);
+        this.getRoomList();
     }
 };
 </script>
