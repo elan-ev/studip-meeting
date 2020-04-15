@@ -48,7 +48,7 @@ class RouteMap
         //Routes for recordings
         $this->app->get('/rooms/{cid}/{room_id}/recordings', Routes\Recordings\RecordingList::class);
         
-
+        //TODO: permissions must be optimized!
         if (in_array($user->perms, ['admin','root', 'dozent', 'tutor'])) {
             // rooms with perm
             $this->app->post('/rooms', Routes\Rooms\RoomAdd::class);
