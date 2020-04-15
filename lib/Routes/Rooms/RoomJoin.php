@@ -47,13 +47,6 @@ class RoomJoin extends MeetingsController
 
         $driver = $driver_factory->getDriver($meeting->driver, $meeting->server_index);
 
-        // ugly hack for BBB
-        if ($driver instanceof ElanEv\Driver\BigBlueButton) {
-            // TODO: check if recreation is necessary
-            $meetingParameters = $meeting->getMeetingParameters();
-            $driver->createMeeting($meetingParameters);
-        }
-
         $joinParameters = new JoinParameters();
         $joinParameters->setMeetingId($room_id);
         $joinParameters->setIdentifier($meeting->identifier);
