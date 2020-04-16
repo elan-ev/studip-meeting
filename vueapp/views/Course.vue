@@ -40,7 +40,7 @@
                     </label>
                     <label>
                         <span class="required">{{ "Konferenzsystem" | i18n }}</span>
-                        <select id="driver_name" size="1" v-model="room['driver_name']">
+                        <select id="driver_name" size="1" v-model="room['driver_name']" @change.prevent="setServer()">
                             <option value="" disabled> {{ "Bitte wählen Sie eine Konferenzsystem aus" | i18n }} </option>
                             <option v-for="(driver_config, driver_name) in config" :key="driver_name" 
                                     :value="driver_name">
@@ -51,7 +51,8 @@
                     <label v-if="room['driver_name'] 
                                 && Object.keys(config[room['driver_name']]['servers']).length">
                         <span class="required">{{ "Verfügbare Server" | i18n }}</span>
-                        <select id="server_index" size="1" v-model="room['server_index']">
+                        <select id="server_index" size="1" v-model="room['server_index']"
+                            :disabled="Object.keys(config[room['driver_name']]['servers']).length == 1">
                             <option value="" disabled> {{ "Bitte wählen Sie eine Server aus" | i18n }} </option>
                             <option v-for="(server_config, server_index) in config[room['driver_name']]['servers']" :key="server_index" 
                                     :value="'' + server_index">
@@ -166,6 +167,12 @@ export default {
                 modal: true,
                 title: 'Raum hinzufügen'.toLocaleString()
             });
+        },
+        setServer() {
+            //mandatory server selection when there is only one server
+            if (this.room['driver_name'] && Object.keys(this.config[this.room['driver_name']]['servers']).length == 1) {
+                this.$set(this.room, "server_index" , "0");
+            }
         },
         addRoom(event) {
             if (event) {
