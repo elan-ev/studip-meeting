@@ -11,7 +11,7 @@
                         <a v-if="info.recording == 'true'" :title=" 'Dieser Raum kann aufgezeichnet werden!' | i18n " >
                             <StudipIcon icon="exclaim-circle" role="status-yellow" size="20"></StudipIcon>
                         </a>
-                        <a style="cursor: pointer;" 
+                        <a v-if="course_config.display.editRoom" style="cursor: pointer;" 
                             :title="room.active == 1 ? 'Meeting für Teilnehmende unsichtbar schalten' 
                                         : 'Meeting für Teilnehmende sichtbar schalten' | i18n " 
                             @click.prevent="editVisibility()">
@@ -23,37 +23,36 @@
                                 @click.prevent="getRecording()">
                             <StudipIcon icon="video2" role="clickable" size="20"></StudipIcon>
                         </a>
-                        <a :title=" room.join_as_moderator == 1 ? 
-                            'Teilnehmende haben Administrations-Rechte' : 'Teilnehmende haben eingeschränkte Rechte' | i18n " >
+                        <a v-if="course_config.display.editRoom" style="cursor: pointer;" :title=" room.join_as_moderator == 1 ? 
+                            'Teilnehmende bekommen eingeschränkte Rechte' : 'Teilnehmende bekommen Administrations-Rechte' | i18n " 
+                            @click.prevent="editRights()">
                             <StudipIcon :icon="room.join_as_moderator == 1 ? 'lock-unlocked' : 'lock-locked'" role="clickable" size="20"></StudipIcon>
                         </a>
                     </div>
                 </div>
             </legend>
             <label id="details">
-                <span>{{ room.join_as_moderator == 1 ? 
-                            'Teilnehmende haben Administrations-Rechte' : 
-                            'Teilnehmende haben eingeschränkte Rechte' | i18n  }}
-                </span>
+                <div>
+                    <span>{{ room.join_as_moderator == 1 ? 
+                                'Teilnehmende haben Administrations-Rechte' : 
+                                'Teilnehmende haben eingeschränkte Rechte' | i18n  }}
+                    </span>
+                </div>
                 <div v-if="info.returncode == 'FAILED'">
-                    <StudipIcon icon="decline-circle" role="attention" size=28></StudipIcon> 
-                    <span class="red">{{ "Dieser Raum ist nicht mehr erreichbar!" | i18n }}</span>
+                    <StudipIcon icon="pause" role="status-yellow" size=28></StudipIcon> 
+                    <span>{{ "Dieser Raum läuft derzeit nicht!" | i18n }}</span>
                 </div>
                 <div v-if="info.running == 'true'">
-                    <StudipIcon icon="check-circle" role="accept" size=28></StudipIcon> 
+                    <StudipIcon icon="play" role="accept" size=28></StudipIcon> 
                     <span>{{ "Dieser Raum läuft gerade!" | i18n }}</span>
                 </div>
-                <!-- <div v-if="info.recording == 'true'">
-                    <StudipIcon icon="video2" role="attention" size=28></StudipIcon> 
-                    <span>{{ "Dieser Raum kann aufgezeichnet werden!" | i18n }}</span>
-                </div> -->
                 <span v-if="room.details" class="creator-date">
                     {{ `Erstellt von: ${room.details['creator']}, ${room.details['date']}` | i18n }}
                 </span>
                 <br>
             </label>
             <div class="meeting-item-btns">
-                <StudipButton icon="" class="delete" type="button" v-on:click="deleteRoom($event)">
+                <StudipButton v-if="course_config.display.deleteRoom" icon="" class="delete" type="button" v-on:click="deleteRoom($event)">
                     {{ "Raum löschen" | i18n}}
                 </StudipButton>
                 <StudipButton icon="" 
@@ -88,6 +87,9 @@ export default {
         StudipIcon,
         MessageBox,
     },
+    computed: {
+        ...mapGetters(['course_config'])
+    },
     props: {
         room: {
             type: Object,
@@ -101,10 +103,17 @@ export default {
         }
     },
     methods: {
+        editRights() {
+            this.room.join_as_moderator = this.room.join_as_moderator == 1 ? 0 : 1;
+            this.$store.dispatch(ROOM_UPDATE, this.room)
+            .then(({ data }) => {
+                if (data.message.type == 'error') {
+                    this.room.join_as_moderator = !this.room.join_as_moderator;
+                    this.message = data.message;
+                }
+            });
+        },
         editVisibility() {
-            // if (this.info.returncode == 'FAILED') {
-            //     return false;
-            // }
             this.room.active = this.room.active == 1 ? 0 : 1;
             this.$store.dispatch(ROOM_UPDATE, this.room)
             .then(({ data }) => {
@@ -139,6 +148,9 @@ export default {
             this.$store.dispatch(ROOM_INFO, this.room.id)
             .then(({ data }) => {
                 this.info = data.info;
+                if (this.info.chdate != this.room.chdate) {
+                    this.$emit('renewRoomList');
+                }
             });
         }
     },

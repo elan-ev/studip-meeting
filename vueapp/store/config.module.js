@@ -39,7 +39,8 @@ const initialState = {
     },
     course_config: {
         "title": "",
-        "introduction": ""
+        "introduction": "",
+        "display": {}
     }
 };
 
