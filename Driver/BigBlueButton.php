@@ -4,6 +4,7 @@ namespace ElanEv\Driver;
 
 use MeetingPlugin;
 use GuzzleHttp\ClientInterface;
+use ElanEv\Model\Meeting;
 
 /**
  * Big Blue Button driver implementation.
@@ -77,6 +78,11 @@ class BigBlueButton implements DriverInterface, RecordingInterface
      */
     public function getJoinMeetingUrl(JoinParameters $parameters)
     {
+        // if a room has already been created it returns true otherwise it creates the room
+        $meeting = new Meeting($parameters->getMeetingId());
+        $meetingParameters = $meeting->getMeetingParameters();
+        $this->createMeeting($meetingParameters);
+
         $params = array(
             'meetingID' => $parameters->getRemoteId() ?: $parameters->getMeetingId(),
             'fullName' => sprintf('%s %s', $parameters->getFirstName(), $parameters->getLastName()),

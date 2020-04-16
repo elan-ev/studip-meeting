@@ -382,12 +382,12 @@ class IndexController extends MeetingsController
         }
         $driver = $this->driver_factory->getDriver($meeting->driver);
     
-        // ugly hack for BBB
+        /* // ugly hack for BBB
         if ($driver instanceof ElanEv\Driver\BigBlueButton) {
             // TODO: check if recreation is necessary
             $meetingParameters = $meeting->getMeetingParameters();
             $driver->createMeeting($meetingParameters);
-        }
+        } */
 
         $joinParameters = new JoinParameters();
         $joinParameters->setMeetingId($meetingId);

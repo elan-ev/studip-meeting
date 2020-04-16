@@ -43,6 +43,7 @@ class RoomInfo extends MeetingsController
             if (!$meetingCourse->isNew()) {
                 $driver = $driver_factory->getDriver($meetingCourse->meeting->driver, $meetingCourse->meeting->server_index);
                 $info = $driver->getMeetingInfo($meetingCourse->meeting->getMeetingParameters());
+                $info->chdate = $meetingCourse->meeting->chdate;
                 return $this->createResponse(['info' => $info], $response);
             }
         } catch (Exception $e) {

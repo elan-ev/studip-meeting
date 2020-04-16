@@ -7,12 +7,13 @@
             <fieldset>
                 <legend>
                     {{ (course_config.title ? course_config.title : "Meetings") | i18n }}
-                    <a v-if="config" style="cursor: pointer;" :title=" 'Raum hinzufügen' | i18n " 
+                    <a v-if="config && course_config.display.addRoom" style="cursor: pointer;" :title=" 'Raum hinzufügen' | i18n " 
                         @click.prevent="showAddMetting()">
                         <StudipIcon icon="add" role="clickable" ></StudipIcon>
                     </a>
                 </legend>
-                <MeetingComponent v-for="(room, index) in rooms_list" :key="index" :room="room" v-on:getRecording="showRecording"></MeetingComponent>
+                <MeetingComponent v-for="(room, index) in rooms_list" :key="index" :room="room" v-on:getRecording="showRecording"
+                     v-on:renewRoomList="getRoomList"></MeetingComponent>
             </fieldset> 
         </form>
         <div v-if="config" id="conference-meeting-create" style="display: none">
@@ -239,10 +240,13 @@ export default {
                 }
             });
         },
+        getRoomList() {
+            this.$store.dispatch(ROOM_LIST);
+        }
     },
     mounted() {
         store.dispatch(CONFIG_LIST_READ, true);
-        store.dispatch(ROOM_LIST);
+        this.getRoomList();
     }
 };
 </script>

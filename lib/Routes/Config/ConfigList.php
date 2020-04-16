@@ -24,12 +24,27 @@ class ConfigList extends MeetingsController
         $course_config = [];
         $cid =  filter_var(str_replace('cid=','', rtrim($request->getUri()->getQuery(), '/')), FILTER_SANITIZE_STRING);
         if ($cid) {
-            $course_config = CourseConfig::findByCourseId($cid);
+            global $user;
+            $course_config = CourseConfig::findByCourseId($cid)->toArray();
+            $displayAddRoom = false;
+            $displayEditRoom = false;
+            $displayDeleteRoom = false;
+            //TODO: permissions must be optimized!
+            if (in_array($user->perms, ['admin','root', 'dozent', 'tutor'])) {
+                $displayAddRoom = true;
+                $displayEditRoom = true;
+                $displayDeleteRoom = true;
+            }
+            $course_config['display'] = [
+                'addRoom' => $displayAddRoom,
+                'editRoom' => $displayEditRoom,
+                'deleteRoom' => $displayDeleteRoom,
+            ];
         }
         $response_result = [];
         !$drivers           ?: $response_result['drivers'] = $drivers;
         !$config            ?: $response_result['config'] = $config;
-        !$course_config     ?: $response_result['course_config'] = $course_config->toArray();
+        !$course_config     ?: $response_result['course_config'] = $course_config;
 
         if (!empty($config)) {
             return $this->createResponse($response_result, $response);
