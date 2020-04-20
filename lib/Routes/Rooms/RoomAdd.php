@@ -49,6 +49,11 @@ class RoomAdd extends MeetingsController
                     $exists = true;
                 }
             }
+
+            //putting mandatory logoutURL into features
+            $hostUrl = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost()
+                    .($request->getUri()->getPort() ? ':' . $request->getUri()->getPort() : '');
+            $json['features']['logoutURL'] = $hostUrl . \PluginEngine::getLink('meetingplugin', array('cid' => $json['cid']), 'index');
             
             if (!$exists) {
                 $meeting = new Meeting();

@@ -76,11 +76,11 @@
                     <label v-if="room['driver_name'] && Object.keys(config_list[room['driver_name']]).includes('features')
                                 && Object.keys(config_list[room['driver_name']]['features']['create']).length">
                         <strong>{{ "Zusätzliche Funktionen" | i18n }}</strong>
-                        <div v-for="(feature, index) in config_list[room['driver_name']]['features']['create']" :key="index">
+                        <div style="margin: 15px 0;" v-for="(feature, index) in config_list[room['driver_name']]['features']['create']" :key="index">
                             <div class="">
                                 {{ feature['display_name'] | i18n }}
                             </div>
-                            <div class="" v-if="feature['value'] && Object.keys(feature['value']).length">
+                            <div class="" v-if="feature['value'] && typeof feature['value'] === 'object'">
                                 <select :id="feature['name']" size="1" v-model.trim="room['features'][feature['name']]">
                                     <option :value="undefined" disabled> {{ "Bitte wählen Sie eine Option aus" | i18n }} </option>
                                     <option v-for="(fvalue, findex) in feature['value']" :key="findex"
@@ -90,7 +90,7 @@
                                 </select>
                             </div>
                             <div class="col-6" v-else>
-                                <input type="text" v-model.trim="room['features'][feature['name']]" id="name">
+                                <input type="text" v-model.trim="room['features'][feature['name']]" :placeholder="feature['value'] ? feature['value'] : ''" id="name">
                             </div>
                         </div>
                     </label>

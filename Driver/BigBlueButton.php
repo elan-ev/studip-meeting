@@ -48,7 +48,6 @@ class BigBlueButton implements DriverInterface, RecordingInterface
             'moderatorPW' => $parameters->getModeratorPassword(),
             'dialNumber' => '',
             'webVoice' => '',
-            'logoutURL' => '',
             'maxParticipants' => '-1',
             'record' => 'true',
             'duration' => '0',
