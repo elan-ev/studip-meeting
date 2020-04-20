@@ -142,7 +142,7 @@
                 </tbody>
             </table>
         </div>
-        <div id="guest-invitaion-modal" style="display: none;">
+        <div id="guest-invitation-modal" style="display: none;">
             <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
                 {{ modal_message.text }}
             </MessageBox>
@@ -334,15 +334,15 @@ export default {
             this.$store.commit(ROOM_CLEAR);
             $('#guest_link').text('');
             $('#guest_link_label').hide();
-            $('#guest-invitaion-modal').data('room', room)
+            $('#guest-invitation-modal').data('room', room)
             .dialog({
                 width: '50%',
                 modal: true,
-                title: 'Gast Einladung'.toLocaleString()
+                title: 'Gast einladen'.toLocaleString()
             });
         },
         generateGuestJoin(event) {
-            var room = $('#guest-invitaion-modal').data('room');
+            var room = $('#guest-invitation-modal').data('room');
             if (room && this.room['guest_name']) {
                 room.guest_name = this.room['guest_name'];
                 this.$store.dispatch(ROOM_JOIN_GUEST, room)
@@ -360,6 +360,7 @@ export default {
             }
             this.$store.commit(ROOM_CLEAR);
             $('#guest_link').text('');
+            $('#guest-invitation-modal').dialog('close');
         }
     },
     mounted() {
