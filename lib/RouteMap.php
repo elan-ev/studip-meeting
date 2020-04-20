@@ -55,6 +55,9 @@ class RouteMap
             $this->app->put('/rooms/{room_id}', Routes\Rooms\RoomEdit::class);
             $this->app->delete('/rooms/{cid}/{room_id}', Routes\Rooms\RoomDelete::class);
 
+            //generate guest invitaion link
+            $this->app->get('/rooms/join/{cid}/{room_id}/{guest_name}/guest', Routes\Rooms\RoomJoinGuest::class);
+
             //recordings with perm
             $this->app->get('/recordings/{recordings_id}', Routes\Recordings\RecordingShow::class);
             $this->app->delete('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingDelete::class);

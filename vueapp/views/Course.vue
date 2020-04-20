@@ -13,7 +13,7 @@
                     </a>
                 </legend>
                 <MeetingComponent v-for="(room, index) in rooms_list" :key="index" :room="room" v-on:getRecording="showRecording"
-                     v-on:renewRoomList="getRoomList"></MeetingComponent>
+                     v-on:renewRoomList="getRoomList" v-on:getGuestInfo="showGuestDialog"></MeetingComponent>
             </fieldset> 
         </form>
         <div v-if="config" id="conference-meeting-create" style="display: none">
@@ -59,6 +59,26 @@
                                     {{ (server_index + 1) + '-' + server_config['url'] }}
                             </option>
                         </select>
+                    </label>
+                    <label v-if="room['driver_name'] && Object.keys(config[room['driver_name']]).includes('features')
+                                && Object.keys(config[room['driver_name']]['features']['create']).length">
+                        <strong>{{ "Zusätzliche Funktionen" | i18n }}</strong>
+                        <div v-for="(feature, index) in config[room['driver_name']]['features']['create']" :key="index">
+                            <div class="">
+                                {{ feature['display_name'] | i18n }}
+                            </div>
+                            <div class="" v-if="Array.isArray(feature['value'])">
+                                <select :id="feature['name']" size="1" v-model.trim="room['features'][feature['name']]">
+                                    <option v-for="(fvalue, findex) in feature['value']" :key="findex" :selected="findex = 0"
+                                            :value="fvalue">
+                                            {{ fvalue }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-6" v-else>
+                                <input type="text" v-model.trim="room['features'][feature['name']]" id="name">
+                            </div>
+                        </div>
                     </label>
                     <div>
                         <StudipButton icon="accept" type="button" v-on:click="addRoom($event)">
@@ -108,6 +128,31 @@
                 </tbody>
             </table>
         </div>
+        <div id="guest-invitaion-modal" style="display: none;">
+            <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
+                {{ modal_message.text }}
+            </MessageBox>
+            <form class="default" >
+                <fieldset>
+                    <label>
+                        <span class="required">{{ "Gastname" | i18n }}</span>
+                        <input type="text" v-model.trim="room['guest_name']" id="name">
+                    </label>
+                    <label id="guest_link_label" style="display: none;">
+                        <span>{{ "Link" | i18n }}</span>
+                        <textarea id="guest_link" cols="30" rows="5"></textarea>
+                    </label>    
+                    <div>
+                        <StudipButton icon="accept" type="button" v-on:click="generateGuestJoin($event)">
+                            {{ "Einladungslink erstellen" | i18n}}
+                        </StudipButton>
+                        <StudipButton icon="cancel" type="button" v-on:click="cancelGuest($event)">
+                            {{ "Abbrechen" | i18n}}
+                        </StudipButton>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
     </div>
 </template>
 
@@ -132,6 +177,7 @@ import {
     RECORDING_LIST,
     RECORDING_SHOW,
     RECORDING_DELETE,
+    ROOM_JOIN_GUEST
 } from "@/store/actions.type";
 
 import {
@@ -249,6 +295,37 @@ export default {
         },
         getRoomList() {
             this.$store.dispatch(ROOM_LIST);
+        },
+        showGuestDialog(room) {
+            this.$store.commit(ROOM_CLEAR);
+            $('#guest_link').text('');
+            $('#guest_link_label').hide();
+            $('#guest-invitaion-modal').data('room', room)
+            .dialog({
+                width: '50%',
+                modal: true,
+                title: 'Gast Einladung'.toLocaleString()
+            });
+        },
+        generateGuestJoin(event) {
+            var room = $('#guest-invitaion-modal').data('room');
+            if (room && this.room['guest_name']) {
+                room.guest_name = this.room['guest_name'];
+                this.$store.dispatch(ROOM_JOIN_GUEST, room)
+                .then(({ data }) => {
+                    if (data.join_url != '') {
+                        $('#guest_link').text(data.join_url);
+                        $('#guest_link_label').show();
+                    }
+                });
+            }
+        },
+        cancelGuest(event) {
+            if (event) {
+                event.preventDefault();
+            }
+            this.$store.commit(ROOM_CLEAR);
+            $('#guest_link').text('');
         }
     },
     mounted() {
