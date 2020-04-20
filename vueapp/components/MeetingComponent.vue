@@ -4,27 +4,27 @@
             <legend>
                 <div class="meeting-item-header">
                     <div class="left">
-                        {{room.name}}  
+                        {{room.name}}
                         <span v-if="info.participantCount > 0">{{ info.participantCount }} {{ 'Teilnehmende aktiv' | i18n }}</span>
                     </div>
                     <div class="right">
                         <a v-if="info.recording == 'true'" :title=" 'Dieser Raum kann aufgezeichnet werden!' | i18n " >
                             <StudipIcon icon="exclaim-circle" role="status-yellow" size="20"></StudipIcon>
                         </a>
-                        <a v-if="course_config.display.editRoom" style="cursor: pointer;" 
-                            :title="room.active == 1 ? 'Meeting für Teilnehmende unsichtbar schalten' 
-                                        : 'Meeting für Teilnehmende sichtbar schalten' | i18n " 
+                        <a v-if="course_config.display.editRoom" style="cursor: pointer;"
+                            :title="room.active == 1 ? 'Meeting für Teilnehmende unsichtbar schalten'
+                                        : 'Meeting für Teilnehmende sichtbar schalten' | i18n "
                             @click.prevent="editVisibility()">
                             <StudipIcon :icon="room.active == 1 ? 'visibility-visible' : 'visibility-invisible'"
                                 role="clickable" size="20"></StudipIcon>
                         </a>
-                        <a style="cursor: pointer;" :title=" 'Die vorhandenen Aufzeichnungen' | i18n " 
-                                :data-badge="room.recordings_count" 
+                        <a style="cursor: pointer;" :title=" 'Die vorhandenen Aufzeichnungen' | i18n "
+                                :data-badge="room.recordings_count"
                                 @click.prevent="getRecording()">
                             <StudipIcon icon="video2" role="clickable" size="20"></StudipIcon>
                         </a>
-                        <a v-if="course_config.display.editRoom" style="cursor: pointer;" :title=" room.join_as_moderator == 1 ? 
-                            'Teilnehmende bekommen eingeschränkte Rechte' : 'Teilnehmende bekommen Administrations-Rechte' | i18n " 
+                        <a v-if="course_config.display.editRoom" style="cursor: pointer;" :title=" room.join_as_moderator == 1 ?
+                            'Teilnehmende bekommen eingeschränkte Rechte' : 'Teilnehmende bekommen Administrations-Rechte' | i18n "
                             @click.prevent="editRights()">
                             <StudipIcon :icon="room.join_as_moderator == 1 ? 'lock-unlocked' : 'lock-locked'" role="clickable" size="20"></StudipIcon>
                         </a>
@@ -33,17 +33,17 @@
             </legend>
             <label id="details">
                 <div>
-                    <span>{{ room.join_as_moderator == 1 ? 
-                                'Teilnehmende haben Administrations-Rechte' : 
+                    <span>{{ room.join_as_moderator == 1 ?
+                                'Teilnehmende haben Administrations-Rechte' :
                                 'Teilnehmende haben eingeschränkte Rechte' | i18n  }}
                     </span>
                 </div>
                 <div v-if="info.returncode == 'FAILED'">
-                    <StudipIcon icon="pause" role="status-yellow" size=28></StudipIcon> 
+                    <StudipIcon icon="pause" role="status-yellow" size=28></StudipIcon>
                     <span>{{ "Dieser Raum läuft derzeit nicht!" | i18n }}</span>
                 </div>
                 <div v-if="info.running == 'true'">
-                    <StudipIcon icon="play" role="accept" size=28></StudipIcon> 
+                    <StudipIcon icon="play" role="accept" size=28></StudipIcon>
                     <span>{{ "Dieser Raum läuft gerade!" | i18n }}</span>
                 </div>
                 <br>
@@ -56,13 +56,13 @@
                 <StudipButton v-if="course_config.display.deleteRoom" icon="" class="delete" type="button" v-on:click="deleteRoom($event)">
                     {{ "Raum löschen" | i18n}}
                 </StudipButton>
-                <StudipButton v-if="course_config.display.editRoom && room.features.guestPolicy && room.features.guestPolicy != 'ALWAYS_DENY'"
+                <StudipButton v-if="course_config.display.editRoom && room.features && room.features.guestPolicy && room.features.guestPolicy != 'ALWAYS_DENY'"
                     type="button" v-on:click="getGuestInfo()">
                     {{ "Gast Einladung" | i18n}}
                 </StudipButton>
-                <StudipButton icon="" 
+                <StudipButton icon=""
                  class="join"
-                 type="button" 
+                 type="button"
                  v-on:click="joinRoom($event)">
                     {{ "Teilnehmen" | i18n}}
                 </StudipButton>
@@ -88,7 +88,7 @@ import {
 export default {
     name: "MeetingComponent",
     components: {
-        StudipButton, 
+        StudipButton,
         StudipIcon,
         MessageBox,
     },
