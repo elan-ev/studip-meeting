@@ -365,4 +365,12 @@ class DfnVc implements DriverInterface
             new ConfigOption('password', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Passwort'))
         );
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCreateFeatures()
+    {
+        return false;
+    }
 }

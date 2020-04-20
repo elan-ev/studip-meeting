@@ -46,6 +46,7 @@
                     <StudipIcon icon="play" role="accept" size=28></StudipIcon> 
                     <span>{{ "Dieser Raum läuft gerade!" | i18n }}</span>
                 </div>
+                <br>
                 <span v-if="room.details" class="creator-date">
                     {{ `Erstellt von: ${room.details['creator']}, ${room.details['date']}` | i18n }}
                 </span>
@@ -54,6 +55,10 @@
             <div class="meeting-item-btns">
                 <StudipButton v-if="course_config.display.deleteRoom" icon="" class="delete" type="button" v-on:click="deleteRoom($event)">
                     {{ "Raum löschen" | i18n}}
+                </StudipButton>
+                <StudipButton v-if="course_config.display.editRoom && room.features.guestPolicy && room.features.guestPolicy != 'ALWAYS_DENY'"
+                    type="button" v-on:click="getGuestInfo()">
+                    {{ "Gast Einladung" | i18n}}
                 </StudipButton>
                 <StudipButton icon="" 
                  class="join"
@@ -140,7 +145,6 @@ export default {
             .then(({ data }) => {
                 if (data.join_url != '') {
                     window.open(data.join_url, '_blank');
-                    this.room.joins++;
                 }
             });
         },
@@ -152,7 +156,10 @@ export default {
                     this.$emit('renewRoomList');
                 }
             });
-        }
+        },
+        getGuestInfo() {
+            this.$emit('getGuestInfo', this.room);
+        },
     },
     mounted() {
         this.getInfo();

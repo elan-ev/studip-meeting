@@ -61,6 +61,9 @@ class RoomAdd extends MeetingsController
                 $meeting->moderator_password = Helper::createPassword();
                 $meeting->join_as_moderator = $json['join_as_moderator'];
                 $meeting->remote_id = md5(uniqid());
+                if (isset($json['features'])) {
+                    $meeting->features = json_encode($json['features']);
+                }
                 $meeting->store();
                 $meetingParameters = $meeting->getMeetingParameters();
 
