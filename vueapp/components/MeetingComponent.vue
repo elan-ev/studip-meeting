@@ -58,7 +58,7 @@
                 </StudipButton>
                 <StudipButton v-if="course_config.display.editRoom && room.features && room.features.guestPolicy && room.features.guestPolicy != 'ALWAYS_DENY'"
                     type="button" v-on:click="getGuestInfo()">
-                    {{ "Gast Einladung" | i18n}}
+                    {{ "Gast einladen" | i18n}}
                 </StudipButton>
                 <StudipButton icon=""
                  class="join"
