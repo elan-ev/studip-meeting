@@ -6,12 +6,12 @@
         <form class="default" v-if="drivers">
             <fieldset v-for="(driver, driver_name) in drivers" :key="driver_name">
                 <legend>
-                    {{ driver.title | i18n }} 
+                    {{ driver.title | i18n }}
                 </legend>
                 <label v-if="Object.keys(config[driver_name]).includes('enable')">
-                        <input type="checkbox" 
-                        true-value="1" 
-                        false-value="0" 
+                        <input type="checkbox"
+                        true-value="1"
+                        false-value="0"
                         v-model="config[driver_name]['enable']">
                         {{ "Verwenden dieses Treibers zulassen" | i18n }}
                 </label>
@@ -21,7 +21,7 @@
                 </label>
                 <div v-if="Object.keys(config[driver_name].servers).length">
                     <MessageBox :type="'info'">
-                        {{ "Folgende Server werden zur Lastverteilung verwendet" | i18n }}
+                        {{ "Folgende Server werden verwendet" | i18n }}
                     </MessageBox>
                     <table class="default collapsable tablesorter conference-meetings">
                         <thead>
@@ -55,7 +55,7 @@
                 <div v-show="server_object[driver_name]">
                     <fieldset>
                         <legend>
-                            {{ "Server konfiguration" | i18n }} ({{ server_object[driver_name]['index'] == -1 ? "Neu" : "Bearbeiten" | i18n }})
+                            {{ "Serverkonfiguration" | i18n }} ({{ server_object[driver_name]['index'] == -1 ? "Neu" : "Bearbeiten" | i18n }})
                         </legend>
                         <div v-for="(value, key) in driver.config" :key="key">
                             <label v-if="value.name != 'enable'">
@@ -65,12 +65,12 @@
                                     :placeholder="value.value">
                             </label>
                         </div>
-                        <StudipButton 
-                            :icon="server_object[driver_name]['index'] == -1 ? 'add' : 'accept'" 
+                        <StudipButton
+                            :icon="server_object[driver_name]['index'] == -1 ? 'add' : 'accept'"
                             @click="addEditServers(driver_name)">
                             {{ server_object[driver_name]['index'] == -1 ? "Server hinzufügen" : "Server bearbeiten" | i18n }}
                         </StudipButton>
-                        <StudipButton v-if="server_object[driver_name]['index'] != -1" 
+                        <StudipButton v-if="server_object[driver_name]['index'] != -1"
                             icon="cancel" @click="clearServer(driver_name)">
                             {{ "Abbrechen" | i18n }}
                         </StudipButton>
@@ -79,7 +79,7 @@
             </fieldset>
             <footer>
                 <StudipButton icon="accept" @click="storeConfig">
-                    {{ "Anbindung hinzufügen" | i18n}}
+                    {{ "Einstellungen speichern" | i18n}}
                 </StudipButton>
             </footer>
         </form>
