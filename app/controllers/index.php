@@ -168,16 +168,6 @@ class IndexController extends MeetingsController
                 [[
                     'label' => $this->courseConfig->title,
                     'url' => PluginEngine::getLink($this->plugin, [], 'index'),
-                ]],
-                [[
-                    'label' => $this->_('Informationen anzeigen'),
-                    'url' => '#',
-                    'icon' => MeetingPlugin::getIcon('info-circle', 'blue'),
-                    'attributes' => [
-                        'class' => 'toggle-info show-info',
-                        'data-show-text' => $this->_('Informationen anzeigen'),
-                        'data-hide-text' => $this->_('Informationen ausblenden'),
-                    ],
                 ]]
             );
         } else {
@@ -381,7 +371,7 @@ class IndexController extends MeetingsController
             throw new Trails_Exception(400);
         }
         $driver = $this->driver_factory->getDriver($meeting->driver);
-    
+
         /* // ugly hack for BBB
         if ($driver instanceof ElanEv\Driver\BigBlueButton) {
             // TODO: check if recreation is necessary
