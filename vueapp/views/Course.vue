@@ -7,22 +7,22 @@
             <fieldset>
                 <legend>
                     {{ (course_config.title ? course_config.title : "Meetings") | i18n }}
-                    <a v-if="config && course_config.display.addRoom" style="cursor: pointer;" :title=" 'Raum hinzufügen' | i18n " 
-                        @click.prevent="showAddMetting()">
+                    <a v-if="config && course_config.display.addRoom" style="cursor: pointer;" :title=" 'Raum hinzufügen' | i18n "
+                        @click.prevent="showAddMeeting()">
                         <StudipIcon icon="add" role="clickable" ></StudipIcon>
                     </a>
                 </legend>
                 <MeetingComponent v-for="(room, index) in rooms_list" :key="index" :room="room" v-on:getRecording="showRecording"
                      v-on:renewRoomList="getRoomList" v-on:getGuestInfo="showGuestDialog"></MeetingComponent>
-            </fieldset> 
+            </fieldset>
         </form>
-        <div v-if="config" id="conference-meeting-create" style="display: none">
+        <div v-if="config_list" id="conference-meeting-create" style="display: none">
             <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
                 {{ modal_message.text }}
             </MessageBox>
-            <MessageBox v-else-if="room['driver_name'] && !Object.keys(config[room['driver_name']]['servers']).length"
+            <MessageBox v-else-if="room['driver_name'] && !Object.keys(config_list[room['driver_name']]['servers']).length"
                  type="error">
-                {{ "Es gibt keine Server an diese Konferenzsystem, bitte wählen Sie andere Konferenzsystem" | i18n }}
+                {{ "Es gibt keine Server für dieses Konferenzsystem, bitte wählen Sie ein anderes Konferenzsystem" | i18n }}
             </MessageBox>
             <form class="default" >
                 <fieldset>
@@ -31,39 +31,40 @@
                         <input type="text" v-model.trim="room['name']" id="name">
                     </label>
                     <label>
-                        <input type="checkbox" 
+                        <input type="checkbox"
                         id="join_as_moderator"
-                        true-value="1" 
-                        false-value="0" 
+                        true-value="1"
+                        false-value="0"
                         v-model="room['join_as_moderator']">
                         {{ "Teilnehmende haben Administrationsrechte" | i18n }}
                     </label>
                     <label>
                         <span class="required">{{ "Konferenzsystem" | i18n }}</span>
-                        <select id="driver_name" size="1" v-model="room['driver_name']" @change.prevent="setServer()">
-                            <option value="" disabled> {{ "Bitte wählen Sie eine Konferenzsystem aus" | i18n }} </option>
-                            <option v-for="(driver_config, driver_name) in config" :key="driver_name" 
+                        <select id="driver_name" size="1" v-model="room['driver_name']" @change.prevent="setServer()" :disabled="Object.keys(config_list).length == 1">
+                            <option value="" disabled> {{ "Bitte wählen Sie ein Konferenzsystem aus" | i18n }} </option>
+                            <option v-for="(driver_config, driver_name) in config_list" :key="driver_name"
                                     :value="driver_name">
                                     {{ driver_config['display_name'] }}
                             </option>
                         </select>
                     </label>
-                    <label v-if="room['driver_name'] 
-                                && Object.keys(config[room['driver_name']]['servers']).length">
+
+                    <label v-if="room['driver_name']
+                                && Object.keys(config_list[room['driver_name']]['servers']).length > 1">
                         <span class="required">{{ "Verfügbare Server" | i18n }}</span>
                         <select id="server_index" size="1" v-model="room['server_index']"
-                            :disabled="Object.keys(config[room['driver_name']]['servers']).length == 1">
-                            <option value="" disabled> {{ "Bitte wählen Sie eine Server aus" | i18n }} </option>
-                            <option v-for="(server_config, server_index) in config[room['driver_name']]['servers']" :key="server_index" 
+                            :disabled="Object.keys(config_list[room['driver_name']]['servers']).length == 1">
+                            <option value="" disabled> {{ "Bitte wählen Sie einen Server aus" | i18n }} </option>
+                            <option v-for="(server_config, server_index) in config_list[room['driver_name']]['servers']" :key="server_index"
                                     :value="'' + server_index">
                                     {{ (server_index + 1) + '-' + server_config['url'] }}
                             </option>
                         </select>
                     </label>
-                    <label v-if="room['driver_name'] && Object.keys(config[room['driver_name']]).includes('features')
-                                && Object.keys(config[room['driver_name']]['features']['create']).length">
+                    <label v-if="room['driver_name'] && Object.keys(config_list[room['driver_name']]).includes('features')
+                                && Object.keys(config_list[room['driver_name']]['features']['create']).length">
                         <strong>{{ "Zusätzliche Funktionen" | i18n }}</strong>
-                        <div v-for="(feature, index) in config[room['driver_name']]['features']['create']" :key="index">
+                        <div v-for="(feature, index) in config_list[room['driver_name']]['features']['create']" :key="index">
                             <div class="">
                                 {{ feature['display_name'] | i18n }}
                             </div>
@@ -141,7 +142,7 @@
                     <label id="guest_link_label" style="display: none;">
                         <span>{{ "Link" | i18n }}</span>
                         <textarea id="guest_link" cols="30" rows="5"></textarea>
-                    </label>    
+                    </label>
                     <div>
                         <StudipButton icon="accept" type="button" v-on:click="generateGuestJoin($event)">
                             {{ "Einladungslink erstellen" | i18n}}
@@ -188,14 +189,25 @@ import {
 export default {
     name: "Course",
     components: {
-        StudipButton, 
+        StudipButton,
         StudipIcon,
         MessageBox,
         MeetingStatus,
         MeetingComponent
     },
     computed: {
-        ...mapGetters(['config', 'room', 'rooms_list', 'course_config', 'recording_list', 'recording'])
+        ...mapGetters(['config', 'room', 'rooms_list', 'course_config', 'recording_list', 'recording']),
+        config_list: function() {
+            let config_list = {};
+
+            for (var driver in this.config) {
+                if (this.config[driver].enable == 1) {
+                    config_list[driver] = this.config[driver];
+                }
+            }
+
+            return config_list;
+        }
     },
     data() {
         return {
@@ -204,7 +216,7 @@ export default {
         }
     },
     methods: {
-        showAddMetting() {
+        showAddMeeting() {
             this.modal_message = {};
             this.$store.commit(ROOM_CLEAR);
             $('#conference-meeting-create')
@@ -213,10 +225,19 @@ export default {
                 modal: true,
                 title: 'Raum hinzufügen'.toLocaleString()
             });
+
+            this.setDriver();
         },
+
+        setDriver() {
+            if (Object.keys(this.config_list).length == 1) {
+                this.$set(this.room, "driver_name" , Object.keys(this.config_list)[0]);
+            }
+        },
+
         setServer() {
             //mandatory server selection when there is only one server
-            if (this.room['driver_name'] && Object.keys(this.config[this.room['driver_name']]['servers']).length == 1) {
+            if (this.room['driver_name'] && Object.keys(this.config_list[this.room['driver_name']]['servers']).length == 1) {
                 this.$set(this.room, "server_index" , "0");
             }
         },
