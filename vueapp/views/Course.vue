@@ -3,6 +3,7 @@
         <MessageBox v-if="message" :type="message.type" @hide="message = ''" :timer="3000">
             {{ message.text }}
         </MessageBox>
+
         <form class="default conference-meeting">
             <fieldset>
                 <legend>
@@ -16,6 +17,7 @@
                      v-on:renewRoomList="getRoomList" v-on:getGuestInfo="showGuestDialog"></MeetingComponent>
             </fieldset>
         </form>
+
         <div v-if="config_list" id="conference-meeting-create" style="display: none">
             <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
                 {{ modal_message.text }}
@@ -24,6 +26,7 @@
                  type="error">
                 {{ "Es gibt keine Server für dieses Konferenzsystem, bitte wählen Sie ein anderes Konferenzsystem" | i18n }}
             </MessageBox>
+
             <form class="default" >
                 <fieldset>
                     <label>
@@ -61,6 +64,7 @@
                             </option>
                         </select>
                     </label>
+
                     <label v-if="room['driver_name'] && Object.keys(config_list[room['driver_name']]).includes('features')
                                 && Object.keys(config_list[room['driver_name']]['features']['create']).length">
                         <strong>{{ "Zusätzliche Funktionen" | i18n }}</strong>
@@ -81,6 +85,7 @@
                             </div>
                         </div>
                     </label>
+
                     <div>
                         <StudipButton icon="accept" type="button" v-on:click="addRoom($event)">
                             {{ "Raum erstellen" | i18n}}
