@@ -53,6 +53,9 @@ class BigBlueButton implements DriverInterface, RecordingInterface
             'record' => 'true',
             'duration' => '0',
         );
+        if ($features = json_decode($parameters->getMeetingFeatures(), true)) {
+            $params = array_merge($params, $features);
+        }
         $response = $this->performRequest('create', $params);
         $xml = new \SimpleXMLElement($response);
 
@@ -83,13 +86,24 @@ class BigBlueButton implements DriverInterface, RecordingInterface
         $meetingParameters = $meeting->getMeetingParameters();
         $this->createMeeting($meetingParameters);
 
-        $params = array(
-            'meetingID' => $parameters->getRemoteId() ?: $parameters->getMeetingId(),
-            'fullName' => sprintf('%s %s', $parameters->getFirstName(), $parameters->getLastName()),
-            'password' => $parameters->getPassword(),
-            'userID' => '',
-            'webVoiceConf' => '',
-        );
+        if ( $parameters->getUsername() == 'guest') {
+            $params = array(
+                'meetingID' => $parameters->getRemoteId() ?: $parameters->getMeetingId(),
+                'fullName' => $parameters->getFirstName(),
+                'password' => $parameters->getPassword(),
+                'webVoiceConf' => '',
+                'guest' => 'true'
+            );
+        } else {
+            $params = array(
+                'meetingID' => $parameters->getRemoteId() ?: $parameters->getMeetingId(),
+                'fullName' => sprintf('%s %s', $parameters->getFirstName(), $parameters->getLastName()),
+                'password' => $parameters->getPassword(),
+                'userID' => '',
+                'webVoiceConf' => '',
+            );
+        }
+        
         $params['checksum'] = $this->createSignature('join', $params);
 
         return sprintf('%s/api/join?%s', rtrim($this->url, '/'), $this->buildQueryString($params));
@@ -209,6 +223,16 @@ class BigBlueButton implements DriverInterface, RecordingInterface
         return array(
             new ConfigOption('url',     dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'URL des BBB-Servers')),
             new ConfigOption('api-key', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Api-Key (Salt)'))
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCreateFeatures()
+    {
+        return array(
+            new ConfigOption('guestPolicy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Guest Policy'), ['ALWAYS_ACCEPT', 'ALWAYS_DENY', 'ASK_MODERATOR']),
         );
     }
 }
