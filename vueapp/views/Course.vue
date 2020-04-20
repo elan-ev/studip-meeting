@@ -13,6 +13,14 @@
                         <StudipIcon icon="add" role="clickable" ></StudipIcon>
                     </a>
                 </legend>
+
+                <MessageBox v-if="!rooms_list.length" :type="'info'">
+                    {{ "Bisher existieren keine Meeting-Räume für diese Veranstaltung. Möchten Sie einen anlegen?" | i18n }}
+                    <br>
+                    <StudipButton type="button"  @click="showAddMeeting()">
+                        {{ "Neuer Raum" | i18n}}
+                    </StudipButton>
+                </MessageBox>
                 <MeetingComponent v-for="(room, index) in rooms_list" :key="index" :room="room" v-on:getRecording="showRecording"
                      v-on:renewRoomList="getRoomList" v-on:getGuestInfo="showGuestDialog"></MeetingComponent>
             </fieldset>
