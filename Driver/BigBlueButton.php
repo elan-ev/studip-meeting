@@ -232,7 +232,8 @@ class BigBlueButton implements DriverInterface, RecordingInterface
     public function getCreateFeatures()
     {
         return array(
-            new ConfigOption('guestPolicy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Guest Policy'), ['ALWAYS_ACCEPT', 'ALWAYS_DENY', 'ASK_MODERATOR']),
+            new ConfigOption('guestPolicy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Guest Policy'),
+                 ['ALWAYS_ACCEPT' => _('Immer akzeptieren'), 'ALWAYS_DENY' => _('Immer leugnen'), 'ASK_MODERATOR' => _('Moderator fragen')]),
         );
     }
 }

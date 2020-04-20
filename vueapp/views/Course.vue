@@ -80,11 +80,12 @@
                             <div class="">
                                 {{ feature['display_name'] | i18n }}
                             </div>
-                            <div class="" v-if="Array.isArray(feature['value'])">
+                            <div class="" v-if="feature['value'] && Object.keys(feature['value']).length">
                                 <select :id="feature['name']" size="1" v-model.trim="room['features'][feature['name']]">
-                                    <option v-for="(fvalue, findex) in feature['value']" :key="findex" :selected="findex = 0"
-                                            :value="fvalue">
-                                            {{ fvalue }}
+                                    <option :value="undefined" disabled> {{ "Bitte wählen Sie eine Option aus" | i18n }} </option>
+                                    <option v-for="(fvalue, findex) in feature['value']" :key="findex"
+                                            :value="findex">
+                                            {{ fvalue | i18n }}
                                     </option>
                                 </select>
                             </div>
