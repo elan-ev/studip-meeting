@@ -9,7 +9,8 @@ import {
     ROOM_DELETE,
     ROOM_JOIN,
     ROOM_STATUS,
-    ROOM_INFO
+    ROOM_INFO,
+    ROOM_JOIN_GUEST
 } from "./actions.type";
 
 import {
@@ -24,6 +25,7 @@ const initialState = {
         "driver_name": "",
         "server_index": "",
         "join_as_moderator": "0",
+        "features": {}
     }
 };
 
@@ -79,6 +81,10 @@ export const actions = {
         return ApiService.get('rooms/join/' + CID + '/' + id);
     },
 
+    async [ROOM_JOIN_GUEST](context, room) {
+        return ApiService.get('rooms/join/' + CID + '/' + room.id + '/' + room.guest_name + '/guest');
+    },
+
     async [ROOM_STATUS](context, id) {
         return ApiService.get('rooms/' + CID + '/' + id + '/status');
     },
@@ -99,6 +105,7 @@ export const mutations = {
             "driver_name": "",
             "server_index": "",
             "join_as_moderator": "0",
+            "features": {}
         }
     }
 };

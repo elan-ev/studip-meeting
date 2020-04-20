@@ -65,4 +65,11 @@ interface DriverInterface
      * @return array
      */
     public function getMeetingInfo(MeetingParameters $parameters);
+
+    /**
+     * Returns a list of config-options as features in order to pass through create API call.
+     *
+     * @return ConfigOption[] list of ConfigOption-objects
+     */
+    public function getCreateFeatures();
 }

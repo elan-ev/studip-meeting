@@ -57,6 +57,7 @@ class RoomsList extends MeetingsController
                     $meeting['recordings_count'] = count($driver->getRecordings($meetingCourse->meeting->getMeetingParameters()));
                 }
                 $meeting['details'] = ['creator' => \User::find($meetingCourse->meeting->user_id)->getFullname(), 'date' => date('d.m.Y H:i', $meetingCourse->meeting->mkdate)];
+                $meeting['features'] = json_decode($meeting['features'], true);
                 $course_rooms_list[] = $meeting;
             } catch (Exception $e) {
                 // $error_message = "There are meetings that are not currently reachable!";

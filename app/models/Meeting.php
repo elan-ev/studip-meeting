@@ -110,6 +110,7 @@ class Meeting extends \SimpleORMap
         $parameters->setMeetingName($this->name);
         $parameters->setAttendeePassword($this->attendee_password);
         $parameters->setModeratorPassword($this->moderator_password);
+        $parameters->setMeetingFeatures($this->features);
 
         return $parameters;
     }

@@ -48,6 +48,15 @@ class Driver
         if (!self::$config) {
             self::$config = json_decode(\Config::get()->getValue('VC_CONFIG'), true);
         }
+
+        foreach (self::$config as $driver_name => $config) {
+            $class = 'ElanEv\\Driver\\' . $driver_name;
+            if (in_array('ElanEv\Driver\DriverInterface', class_implements($class)) !== false) {
+                if ($create_features = $class::getCreateFeatures()) {
+                    self::$config[$driver_name]['features']['create'] = self::convertDriverConfigToArray($create_features);
+                }
+            }
+        }
     }
 
     static function convertDriverConfigToArray($config_options)
