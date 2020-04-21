@@ -38,7 +38,7 @@ class RoomEdit extends MeetingsController
         $json = $this->getRequestData($request);
         
         $meetingCourse = new MeetingCourse([$room_id, $json['cid']]);
-        $name = utf8_decode($json['name']);
+        $name = $json['name'];
         $recordingUrl = utf8_decode($json['recording_url']);
 
         $message = [];
