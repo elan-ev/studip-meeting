@@ -54,6 +54,11 @@ class RoomAdd extends MeetingsController
             $hostUrl = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost()
                     .($request->getUri()->getPort() ? ':' . $request->getUri()->getPort() : '');
             $json['features']['logoutURL'] = $hostUrl . \PluginEngine::getLink('meetingplugin', array('cid' => $json['cid']), 'index');
+
+            //Adding default "duration" of 240 Minutes into features if it is not set
+            if (!isset($json['features']['duration'])) {
+                $json['features']['duration'] = "240";
+            }
             
             if (!$exists) {
                 $meeting = new Meeting();
@@ -66,9 +71,7 @@ class RoomAdd extends MeetingsController
                 $meeting->moderator_password = Helper::createPassword();
                 $meeting->join_as_moderator = $json['join_as_moderator'];
                 $meeting->remote_id = md5(uniqid());
-                if (isset($json['features'])) {
-                    $meeting->features = json_encode($json['features']);
-                }
+                $meeting->features = json_encode($json['features']);
                 $meeting->store();
                 $meetingParameters = $meeting->getMeetingParameters();
 
