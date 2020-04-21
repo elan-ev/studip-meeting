@@ -50,7 +50,6 @@ class BigBlueButton implements DriverInterface, RecordingInterface
             'webVoice' => '',
             'maxParticipants' => '-1',
             'record' => 'true',
-            'duration' => '0',
         );
         if ($features = json_decode($parameters->getMeetingFeatures(), true)) {
             $params = array_merge($params, $features);
@@ -233,6 +232,8 @@ class BigBlueButton implements DriverInterface, RecordingInterface
         return array(
             new ConfigOption('guestPolicy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Guest Policy'),
                  ['ALWAYS_ACCEPT' => _('Immer akzeptieren'), 'ALWAYS_DENY' => _('Immer leugnen'), 'ASK_MODERATOR' => _('Moderator fragen')]),
+            new ConfigOption('duration', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Dauer der Konferenz'), 
+                 _('Wenn leer, wird eine Dauer von "240" Minuten eingestellt')),     
         );
     }
 }
