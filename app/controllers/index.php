@@ -312,7 +312,7 @@ class IndexController extends MeetingsController
     public function edit_action($meetingId)
     {
         $meeting = new Meeting($meetingId);
-        $name = utf8_decode(Request::get('name'));
+        $name = Request::get('name');
         $recordingUrl = utf8_decode(Request::get('recording_url'));
 
         if (!$meeting->isNew() && $this->userCanModifyCourse(Context::getId()) && $name) {
@@ -371,7 +371,6 @@ class IndexController extends MeetingsController
             throw new Trails_Exception(400);
         }
         $driver = $this->driver_factory->getDriver($meeting->driver);
-
         /* // ugly hack for BBB
         if ($driver instanceof ElanEv\Driver\BigBlueButton) {
             // TODO: check if recreation is necessary
