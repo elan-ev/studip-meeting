@@ -76,24 +76,24 @@
                     <label v-if="room['driver_name'] && Object.keys(config_list[room['driver_name']]).includes('features')
                                 && Object.keys(config_list[room['driver_name']]['features']['create']).length">
                         <strong>{{ "Zusätzliche Funktionen" | i18n }}</strong>
-                        <div v-for="(feature, index) in config_list[room['driver_name']]['features']['create']" :key="index">
+                        <div style="margin: 15px 0;" v-for="(feature, index) in config_list[room['driver_name']]['features']['create']" :key="index">
                             <div class="">
                                 {{ feature['display_name'] | i18n }}
                             </div>
-                            <div class="" v-if="Array.isArray(feature['value'])">
+                            <div class="" v-if="feature['value'] && typeof feature['value'] === 'object'">
                                 <select :id="feature['name']" size="1" v-model.trim="room['features'][feature['name']]">
-                                    <option v-for="(fvalue, findex) in feature['value']" :key="findex" :selected="findex = 0"
-                                            :value="fvalue">
-                                            {{ fvalue }}
+                                    <option :value="undefined" disabled> {{ "Bitte wählen Sie eine Option aus" | i18n }} </option>
+                                    <option v-for="(fvalue, findex) in feature['value']" :key="findex"
+                                            :value="findex">
+                                            {{ fvalue | i18n }}
                                     </option>
                                 </select>
                             </div>
                             <div class="col-6" v-else>
-                                <input type="text" v-model.trim="room['features'][feature['name']]" id="name">
+                                <input type="text" v-model.trim="room['features'][feature['name']]" :placeholder="feature['value'] ? feature['value'] : ''" id="name">
                             </div>
                         </div>
                     </label>
-
                     <div>
                         <StudipButton icon="accept" type="button" v-on:click="addRoom($event)">
                             {{ "Raum erstellen" | i18n}}
@@ -251,6 +251,12 @@ export default {
         setServer() {
             //mandatory server selection when there is only one server
             if (this.room['driver_name'] && Object.keys(this.config_list[this.room['driver_name']]['servers']).length == 1) {
+                this.$set(this.room, "server_index" , "0");
+            }
+        },
+        setServer() {
+            //mandatory server selection when there is only one server
+            if (this.room['driver_name'] && Object.keys(this.config[this.room['driver_name']]['servers']).length == 1) {
                 this.$set(this.room, "server_index" , "0");
             }
         },
