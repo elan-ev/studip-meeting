@@ -155,3 +155,18 @@ div.meeting-item-btns {
         float:right;
     }
 }
+fieldset {
+    label {
+        input[type="checkbox"] {
+            cursor: pointer;
+            &[disabled] {
+                cursor: default;
+            }
+        }
+        span{
+            &.disabled {
+                color: #3c454e;
+            }
+        }
+    }
+}

@@ -5,6 +5,7 @@ namespace ElanEv\Driver;
 use MeetingPlugin;
 use GuzzleHttp\ClientInterface;
 use ElanEv\Model\Meeting;
+use ElanEv\Model\Driver;
 
 /**
  * Big Blue Button driver implementation.
@@ -49,7 +50,6 @@ class BigBlueButton implements DriverInterface, RecordingInterface
             'dialNumber' => '',
             'webVoice' => '',
             'maxParticipants' => '-1',
-            'record' => 'true',
         );
         if ($features = json_decode($parameters->getMeetingFeatures(), true)) {
             $params = array_merge($params, $features);
@@ -229,11 +229,28 @@ class BigBlueButton implements DriverInterface, RecordingInterface
      */
     public function getCreateFeatures()
     {
-        return array(
+        $res = [
             new ConfigOption('guestPolicy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Guest Policy'),
                  ['ALWAYS_ACCEPT' => _('Immer akzeptieren'), 'ALWAYS_DENY' => _('Immer leugnen'), 'ASK_MODERATOR' => _('Moderator fragen')]),
             new ConfigOption('duration', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Dauer der Konferenz'), 
                  _('Wenn leer, wird eine Dauer von "240" Minuten eingestellt')),     
-        );
+        ];
+
+        if (Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'record')) {
+            $res[] = new ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Dieser Raum kann aufgezeichnet werden'), 
+                ['1' => _('Ja'), '0' => _('Nein')]);
+        }
+
+        return array_reverse($res);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function useOpenCastForRecording()
+    {
+        $res = false;
+        !MeetingPlugin::checkOpenCast() ?: $res = new ConfigOption('opencast', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Verwenden Opencast für dieses Treibers'), false);
+        return $res;
     }
 }

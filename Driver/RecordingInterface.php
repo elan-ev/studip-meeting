@@ -26,4 +26,11 @@ interface RecordingInterface
      * @return bool
      */
     public function deleteRecordings($recordID);
+
+    /**
+     * Returns a list of opencast related config vars or false if OpenCast plugin is not there
+     *
+     * @return array | bool opencast related configs list, false if OpenCast is not there
+     */
+    public function useOpenCastForRecording();
 }
