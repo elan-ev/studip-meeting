@@ -14,7 +14,7 @@
                     </a>
                 </legend>
 
-                <MessageBox v-if="!rooms_list.length" :type="'info'">
+                <MessageBox v-if="!rooms_list.length && config && course_config.display.addRoom" :type="'info'">
                     {{ "Bisher existieren keine Meeting-Räume für diese Veranstaltung. Möchten Sie einen anlegen?" | i18n }}
                     <br>
                     <StudipButton type="button"  @click="showAddMeeting()">
@@ -303,22 +303,26 @@ export default {
             this.$store.commit(ROOM_CLEAR);
         },
         showRecording(room) {
-            this.$store.dispatch(RECORDING_LIST, room.id).then(({ data }) => {
-                if (data.length) {
-                    this.$store.commit(RECORDING_LIST_SET, data);
-                    $('#recording-modal')
-                    .dialog({
-                        width: '70%',
-                        modal: true,
-                        title: `Aufzeichnungen für Raum "${room.name}"`.toLocaleString()
-                    });
-                } else {
-                    this.message = {
-                        type: 'info',
-                        text: `Keine Aufzeichnungen für Raum "${room.name}"`.toLocaleString()
-                    };
-                }
-            });
+            if (typeof room.recordings_count == 'string') { //opencast url
+                window.open(room.recordings_count, '_blank');
+            } else { //default
+                this.$store.dispatch(RECORDING_LIST, room.id).then(({ data }) => {
+                    if (data.length) {
+                        this.$store.commit(RECORDING_LIST_SET, data);
+                        $('#recording-modal')
+                        .dialog({
+                            width: '70%',
+                            modal: true,
+                            title: `Aufzeichnungen für Raum "${room.name}"`.toLocaleString()
+                        });
+                    } else {
+                        this.message = {
+                            type: 'info',
+                            text: `Keine Aufzeichnungen für Raum "${room.name}"`.toLocaleString()
+                        };
+                    }
+                });
+            }
         },
         deleteRecording(recording) {
             this.$store.dispatch(RECORDING_DELETE, recording);

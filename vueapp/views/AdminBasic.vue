@@ -19,6 +19,20 @@
                     {{ "Display Name" | i18n }}
                     <input type="text" v-model.trim="config[driver_name]['display_name']">
                 </label>
+                <fieldset v-if="Object.keys(driver).includes('recording')">
+                    <label v-for="(rval, rkey) in driver['recording']" :key="rkey">
+                        <input v-if="typeof rval['value'] == 'boolean'" type="checkbox"
+                        :disabled="rval['name'] != 'record' && config[driver_name]['record'] != '1'"
+                        :class="{'disabled': rval['name'] != 'record' && config[driver_name]['record'] != '1'}"
+                        true-value="1"
+                        false-value="0"
+                        @click="handleRecordings(driver_name)"
+                        v-model="config[driver_name][rval['name']]">
+                        <span :class="{'disabled': rval['name'] != 'record' && config[driver_name]['record'] != '1'}">
+                            {{ rval['display_name'] | i18n }}
+                        </span>
+                    </label>
+                </fieldset>
                 <div v-if="Object.keys(config[driver_name].servers).length">
                     <MessageBox :type="'info'">
                         {{ "Folgende Server werden verwendet" | i18n }}
@@ -177,6 +191,18 @@ export default {
                 this.$set(this.server_object, driver_name, server_config);
             }
         },
+        handleRecordings(driver_name) {
+            // it is used to disable every other parameters when the recording is off
+            setTimeout(() => {
+                if (this.config[driver_name]['record'] == '0') {
+                    for (var rindex in this.drivers[driver_name]['recording']) {
+                        if (this.drivers[driver_name]['recording'][rindex]['name'] != 'record') {
+                            this.$set(this.config[driver_name], this.drivers[driver_name]['recording'][rindex]['name'], '0');
+                        }
+                    }
+                }
+            }, 100);
+        }
     },
     mounted() {
         store.dispatch(CONFIG_LIST_READ);

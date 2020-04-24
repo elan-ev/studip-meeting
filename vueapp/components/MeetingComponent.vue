@@ -18,10 +18,11 @@
                             <StudipIcon :icon="room.active == 1 ? 'visibility-visible' : 'visibility-invisible'"
                                 role="clickable" size="20"></StudipIcon>
                         </a>
-                        <a style="cursor: pointer;" :title=" 'Die vorhandenen Aufzeichnungen' | i18n "
-                                :data-badge="room.recordings_count"
+                        <a v-if="room.recordings_count" style="cursor: pointer;" 
+                                :title=" typeof room.recordings_count == 'string' ? 'Die vorhandenen Aufzeichnungen auf Opencast' : 'Die vorhandenen Aufzeichnungen' | i18n "
+                                :data-badge="typeof room.recordings_count == 'number' ? room.recordings_count : 0"
                                 @click.prevent="getRecording()">
-                            <StudipIcon icon="video2" role="clickable" size="20"></StudipIcon>
+                            <StudipIcon :icon="typeof room.recordings_count == 'string' ? 'video2+new' : 'video2'" role="clickable" size="20"></StudipIcon>
                         </a>
                         <a v-if="course_config.display.editRoom" style="cursor: pointer;" :title=" room.join_as_moderator == 1 ?
                             'Teilnehmende bekommen eingeschränkte Rechte' : 'Teilnehmende bekommen Administrations-Rechte' | i18n "

@@ -261,4 +261,31 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
     {
         return $this->assetsUrl;
     }
+
+    /**
+     * Checks if opencast is loaded, and if course id is passed,
+     * returns the series id of the course if opencast has been set for the course
+     *
+     * @param  string  $cid course ID with default null
+     * @return bool | array | string
+    */
+    function checkOpenCast($cid = null) {
+        $opencast_plugin = PluginEngine::getPlugin("OpenCast");
+        if ($opencast_plugin) {
+            if ($cid) {
+                if ($opencast_plugin->isActivated($cid)) {
+                    try {
+                        return \Opencast\Models\OCSeminarSeries::getSeries($cid);
+                    } catch (Exception $ex) {
+                        //Handle Error
+                        return false;
+                    }
+                } else {
+                    return "not active";
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 }

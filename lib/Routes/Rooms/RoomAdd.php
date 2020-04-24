@@ -16,6 +16,7 @@ use ElanEv\Model\Meeting;
 use ElanEv\Model\Helper;
 use ElanEv\Driver\DriverFactory;
 use ElanEv\Model\Driver;
+use MeetingPlugin;
 
 class RoomAdd extends MeetingsController
 {
@@ -59,6 +60,25 @@ class RoomAdd extends MeetingsController
             if (!isset($json['features']['duration'])) {
                 $json['features']['duration'] = "240";
             }
+
+            //Handle recording stuff
+            $record = 'false';
+            $opencast_series_id = '';
+            if (Driver::getConfigValueByDriver($json['driver_name'], 'record')) { //config double check
+                if (isset($json['features']['record']) && $json['features']['record'] == 1) { //user record request
+                    $record = 'true';
+                    if (Driver::getConfigValueByDriver($json['driver_name'], 'opencast')) { // config check for opencast
+                        $series_id = MeetingPlugin::checkOpenCast($json['cid']);
+                        if (is_array($series_id)) {
+                            $opencast_series_id = $series_id[0];
+                        } else if (!$series_id) {
+                            throw new Error(_('Opencast Series id kann nicht gefunden werden!'), 404);
+                        }
+                    }
+                }
+            }
+            $json['features']['record'] = $record;
+            !$opencast_series_id ?: $json['features']['meta_opencast-series-id'] = $opencast_series_id;
             
             if (!$exists) {
                 $meeting = new Meeting();
