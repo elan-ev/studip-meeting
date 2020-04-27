@@ -166,7 +166,7 @@ export default {
         this.getInfo();
         this.interval = setInterval(() => {
             this.getInfo();
-        }, 60000);
+        }, 120000);
     },
     beforeDestroy () {
        clearInterval(this.interval)

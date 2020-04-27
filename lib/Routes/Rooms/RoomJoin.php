@@ -45,6 +45,18 @@ class RoomJoin extends MeetingsController
             throw new Error(_('Dieser Raum in diesem Kurs kann nicht gefunden werden!'), 404);
         }
 
+        //putting mandatory logoutURL into features
+        ;
+        if ($features = json_decode($meeting->features, true)) {
+            if (!isset($features['logoutURL'])) {
+                $hostUrl = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost()
+                    .($request->getUri()->getPort() ? ':' . $request->getUri()->getPort() : '');
+                $features['logoutURL'] =  $hostUrl . \PluginEngine::getLink('meetingplugin', array('cid' => $cid), 'index');
+                $meeting->features = json_encode($features);
+                $meeting->store();
+            }
+        }
+
         $driver = $driver_factory->getDriver($meeting->driver, $meeting->server_index);
 
         $joinParameters = new JoinParameters();
