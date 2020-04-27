@@ -34,7 +34,6 @@
                  type="error">
                 {{ "Es gibt keine Server für dieses Konferenzsystem, bitte wählen Sie ein anderes Konferenzsystem" | i18n }}
             </MessageBox>
-
             <form class="default" >
                 <fieldset>
                     <label>
@@ -51,7 +50,7 @@
                     </label>
                     <label>
                         <span class="required">{{ "Konferenzsystem" | i18n }}</span>
-                        <select id="driver_name" size="1" v-model="room['driver_name']" @change.prevent="setServer()" :disabled="Object.keys(config_list).length == 1">
+                        <select id="driver_name" size="1" v-model="room['driver_name']" @change.prevent="handleDriverDefaults()" :disabled="Object.keys(config_list).length == 1">
                             <option value="" disabled> {{ "Bitte wählen Sie ein Konferenzsystem aus" | i18n }} </option>
                             <option v-for="(driver_config, driver_name) in config_list" :key="driver_name"
                                     :value="driver_name">
@@ -77,10 +76,11 @@
                                 && Object.keys(config_list[room['driver_name']]['features']['create']).length">
                         <strong>{{ "Zusätzliche Funktionen" | i18n }}</strong>
                         <div style="margin: 15px 0;" v-for="(feature, index) in config_list[room['driver_name']]['features']['create']" :key="index">
-                            <div class="">
+                            <hr>
+                            <span class="">
                                 {{ feature['display_name'] | i18n }}
-                            </div>
-                            <div class="" v-if="feature['value'] && typeof feature['value'] === 'object'">
+                            </span>
+                            <div class="" v-if="feature['value'] && typeof feature['value'] === 'object' && feature['name'] != 'roomSizeProfiles'">
                                 <select :id="feature['name']" size="1" v-model.trim="room['features'][feature['name']]">
                                     <option :value="undefined" disabled> {{ "Bitte wählen Sie eine Option aus" | i18n }} </option>
                                     <option v-for="(fvalue, findex) in feature['value']" :key="findex"
@@ -89,8 +89,35 @@
                                     </option>
                                 </select>
                             </div>
-                            <div class="col-6" v-else>
-                                <input type="text" v-model.trim="room['features'][feature['name']]" :placeholder="feature['value'] ? feature['value'] : ''" id="name">
+                            <div id="meeting-create-feature-size" class="col-6" v-else-if="feature['name'] == 'roomSizeProfiles'">
+                                <select :id="feature['name']" size="1" @change="setRoomSize(feature['value'])" v-model.trim="room['features'][feature['name']]">
+                                    <option :value="undefined" disabled> {{ "Bitte wählen Sie eine Option aus" | i18n }} </option>
+                                    <option v-for="(fvalue, findex) in feature['value']" :key="findex"
+                                            :value="fvalue['name']">
+                                            {{ fvalue['display_name'] | i18n }}
+                                    </option>
+                                </select>
+                                <div style="margin-top: 15px;" v-for="(fvalue, findex) in feature['value']" :key="findex">
+                                    <label v-for="(fsvalue, fsindex) in fvalue['value']" :key="fsindex" v-show="room['features'][feature['name']] == fvalue['name']">
+                                        <div v-if="typeof fsvalue['value'] != 'boolean'">
+                                            <span class="">{{ fsvalue['display_name'] | i18n }}</span>
+                                            <input type="text" v-model.trim="room['features'][fsvalue['name']]" 
+                                                :placeholder="fsvalue['value'] ? fsvalue['value'] : ''" :id="fsvalue['name']">
+                                        </div>
+                                        
+                                        <div v-else>
+                                            <input  type="checkbox"
+                                                true-value="true"
+                                                false-value="false"
+                                                v-model="room['features'][fsvalue['name'] ]">
+                                                {{ fsvalue['display_name'] | i18n }}
+                                        </div>
+                                        
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="" v-else>
+                                <input type="text" v-model.trim="room['features'][feature['name']]" :placeholder="feature['value'] ? feature['value'] : ''" :id="feature['name']">
                             </div>
                         </div>
                     </label>
@@ -150,7 +177,7 @@
                 <fieldset>
                     <label>
                         <span class="required">{{ "Gastname" | i18n }}</span>
-                        <input type="text" v-model.trim="room['guest_name']" id="name">
+                        <input type="text" v-model.trim="room['guest_name']" id="guestname">
                     </label>
                     <label id="guest_link_label" style="display: none;">
                         <span>{{ "Link" | i18n }}</span>
@@ -234,7 +261,8 @@ export default {
             this.$store.commit(ROOM_CLEAR);
             $('#conference-meeting-create')
             .dialog({
-                width: '50%',
+                height: ($(window).height() * 0.8),
+                width: '70%',
                 modal: true,
                 title: 'Raum hinzufügen'.toLocaleString()
             });
@@ -247,16 +275,26 @@ export default {
                 this.$set(this.room, "driver_name" , Object.keys(this.config_list)[0]);
             }
         },
-
-        setServer() {
+        handleDriverDefaults() {
+            //set default features
+            this.$set(this.room, "features" , {});
+            if (Object.keys(this.config_list[this.room['driver_name']]).includes('features')) {
+                //set size feature
+                if (Object.keys(this.config_list[this.room['driver_name']]['features']['create']).length) {
+                    var roomSizeProfiles = this.config_list[this.room['driver_name']]['features']['create'].find(f => f.name == 'roomSizeProfiles');
+                    if (roomSizeProfiles) {
+                        var smallProfile = roomSizeProfiles.value.find(s => s.name == 'small');
+                        if (smallProfile) {
+                            this.$set(this.room['features'], "roomSizeProfiles" , "small");
+                            smallProfile.value.forEach(content => { 
+                                this.$set(this.room['features'], content.name , content.value);
+                            });
+                        }
+                    }
+                }
+            }
             //mandatory server selection when there is only one server
             if (this.room['driver_name'] && Object.keys(this.config_list[this.room['driver_name']]['servers']).length == 1) {
-                this.$set(this.room, "server_index" , "0");
-            }
-        },
-        setServer() {
-            //mandatory server selection when there is only one server
-            if (this.room['driver_name'] && Object.keys(this.config[this.room['driver_name']]['servers']).length == 1) {
                 this.$set(this.room, "server_index" , "0");
             }
         },
@@ -266,8 +304,8 @@ export default {
             }
             var empty_fields_arr = [];
             for (var key in this.room) {
-                if (key != 'join_as_moderator' && this.room[key] == '' ) {
-                    $(`#${key}`).prev().is(':visible') ? empty_fields_arr.push($(`#${key}`).prev().text()) : '';
+                if (key != 'join_as_moderator' && key != 'features' && this.room[key] === '' ) {
+                    $(`#${key}`).prev().hasClass('required') ? empty_fields_arr.push($(`#${key}`).prev().text()) : '';
                 }
             }
             if ( !empty_fields_arr.length ) {
@@ -276,6 +314,7 @@ export default {
                 .then(({ data }) => {
                     this.message = data.message;
                     if (this.message.type == 'error') {
+                        $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
                         this.$set(this.modal_message, "type" , "error");
                         this.$set(this.modal_message, "text" , this.message.text);
                     } else {
@@ -286,10 +325,12 @@ export default {
                         }, 3000);
                     }
                 }).catch (error => {
+                    $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
                     this.$set(this.modal_message, "type" , "error");
                     this.$set(this.modal_message, "text" , 'System Error: please contact system administrator!');
                 });
             } else {
+                $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
                 var empty_fields_str = empty_fields_arr.join('), (');
                 this.$set(this.modal_message, "type" , "error");
                 this.$set(this.modal_message, "text" , `Bitte füllen Sie folgende Felder aus: (${empty_fields_str})`.toLocaleString());
@@ -371,6 +412,24 @@ export default {
             this.$store.commit(ROOM_CLEAR);
             $('#guest_link').text('');
             $('#guest-invitation-modal').dialog('close');
+        },
+        setRoomSize(values) {
+            setTimeout(() => {
+                values.forEach(profile => { //remove all previuos size features
+                    profile.value.forEach(profile_content => {
+                        if (Object.keys(this.room['features']).includes(profile_content['name'])) {
+                            this.$delete(this.room['features'], profile_content['name']);
+                        }
+                    });
+                });
+                values.forEach(profile => { //add selected size features
+                    if (this.room['features']['roomSizeProfiles'] == profile['name']) {
+                        profile.value.forEach(profile_content => {
+                            this.$set(this.room['features'], profile_content['name'] , profile_content['value']);
+                        });
+                    }
+                });
+            }, 100);
         }
     },
     mounted() {

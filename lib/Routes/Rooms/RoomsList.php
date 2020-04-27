@@ -63,7 +63,7 @@ class RoomsList extends MeetingsController
                                     in_array($this->getFeatures($meeting['features'], 'meta_opencast-series-id'), 
                                         MeetingPlugin::checkOpenCast($meetingCourse->course_id)))
                                 {
-                                    $meeting['recordings_count'] = 'Opencast URL + ' . $this->getFeatures($meeting['features'], 'meta_opencast-series-id');
+                                    $meeting['recordings_count'] = \PluginEngine::getURL('OpenCast', ['cid' => $cid], 'course', true);
                                 } else {
                                     $meeting['recordings_count'] = false;
                                 }

@@ -40,6 +40,8 @@ class RoomAdd extends MeetingsController
     public function __invoke(Request $request, Response $response, $args)
     {
         try {
+            $has_error = false;
+            $error_text = '';
             $user = $GLOBALS['user'];
             $driver_factory = new DriverFactory(Driver::getConfig());
             $json = $this->getRequestData($request);
@@ -50,37 +52,57 @@ class RoomAdd extends MeetingsController
                     $exists = true;
                 }
             }
-
-            //putting mandatory logoutURL into features
-            $hostUrl = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost()
-                    .($request->getUri()->getPort() ? ':' . $request->getUri()->getPort() : '');
-            $json['features']['logoutURL'] = $hostUrl . \PluginEngine::getLink('meetingplugin', array('cid' => $json['cid']), 'index');
-
-            //Adding default "duration" of 240 Minutes into features if it is not set
-            if (!isset($json['features']['duration'])) {
-                $json['features']['duration'] = "240";
+            //validations 
+            if ($exists) {
+                $has_error = true;
+                $error_text = _('Dieser Raum existiert');
             }
 
-            //Handle recording stuff
-            $record = 'false';
-            $opencast_series_id = '';
-            if (Driver::getConfigValueByDriver($json['driver_name'], 'record')) { //config double check
-                if (isset($json['features']['record']) && $json['features']['record'] == 1) { //user record request
-                    $record = 'true';
-                    if (Driver::getConfigValueByDriver($json['driver_name'], 'opencast')) { // config check for opencast
-                        $series_id = MeetingPlugin::checkOpenCast($json['cid']);
-                        if (is_array($series_id)) {
-                            $opencast_series_id = $series_id[0];
-                        } else if (!$series_id) {
-                            throw new Error(_('Opencast Series id kann nicht gefunden werden!'), 404);
+            if (empty($json['name'])) {
+                $has_error = true;
+                $error_text = _('Der Raumname darf nicht leer sein');
+            }
+
+            if (empty($json['driver_name'])) {
+                $has_error = true;
+                $error_text = _('Es ist kein Konferenzsystem ausgewählt');
+            }
+
+            if (!is_numeric($json['server_index'])) {
+                $has_error = true;
+                $error_text = _('Server ist nicht definiert');
+            }
+
+            if (!$has_error) {
+                //putting mandatory logoutURL into features
+                $hostUrl = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost()
+                        .($request->getUri()->getPort() ? ':' . $request->getUri()->getPort() : '');
+                $json['features']['logoutURL'] = $hostUrl . \PluginEngine::getLink('meetingplugin', array('cid' => $json['cid']), 'index');
+
+                //Adding default "duration" of 240 Minutes into features if it is not set
+                if (!isset($json['features']['duration'])) {
+                    $json['features']['duration'] = "240";
+                }
+
+                //Handle recording stuff
+                $record = 'false';
+                $opencast_series_id = '';
+                if (Driver::getConfigValueByDriver($json['driver_name'], 'record')) { //config double check
+                    if (isset($json['features']['record']) && $json['features']['record'] == 1) { //user record request
+                        $record = 'true';
+                        if (Driver::getConfigValueByDriver($json['driver_name'], 'opencast')) { // config check for opencast
+                            $series_id = MeetingPlugin::checkOpenCast($json['cid']);
+                            if (is_array($series_id)) {
+                                $opencast_series_id = $series_id[0];
+                            } else if (!$series_id) {
+                                throw new Error(_('Opencast Series id kann nicht gefunden werden!'), 404);
+                            }
                         }
                     }
                 }
-            }
-            $json['features']['record'] = $record;
-            !$opencast_series_id ?: $json['features']['meta_opencast-series-id'] = $opencast_series_id;
-            
-            if (!$exists) {
+                $json['features']['record'] = $record;
+                !$opencast_series_id ?: $json['features']['meta_opencast-series-id'] = $opencast_series_id;
+                
                 $meeting = new Meeting();
                 $meeting->courses[] = new \Course($json['cid']);
                 $meeting->user_id = $user->id;
@@ -114,10 +136,9 @@ class RoomAdd extends MeetingsController
                     'text' => _('Room created!'),
                     'type' => 'success'
                 ];
-                
             } else {
                 $message = [
-                    'text' => _('meeting already exists!'),
+                    'text' => $error_text,
                     'type' => 'error'
                 ];
             }
