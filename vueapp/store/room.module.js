@@ -63,13 +63,8 @@ export const actions = {
     },
 
     async [ROOM_UPDATE](context, params) {
-        return ApiService.update('rooms', params.id, {
-            "active": params.active,
-            "name": params.name,
-            "recording_url": params.recording_url,
-            "join_as_moderator": params.join_as_moderator,
-            "cid": CID
-        });
+        params.cid = CID;
+        return ApiService.update('rooms' , params.id, params);
     },
 
     async [ROOM_CREATE](context, params) {
