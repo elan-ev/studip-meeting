@@ -22,7 +22,7 @@
                     </StudipButton>
                 </MessageBox>
                 <MeetingComponent v-for="(room, index) in rooms_list" :key="index" :room="room" v-on:getRecording="showRecording"
-                     v-on:renewRoomList="getRoomList" v-on:getGuestInfo="showGuestDialog"></MeetingComponent>
+                     v-on:renewRoomList="getRoomList" v-on:getGuestInfo="showGuestDialog" v-on:getFeatures="showEditFeatureDialog"></MeetingComponent>
             </fieldset>
         </form>
 
@@ -122,7 +122,10 @@
                         </div>
                     </label>
                     <div>
-                        <StudipButton icon="accept" type="button" v-on:click="addRoom($event)">
+                        <StudipButton v-if="room['id']" icon="accept" type="button" v-on:click="editRoom($event)">
+                            {{ "Raum bearbeiten" | i18n}}
+                        </StudipButton>
+                        <StudipButton v-else icon="accept" type="button" v-on:click="addRoom($event)">
                             {{ "Raum erstellen" | i18n}}
                         </StudipButton>
                         <StudipButton icon="cancel" type="button" v-on:click="cancelAddRoom($event)">
@@ -430,6 +433,37 @@ export default {
                     }
                 });
             }, 100);
+        },
+        showEditFeatureDialog(room) {
+            this.$store.commit(ROOM_CLEAR);
+            this.$set(this.room, 'driver_name', room.driver);
+            this.$set(this.room, 'features', room.features);
+            this.$set(this.room, 'join_as_moderator', room.join_as_moderator);
+            this.$set(this.room, 'name', room.name);
+            this.$set(this.room, 'server_index', room.server_index);
+            this.$set(this.room, 'id', room.id);
+            this.modal_message = {};
+            $('#conference-meeting-create')
+            .dialog({
+                height: ($(window).height() * 0.8),
+                width: '70%',
+                modal: true,
+                title: 'Raumeinstellung'.toLocaleString()
+            });
+        },
+        editRoom() {
+            this.$store.dispatch(ROOM_UPDATE, this.room)
+            .then(({ data }) => {
+                console.log(data.message);
+                this.message = data.message;
+                if (data.message.type == 'success') {
+                    $('#conference-meeting-create').dialog('close');
+                    this.getRoomList();
+                } else {
+                    $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
+                    this.modal_message = data.message; 
+                }
+            });
         }
     },
     mounted() {

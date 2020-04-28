@@ -240,7 +240,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
 
         if (Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'record')) {
             $res[] = new ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnung (Default: Nein)'), 
-                ['1' => 'Ja', '0' => 'Nein']);
+                ['true' => 'Ja', 'false' => 'Nein']);
         }
 
         $res[] = new ConfigOption('roomSizeProfiles', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Größe des Raumes (Default: Kleiner Raum)'), 

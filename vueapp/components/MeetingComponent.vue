@@ -11,6 +11,11 @@
                         <a v-if="info.recording == 'true'" :title=" 'Dieser Raum kann aufgezeichnet werden!' | i18n " >
                             <StudipIcon icon="exclaim-circle" role="status-yellow" size="20"></StudipIcon>
                         </a>
+                        <a v-if="course_config.display.editRoom" style="cursor: pointer;" 
+                            :title=" 'Raumeinstellungen' | i18n "
+                            @click.prevent="editFeatures()">
+                            <StudipIcon icon="admin" role="clickable" size="20"></StudipIcon>
+                        </a>
                         <a v-if="course_config.display.editRoom" style="cursor: pointer;"
                             :title="room.active == 1 ? 'Meeting für Teilnehmende unsichtbar schalten'
                                         : 'Meeting für Teilnehmende sichtbar schalten' | i18n "
@@ -109,6 +114,9 @@ export default {
         }
     },
     methods: {
+        editFeatures() {
+            this.$emit('getFeatures', this.room);
+        },
         editRights() {
             this.room.join_as_moderator = this.room.join_as_moderator == 1 ? 0 : 1;
             this.$store.dispatch(ROOM_UPDATE, this.room)
