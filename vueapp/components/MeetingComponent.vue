@@ -66,12 +66,9 @@
                     type="button" v-on:click="getGuestInfo()">
                     {{ "Gast einladen" | i18n}}
                 </StudipButton>
-                <StudipButton icon=""
-                 class="join"
-                 type="button"
-                 v-on:click="joinRoom($event)">
+                <a class="button join" :href="join_url" target="_blank">
                     {{ "Teilnehmen" | i18n}}
-                </StudipButton>
+                </a>
             </div>
         </fieldset>
     </div>
@@ -111,6 +108,7 @@ export default {
         return {
             interval: null,
             info: {},
+            join_url: ''
         }
     },
     methods: {
@@ -149,17 +147,7 @@ export default {
                 this.$store.dispatch(ROOM_DELETE, this.room.id)
             }
         },
-        joinRoom(event) {
-            if (event) {
-                event.preventDefault();
-            }
-            this.$store.dispatch(ROOM_JOIN, this.room.id)
-            .then(({ data }) => {
-                if (data.join_url != '') {
-                    window.open(data.join_url, '_blank');
-                }
-            });
-        },
+
         getInfo() {
             this.$store.dispatch(ROOM_INFO, this.room.id)
             .then(({ data }) => {
@@ -172,11 +160,23 @@ export default {
         getGuestInfo() {
             this.$emit('getGuestInfo', this.room);
         },
+
+        updateJoinLink() {
+            this.$store.dispatch(ROOM_JOIN, this.room.id)
+            .then(({ data }) => {
+                if (data.join_url != '') {
+                    this.join_url = data.join_url;
+                    //window.open(data.join_url, '_blank');
+                }
+            });
+        }
     },
     mounted() {
         this.getInfo();
+        this.updateJoinLink();
         this.interval = setInterval(() => {
             this.getInfo();
+            this.updateJoinLink();
         }, 120000);
     },
     beforeDestroy () {

@@ -91,14 +91,14 @@ div.meeting-item-header {
             }
             &[data-badge]:not([data-badge="0"]) {
                 position: relative;
-    
+
                 &::before {
                     position: absolute;
                     left: 50%;
                     top: -10px;
 
                     margin-left: 5px;
-    
+
                     background-clip: content-box;
                     background-color: #D60000;
                     border-radius: 50%;
@@ -151,7 +151,7 @@ div.meeting-item-btns {
             background-color: #D60000;
         }
     }
-    button.join {
+    a.join {
         float:right;
     }
 }
