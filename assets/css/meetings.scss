@@ -144,12 +144,6 @@ div.meeting-item-btns {
     clear: both;
     button.delete {
         float:right;
-        border-color: #D60000;
-        color: #D60000;
-        &:hover, &:active {
-            color: white;
-            background-color: #D60000;
-        }
     }
     a.join {
         float:left;
