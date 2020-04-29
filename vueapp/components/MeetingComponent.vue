@@ -11,6 +11,11 @@
                         <a v-if="info.recording == 'true'" :title=" 'Dieser Raum kann aufgezeichnet werden!' | i18n " >
                             <StudipIcon icon="exclaim-circle" role="status-yellow" size="20"></StudipIcon>
                         </a>
+                        <a v-if="course_config.display.editRoom" style="cursor: pointer;" 
+                            :title=" 'Raumeinstellungen' | i18n "
+                            @click.prevent="editFeatures()">
+                            <StudipIcon icon="admin" role="clickable" size="20"></StudipIcon>
+                        </a>
                         <a v-if="course_config.display.editRoom" style="cursor: pointer;"
                             :title="room.active == 1 ? 'Meeting für Teilnehmende unsichtbar schalten'
                                         : 'Meeting für Teilnehmende sichtbar schalten' | i18n "
@@ -18,10 +23,11 @@
                             <StudipIcon :icon="room.active == 1 ? 'visibility-visible' : 'visibility-invisible'"
                                 role="clickable" size="20"></StudipIcon>
                         </a>
-                        <a style="cursor: pointer;" :title=" 'Die vorhandenen Aufzeichnungen' | i18n "
-                                :data-badge="room.recordings_count"
+                        <a v-if="room.recordings_count" style="cursor: pointer;" 
+                                :title=" typeof room.recordings_count == 'string' ? 'Die vorhandenen Aufzeichnungen auf Opencast' : 'Die vorhandenen Aufzeichnungen' | i18n "
+                                :data-badge="typeof room.recordings_count == 'number' ? room.recordings_count : 0"
                                 @click.prevent="getRecording()">
-                            <StudipIcon icon="video2" role="clickable" size="20"></StudipIcon>
+                            <StudipIcon :icon="typeof room.recordings_count == 'string' ? 'video2+new' : 'video2'" role="clickable" size="20"></StudipIcon>
                         </a>
                         <a v-if="course_config.display.editRoom" style="cursor: pointer;" :title=" room.join_as_moderator == 1 ?
                             'Teilnehmende bekommen eingeschränkte Rechte' : 'Teilnehmende bekommen Administrations-Rechte' | i18n "
@@ -108,6 +114,9 @@ export default {
         }
     },
     methods: {
+        editFeatures() {
+            this.$emit('getFeatures', this.room);
+        },
         editRights() {
             this.room.join_as_moderator = this.room.join_as_moderator == 1 ? 0 : 1;
             this.$store.dispatch(ROOM_UPDATE, this.room)
@@ -165,7 +174,7 @@ export default {
         this.getInfo();
         this.interval = setInterval(() => {
             this.getInfo();
-        }, 60000);
+        }, 120000);
     },
     beforeDestroy () {
        clearInterval(this.interval)

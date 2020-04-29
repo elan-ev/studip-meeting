@@ -47,10 +47,22 @@ class ConfigOption
     }
 
     public function toArray() {
+        $values = [];
+        if (is_array($this->getValue())) {
+            foreach ($this->getValue() as $key => $val) {
+                if ( $val instanceof \ElanEv\Driver\ConfigOption) {
+                    $values[$key] = $val->toArray();
+                } else {
+                    $values[$key] = $val;
+                }
+            }
+        } else {
+            $values = $this->getValue();
+        }
         return [
             'name' => $this->getName(),
             'display_name' => $this->getDisplayName(),
-            'value' => $this->getValue()
+            'value' => $values
         ];
     }
 }

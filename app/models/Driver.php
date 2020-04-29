@@ -26,18 +26,31 @@ class Driver
 
         foreach (glob(__DIR__ . '/../../Driver/*.php') as $filename) {
             $class = 'ElanEv\\Driver\\' . substr(basename($filename), 0, -4);
+            $title = '';
+            $config_options = [];
+            $recording_options = [];
             if (in_array('ElanEv\Driver\DriverInterface', class_implements($class)) !== false) {
-
                 $title          = substr(basename($filename), 0, -4);
                 $config_options = $class::getConfigOptions();
-
-                // $config_options[] = new \ElanEv\Driver\ConfigOption('enable', '');
-
-                $drivers[$title] = array(
-                    'title'  => $title,
-                    'config' => $toArray ? self::convertDriverConfigToArray($config_options) : $config_options
-                );
             }
+
+            if (in_array('ElanEv\Driver\RecordingInterface', class_implements($class)) !== false) {
+                //If there is RecordingInterface then the field 'record' is considered as a must later on in the logic
+                //that means, if admin set record to true then every other setting like opencast can be used
+                $recording_options['record'] = new \ElanEv\Driver\ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnung zulassen'), false);
+                if ($oc_config = $class::useOpenCastForRecording()) {
+                    $recording_options['opencast'] = $oc_config;
+                }
+            }
+
+            if ($title && $config_options) {
+                $drivers[$title] = array(
+                    'title'     => $title,
+                    'config'    => $toArray ? self::convertDriverConfigToArray($config_options) : $config_options,
+                );
+
+                !$recording_options ?:  $drivers[$title]['recording'] = $toArray ? self::convertDriverConfigToArray($recording_options) : $recording_options;
+            }  
         }
 
         return $drivers;
@@ -101,5 +114,18 @@ class Driver
         self::loadConfig();
 
         return self::$config;
+    }
+
+    static function getConfigValueByDriver($driver_name, $key)
+    {
+        $config = json_decode(\Config::get()->getValue('VC_CONFIG'), true);
+
+        foreach ($config as $dname => $dvals) {
+            if ($driver_name == $dname && isset($dvals[$key])) {
+                return $dvals[$key];
+            }
+        }
+
+        return false;
     }
 }

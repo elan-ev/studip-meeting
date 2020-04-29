@@ -14,7 +14,7 @@
                     </a>
                 </legend>
 
-                <MessageBox v-if="!rooms_list.length" :type="'info'">
+                <MessageBox v-if="!rooms_list.length && config && course_config.display.addRoom" :type="'info'">
                     {{ "Bisher existieren keine Meeting-Räume für diese Veranstaltung. Möchten Sie einen anlegen?" | i18n }}
                     <br>
                     <StudipButton type="button"  @click="showAddMeeting()">
@@ -22,7 +22,7 @@
                     </StudipButton>
                 </MessageBox>
                 <MeetingComponent v-for="(room, index) in rooms_list" :key="index" :room="room" v-on:getRecording="showRecording"
-                     v-on:renewRoomList="getRoomList" v-on:getGuestInfo="showGuestDialog"></MeetingComponent>
+                     v-on:renewRoomList="getRoomList" v-on:getGuestInfo="showGuestDialog" v-on:getFeatures="showEditFeatureDialog"></MeetingComponent>
             </fieldset>
         </form>
 
@@ -34,7 +34,6 @@
                  type="error">
                 {{ "Es gibt keine Server für dieses Konferenzsystem, bitte wählen Sie ein anderes Konferenzsystem" | i18n }}
             </MessageBox>
-
             <form class="default" >
                 <fieldset>
                     <label>
@@ -51,7 +50,7 @@
                     </label>
                     <label>
                         <span class="required">{{ "Konferenzsystem" | i18n }}</span>
-                        <select id="driver_name" size="1" v-model="room['driver_name']" @change.prevent="setServer()" :disabled="Object.keys(config_list).length == 1">
+                        <select id="driver_name" size="1" v-model="room['driver_name']" @change.prevent="handleDriverDefaults()" :disabled="Object.keys(config_list).length == 1">
                             <option value="" disabled> {{ "Bitte wählen Sie ein Konferenzsystem aus" | i18n }} </option>
                             <option v-for="(driver_config, driver_name) in config_list" :key="driver_name"
                                     :value="driver_name">
@@ -77,10 +76,11 @@
                                 && Object.keys(config_list[room['driver_name']]['features']['create']).length">
                         <strong>{{ "Zusätzliche Funktionen" | i18n }}</strong>
                         <div style="margin: 15px 0;" v-for="(feature, index) in config_list[room['driver_name']]['features']['create']" :key="index">
-                            <div class="">
+                            <hr>
+                            <span class="">
                                 {{ feature['display_name'] | i18n }}
-                            </div>
-                            <div class="" v-if="feature['value'] && typeof feature['value'] === 'object'">
+                            </span>
+                            <div class="" v-if="feature['value'] && typeof feature['value'] === 'object' && feature['name'] != 'roomSizeProfiles'">
                                 <select :id="feature['name']" size="1" v-model.trim="room['features'][feature['name']]">
                                     <option :value="undefined" disabled> {{ "Bitte wählen Sie eine Option aus" | i18n }} </option>
                                     <option v-for="(fvalue, findex) in feature['value']" :key="findex"
@@ -89,13 +89,43 @@
                                     </option>
                                 </select>
                             </div>
-                            <div class="col-6" v-else>
-                                <input type="text" v-model.trim="room['features'][feature['name']]" :placeholder="feature['value'] ? feature['value'] : ''" id="name">
+                            <div id="meeting-create-feature-size" class="col-6" v-else-if="feature['name'] == 'roomSizeProfiles'">
+                                <select :id="feature['name']" size="1" @change="setRoomSize(feature['value'])" v-model.trim="room['features'][feature['name']]">
+                                    <option :value="undefined" disabled> {{ "Bitte wählen Sie eine Option aus" | i18n }} </option>
+                                    <option v-for="(fvalue, findex) in feature['value']" :key="findex"
+                                            :value="fvalue['name']">
+                                            {{ fvalue['display_name'] | i18n }}
+                                    </option>
+                                </select>
+                                <div style="margin-top: 15px;" v-for="(fvalue, findex) in feature['value']" :key="findex">
+                                    <label v-for="(fsvalue, fsindex) in fvalue['value']" :key="fsindex" v-show="room['features'][feature['name']] == fvalue['name']">
+                                        <div v-if="typeof fsvalue['value'] != 'boolean'">
+                                            <span class="">{{ fsvalue['display_name'] | i18n }}</span>
+                                            <input type="text" v-model.trim="room['features'][fsvalue['name']]" 
+                                                :placeholder="fsvalue['value'] ? fsvalue['value'] : ''" :id="fsvalue['name']">
+                                        </div>
+                                        
+                                        <div v-else>
+                                            <input  type="checkbox"
+                                                true-value="true"
+                                                false-value="false"
+                                                v-model="room['features'][fsvalue['name'] ]">
+                                                {{ fsvalue['display_name'] | i18n }}
+                                        </div>
+                                        
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="" v-else>
+                                <input type="text" v-model.trim="room['features'][feature['name']]" :placeholder="feature['value'] ? feature['value'] : ''" :id="feature['name']">
                             </div>
                         </div>
                     </label>
                     <div>
-                        <StudipButton icon="accept" type="button" v-on:click="addRoom($event)">
+                        <StudipButton v-if="room['id']" icon="accept" type="button" v-on:click="editRoom($event)">
+                            {{ "Änderungen speichern" | i18n}}
+                        </StudipButton>
+                        <StudipButton v-else icon="accept" type="button" v-on:click="addRoom($event)">
                             {{ "Raum erstellen" | i18n}}
                         </StudipButton>
                         <StudipButton icon="cancel" type="button" v-on:click="cancelAddRoom($event)">
@@ -143,22 +173,26 @@
             </table>
         </div>
         <div id="guest-invitation-modal" style="display: none;">
-            <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
+            <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''" :timer="2000">
                 {{ modal_message.text }}
             </MessageBox>
             <form class="default" >
                 <fieldset>
                     <label>
                         <span class="required">{{ "Gastname" | i18n }}</span>
-                        <input type="text" v-model.trim="room['guest_name']" id="name">
+                        <input type="text" v-model.trim="room['guest_name']" id="guestname">
                     </label>
                     <label id="guest_link_label" style="display: none;">
                         <span>{{ "Link" | i18n }}</span>
+                        <StudipTooltipIcon :text="'Bitte versuchen Sie, dem Gast den Link zu geben.' | i18n" :important="true"></StudipTooltipIcon>
                         <textarea id="guest_link" cols="30" rows="5"></textarea>
+                        <StudipButton icon="add" type="button" v-on:click="copyGuestLinkClipboard($event)">
+                            {{ "In Clipboard kopieren" | i18n}}
+                        </StudipButton>
                     </label>
                     <div>
-                        <StudipButton icon="accept" type="button" v-on:click="generateGuestJoin($event)">
-                            {{ "Einladungslink erstellen" | i18n}}
+                        <StudipButton id="generate_link_btn" icon="accept" type="button" v-on:click="generateGuestJoin($event)">
+                            {{ "Einladungslink erstellen" | i18n }}
                         </StudipButton>
                         <StudipButton icon="cancel" type="button" v-on:click="cancelGuest($event)">
                             {{ "Abbrechen" | i18n}}
@@ -176,6 +210,7 @@ import store from "@/store";
 
 import StudipButton from "@/components/StudipButton";
 import StudipIcon from "@/components/StudipIcon";
+import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import MessageBox from "@/components/MessageBox";
 import MeetingStatus from "@/components/MeetingStatus";
 import MeetingComponent from "@/components/MeetingComponent";
@@ -204,6 +239,7 @@ export default {
     components: {
         StudipButton,
         StudipIcon,
+        StudipTooltipIcon,
         MessageBox,
         MeetingStatus,
         MeetingComponent
@@ -234,7 +270,8 @@ export default {
             this.$store.commit(ROOM_CLEAR);
             $('#conference-meeting-create')
             .dialog({
-                width: '50%',
+                height: ($(window).height() * 0.8),
+                width: '70%',
                 modal: true,
                 title: 'Raum hinzufügen'.toLocaleString()
             });
@@ -247,16 +284,26 @@ export default {
                 this.$set(this.room, "driver_name" , Object.keys(this.config_list)[0]);
             }
         },
-
-        setServer() {
+        handleDriverDefaults() {
+            //set default features
+            this.$set(this.room, "features" , {});
+            if (Object.keys(this.config_list[this.room['driver_name']]).includes('features')) {
+                //set size feature
+                if (Object.keys(this.config_list[this.room['driver_name']]['features']['create']).length) {
+                    var roomSizeProfiles = this.config_list[this.room['driver_name']]['features']['create'].find(f => f.name == 'roomSizeProfiles');
+                    if (roomSizeProfiles) {
+                        var smallProfile = roomSizeProfiles.value.find(s => s.name == 'small');
+                        if (smallProfile) {
+                            this.$set(this.room['features'], "roomSizeProfiles" , "small");
+                            smallProfile.value.forEach(content => { 
+                                this.$set(this.room['features'], content.name , content.value);
+                            });
+                        }
+                    }
+                }
+            }
             //mandatory server selection when there is only one server
             if (this.room['driver_name'] && Object.keys(this.config_list[this.room['driver_name']]['servers']).length == 1) {
-                this.$set(this.room, "server_index" , "0");
-            }
-        },
-        setServer() {
-            //mandatory server selection when there is only one server
-            if (this.room['driver_name'] && Object.keys(this.config[this.room['driver_name']]['servers']).length == 1) {
                 this.$set(this.room, "server_index" , "0");
             }
         },
@@ -266,8 +313,8 @@ export default {
             }
             var empty_fields_arr = [];
             for (var key in this.room) {
-                if (key != 'join_as_moderator' && this.room[key] == '' ) {
-                    $(`#${key}`).prev().is(':visible') ? empty_fields_arr.push($(`#${key}`).prev().text()) : '';
+                if (key != 'join_as_moderator' && key != 'features' && this.room[key] === '' ) {
+                    $(`#${key}`).prev().hasClass('required') ? empty_fields_arr.push($(`#${key}`).prev().text()) : '';
                 }
             }
             if ( !empty_fields_arr.length ) {
@@ -276,6 +323,7 @@ export default {
                 .then(({ data }) => {
                     this.message = data.message;
                     if (this.message.type == 'error') {
+                        $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
                         this.$set(this.modal_message, "type" , "error");
                         this.$set(this.modal_message, "text" , this.message.text);
                     } else {
@@ -286,10 +334,12 @@ export default {
                         }, 3000);
                     }
                 }).catch (error => {
+                    $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
                     this.$set(this.modal_message, "type" , "error");
                     this.$set(this.modal_message, "text" , 'System Error: please contact system administrator!');
                 });
             } else {
+                $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
                 var empty_fields_str = empty_fields_arr.join('), (');
                 this.$set(this.modal_message, "type" , "error");
                 this.$set(this.modal_message, "text" , `Bitte füllen Sie folgende Felder aus: (${empty_fields_str})`.toLocaleString());
@@ -303,22 +353,26 @@ export default {
             this.$store.commit(ROOM_CLEAR);
         },
         showRecording(room) {
-            this.$store.dispatch(RECORDING_LIST, room.id).then(({ data }) => {
-                if (data.length) {
-                    this.$store.commit(RECORDING_LIST_SET, data);
-                    $('#recording-modal')
-                    .dialog({
-                        width: '70%',
-                        modal: true,
-                        title: `Aufzeichnungen für Raum "${room.name}"`.toLocaleString()
-                    });
-                } else {
-                    this.message = {
-                        type: 'info',
-                        text: `Keine Aufzeichnungen für Raum "${room.name}"`.toLocaleString()
-                    };
-                }
-            });
+            if (typeof room.recordings_count == 'string') { //opencast url
+                window.open(room.recordings_count, '_blank');
+            } else { //default
+                this.$store.dispatch(RECORDING_LIST, room.id).then(({ data }) => {
+                    if (data.length) {
+                        this.$store.commit(RECORDING_LIST_SET, data);
+                        $('#recording-modal')
+                        .dialog({
+                            width: '70%',
+                            modal: true,
+                            title: `Aufzeichnungen für Raum "${room.name}"`.toLocaleString()
+                        });
+                    } else {
+                        this.message = {
+                            type: 'info',
+                            text: `Keine Aufzeichnungen für Raum "${room.name}"`.toLocaleString()
+                        };
+                    }
+                });
+            }
         },
         deleteRecording(recording) {
             this.$store.dispatch(RECORDING_DELETE, recording);
@@ -348,16 +402,26 @@ export default {
             });
         },
         generateGuestJoin(event) {
+            if (event) {
+                event.preventDefault();
+            }
             var room = $('#guest-invitation-modal').data('room');
             if (room && this.room['guest_name']) {
-                room.guest_name = this.room['guest_name'];
-                this.$store.dispatch(ROOM_JOIN_GUEST, room)
-                .then(({ data }) => {
-                    if (data.join_url != '') {
-                        $('#guest_link').text(data.join_url);
-                        $('#guest_link_label').show();
-                    }
-                });
+                if ($('#guest_link').text().trim()) {
+                    this.$set(this.room, 'guest_name', '');
+                    $('#guest_link').text('');
+                    $('#generate_link_btn').text('Einladungslink erstellen'.toLocaleString());
+                } else {
+                    room.guest_name = this.room['guest_name'];
+                    this.$store.dispatch(ROOM_JOIN_GUEST, room)
+                    .then(({ data }) => {
+                        if (data.join_url != '') {
+                            $('#guest_link').text(data.join_url);
+                            $('#guest_link_label').show();
+                            $('#generate_link_btn').text('Neuen Gast einladen'.toLocaleString());
+                        }
+                    });
+                }
             }
         },
         cancelGuest(event) {
@@ -367,7 +431,77 @@ export default {
             this.$store.commit(ROOM_CLEAR);
             $('#guest_link').text('');
             $('#guest-invitation-modal').dialog('close');
-        }
+        },
+        copyGuestLinkClipboard(event) {
+            if (event) {
+                event.preventDefault();
+            }
+            let guest_link_element = document.getElementById('guest_link');
+            var link = guest_link_element.textContent;
+            if (link.trim()) {
+                try {
+                    guest_link_element.select();
+                    document.execCommand("copy");
+                    document.getSelection().removeAllRanges();
+                    this.modal_message = {
+                        type: 'success',
+                        text: 'Der Link wurde in Clipboard kopiert'.toLocaleString()
+                    }
+                } catch(e) {
+                    console.log(e);
+                }
+                $('#guest_link').blur();
+            }
+        },
+        setRoomSize(values) {
+            setTimeout(() => {
+                values.forEach(profile => { //remove all previuos size features
+                    profile.value.forEach(profile_content => {
+                        if (Object.keys(this.room['features']).includes(profile_content['name'])) {
+                            this.$delete(this.room['features'], profile_content['name']);
+                        }
+                    });
+                });
+                values.forEach(profile => { //add selected size features
+                    if (this.room['features']['roomSizeProfiles'] == profile['name']) {
+                        profile.value.forEach(profile_content => {
+                            this.$set(this.room['features'], profile_content['name'] , profile_content['value']);
+                        });
+                    }
+                });
+            }, 100);
+        },
+        showEditFeatureDialog(room) {
+            this.$store.commit(ROOM_CLEAR);
+            this.$set(this.room, 'driver_name', room.driver);
+            this.$set(this.room, 'features', room.features);
+            this.$set(this.room, 'join_as_moderator', room.join_as_moderator);
+            this.$set(this.room, 'name', room.name);
+            this.$set(this.room, 'server_index', room.server_index);
+            this.$set(this.room, 'id', room.id);
+            this.modal_message = {};
+            $('#conference-meeting-create')
+            .dialog({
+                height: ($(window).height() * 0.8),
+                width: '70%',
+                modal: true,
+                title: 'Raumeinstellung'.toLocaleString()
+            });
+        },
+        editRoom() {
+            this.$store.dispatch(ROOM_UPDATE, this.room)
+            .then(({ data }) => {
+                console.log(data.message);
+                this.message = data.message;
+                if (data.message.type == 'success') {
+                    $('#conference-meeting-create').dialog('close');
+                    this.getRoomList();
+                } else {
+                    $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
+                    this.modal_message = data.message; 
+                }
+            });
+        },
     },
     mounted() {
         store.dispatch(CONFIG_LIST_READ, true);
