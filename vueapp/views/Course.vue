@@ -77,7 +77,6 @@
                             </span>
                             <div class="" v-if="feature['value'] && typeof feature['value'] === 'object' && feature['name'] != 'roomSizeProfiles'">
                                 <select :id="feature['name']" size="1" v-model.trim="room['features'][feature['name']]">
-                                    <option :value="undefined" disabled> {{ "Bitte wählen Sie eine Option aus" | i18n }} </option>
                                     <option v-for="(fvalue, findex) in feature['value']" :key="findex"
                                             :value="findex">
                                             {{ fvalue | i18n }}
@@ -86,7 +85,6 @@
                             </div>
                             <div id="meeting-create-feature-size" class="col-6" v-else-if="feature['name'] == 'roomSizeProfiles'">
                                 <select :id="feature['name']" size="1" @change="setRoomSize(feature['value'])" v-model.trim="room['features'][feature['name']]">
-                                    <option :value="undefined" disabled> {{ "Bitte wählen Sie eine Option aus" | i18n }} </option>
                                     <option v-for="(fvalue, findex) in feature['value']" :key="findex"
                                             :value="fvalue['name']">
                                             {{ fvalue['display_name'] | i18n }}
@@ -297,7 +295,19 @@ export default {
                             });
                         }
                     }
+
+                    // set all selects to first entry
+                    for (let index in this.config_list[this.room['driver_name']]['features']['create']) {
+                        let feature = this.config_list[this.room['driver_name']]['features']['create'][index];
+                        console.log(typeof feature.value, feature);
+
+                        if (typeof feature.value === 'object' && !Array.isArray(feature.value)) {
+                            this.room['features'][feature['name']] = Object.keys(feature['value'])[0];
+                        }
+                    }
                 }
+
+
             }
             //mandatory server selection when there is only one server
             if (this.room['driver_name'] && Object.keys(this.config_list[this.room['driver_name']]['servers']).length == 1) {

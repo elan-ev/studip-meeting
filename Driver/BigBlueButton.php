@@ -233,17 +233,17 @@ class BigBlueButton implements DriverInterface, RecordingInterface
     {
         $res = [
             new ConfigOption('guestPolicy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zutritt von Gästen'),
-                 ['ALWAYS_ACCEPT' => _('Immer akzeptieren'), 'ALWAYS_DENY' => _('Immer ablehnen'), 'ASK_MODERATOR' => _('Moderator fragen')]),
-            new ConfigOption('duration', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Dauer der Konferenz (Default: 240 Minuten)'),
+                 ['ALWAYS_DENY' => _('Immer ablehnen'), 'ASK_MODERATOR' => _('Moderator fragen'), 'ALWAYS_ACCEPT' => _('Immer akzeptieren'), ]),
+            new ConfigOption('duration', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Dauer der Konferenz'),
                  _('Wenn leer, wird eine Dauer von "240" Minuten eingestellt')),
         ];
 
         if (Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'record')) {
-            $res[] = new ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnung (Default: Nein)'),
-                ['true' => 'Ja', 'false' => 'Nein']);
+            $res[] = new ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnung'),
+                ['false' => 'Nein', 'true' => 'Ja']);
         }
 
-        $res[] = new ConfigOption('roomSizeProfiles', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Größe des Raumes (Default: Kleiner Raum)'),
+        $res[] = new ConfigOption('roomSizeProfiles', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Größe des Raumes'),
                 self::roomSizeProfile()
         );
 
