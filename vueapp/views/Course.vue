@@ -123,7 +123,7 @@
                     </label>
                     <div>
                         <StudipButton v-if="room['id']" icon="accept" type="button" v-on:click="editRoom($event)">
-                            {{ "Raum bearbeiten" | i18n}}
+                            {{ "Änderungen speichern" | i18n}}
                         </StudipButton>
                         <StudipButton v-else icon="accept" type="button" v-on:click="addRoom($event)">
                             {{ "Raum erstellen" | i18n}}
@@ -173,7 +173,7 @@
             </table>
         </div>
         <div id="guest-invitation-modal" style="display: none;">
-            <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
+            <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''" :timer="2000">
                 {{ modal_message.text }}
             </MessageBox>
             <form class="default" >
@@ -184,11 +184,15 @@
                     </label>
                     <label id="guest_link_label" style="display: none;">
                         <span>{{ "Link" | i18n }}</span>
+                        <StudipTooltipIcon :text="'Bitte versuchen Sie, dem Gast den Link zu geben.' | i18n" :important="true"></StudipTooltipIcon>
                         <textarea id="guest_link" cols="30" rows="5"></textarea>
+                        <StudipButton icon="add" type="button" v-on:click="copyGuestLinkClipboard($event)">
+                            {{ "In Clipboard kopieren" | i18n}}
+                        </StudipButton>
                     </label>
                     <div>
-                        <StudipButton icon="accept" type="button" v-on:click="generateGuestJoin($event)">
-                            {{ "Einladungslink erstellen" | i18n}}
+                        <StudipButton id="generate_link_btn" icon="accept" type="button" v-on:click="generateGuestJoin($event)">
+                            {{ "Einladungslink erstellen" | i18n }}
                         </StudipButton>
                         <StudipButton icon="cancel" type="button" v-on:click="cancelGuest($event)">
                             {{ "Abbrechen" | i18n}}
@@ -206,6 +210,7 @@ import store from "@/store";
 
 import StudipButton from "@/components/StudipButton";
 import StudipIcon from "@/components/StudipIcon";
+import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import MessageBox from "@/components/MessageBox";
 import MeetingStatus from "@/components/MeetingStatus";
 import MeetingComponent from "@/components/MeetingComponent";
@@ -234,6 +239,7 @@ export default {
     components: {
         StudipButton,
         StudipIcon,
+        StudipTooltipIcon,
         MessageBox,
         MeetingStatus,
         MeetingComponent
@@ -396,16 +402,26 @@ export default {
             });
         },
         generateGuestJoin(event) {
+            if (event) {
+                event.preventDefault();
+            }
             var room = $('#guest-invitation-modal').data('room');
             if (room && this.room['guest_name']) {
-                room.guest_name = this.room['guest_name'];
-                this.$store.dispatch(ROOM_JOIN_GUEST, room)
-                .then(({ data }) => {
-                    if (data.join_url != '') {
-                        $('#guest_link').text(data.join_url);
-                        $('#guest_link_label').show();
-                    }
-                });
+                if ($('#guest_link').text().trim()) {
+                    this.$set(this.room, 'guest_name', '');
+                    $('#guest_link').text('');
+                    $('#generate_link_btn').text('Einladungslink erstellen'.toLocaleString());
+                } else {
+                    room.guest_name = this.room['guest_name'];
+                    this.$store.dispatch(ROOM_JOIN_GUEST, room)
+                    .then(({ data }) => {
+                        if (data.join_url != '') {
+                            $('#guest_link').text(data.join_url);
+                            $('#guest_link_label').show();
+                            $('#generate_link_btn').text('Neuen Gast einladen'.toLocaleString());
+                        }
+                    });
+                }
             }
         },
         cancelGuest(event) {
@@ -415,6 +431,27 @@ export default {
             this.$store.commit(ROOM_CLEAR);
             $('#guest_link').text('');
             $('#guest-invitation-modal').dialog('close');
+        },
+        copyGuestLinkClipboard(event) {
+            if (event) {
+                event.preventDefault();
+            }
+            let guest_link_element = document.getElementById('guest_link');
+            var link = guest_link_element.textContent;
+            if (link.trim()) {
+                try {
+                    guest_link_element.select();
+                    document.execCommand("copy");
+                    document.getSelection().removeAllRanges();
+                    this.modal_message = {
+                        type: 'success',
+                        text: 'Der Link wurde in Clipboard kopiert'.toLocaleString()
+                    }
+                } catch(e) {
+                    console.log(e);
+                }
+                $('#guest_link').blur();
+            }
         },
         setRoomSize(values) {
             setTimeout(() => {
@@ -464,7 +501,7 @@ export default {
                     this.modal_message = data.message; 
                 }
             });
-        }
+        },
     },
     mounted() {
         store.dispatch(CONFIG_LIST_READ, true);
