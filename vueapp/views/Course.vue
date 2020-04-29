@@ -101,10 +101,10 @@
                                     <label v-for="(fsvalue, fsindex) in fvalue['value']" :key="fsindex" v-show="room['features'][feature['name']] == fvalue['name']">
                                         <div v-if="typeof fsvalue['value'] != 'boolean'">
                                             <span class="">{{ fsvalue['display_name'] | i18n }}</span>
-                                            <input type="text" v-model.trim="room['features'][fsvalue['name']]" 
+                                            <input type="text" v-model.trim="room['features'][fsvalue['name']]"
                                                 :placeholder="fsvalue['value'] ? fsvalue['value'] : ''" :id="fsvalue['name']">
                                         </div>
-                                        
+
                                         <div v-else>
                                             <input  type="checkbox"
                                                 true-value="true"
@@ -112,7 +112,7 @@
                                                 v-model="room['features'][fsvalue['name'] ]">
                                                 {{ fsvalue['display_name'] | i18n }}
                                         </div>
-                                        
+
                                     </label>
                                 </div>
                             </div>
@@ -282,8 +282,10 @@ export default {
         setDriver() {
             if (Object.keys(this.config_list).length == 1) {
                 this.$set(this.room, "driver_name" , Object.keys(this.config_list)[0]);
+                this.handleDriverDefaults();
             }
         },
+
         handleDriverDefaults() {
             //set default features
             this.$set(this.room, "features" , {});
@@ -295,7 +297,7 @@ export default {
                         var smallProfile = roomSizeProfiles.value.find(s => s.name == 'small');
                         if (smallProfile) {
                             this.$set(this.room['features'], "roomSizeProfiles" , "small");
-                            smallProfile.value.forEach(content => { 
+                            smallProfile.value.forEach(content => {
                                 this.$set(this.room['features'], content.name , content.value);
                             });
                         }
@@ -498,7 +500,7 @@ export default {
                     this.getRoomList();
                 } else {
                     $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
-                    this.modal_message = data.message; 
+                    this.modal_message = data.message;
                 }
             });
         },
