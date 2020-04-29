@@ -11,7 +11,7 @@
                         <a v-if="info.recording == 'true'" :title=" 'Dieser Raum kann aufgezeichnet werden!' | i18n " >
                             <StudipIcon icon="exclaim-circle" role="status-yellow" size="20"></StudipIcon>
                         </a>
-                        <a v-if="course_config.display.editRoom" style="cursor: pointer;" 
+                        <a v-if="course_config.display.editRoom" style="cursor: pointer;"
                             :title=" 'Raumeinstellungen' | i18n "
                             @click.prevent="editFeatures()">
                             <StudipIcon icon="admin" role="clickable" size="20"></StudipIcon>
@@ -23,7 +23,7 @@
                             <StudipIcon :icon="room.active == 1 ? 'visibility-visible' : 'visibility-invisible'"
                                 role="clickable" size="20"></StudipIcon>
                         </a>
-                        <a v-if="room.recordings_count" style="cursor: pointer;" 
+                        <a v-if="room.recordings_count" style="cursor: pointer;"
                                 :title=" typeof room.recordings_count == 'string' ? 'Die vorhandenen Aufzeichnungen auf Opencast' : 'Die vorhandenen Aufzeichnungen' | i18n "
                                 :data-badge="typeof room.recordings_count == 'number' ? room.recordings_count : 0"
                                 @click.prevent="getRecording()">
@@ -144,7 +144,10 @@ export default {
             if (event) {
                 event.preventDefault();
             }
-            this.$store.dispatch(ROOM_DELETE, this.room.id)
+
+            if (confirm('Sind sie sicher, dass sie diesen Raum löschen möchten?')) {
+                this.$store.dispatch(ROOM_DELETE, this.room.id)
+            }
         },
         joinRoom(event) {
             if (event) {
