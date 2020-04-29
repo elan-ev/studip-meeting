@@ -4,26 +4,22 @@
             {{ message.text }}
         </MessageBox>
 
-        <form class="default conference-meeting">
-            <fieldset>
-                <legend>
-                    {{ (course_config.title ? course_config.title : "Meetings") | i18n }}
-                    <a v-if="config && course_config.display.addRoom" style="cursor: pointer;" :title=" 'Raum hinzufügen' | i18n "
-                        @click.prevent="showAddMeeting()">
-                        <StudipIcon icon="add" role="clickable" ></StudipIcon>
-                    </a>
-                </legend>
+        <MessageBox v-if="!rooms_list.length && config && course_config.display.addRoom" :type="'info'">
+            {{ "Bisher existieren keine Meeting-Räume für diese Veranstaltung. Möchten Sie einen anlegen?" | i18n }}
+            <br>
+            <StudipButton type="button"  @click="showAddMeeting()">
+                {{ "Neuer Raum" | i18n}}
+            </StudipButton>
+        </MessageBox>
 
-                <MessageBox v-if="!rooms_list.length && config && course_config.display.addRoom" :type="'info'">
-                    {{ "Bisher existieren keine Meeting-Räume für diese Veranstaltung. Möchten Sie einen anlegen?" | i18n }}
-                    <br>
-                    <StudipButton type="button"  @click="showAddMeeting()">
-                        {{ "Neuer Raum" | i18n}}
-                    </StudipButton>
-                </MessageBox>
+        <StudipButton type="button" v-if="rooms_list.length && config && course_config.display.addRoom"
+            @click="showAddMeeting()">
+            {{ 'Raum hinzufügen' | i18n }}
+        </StudipButton>
+
+        <form class="default conference-meeting" v-if="rooms_list.length">
                 <MeetingComponent v-for="(room, index) in rooms_list" :key="index" :room="room" v-on:getRecording="showRecording"
                      v-on:renewRoomList="getRoomList" v-on:getGuestInfo="showGuestDialog" v-on:getFeatures="showEditFeatureDialog"></MeetingComponent>
-            </fieldset>
         </form>
 
         <div v-if="config_list" id="conference-meeting-create" style="display: none">
@@ -37,7 +33,7 @@
             <form class="default" >
                 <fieldset>
                     <label>
-                        <span class="required">{{ "Name der Raums" | i18n }}</span>
+                        <span class="required">{{ "Name des Raums" | i18n }}</span>
                         <input type="text" v-model.trim="room['name']" id="name">
                     </label>
                     <label>
