@@ -12,14 +12,23 @@
 <form action="<?= PluginEngine::getLink($plugin, array(), 'index/config') ?>" method="post" class="studip_form default">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset style="padding-top: 0;">
-        <label for="vc_config_title"><?= $_('Reitername:') ?></label>
-        <input type="text" name="title" id="vc_config_title" value="<?= htmlReady($courseConfig->title) ?>" size="80" autofocus>
+        <legend>
+            Einstellungen
+        </legend>
+        <label>
+            <?= $_('Reitername') ?>
+            <input type="text" name="title" id="vc_config_title" value="<?= htmlReady($courseConfig->title) ?>" size="80" autofocus>
+        </label>
 
-        <label for="vc_config_introduction"><?= $_('Einleitungstext:') ?></label>
-        <textarea name="introduction" id="vc_config_introduction" cols="80" rows="10" class="add_toolbar"><?= htmlReady($courseConfig->introduction) ?></textarea>
+
+        <label>
+            <?= $_('Einleitungstext') ?>
+            <textarea name="introduction" id="vc_config_introduction" cols="80" rows="10" class="add_toolbar"><?= htmlReady($courseConfig->introduction) ?></textarea>
+        </label>
     </fieldset>
-    <div data-dialog-button>
+
+    <footer data-dialog-button>
         <?= Studip\Button::createAccept($_('Speichern'), 'anlegen') ?>
         <?= Studip\LinkButton::createCancel($_('Abbrechen'), PluginEngine::getLink($plugin, array(), 'index')) ?>
-    </div>
+    </footer>
 </form>
