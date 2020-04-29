@@ -76,7 +76,6 @@
                                 && Object.keys(config_list[room['driver_name']]['features']['create']).length">
                         <strong>{{ "Zusätzliche Funktionen" | i18n }}</strong>
                         <div style="margin: 15px 0;" v-for="(feature, index) in config_list[room['driver_name']]['features']['create']" :key="index">
-                            <hr>
                             <span class="">
                                 {{ feature['display_name'] | i18n }}
                             </span>
