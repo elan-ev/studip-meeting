@@ -46,7 +46,7 @@
                 </div>
                 <div v-if="info.returncode == 'FAILED'">
                     <StudipIcon icon="pause" role="status-yellow" size=28></StudipIcon>
-                    <span>{{ "Dieser Raum läuft derzeit nicht!" | i18n }}</span>
+                    <span>{{ "Dieser Raum läuft, es ist aber gerade niemand anwesend." | i18n }}</span>
                 </div>
                 <div v-if="info.running == 'true'">
                     <StudipIcon icon="play" role="accept" size=28></StudipIcon>
