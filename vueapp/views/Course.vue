@@ -42,7 +42,7 @@
                         true-value="1"
                         false-value="0"
                         v-model="room['join_as_moderator']">
-                        {{ "Teilnehmende haben Administrationsrechte" | i18n }}
+                        {{ "Sollen Teilnehmende Administrationsrechte erhalten?" | i18n }}
                     </label>
                     <label>
                         <span class="required">{{ "Konferenzsystem" | i18n }}</span>
