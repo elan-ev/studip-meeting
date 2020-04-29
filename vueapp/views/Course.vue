@@ -22,7 +22,7 @@
                      v-on:renewRoomList="getRoomList" v-on:getGuestInfo="showGuestDialog" v-on:getFeatures="showEditFeatureDialog"></MeetingComponent>
         </form>
 
-        <div v-if="config_list" id="conference-meeting-create" style="display: none">
+        <div v-if="config_list" id="conference-meeting-create" style="display: none" >
             <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
                 {{ modal_message.text }}
             </MessageBox>
@@ -30,7 +30,7 @@
                  type="error">
                 {{ "Es gibt keine Server für dieses Konferenzsystem, bitte wählen Sie ein anderes Konferenzsystem" | i18n }}
             </MessageBox>
-            <form class="default" >
+            <form class="default" @keyup="checkAddRoom($event)">
                 <fieldset>
                     <label>
                         <span class="required">{{ "Name des Raums" | i18n }}</span>
@@ -314,10 +314,18 @@ export default {
                 this.$set(this.room, "server_index" , "0");
             }
         },
+
+        checkAddRoom(event) {
+            if (event.key == 'Enter') {
+                this.addRoom(event);
+            }
+        },
+
         addRoom(event) {
             if (event) {
                 event.preventDefault();
             }
+
             var empty_fields_arr = [];
             for (var key in this.room) {
                 if (key != 'join_as_moderator' && key != 'features' && this.room[key] === '' ) {
