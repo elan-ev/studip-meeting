@@ -37,7 +37,7 @@ class Driver
             if (in_array('ElanEv\Driver\RecordingInterface', class_implements($class)) !== false) {
                 //If there is RecordingInterface then the field 'record' is considered as a must later on in the logic
                 //that means, if admin set record to true then every other setting like opencast can be used
-                $recording_options['record'] = new \ElanEv\Driver\ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnung zulassen'), false);
+                $recording_options['record'] = new \ElanEv\Driver\ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnungen zulassen'), false);
                 if ($oc_config = $class::useOpenCastForRecording()) {
                     $recording_options['opencast'] = $oc_config;
                 }
@@ -50,7 +50,7 @@ class Driver
                 );
 
                 !$recording_options ?:  $drivers[$title]['recording'] = $toArray ? self::convertDriverConfigToArray($recording_options) : $recording_options;
-            }  
+            }
         }
 
         return $drivers;
