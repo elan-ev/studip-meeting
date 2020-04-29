@@ -19,7 +19,7 @@
                     {{ "Display Name" | i18n }}
                     <input type="text" v-model.trim="config[driver_name]['display_name']">
                 </label>
-                <fieldset v-if="Object.keys(driver).includes('recording')">
+                <div v-if="Object.keys(driver).includes('recording')">
                     <label v-for="(rval, rkey) in driver['recording']" :key="rkey">
                         <input v-if="typeof rval['value'] == 'boolean'" type="checkbox"
                         :disabled="rval['name'] != 'record' && config[driver_name]['record'] != '1'"
@@ -32,11 +32,11 @@
                             {{ rval['display_name'] | i18n }}
                         </span>
                     </label>
-                </fieldset>
+                </div>
                 <div v-if="Object.keys(config[driver_name].servers).length">
-                    <MessageBox :type="'info'">
+                    <h3>
                         {{ "Folgende Server werden verwendet" | i18n }}
-                    </MessageBox>
+                    </h3>
                     <table class="default collapsable tablesorter conference-meetings">
                         <thead>
                             <tr>
@@ -59,7 +59,7 @@
                                         <StudipIcon icon="edit" role="clickable" ></StudipIcon>
                                     </a>
                                     <a style="cursor: pointer;" @click.prevent="deleteServer(driver_name, index)">
-                                        <StudipIcon icon="trash" role="attention"></StudipIcon>
+                                        <StudipIcon icon="trash" role="clickable"></StudipIcon>
                                     </a>
                                 </td>
                             </tr>

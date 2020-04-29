@@ -256,7 +256,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
     public function useOpenCastForRecording()
     {
         $res = false;
-        !MeetingPlugin::checkOpenCast() ?: $res = new ConfigOption('opencast', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Verwenden Opencast für dieses Treibers'), false);
+        !MeetingPlugin::checkOpenCast() ?: $res = new ConfigOption('opencast', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Opencast für Aufzeichnungen verwenden'), false);
         return $res;
     }
 
