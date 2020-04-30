@@ -77,7 +77,7 @@ class DriverFactory
 
         $driver_conf['url'] = rtrim($driver_conf['url'], '/');
         $client_options = [];
-        if ($driver_conf['proxy']) {
+        if (isset($driver_conf['proxy'])) {
             $client_options['proxy'] = $driver_conf['proxy'];
         }
         $client = $this->createHttpClient($client_options);
