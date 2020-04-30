@@ -122,7 +122,7 @@ class RoomAdd extends MeetingsController
                 try {
                     if (!$driver->createMeeting($meetingParameters)) {
                         self::revert_on_fail($meeting, $json['cid']);
-                        throw new Error(sprintf('unable to create meeting with driver %s', $json['driver_name']), 404);
+                        throw new Error(sprintf('Meeting mit %s Treiber kann nicht erstellt werden', $json['driver_name']), 404);
                     }
                 } catch (Exception $e) {
                     self::revert_on_fail($meeting, $json['cid']);
@@ -133,7 +133,7 @@ class RoomAdd extends MeetingsController
                 $meeting->store();
 
                 $message = [
-                    'text' => _('Room created!'),
+                    'text' => _('Raum wurde erfolgreich erstellt.'),
                     'type' => 'success'
                 ];
             } else {
