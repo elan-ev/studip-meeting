@@ -31,3 +31,8 @@ die Konfiguration der einzelnen Konnektoren vorgenommen werden.
 Standardmäßig gibt es zwei Konnektoren:
 * BigBlueButton
 * DfnVC (Adobe Connect)
+
+Erstellen einer eigenen Pluginversion
+-------------------------------------
+
+Um ein installierbares Zip zu erstellen, reicht es den Quellcode herunterzuladen und `npm run zip` aufzurufen.
