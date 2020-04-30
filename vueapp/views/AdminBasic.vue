@@ -31,6 +31,7 @@
                         <span :class="{'disabled': rval['name'] != 'record' && config[driver_name]['record'] != '1'}">
                             {{ rval['display_name'] | i18n }}
                         </span>
+                        <StudipTooltipIcon v-if="Object.keys(rval).includes('info')" :text="rval['info'] | i18n"></StudipTooltipIcon>
                     </label>
                 </div>
                 <div v-if="Object.keys(config[driver_name].servers).length">
@@ -105,6 +106,7 @@ import { mapGetters } from "vuex";
 import store from "@/store";
 
 import StudipButton from "@/components/StudipButton";
+import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import StudipIcon from "@/components/StudipIcon";
 import MessageBox from "@/components/MessageBox";
 
@@ -121,6 +123,7 @@ export default {
     name: "AdminBasic",
     components: {
         StudipButton,
+        StudipTooltipIcon,
         MessageBox,
         StudipIcon
     },

@@ -233,18 +233,22 @@ class BigBlueButton implements DriverInterface, RecordingInterface
     {
         $res = [
             new ConfigOption('guestPolicy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zutritt von Gästen'),
-                 ['ALWAYS_DENY' => _('Immer ablehnen'), 'ASK_MODERATOR' => _('Moderator fragen'), 'ALWAYS_ACCEPT' => _('Immer akzeptieren'), ]),
+                 ['ALWAYS_DENY' => _('Immer ablehnen'), 'ASK_MODERATOR' => _('Moderator fragen'), 'ALWAYS_ACCEPT' => _('Immer akzeptieren'), ],
+                 _('Die Gastrichtlinie bestimmt, ob Benutzer als Gäste an der Besprechung teilnehmen dürfen oder nicht.')),
             new ConfigOption('duration', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Dauer der Konferenz'),
-                 _('Wenn leer, wird eine Dauer von "240" Minuten eingestellt')),
+                 _('Wenn leer, wird eine Dauer von "240" Minuten eingestellt'),
+                 _('Die maximale Länge (in Minuten) für das Meeting. Nach Erreichen der letzten Minuten wird die Benachrichtigung benachrichtigt und der Raum endet am Ende.')),
         ];
 
         if (Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'record')) {
             $res[] = new ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnung'),
-                ['false' => 'Nein', 'true' => 'Ja']);
+                ['false' => 'Nein', 'true' => 'Ja'], _('Der Server wird angewiesen, die Medien und Ereignisse in der Sitzung für die spätere Wiedergabe aufzuzeichnen.'));
         }
 
         $res[] = new ConfigOption('roomSizeProfiles', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Größe des Raumes'),
-                self::roomSizeProfile()
+                self::roomSizeProfile(),
+                _('Diese Funktion verbessert die Serverleistung. Wählen Sie die Raumprofile entsprechend Ihren Anforderungen aus. ' 
+                                            . 'Durch Auswahl der einzelnen Profile können die Einstellungen weiterhin geändert werden.')
         );
 
         return array_reverse($res);
@@ -265,31 +269,62 @@ class BigBlueButton implements DriverInterface, RecordingInterface
      *
      * @return array consists of nested list of ConfigOptions
     */
-    static private function roomSizeProfile () {
+    static private function roomSizeProfile() {
         return [
             new ConfigOption('small', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Kleiner Raum'), [
-                new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 50),
-                new ConfigOption('muteOnStart', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Beim Start stumm schalten'), true),
+                new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 50, self::getFeatureInfo('maxParticipants')),    
+                new ConfigOption('muteOnStart', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Beim Start stumm schalten'), true, self::getFeatureInfo('muteOnStart')), 
             ]),
             new ConfigOption('medium', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Mittlerer Raum'), [
-                new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 150),
-                new ConfigOption('muteOnStart', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Beim Start stumm schalten'), true),
-                new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Webcams Nur für Moderatoren'), true),
+                new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 150, self::getFeatureInfo('maxParticipants')),    
+                new ConfigOption('muteOnStart', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Beim Start stumm schalten'), true, self::getFeatureInfo('muteOnStart')), 
+                new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Webcams Nur für Moderatoren'), true, self::getFeatureInfo('webcamsOnlyForModerator')), 
             ]),
             new ConfigOption('large', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Großer Raum'), [
-                new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 300),
-                new ConfigOption('lockSettingsDisableCam', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Webcam deaktivieren'), true),
-                new ConfigOption('lockSettingsDisableMic', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Mikrofon deaktivieren'), true),
-                new ConfigOption('lockSettingsDisableNote', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Notizen deaktivieren'), true),
+                new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 300, self::getFeatureInfo('maxParticipants')),    
+                new ConfigOption('lockSettingsDisableCam', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Webcam deaktivieren'), true, self::getFeatureInfo('lockSettingsDisableCam')), 
+                new ConfigOption('lockSettingsDisableMic', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Mikrofon deaktivieren'), true, self::getFeatureInfo('lockSettingsDisableMic')), 
+                new ConfigOption('lockSettingsDisableNote', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Notizen deaktivieren'), true, self::getFeatureInfo('lockSettingsDisableNote')), 
             ]),
             new ConfigOption('no-limit', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Keine Grenzen'), [
-                new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl')),
-                new ConfigOption('muteOnStart', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Beim Start stumm schalten'), false),
-                new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Webcams Nur für Moderatoren'), false),
-                new ConfigOption('lockSettingsDisableCam', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Webcam deaktivieren'), false),
-                new ConfigOption('lockSettingsDisableMic', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Mikrofon deaktivieren'), false),
-                new ConfigOption('lockSettingsDisableNote', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Notizen deaktivieren'), false),
+                new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), null, self::getFeatureInfo('maxParticipants')),    
+                new ConfigOption('muteOnStart', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Beim Start stumm schalten'), false, self::getFeatureInfo('muteOnStart')),
+                new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Webcams Nur für Moderatoren'), false, self::getFeatureInfo('webcamsOnlyForModerator')),
+                new ConfigOption('lockSettingsDisableCam', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Webcam deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableCam')), 
+                new ConfigOption('lockSettingsDisableMic', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Mikrofon deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableMic')), 
+                new ConfigOption('lockSettingsDisableNote', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Notizen deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableNote')),
             ]),
         ];
+    }
+
+    /**
+     * Return the info text of frequently used features
+     *
+     * @return string info text to be displayed as tooltip
+    */
+    static private function getFeatureInfo($name)  {
+        switch ($name) {
+            case 'maxParticipants':
+                return _('Die maximale Anzahl von Benutzern, die gleichzeitig an der Konferenz teilnehmen dürfen.');
+                break;
+            case 'muteOnStart':
+                return _('Alle Benutzer werden stummgeschaltet, wenn das Meeting beginnt.');
+                break;
+            case 'webcamsOnlyForModerator':
+                return _('Nur Moderatoren können ihre Webcams teilen.');
+                break;
+            case 'lockSettingsDisableCam':
+                return _('Es verhindert, dass Benutzer ihre Kamera in der Besprechung freigeben.');
+                break;
+            case 'lockSettingsDisableMic':
+                return _('Benutzer können nur im Listen-Only-Modus teilnehmen.');
+                break;
+            case 'lockSettingsDisableNote':
+                return _('Es deaktiviert Notizen in der Besprechung.');
+                break;
+            default:
+                return _('');
+                break;
+        }
     }
 }
