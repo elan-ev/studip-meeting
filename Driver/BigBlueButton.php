@@ -234,10 +234,10 @@ class BigBlueButton implements DriverInterface, RecordingInterface
         $res = [
             new ConfigOption('guestPolicy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zutritt von Gästen'),
                  ['ALWAYS_DENY' => _('Immer ablehnen'), 'ASK_MODERATOR' => _('Moderator fragen'), 'ALWAYS_ACCEPT' => _('Immer akzeptieren'), ],
-                 _('Die Gastrichtlinie bestimmt, ob Benutzer als Gäste an der Besprechung teilnehmen dürfen oder nicht.')),
+                 _('Legen Sie fest, ob Benutzer mit Einladungslink als Gäste an der Besprechung teilnehmen dürfen oder nicht und ob Gäste dem Meeting direkt beitreten können oder ihre Teilnahme von einem Moderator bestätigt werden müssen.')),
             new ConfigOption('duration', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Dauer der Konferenz'),
                  _('Wenn leer, wird eine Dauer von "240" Minuten eingestellt'),
-                 _('Die maximale Länge (in Minuten) für das Meeting. Nach Erreichen der letzten Minuten wird die Benachrichtigung benachrichtigt und der Raum endet am Ende.')),
+                 _('Die maximale Länge (in Minuten) für das Meeting. Nach Ablauf der eingestellen Dauer wird das Meeting automatisch beendet, d.h. der Raum wird geschlossen. Falls bereits vor Ablauf der Zeit alle Teilnehmenden das Meeting verlassen haben, oder ein Moderator das Meeting aktiv beendet wird der Raum ebenfalls geschlossen.')),
         ];
 
         if (Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'record')) {
@@ -284,7 +284,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
                 new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 300, self::getFeatureInfo('maxParticipants')),    
                 new ConfigOption('lockSettingsDisableCam', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Webcam deaktivieren'), true, self::getFeatureInfo('lockSettingsDisableCam')), 
                 new ConfigOption('lockSettingsDisableMic', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Mikrofon deaktivieren'), true, self::getFeatureInfo('lockSettingsDisableMic')), 
-                new ConfigOption('lockSettingsDisableNote', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Notizen deaktivieren'), true, self::getFeatureInfo('lockSettingsDisableNote')), 
+                new ConfigOption('lockSettingsDisableNote', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Gemeinsame Notizen deaktivieren'), true, self::getFeatureInfo('lockSettingsDisableNote')), 
             ]),
             new ConfigOption('no-limit', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Keine Grenzen'), [
                 new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), null, self::getFeatureInfo('maxParticipants')),    
@@ -292,7 +292,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
                 new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Webcams Nur für Moderatoren'), false, self::getFeatureInfo('webcamsOnlyForModerator')),
                 new ConfigOption('lockSettingsDisableCam', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Webcam deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableCam')), 
                 new ConfigOption('lockSettingsDisableMic', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Mikrofon deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableMic')), 
-                new ConfigOption('lockSettingsDisableNote', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Notizen deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableNote')),
+                new ConfigOption('lockSettingsDisableNote', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Gemeinsame Notizen deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableNote')),
             ]),
         ];
     }
