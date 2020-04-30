@@ -16,41 +16,46 @@
                             @click.prevent="editFeatures()">
                             <StudipIcon icon="admin" role="clickable" size="20"></StudipIcon>
                         </a>
-                        <a v-if="course_config.display.editRoom" style="cursor: pointer;"
-                            :title="room.active == 1 ? 'Meeting für Teilnehmende unsichtbar schalten'
-                                        : 'Meeting für Teilnehmende sichtbar schalten' | i18n "
-                            @click.prevent="editVisibility()">
-                            <StudipIcon :icon="room.active == 1 ? 'visibility-visible' : 'visibility-invisible'"
-                                role="clickable" size="20"></StudipIcon>
-                        </a>
                         <a v-if="room.recordings_count" style="cursor: pointer;"
                                 :title=" typeof room.recordings_count == 'string' ? 'Die vorhandenen Aufzeichnungen auf Opencast' : 'Die vorhandenen Aufzeichnungen' | i18n "
                                 :data-badge="typeof room.recordings_count == 'number' ? room.recordings_count : 0"
                                 @click.prevent="getRecording()">
                             <StudipIcon :icon="typeof room.recordings_count == 'string' ? 'video2+new' : 'video2'" role="clickable" size="20"></StudipIcon>
                         </a>
-                        <a v-if="course_config.display.editRoom" style="cursor: pointer;" :title=" room.join_as_moderator == 1 ?
-                            'Teilnehmende bekommen eingeschränkte Rechte' : 'Teilnehmende bekommen Administrations-Rechte' | i18n "
-                            @click.prevent="editRights()">
-                            <StudipIcon :icon="room.join_as_moderator == 1 ? 'lock-unlocked' : 'lock-locked'" role="clickable" size="20"></StudipIcon>
-                        </a>
                     </div>
                 </div>
             </legend>
             <label id="details">
-                <div>
-                    <span>{{ room.join_as_moderator == 1 ?
+                <div v-if="course_config.display.editRoom">
+                    <a style="cursor: pointer;" :title=" room.join_as_moderator == 1 ?
+                        'Teilnehmende bekommen eingeschränkte Rechte' : 'Teilnehmende bekommen Administrations-Rechte' | i18n "
+                        @click.prevent="editRights()">
+                        <StudipIcon class="info-icon" :icon="room.join_as_moderator == 1 ? 'lock-unlocked' : 'lock-locked'" role="clickable" size="24"></StudipIcon>
+                    </a>
+                    <span :id="'rights-info-text-' + room.id" class="">{{ room.join_as_moderator == 1 ?
                                 'Teilnehmende haben Administrations-Rechte' :
                                 'Teilnehmende haben eingeschränkte Rechte' | i18n  }}
                     </span>
                 </div>
+                <div v-if="course_config.display.editRoom">
+                    <a  style="cursor: pointer;"
+                        :title="room.active == 1 ? 'Meeting für Teilnehmende unsichtbar schalten'
+                                    : 'Meeting für Teilnehmende sichtbar schalten' | i18n "
+                        @click.prevent="editVisibility()">
+                        <StudipIcon class="info-icon" :icon="room.active == 1 ? 'visibility-visible' : 'visibility-invisible'"
+                            role="clickable" size="24"></StudipIcon>
+                    </a>
+                    <span :id="'active-info-text-' + room.id" class="">{{ room.active == 1 ? 'Das Meeting ist für die Teilnehmer sichtbar'
+                                        : 'Das Meeting ist für die Teilnehmer unsichtbar' | i18n  }}
+                    </span>
+                </div>
                 <div v-if="info.returncode == 'FAILED'">
-                    <StudipIcon icon="pause" role="status-yellow" size=28></StudipIcon>
-                    <span>{{ "Dieser Raum läuft, es ist aber gerade niemand anwesend." | i18n }}</span>
+                    <StudipIcon class="info-icon" icon="pause" role="status-yellow" size=24></StudipIcon>
+                    <span class="has-changed">{{ "Dieser Raum läuft, es ist aber gerade niemand anwesend." | i18n }}</span>
                 </div>
                 <div v-if="info.running == 'true'">
-                    <StudipIcon icon="play" role="accept" size=28></StudipIcon>
-                    <span>{{ "Dieser Raum läuft gerade!" | i18n }}</span>
+                    <StudipIcon class="info-icon" icon="play" role="accept" size=24></StudipIcon>
+                    <span class="has-changed">{{ "Dieser Raum läuft gerade!" | i18n }}</span>
                 </div>
                 <br>
                 <span v-if="room.details" class="creator-date">
@@ -116,22 +121,28 @@ export default {
             this.$emit('getFeatures', this.room);
         },
         editRights() {
+            $(`#rights-info-text-${this.room.id}`).removeClass('has-changed');
             this.room.join_as_moderator = this.room.join_as_moderator == 1 ? 0 : 1;
             this.$store.dispatch(ROOM_UPDATE, this.room)
             .then(({ data }) => {
                 if (data.message.type == 'error') {
                     this.room.join_as_moderator = !this.room.join_as_moderator;
                     this.message = data.message;
+                } else {
+                    $(`#rights-info-text-${this.room.id}`).addClass('has-changed');
                 }
             });
         },
         editVisibility() {
+            $(`#active-info-text-${this.room.id}`).removeClass('has-changed');
             this.room.active = this.room.active == 1 ? 0 : 1;
             this.$store.dispatch(ROOM_UPDATE, this.room)
             .then(({ data }) => {
                 if (data.message.type == 'error') {
                     this.room.active = !this.room.active;
                     this.message = data.message;
+                } else {
+                    $(`#active-info-text-${this.room.id}`).addClass('has-changed');
                 }
             });
         },
