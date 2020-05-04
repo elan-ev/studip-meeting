@@ -75,6 +75,7 @@
                             <span class="">
                                 {{ feature['display_name'] | i18n }}
                             </span>
+                            <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
                             <div class="" v-if="feature['value'] && typeof feature['value'] === 'object' && feature['name'] != 'roomSizeProfiles'">
                                 <select :id="feature['name']" size="1" v-model.trim="room['features'][feature['name']]">
                                     <option v-for="(fvalue, findex) in feature['value']" :key="findex"
@@ -94,6 +95,7 @@
                                     <label v-for="(fsvalue, fsindex) in fvalue['value']" :key="fsindex" v-show="room['features'][feature['name']] == fvalue['name']">
                                         <div v-if="typeof fsvalue['value'] != 'boolean'">
                                             <span class="">{{ fsvalue['display_name'] | i18n }}</span>
+                                            <StudipTooltipIcon v-if="Object.keys(fsvalue).includes('info')" :text="fsvalue['info'] | i18n"></StudipTooltipIcon>
                                             <input type="text" v-model.trim="room['features'][fsvalue['name']]"
                                                 :placeholder="fsvalue['value'] ? fsvalue['value'] : ''" :id="fsvalue['name']">
                                         </div>
@@ -104,6 +106,7 @@
                                                 false-value="false"
                                                 v-model="room['features'][fsvalue['name'] ]">
                                                 {{ fsvalue['display_name'] | i18n }}
+                                                <StudipTooltipIcon v-if="Object.keys(fsvalue).includes('info')" :text="fsvalue['info'] | i18n"></StudipTooltipIcon>
                                         </div>
 
                                     </label>
@@ -299,7 +302,7 @@ export default {
                     // set all selects to first entry
                     for (let index in this.config_list[this.room['driver_name']]['features']['create']) {
                         let feature = this.config_list[this.room['driver_name']]['features']['create'][index];
-                        console.log(typeof feature.value, feature);
+                        // console.log(typeof feature.value, feature);
 
                         if (typeof feature.value === 'object' && !Array.isArray(feature.value)) {
                             this.room['features'][feature['name']] = Object.keys(feature['value'])[0];

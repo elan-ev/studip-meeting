@@ -14,12 +14,13 @@ namespace ElanEv\Driver;
 class ConfigOption
 {
     private
-            $name, $display_name, $value, $default_value;
+            $name, $display_name, $value, $default_value, $info;
 
-    public function __construct($name, $display_name, $default_value = null) {
+    public function __construct($name, $display_name, $default_value = null, $info = null) {
         $this->name          = $name;
         $this->display_name  = $display_name;
         $this->default_value = $default_value;
+        $this->info     = $info;
     }
 
     public function getName()
@@ -46,6 +47,14 @@ class ConfigOption
         $this->value = $value;
     }
 
+    public function getInfo() {
+        return $this->info;
+    }
+
+    public function setInfo($info) {
+        $this->info = $info;
+    }
+
     public function toArray() {
         $values = [];
         if (is_array($this->getValue())) {
@@ -59,10 +68,11 @@ class ConfigOption
         } else {
             $values = $this->getValue();
         }
-        return [
-            'name' => $this->getName(),
-            'display_name' => $this->getDisplayName(),
-            'value' => $values
-        ];
+        $result_arr = [];
+        $result_arr['name'] = $this->getName();
+        $result_arr['display_name'] = $this->getDisplayName();
+        $result_arr['value'] = $values;
+        !$this->getInfo() ?: $result_arr['info'] = $this->getInfo();
+        return $result_arr;
     }
 }
