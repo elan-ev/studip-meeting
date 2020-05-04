@@ -128,16 +128,32 @@ label#details {
     img {
         position: relative;
         top: 12px;
+        &.info-icon {
+            top: 7px;
+            margin-right: 7px;
+        }
     }
-    span.red {
-        color: #D60000;
-    }
-    span.creator-date {
-        color: #636971;
-        font-size: 12px;
-        float: right;
-        font-style: italic;
-        margin: 10px 0;
+    span {
+        &.red {
+            color: #D60000;
+        }
+        &.creator-date {
+            color: #636971;
+            font-size: 12px;
+            float: right;
+            font-style: italic;
+            margin: 10px 0;
+        }
+        &.has-changed {
+            animation: alert 1s;
+        }
+
+        @keyframes alert
+        {
+            0%      {color:#D60000;}
+            50%     {color:darken(#D60000, 7%);}
+            100%    {color:inherit;}
+        }
     }
 }
 div.meeting-item-btns {
