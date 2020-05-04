@@ -1,6 +1,6 @@
 <template>
     <div>
-        <MessageBox v-if="message" :type="message.type" @hide="message = ''" :timer="3000">
+        <MessageBox v-if="message" :type="message.type" @hide="message = ''">
             {{ message.text }}
         </MessageBox>
 
@@ -12,7 +12,7 @@
             </StudipButton>
         </MessageBox>
 
-        <StudipButton type="button" v-if="rooms_list.length && config && course_config.display.addRoom"
+        <StudipButton type="button" icon="add" v-if="rooms_list.length && config && course_config.display.addRoom"
             @click="showAddMeeting()">
             {{ 'Raum hinzufügen' | i18n }}
         </StudipButton>
@@ -198,29 +198,33 @@
             </table>
         </div>
         <div id="guest-invitation-modal" style="display: none;">
-            <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''" :timer="2000">
+            <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
                 {{ modal_message.text }}
             </MessageBox>
-            <form class="default" >
+
+            <form class="default" @submit.prevent="generateGuestJoin">
                 <fieldset>
                     <label>
                         <span class="required">{{ "Gastname" | i18n }}</span>
-                        <input type="text" v-model.trim="room['guest_name']" id="guestname">
+                        <input type="text" v-model.trim="room['guest_name']" id="guestname" @change="generateGuestJoin($event)">
                     </label>
-                    <label id="guest_link_label" style="display: none;">
+
+                    <label id="guest_link_label" v-if="guest_link">
                         <span>{{ "Link" | i18n }}</span>
                         <StudipTooltipIcon :text="'Bitte versuchen Sie, dem Gast den Link zu geben.' | i18n" :important="true"></StudipTooltipIcon>
-                        <textarea id="guest_link" cols="30" rows="5"></textarea>
-                        <StudipButton icon="add" type="button" v-on:click="copyGuestLinkClipboard($event)">
-                            {{ "In Clipboard kopieren" | i18n}}
-                        </StudipButton>
+                        <textarea ref="guestLinkArea" v-model="guest_link" cols="30" rows="5"></textarea>
                     </label>
+
                     <div>
-                        <StudipButton id="generate_link_btn" icon="accept" type="button" v-on:click="generateGuestJoin($event)">
+                        <StudipButton type="button" v-on:click="copyGuestLinkClipboard($event)" v-if="guest_link">
+                            {{ "In Zwischenablage kopieren" | i18n}}
+                        </StudipButton>
+                        <StudipButton id="generate_link_btn" icon="accept" type="button" v-on:click="generateGuestJoin($event)" v-else>
                             {{ "Einladungslink erstellen" | i18n }}
                         </StudipButton>
+
                         <StudipButton icon="cancel" type="button" v-on:click="cancelGuest($event)">
-                            {{ "Abbrechen" | i18n}}
+                            {{ "Dialog schließen" | i18n}}
                         </StudipButton>
                     </div>
                 </fieldset>
@@ -286,7 +290,8 @@ export default {
     data() {
         return {
             message: null,
-            modal_message: {}
+            modal_message: {},
+            guest_link: ''
         }
     },
     methods: {
@@ -453,8 +458,8 @@ export default {
         },
         showGuestDialog(room) {
             this.$store.commit(ROOM_CLEAR);
-            $('#guest_link').text('');
-            $('#guest_link_label').hide();
+            this.guest_link = '';
+
             $('#guest-invitation-modal').data('room', room)
             .dialog({
                 width: '50%',
@@ -467,22 +472,17 @@ export default {
                 event.preventDefault();
             }
             var room = $('#guest-invitation-modal').data('room');
+
+            let view = this;
+
             if (room && this.room['guest_name']) {
-                if ($('#guest_link').text().trim()) {
-                    this.$set(this.room, 'guest_name', '');
-                    $('#guest_link').text('');
-                    $('#generate_link_btn').text('Einladungslink erstellen'.toLocaleString());
-                } else {
-                    room.guest_name = this.room['guest_name'];
-                    this.$store.dispatch(ROOM_JOIN_GUEST, room)
-                    .then(({ data }) => {
-                        if (data.join_url != '') {
-                            $('#guest_link').text(data.join_url);
-                            $('#guest_link_label').show();
-                            $('#generate_link_btn').text('Neuen Gast einladen'.toLocaleString());
-                        }
-                    });
-                }
+                room.guest_name = this.room['guest_name'];
+                this.$store.dispatch(ROOM_JOIN_GUEST, room)
+                .then(({ data }) => {
+                    if (data.join_url != '') {
+                        view.guest_link = data.join_url;
+                    }
+                });
             }
         },
         cancelGuest(event) {
@@ -490,16 +490,17 @@ export default {
                 event.preventDefault();
             }
             this.$store.commit(ROOM_CLEAR);
-            $('#guest_link').text('');
+            this.guest_link = '';
             $('#guest-invitation-modal').dialog('close');
         },
         copyGuestLinkClipboard(event) {
             if (event) {
                 event.preventDefault();
             }
-            let guest_link_element = document.getElementById('guest_link');
-            var link = guest_link_element.textContent;
-            if (link.trim()) {
+
+            let guest_link_element = this.$refs.guestLinkArea;
+
+            if (this.guest_link.trim()) {
                 try {
                     guest_link_element.select();
                     document.execCommand("copy");
@@ -511,7 +512,6 @@ export default {
                 } catch(e) {
                     console.log(e);
                 }
-                $('#guest_link').blur();
             }
         },
         setRoomSize(values) {
