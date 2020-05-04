@@ -5,7 +5,7 @@
                 <div class="meeting-item-header">
                     <div class="left">
                         {{room.name}}
-                        <span v-if="info.participantCount > 0">{{ info.participantCount }} {{ 'Teilnehmende aktiv' | i18n }}</span>
+                        <span v-if="info.participantCount > 0">{{ info.participantCount }} {{ 'Teilnehmende/r aktiv' | i18n }}</span>
                     </div>
                     <div class="right">
                         <a v-if="info.recording == 'true'" :title=" 'Dieser Raum kann aufgezeichnet werden!' | i18n " >
@@ -28,7 +28,7 @@
             <label id="details">
                 <div v-if="course_config.display.editRoom">
                     <a style="cursor: pointer;" :title=" room.join_as_moderator == 1 ?
-                        'Teilnehmende bekommen eingeschränkte Rechte' : 'Teilnehmende bekommen Administrations-Rechte' | i18n "
+                        'Teilnehmenden nur eingeschränkte Rechte geben' : 'Teilnehmenden Administrationsrechte geben' | i18n "
                         @click.prevent="editRights()">
                         <StudipIcon class="info-icon" :icon="room.join_as_moderator == 1 ? 'lock-unlocked' : 'lock-locked'" role="clickable" size="24"></StudipIcon>
                     </a>
