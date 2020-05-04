@@ -5,7 +5,14 @@
                 <div class="meeting-item-header">
                     <div class="left">
                         {{room.name}}
-                        <span v-if="info.participantCount > 0">{{ info.participantCount }} {{ 'Teilnehmende/r aktiv' | i18n }}</span>
+
+                        <StudipTooltipIcon v-if="room.details"
+                            :text="`Erstellt von: ${room.details['creator']}, ${room.details['date']}` | i18n">
+                        </StudipTooltipIcon>
+
+                        <span v-if="info.participantCount > 0" class="participants">
+                            {{ info.participantCount }} {{ 'Teilnehmende/r aktiv' | i18n }}
+                        </span>
                     </div>
                     <div class="right">
                         <a v-if="info.recording == 'true'" :title=" 'Dieser Raum kann aufgezeichnet werden!' | i18n " >
@@ -58,17 +65,15 @@
                     <span class="has-changed">{{ "Dieser Raum läuft gerade!" | i18n }}</span>
                 </div>
                 <br>
-                <span v-if="room.details" class="creator-date">
-                    {{ `Erstellt von: ${room.details['creator']}, ${room.details['date']}` | i18n }}
-                </span>
-                <br>
             </label>
             <div class="meeting-item-btns">
                 <StudipButton v-if="course_config.display.deleteRoom" icon="" class="delete" type="button" v-on:click="deleteRoom($event)">
                     {{ "Raum löschen" | i18n}}
                 </StudipButton>
                 <StudipButton v-if="course_config.display.editRoom && room.features && room.features.guestPolicy && room.features.guestPolicy != 'ALWAYS_DENY'"
-                    type="button" v-on:click="getGuestInfo()">
+                    type="button" v-on:click="getGuestInfo()"
+                    icon="add"
+                >
                     {{ "Gast einladen" | i18n}}
                 </StudipButton>
                 <a class="button join" :href="join_url" target="_blank">
@@ -82,6 +87,7 @@
 <script>
 import StudipButton from "@/components/StudipButton";
 import StudipIcon from "@/components/StudipIcon";
+import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import MessageBox from "@/components/MessageBox";
 import { mapGetters } from "vuex";
 import store from "@/store";
@@ -98,6 +104,7 @@ export default {
     components: {
         StudipButton,
         StudipIcon,
+        StudipTooltipIcon,
         MessageBox,
     },
     computed: {
