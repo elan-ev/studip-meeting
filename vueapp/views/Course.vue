@@ -211,7 +211,7 @@
 
                     <label id="guest_link_label" v-if="guest_link">
                         <span>{{ "Link" | i18n }}</span>
-                        <StudipTooltipIcon :text="'Bitte versuchen Sie, dem Gast den Link zu geben.' | i18n" :important="true"></StudipTooltipIcon>
+                        <StudipTooltipIcon :text="'Bitte geben sie diesen Link dem Gast.' | i18n" :important="true"></StudipTooltipIcon>
                         <textarea ref="guestLinkArea" v-model="guest_link" cols="30" rows="5"></textarea>
                     </label>
 
@@ -507,7 +507,7 @@ export default {
                     document.getSelection().removeAllRanges();
                     this.modal_message = {
                         type: 'success',
-                        text: 'Der Link wurde in die Zwischenablage kopiert'.toLocaleString()
+                        text: 'Der Link wurde in die Zwischenablage kopiert.'.toLocaleString()
                     }
                 } catch(e) {
                     console.log(e);
