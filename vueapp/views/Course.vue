@@ -30,8 +30,12 @@
                  type="error">
                 {{ "Es gibt keine Server für dieses Konferenzsystem, bitte wählen Sie ein anderes Konferenzsystem" | i18n }}
             </MessageBox>
-            <form class="default" @keyup="checkAddRoom($event)">
+
+            <form class="default collapsable" @keyup="checkAddRoom($event)" style="position: relative">
                 <fieldset>
+                    <legend>
+                        {{ 'Grundeinstellungen' | i18n }}
+                    </legend>
                     <label>
                         <span class="required">{{ "Name des Raums" | i18n }}</span>
                         <input type="text" v-model.trim="room['name']" id="name">
@@ -44,7 +48,7 @@
                         v-model="room['join_as_moderator']">
                         {{ "Sollen Teilnehmende Administrationsrechte erhalten?" | i18n }}
                     </label>
-                    <label>
+                    <label v-if="Object.keys(config_list).length > 1">
                         <span class="required">{{ "Konferenzsystem" | i18n }}</span>
                         <select id="driver_name" size="1" v-model="room['driver_name']" @change.prevent="handleDriverDefaults()" :disabled="Object.keys(config_list).length == 1">
                             <option value="" disabled> {{ "Bitte wählen Sie ein Konferenzsystem aus" | i18n }} </option>
@@ -67,68 +71,93 @@
                             </option>
                         </select>
                     </label>
+                </fieldset>
 
-                    <label v-if="room['driver_name'] && Object.keys(config_list[room['driver_name']]).includes('features')
-                                && Object.keys(config_list[room['driver_name']]['features']['create']).length">
-                        <strong>{{ "Zusätzliche Funktionen" | i18n }}</strong>
-                        <div style="margin: 15px 0;" v-for="(feature, index) in config_list[room['driver_name']]['features']['create']" :key="index">
-                            <span class="">
+                <fieldset v-if="room['driver_name'] && Object.keys(config_list[room['driver_name']]).includes('features')
+                            && Object.keys(config_list[room['driver_name']]['features']['create']).length"
+                    class="collapsed"
+                >
+                    <legend>{{ "Zusätzliche Funktionen" | i18n }}</legend>
+                    <div v-for="(feature, index) in config_list[room['driver_name']]['features']['create']" :key="index">
+                        <label v-if="feature['value'] === true || feature['value'] === false">
+                            <input  type="checkbox"
+                                true-value="true"
+                                false-value="false"
+                                v-model="room['features'][feature['name']]">
+
                                 {{ feature['display_name'] | i18n }}
-                            </span>
+                                <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
+                        </label>
+
+                        <label v-else-if="feature['value'] && typeof feature['value'] === 'object' && feature['name'] != 'roomSizeProfiles'">
+                            {{ feature['display_name'] | i18n }}
                             <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
-                            <div class="" v-if="feature['value'] && typeof feature['value'] === 'object' && feature['name'] != 'roomSizeProfiles'">
-                                <select :id="feature['name']" size="1" v-model.trim="room['features'][feature['name']]">
-                                    <option v-for="(fvalue, findex) in feature['value']" :key="findex"
-                                            :value="findex">
-                                            {{ fvalue | i18n }}
-                                    </option>
-                                </select>
-                            </div>
-                            <div id="meeting-create-feature-size" class="col-6" v-else-if="feature['name'] == 'roomSizeProfiles'">
+
+                            <select :id="feature['name']" size="1" v-model.trim="room['features'][feature['name']]">
+                                <option v-for="(fvalue, findex) in feature['value']" :key="findex"
+                                        :value="findex">
+                                        {{ fvalue | i18n }}
+                                </option>
+                            </select>
+                        </label>
+
+
+
+                        <div id="meeting-create-feature-size" class="col-6" v-else-if="feature['name'] == 'roomSizeProfiles'">
+                            <label>
+                                {{ feature['display_name'] | i18n }}
+                                <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
+
                                 <select :id="feature['name']" size="1" @change="setRoomSize(feature['value'])" v-model.trim="room['features'][feature['name']]">
                                     <option v-for="(fvalue, findex) in feature['value']" :key="findex"
                                             :value="fvalue['name']">
                                             {{ fvalue['display_name'] | i18n }}
                                     </option>
                                 </select>
-                                <div style="margin-top: 15px;" v-for="(fvalue, findex) in feature['value']" :key="findex">
-                                    <label v-for="(fsvalue, fsindex) in fvalue['value']" :key="fsindex" v-show="room['features'][feature['name']] == fvalue['name']">
-                                        <div v-if="typeof fsvalue['value'] != 'boolean'">
-                                            <span class="">{{ fsvalue['display_name'] | i18n }}</span>
+                            </label>
+                            <div style="margin-top: 15px;" v-for="(fvalue, findex) in feature['value']" :key="findex">
+                                <label v-for="(fsvalue, fsindex) in fvalue['value']" :key="fsindex" v-show="room['features'][feature['name']] == fvalue['name']">
+                                    <div v-if="typeof fsvalue['value'] != 'boolean'">
+                                        <span class="">{{ fsvalue['display_name'] | i18n }}</span>
+                                        <StudipTooltipIcon v-if="Object.keys(fsvalue).includes('info')" :text="fsvalue['info'] | i18n"></StudipTooltipIcon>
+                                        <input type="text" v-model.trim="room['features'][fsvalue['name']]"
+                                            :placeholder="fsvalue['value'] ? fsvalue['value'] : ''" :id="fsvalue['name']">
+                                    </div>
+
+                                    <div v-else>
+                                        <input  type="checkbox"
+                                            true-value="true"
+                                            false-value="false"
+                                            v-model="room['features'][fsvalue['name'] ]">
+                                            {{ fsvalue['display_name'] | i18n }}
                                             <StudipTooltipIcon v-if="Object.keys(fsvalue).includes('info')" :text="fsvalue['info'] | i18n"></StudipTooltipIcon>
-                                            <input type="text" v-model.trim="room['features'][fsvalue['name']]"
-                                                :placeholder="fsvalue['value'] ? fsvalue['value'] : ''" :id="fsvalue['name']">
-                                        </div>
+                                    </div>
 
-                                        <div v-else>
-                                            <input  type="checkbox"
-                                                true-value="true"
-                                                false-value="false"
-                                                v-model="room['features'][fsvalue['name'] ]">
-                                                {{ fsvalue['display_name'] | i18n }}
-                                                <StudipTooltipIcon v-if="Object.keys(fsvalue).includes('info')" :text="fsvalue['info'] | i18n"></StudipTooltipIcon>
-                                        </div>
-
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="" v-else>
-                                <input type="text" v-model.trim="room['features'][feature['name']]" :placeholder="feature['value'] ? feature['value'] : ''" :id="feature['name']">
+                                </label>
                             </div>
                         </div>
-                    </label>
-                    <div>
-                        <StudipButton v-if="room['id']" icon="accept" type="button" v-on:click="editRoom($event)">
+                        <label v-else>
+                            {{ feature['display_name'] | i18n }}
+                            <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
+
+                            <input type="text" v-model.trim="room['features'][feature['name']]" :placeholder="feature['value'] ? feature['value'] : ''" :id="feature['name']">
+                        </label>
+                    </div>
+                </fieldset>
+
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <div class="ui-dialog-buttonset">
+                        <StudipButton v-if="room['id']" icon="accept" type="button" v-on:click="editRoom($event)" class="ui-button ui-corner-all ui-widget">
                             {{ "Änderungen speichern" | i18n}}
                         </StudipButton>
-                        <StudipButton v-else icon="accept" type="button" v-on:click="addRoom($event)">
+                        <StudipButton v-else icon="accept" type="button" v-on:click="addRoom($event)" class="ui-button ui-corner-all ui-widget">
                             {{ "Raum erstellen" | i18n}}
                         </StudipButton>
-                        <StudipButton icon="cancel" type="button" v-on:click="cancelAddRoom($event)">
+                        <StudipButton icon="cancel" type="button" v-on:click="cancelAddRoom($event)" class="ui-button ui-corner-all ui-widget">
                             {{ "Abbrechen" | i18n}}
                         </StudipButton>
                     </div>
-                </fieldset>
+                </div>
             </form>
         </div>
         <div id="recording-modal" style="display: none;">
@@ -264,13 +293,27 @@ export default {
         showAddMeeting() {
             this.modal_message = {};
             this.$store.commit(ROOM_CLEAR);
-            $('#conference-meeting-create')
-            .dialog({
-                height: ($(window).height() * 0.8),
-                width: '70%',
-                modal: true,
-                title: 'Raum hinzufügen'.toLocaleString()
-            });
+
+            let options;
+
+            // handle mobile devices
+            if (window.innerWidth < 600) {
+                options = {
+                    width: '100%',
+                    modal: true,
+                    position: { my: "top", at: "top", of: window },
+                    title: 'Raum hinzufügen'.toLocaleString()
+                }
+            } else {
+                options = {
+                    minWidth: 500,
+                    modal: true,
+                    position: { my: "top", at: "top", of: window },
+                    title: 'Raum hinzufügen'.toLocaleString()
+                }
+            }
+
+            $('#conference-meeting-create').dialog(options);
 
             this.setDriver();
         },
