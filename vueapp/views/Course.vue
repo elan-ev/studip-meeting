@@ -507,7 +507,7 @@ export default {
                     document.getSelection().removeAllRanges();
                     this.modal_message = {
                         type: 'success',
-                        text: 'Der Link wurde in Clipboard kopiert'.toLocaleString()
+                        text: 'Der Link wurde in die Zwischenablage kopiert'.toLocaleString()
                     }
                 } catch(e) {
                     console.log(e);
