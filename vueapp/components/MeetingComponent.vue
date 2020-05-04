@@ -56,13 +56,13 @@
                                         : 'Das Meeting ist für die Teilnehmer unsichtbar' | i18n  }}
                     </span>
                 </div>
-                <div v-if="info.returncode == 'FAILED'">
+                <!--<div v-if="info.returncode == 'FAILED'">
                     <StudipIcon class="info-icon" icon="pause" role="status-yellow" size=24></StudipIcon>
                     <span class="has-changed">{{ "Dieser Raum läuft, es ist aber gerade niemand anwesend." | i18n }}</span>
-                </div>
+                </div>-->
                 <div v-if="info.running == 'true'">
                     <StudipIcon class="info-icon" icon="play" role="accept" size=24></StudipIcon>
-                    <span class="has-changed">{{ "Dieser Raum läuft gerade!" | i18n }}</span>
+                    <span class="has-changed">{{ "Dieser Raum ist aktiv." | i18n }}</span>
                 </div>
                 <br>
             </label>

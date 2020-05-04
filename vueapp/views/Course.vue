@@ -46,7 +46,7 @@
                         true-value="1"
                         false-value="0"
                         v-model="room['join_as_moderator']">
-                        {{ "Sollen Teilnehmende Administrationsrechte erhalten?" | i18n }}
+                        {{ "Administrationsrechte für alle Teilnehmenden" | i18n }}
                     </label>
                     <label v-if="Object.keys(config_list).length > 1">
                         <span class="required">{{ "Konferenzsystem" | i18n }}</span>
@@ -460,6 +460,7 @@ export default {
         showGuestDialog(room) {
             this.$store.commit(ROOM_CLEAR);
             this.guest_link = '';
+            this.modal_message.text = '';
 
             $('#guest-invitation-modal').data('room', room)
             .dialog({
