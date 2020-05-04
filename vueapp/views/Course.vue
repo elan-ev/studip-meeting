@@ -206,6 +206,7 @@
                 <fieldset>
                     <label>
                         <span class="required">{{ "Gastname" | i18n }}</span>
+                        <StudipTooltipIcon :text="'Der Gast bekommt diesen Namen in der Besprechung zugewiesen.' | i18n"></StudipTooltipIcon>
                         <input type="text" v-model.trim="room['guest_name']" id="guestname" @change="generateGuestJoin($event)">
                     </label>
 

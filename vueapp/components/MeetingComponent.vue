@@ -74,7 +74,7 @@
                     type="button" v-on:click="getGuestInfo()"
                     icon="add"
                 >
-                    {{ "Gast einladen" | i18n}}
+                    {{ "Einladungslink erstellen" | i18n }}
                 </StudipButton>
                 <a class="button join" :href="join_url" target="_blank">
                     {{ "Teilnehmen" | i18n}}
