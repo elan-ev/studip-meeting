@@ -274,7 +274,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
             new ConfigOption('small', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Kleiner Raum'), [
                 new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 50, self::getFeatureInfo('maxParticipants')),
                 new ConfigOption('muteOnStart', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Beim Start stumm schalten'), true, self::getFeatureInfo('muteOnStart')),
-                new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Webcams Nur für Moderatoren'), false, self::getFeatureInfo('webcamsOnlyForModerator')),
+                new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Webcams nur für Moderatoren'), false, self::getFeatureInfo('webcamsOnlyForModerator')),
                 new ConfigOption('lockSettingsDisableCam', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Webcam deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableCam')),
                 new ConfigOption('lockSettingsDisableMic', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Mikrofon deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableMic')),
                 new ConfigOption('lockSettingsDisableNote', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Gemeinsame Notizen deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableNote')),
@@ -282,7 +282,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
             new ConfigOption('medium', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Mittlerer Raum'), [
                 new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 150, self::getFeatureInfo('maxParticipants')),
                 new ConfigOption('muteOnStart', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Beim Start stumm schalten'), true, self::getFeatureInfo('muteOnStart')),
-                new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Webcams Nur für Moderatoren'), true, self::getFeatureInfo('webcamsOnlyForModerator')),
+                new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Webcams nur für Moderatoren'), true, self::getFeatureInfo('webcamsOnlyForModerator')),
                 new ConfigOption('lockSettingsDisableCam', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Webcam deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableCam')),
                 new ConfigOption('lockSettingsDisableMic', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Mikrofon deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableMic')),
                 new ConfigOption('lockSettingsDisableNote', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Gemeinsame Notizen deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableNote')),
@@ -290,7 +290,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
             new ConfigOption('large', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Großer Raum'), [
                 new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 300, self::getFeatureInfo('maxParticipants')),
                 new ConfigOption('muteOnStart', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Beim Start stumm schalten'), true, self::getFeatureInfo('muteOnStart')),
-                new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Webcams Nur für Moderatoren'), false, self::getFeatureInfo('webcamsOnlyForModerator')),
+                new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Webcams nur für Moderatoren'), false, self::getFeatureInfo('webcamsOnlyForModerator')),
                 new ConfigOption('lockSettingsDisableCam', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Webcam deaktivieren'), true, self::getFeatureInfo('lockSettingsDisableCam')),
                 new ConfigOption('lockSettingsDisableMic', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Mikrofon deaktivieren'), true, self::getFeatureInfo('lockSettingsDisableMic')),
                 new ConfigOption('lockSettingsDisableNote', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Gemeinsame Notizen deaktivieren'), true, self::getFeatureInfo('lockSettingsDisableNote')),
@@ -298,7 +298,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
             new ConfigOption('no-limit', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Keine Grenzen'), [
                 new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), null, self::getFeatureInfo('maxParticipants')),
                 new ConfigOption('muteOnStart', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Beim Start stumm schalten'), false, self::getFeatureInfo('muteOnStart')),
-                new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Webcams Nur für Moderatoren'), false, self::getFeatureInfo('webcamsOnlyForModerator')),
+                new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Webcams nur für Moderatoren'), false, self::getFeatureInfo('webcamsOnlyForModerator')),
                 new ConfigOption('lockSettingsDisableCam', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Webcam deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableCam')),
                 new ConfigOption('lockSettingsDisableMic', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Teilnehmer Mikrofon deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableMic')),
                 new ConfigOption('lockSettingsDisableNote', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Gemeinsame Notizen deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableNote')),
