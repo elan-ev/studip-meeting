@@ -248,7 +248,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
         $res[] = new ConfigOption('roomSizeProfiles', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Größe des Raumes'),
                 self::roomSizeProfile(),
                 _('Diese Funktion verbessert die Serverleistung. Wählen Sie die Raumprofile entsprechend Ihren Anforderungen aus. '
-                                            . 'Durch Auswahl der einzelnen Profile können die Einstellungen weiterhin geändert werden.')
+                                            . 'Nach Auswahl der einzelnen Profile können die Einstellungen weiterhin geändert werden.')
         );
 
         return array_reverse($res);
