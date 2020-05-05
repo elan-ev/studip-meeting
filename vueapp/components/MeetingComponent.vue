@@ -63,6 +63,9 @@
                 <div v-if="info.running == 'true'">
                     <StudipIcon class="info-icon" icon="play" role="accept" size=24></StudipIcon>
                     <span class="has-changed">{{ "Dieser Raum ist aktiv." | i18n }}</span>
+                    <StudipTooltipIcon
+                        :text=" 'Der Status aktualisiert sich mit einer Zeitverzögerung von bis zu 2 Minuten' | i18n">
+                    </StudipTooltipIcon>
                 </div>
                 <br>
             </label>
