@@ -543,13 +543,28 @@ export default {
             this.$set(this.room, 'server_index', room.server_index);
             this.$set(this.room, 'id', room.id);
             this.modal_message = {};
-            $('#conference-meeting-create')
-            .dialog({
-                height: ($(window).height() * 0.8),
-                width: '70%',
-                modal: true,
-                title: 'Raumeinstellung'.toLocaleString()
-            });
+
+
+            let options;
+
+            // handle mobile devices
+            if (window.innerWidth < 600) {
+                options = {
+                    width: '100%',
+                    modal: true,
+                    position: { my: "top", at: "top", of: window },
+                    title: 'Raumeinstellung'.toLocaleString()
+                }
+            } else {
+                options = {
+                    minWidth: 500,
+                    modal: true,
+                    position: { my: "top", at: "top", of: window },
+                    title: 'Raumeinstellung'.toLocaleString()
+                }
+            }
+
+            $('#conference-meeting-create').dialog(options);
         },
         editRoom() {
             this.$store.dispatch(ROOM_UPDATE, this.room)
