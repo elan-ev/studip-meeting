@@ -39,12 +39,16 @@ class RoomAdd extends MeetingsController
 
     public function __invoke(Request $request, Response $response, $args)
     {
+        global $perm;
+        $json = $this->getRequestData($request);
+        if (!$perm->have_studip_perm('tutor', $json['cid'])) {
+            throw new Error(_('Access Denied'), 403);
+        }
         try {
             $has_error = false;
             $error_text = '';
             $user = $GLOBALS['user'];
             $driver_factory = new DriverFactory(Driver::getConfig());
-            $json = $this->getRequestData($request);
 
             $exists = false;
             foreach (MeetingCourse::findByUser($user) as $meetingCourse) {

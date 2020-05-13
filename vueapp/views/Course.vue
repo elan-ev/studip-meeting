@@ -19,7 +19,7 @@
 
         <form class="default conference-meeting" v-if="rooms_list.length">
                 <MeetingComponent v-for="(room, index) in rooms_list" :key="index" :room="room" v-on:getRecording="showRecording"
-                     v-on:renewRoomList="getRoomList" v-on:getGuestInfo="showGuestDialog" v-on:getFeatures="showEditFeatureDialog"></MeetingComponent>
+                     v-on:renewRoomList="getRoomList" v-on:getGuestInfo="showGuestDialog" v-on:getFeatures="showEditFeatureDialog" v-on:setMessage="showMessage"></MeetingComponent>
         </form>
 
         <div v-if="config_list" id="conference-meeting-create" style="display: none" >
@@ -251,7 +251,6 @@ import {
     ROOM_READ,
     ROOM_UPDATE,
     ROOM_CREATE,
-    ROOM_DELETE,
     ROOM_JOIN,
     RECORDING_LIST,
     RECORDING_SHOW,
@@ -400,10 +399,8 @@ export default {
                             this.message = null;
                         }, 3000);
                     }
-                }).catch (error => {
-                    $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
-                    this.$set(this.modal_message, "type" , "error");
-                    this.$set(this.modal_message, "text" , 'System Error: please contact system administrator!');
+                }).catch (({error}) => {
+                    $('#conference-meeting-create').dialog('close');
                 });
             } else {
                 $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
@@ -484,6 +481,11 @@ export default {
                     if (data.join_url != '') {
                         view.guest_link = data.join_url;
                     }
+                    if (data.message) {
+                        this.modal_message = data.message;
+                    }
+                }).catch (({error}) => {
+                    $('#guest-invitation-modal').dialog('close');
                 });
             }
         },
@@ -578,8 +580,13 @@ export default {
                     $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
                     this.modal_message = data.message;
                 }
+            }).catch (({error}) => {
+                $('#conference-meeting-create').dialog('close');
             });
         },
+        showMessage(message) {
+            this.message = message;
+        }
     },
     mounted() {
         store.dispatch(CONFIG_LIST_READ, true);

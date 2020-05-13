@@ -59,8 +59,8 @@ const getters = {
 export const state = { ...initialState };
 
 export const actions = {
-    async [CONFIG_LIST_READ](context, cid = false) {
-        return ApiService.get('config' + (cid ? '?cid=' + CID : ''))
+    async [CONFIG_LIST_READ](context, needs_cid = false) {
+        return ApiService.get('config/list/' + (needs_cid ? CID : '0'))
             .then(({ data }) => {
                 if (data != []) {
                     context.commit(CONFIG_SET, data);

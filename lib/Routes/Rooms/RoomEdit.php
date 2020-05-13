@@ -35,8 +35,13 @@ class RoomEdit extends MeetingsController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $room_id = $args['room_id'];
+        global $perm;
         $json = $this->getRequestData($request);
+        if (!$perm->have_studip_perm('tutor', $json['cid'])) {
+            throw new Error(_('Access Denied'), 403);
+        }
+
+        $room_id = $args['room_id'];
         
         $meetingCourse = new MeetingCourse([$room_id, $json['cid']]);
         $name = $json['name'];

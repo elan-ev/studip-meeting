@@ -41,8 +41,7 @@ export const actions = {
     },
 
     async [RECORDING_DELETE](context, recording) {
-        /* We need CID and room id in order to extract the driver later on! */
-        await ApiService.delete('recordings/' + CID + '/' + recording.room_id + '/' + recording.recordID);
+        return await ApiService.delete('recordings/' + CID + '/' + recording.room_id + '/' + recording.recordID);
     },
 };
 

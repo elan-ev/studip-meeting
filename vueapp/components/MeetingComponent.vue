@@ -137,10 +137,12 @@ export default {
             .then(({ data }) => {
                 if (data.message.type == 'error') {
                     this.room.join_as_moderator = !this.room.join_as_moderator;
-                    this.message = data.message;
+                    this.$emit('setMessage', data.message);
                 } else {
                     $(`#rights-info-text-${this.room.id}`).addClass('has-changed');
                 }
+            }).catch (({error}) => {
+                this.room.join_as_moderator = !this.room.join_as_moderator;
             });
         },
         editVisibility() {
@@ -150,10 +152,12 @@ export default {
             .then(({ data }) => {
                 if (data.message.type == 'error') {
                     this.room.active = !this.room.active;
-                    this.message = data.message;
+                    this.$emit('setMessage', data.message);
                 } else {
                     $(`#active-info-text-${this.room.id}`).addClass('has-changed');
                 }
+            }).catch (({error}) => {
+                this.room.active = !this.room.active;
             });
         },
         getRecording() {
@@ -166,6 +170,12 @@ export default {
 
             if (confirm('Sind sie sicher, dass sie diesen Raum löschen möchten?')) {
                 this.$store.dispatch(ROOM_DELETE, this.room.id)
+                .then(({data}) => {
+                    this.$emit('setMessage', data.message);
+                    if (data.message.type == 'success') {
+                        this.$emit('renewRoomList');
+                    }
+                });
             }
         },
 

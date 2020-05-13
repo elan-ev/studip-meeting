@@ -58,8 +58,7 @@ export const actions = {
     },
 
     async [ROOM_DELETE](context, id) {
-        await ApiService.delete('rooms/' + CID + '/' + id);
-        context.dispatch(ROOM_LIST);
+        return await ApiService.delete('rooms/' + CID + '/' + id);
     },
 
     async [ROOM_UPDATE](context, params) {
