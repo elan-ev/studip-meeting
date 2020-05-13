@@ -59,7 +59,7 @@ class RoomAdd extends MeetingsController
             //validations 
             if ($exists) {
                 $has_error = true;
-                $error_text = _('Dieser Raum existiert');
+                $error_text = _('Es existiert bereits ein gleichnamiger Raum.');
             }
 
             if (empty($json['name'])) {
