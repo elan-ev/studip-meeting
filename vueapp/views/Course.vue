@@ -50,7 +50,7 @@
                     </label>
                     <label v-if="Object.keys(config_list).length > 1">
                         <span class="required">{{ "Konferenzsystem" | i18n }}</span>
-                        <select id="driver_name" size="1" v-model="room['driver_name']" @change.prevent="handleDriverDefaults()" :disabled="Object.keys(config_list).length == 1">
+                        <select id="driver_name" v-model="room['driver_name']" @change.prevent="handleDriverDefaults()" :disabled="Object.keys(config_list).length == 1">
                             <option value="" disabled> {{ "Bitte wählen Sie ein Konferenzsystem aus" | i18n }} </option>
                             <option v-for="(driver_config, driver_name) in config_list" :key="driver_name"
                                     :value="driver_name">
@@ -62,7 +62,7 @@
                     <label v-if="room['driver_name']
                                 && Object.keys(config_list[room['driver_name']]['servers']).length > 1">
                         <span class="required">{{ "Verfügbare Server" | i18n }}</span>
-                        <select id="server_index" size="1" v-model="room['server_index']"
+                        <select id="server_index" v-model="room['server_index']"
                             :disabled="Object.keys(config_list[room['driver_name']]['servers']).length == 1">
                             <option value="" disabled> {{ "Bitte wählen Sie einen Server aus" | i18n }} </option>
                             <option v-for="(server_config, server_index) in config_list[room['driver_name']]['servers']" :key="server_index"
@@ -93,7 +93,7 @@
                             {{ feature['display_name'] | i18n }}
                             <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
 
-                            <select :id="feature['name']" size="1" v-model.trim="room['features'][feature['name']]">
+                            <select :id="feature['name']" v-model.trim="room['features'][feature['name']]">
                                 <option v-for="(fvalue, findex) in feature['value']" :key="findex"
                                         :value="findex">
                                         {{ fvalue | i18n }}
@@ -108,7 +108,7 @@
                                 {{ feature['display_name'] | i18n }}
                                 <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
 
-                                <select :id="feature['name']" size="1" @change="setRoomSize(feature['value'])" v-model.trim="room['features'][feature['name']]">
+                                <select :id="feature['name']" @change="setRoomSize(feature['value'])" v-model.trim="room['features'][feature['name']]">
                                     <option v-for="(fvalue, findex) in feature['value']" :key="findex"
                                             :value="fvalue['name']">
                                             {{ fvalue['display_name'] | i18n }}
