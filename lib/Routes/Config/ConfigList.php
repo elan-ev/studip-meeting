@@ -20,17 +20,16 @@ class ConfigList extends MeetingsController
         $drivers = Driver::discover(true);
 
         $config = Driver::getConfig();
-
+        
         $course_config = [];
-        $cid =  filter_var(str_replace('cid=','', rtrim($request->getUri()->getQuery(), '/')), FILTER_SANITIZE_STRING);
+        $cid = $args['cid'];
         if ($cid) {
-            global $user;
+            global $perm;
             $course_config = CourseConfig::findByCourseId($cid)->toArray();
             $displayAddRoom = false;
             $displayEditRoom = false;
             $displayDeleteRoom = false;
-            //TODO: permissions must be optimized!
-            if (in_array($user->perms, ['admin','root', 'dozent', 'tutor'])) {
+            if ($perm->have_studip_perm('tutor', $cid)) {
                 $displayAddRoom = true;
                 $displayEditRoom = true;
                 $displayDeleteRoom = true;

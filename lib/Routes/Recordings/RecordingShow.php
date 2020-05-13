@@ -31,7 +31,13 @@ class RecordingShow extends MeetingsController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
+        global $perm;
         $recordings_id = $args['recordings_id'];
+        $room_id = $args['room_id'];
+        $cid = $args['cid'];
+        if (!$perm->have_studip_perm('tutor', $cid)) {
+            throw new Error(_('Access Denied'), 403);
+        }
 
         //TODO:  get json for this room what exactly this route supposed to do?
         return $this->createResponse('get json for this room', $response);

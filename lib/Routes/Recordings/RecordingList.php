@@ -54,7 +54,7 @@ class RecordingList extends MeetingsController
                     }
                 }
             } catch (Exception $e) {
-                throw new Error('Error in recording list (' . $e->getMessage() . ')', 404);
+                throw new Error('Fehler in der Aufzeichnungliste (' . $e->getMessage() . ')', 404);
             }
         }
 

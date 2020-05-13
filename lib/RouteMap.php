@@ -34,7 +34,7 @@ class RouteMap
         $this->app->get('/user', Routes\Users\UsersShow::class);
 
         //configs
-        $this->app->get('/config', Routes\Config\ConfigList::class);
+        $this->app->get('/config/list/{cid}', Routes\Config\ConfigList::class);
 
         //Routes for rooms in seminar
         $this->app->get('/course/{cid}/rooms', Routes\Rooms\RoomsList::class);
@@ -48,20 +48,18 @@ class RouteMap
         //Routes for recordings
         $this->app->get('/rooms/{cid}/{room_id}/recordings', Routes\Recordings\RecordingList::class);
         
-        //TODO: permissions must be optimized!
-        if (in_array($user->perms, ['admin','root', 'dozent', 'tutor'])) {
-            // rooms with perm
-            $this->app->post('/rooms', Routes\Rooms\RoomAdd::class);
-            $this->app->put('/rooms/{room_id}', Routes\Rooms\RoomEdit::class);
-            $this->app->delete('/rooms/{cid}/{room_id}', Routes\Rooms\RoomDelete::class);
+        //following requests contain validation of permissions
+        // rooms with perm
+        $this->app->post('/rooms', Routes\Rooms\RoomAdd::class);
+        $this->app->put('/rooms/{room_id}', Routes\Rooms\RoomEdit::class);
+        $this->app->delete('/rooms/{cid}/{room_id}', Routes\Rooms\RoomDelete::class);
 
-            //generate guest invitaion link
-            $this->app->get('/rooms/join/{cid}/{room_id}/{guest_name}/guest', Routes\Rooms\RoomJoinGuest::class);
+        //generate guest invitaion link
+        $this->app->get('/rooms/join/{cid}/{room_id}/{guest_name}/guest', Routes\Rooms\RoomJoinGuest::class);
 
-            //recordings with perm
-            $this->app->get('/recordings/{recordings_id}', Routes\Recordings\RecordingShow::class);
-            $this->app->delete('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingDelete::class);
-        }
+        //recordings with perm
+        $this->app->get('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingShow::class);
+        $this->app->delete('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingDelete::class);
     }
 
     public function adminRoutes()

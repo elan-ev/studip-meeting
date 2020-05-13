@@ -31,20 +31,23 @@ class RoomDelete extends MeetingsController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        try {
-            global $perm;
-            $driver_factory = new DriverFactory(Driver::getConfig());
+        global $perm;
+        $cid = $args['cid'];
 
+        if (!$perm->have_studip_perm('tutor', $cid)) {
+            throw new Error(_('Access Denied'), 403);
+        }
+        try {
+            $driver_factory = new DriverFactory(Driver::getConfig());
             $room_id = $args['room_id'];
-            $cid = $args['cid'];
             $message = [
-                'text' => _('Unable to delete meeting'),
+                'text' => _('Dieser Raum konnte nicht gefunden werden'),
                 'type' => 'error'
             ];
 
             $meetingCourse = new MeetingCourse([$room_id, $cid ]);
 
-            if (!$meetingCourse->isNew() && $perm->have_studip_perm('tutor', $meetingCourse->course->id)) {
+            if (!$meetingCourse->isNew()) {
                 // don't associate the meeting and the course any more
                 $meetingId = $meetingCourse->meeting->id;
                 $meetingCourse->delete();
