@@ -17,8 +17,12 @@
             {{ 'Raum hinzufügen' | i18n }}
         </StudipButton>
 
-        <form class="default conference-meeting" v-if="rooms_list.length">
-                <MeetingComponent v-for="(room, index) in rooms_list" :key="index" :room="room" v-on:getRecording="showRecording"
+        <span>
+            <input type="text" placeholder="Räume filtern nach Name" v-model="searchtext">
+        </span>
+
+        <form class="default conference-meeting" v-if="rooms_list_filtered.length">
+                <MeetingComponent v-for="(room, index) in rooms_list_filtered" :key="index" :room="room" v-on:getRecording="showRecording"
                      v-on:renewRoomList="getRoomList" v-on:getGuestInfo="showGuestDialog" v-on:getFeatures="showEditFeatureDialog"></MeetingComponent>
         </form>
 
@@ -286,13 +290,25 @@ export default {
             }
 
             return config_list;
+        },
+        rooms_list_filtered: function() {
+            let view = this;
+
+            if (this.searchtext != '') {
+                return this.rooms_list.filter(function(entry) {
+                    return (entry.name.toLowerCase().indexOf(view.searchtext.toLowerCase()) !== -1);
+                });
+            } else {
+                return this.rooms_list;
+            }
         }
     },
     data() {
         return {
             message: null,
             modal_message: {},
-            guest_link: ''
+            guest_link: '',
+            searchtext: ''
         }
     },
     methods: {
