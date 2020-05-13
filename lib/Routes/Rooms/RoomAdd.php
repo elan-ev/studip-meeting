@@ -110,7 +110,7 @@ class RoomAdd extends MeetingsController
                 $meeting = new Meeting();
                 $meeting->courses[] = new \Course($json['cid']);
                 $meeting->user_id = $user->id;
-                $meeting->name = $json['name'];
+                $meeting->name = trim($json['name']);
                 $meeting->driver = $json['driver_name'];
                 $meeting->server_index = $json['server_index'];
                 $meeting->attendee_password = Helper::createPassword();
@@ -168,7 +168,7 @@ class RoomAdd extends MeetingsController
     private function meeting_exists($meetingCourse, $data)
     {
         if ($meetingCourse->course_id == $data['cid']
-            && $meetingCourse->meeting->name == $data['name']
+            && trim($meetingCourse->meeting->name) == trim($data['name'])
             && $meetingCourse->meeting->driver == $data['driver_name']
             && $meetingCourse->meeting->server_index == $data['server_index']) {
                 return true;

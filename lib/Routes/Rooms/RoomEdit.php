@@ -44,7 +44,7 @@ class RoomEdit extends MeetingsController
         $room_id = $args['room_id'];
         
         $meetingCourse = new MeetingCourse([$room_id, $json['cid']]);
-        $name = $json['name'];
+        $name = trim($json['name']);
         $allow_change_driver = (isset($json['driver_name']) && !empty($json['driver_name'])) || !isset($json['driver_name']);
         $allow_change_server_index = (isset($json['server_index']) && is_numeric($json['server_index'])) || !isset($json['server_index']);
 
