@@ -198,7 +198,7 @@
             </table>
         </div>
         <div id="guest-invitation-modal" style="display: none;">
-            <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''" :timer="5000">
+            <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
                 {{ modal_message.text }}
             </MessageBox>
 
