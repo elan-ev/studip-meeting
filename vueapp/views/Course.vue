@@ -31,7 +31,7 @@
                 {{ "Es gibt keine Server für dieses Konferenzsystem, bitte wählen Sie ein anderes Konferenzsystem" | i18n }}
             </MessageBox>
 
-            <form class="default collapsable" @keyup="checkAddRoom($event)" style="position: relative">
+            <form class="default collapsable" @keyup="roomFormSubmit($event)" style="position: relative">
                 <fieldset>
                     <legend>
                         {{ 'Grundeinstellungen' | i18n }}
@@ -367,9 +367,13 @@ export default {
             }
         },
 
-        checkAddRoom(event) {
+        roomFormSubmit(event) {
             if (event.key == 'Enter') {
-                this.addRoom(event);
+                if (Object.keys(this.room).includes('id')) {
+                    this.editRoom(event);
+                } else {
+                    this.addRoom(event);
+                }
             }
         },
 
@@ -569,10 +573,12 @@ export default {
 
             $('#conference-meeting-create').dialog(options);
         },
-        editRoom() {
+        editRoom(event) {
+            if (event) {
+                event.preventDefault();
+            }
             this.$store.dispatch(ROOM_UPDATE, this.room)
             .then(({ data }) => {
-                console.log(data.message);
                 this.message = data.message;
                 if (data.message.type == 'success') {
                     $('#conference-meeting-create').dialog('close');
