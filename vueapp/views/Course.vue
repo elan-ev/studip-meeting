@@ -1,6 +1,6 @@
 <template>
     <div>
-        <MessageBox v-if="course_config" type="info">
+        <MessageBox v-if="course_config && course_config.introduction.replace(/(<([^>]+)>)/ig, '') != ''" type="info">
             <span v-html="course_config.introduction"></span>
         </MessageBox>
 
