@@ -7,7 +7,6 @@ import {
     ROOM_UPDATE,
     ROOM_CREATE,
     ROOM_DELETE,
-    ROOM_JOIN,
     ROOM_STATUS,
     ROOM_INFO,
     ROOM_JOIN_GUEST
@@ -15,11 +14,13 @@ import {
 
 import {
     ROOMS_LIST_SET,
+    ROOMS_INFO_SET,
     ROOM_CLEAR
 } from "./mutations.type";
 
 const initialState = {
     rooms_list: [],
+    rooms_info: [],
     room: {
         "name": "",
         "driver_name": "",
@@ -32,6 +33,9 @@ const initialState = {
 const getters = {
     rooms_list(state) {
         return state.rooms_list;
+    },
+    rooms_info(state) {
+        return state.rooms_info;
     },
     room(state) {
         return state.room;
@@ -71,10 +75,6 @@ export const actions = {
         return await ApiService.post('rooms', params);
     },
 
-    async [ROOM_JOIN](context, id) {
-        return ApiService.get('rooms/join/' + CID + '/' + id);
-    },
-
     async [ROOM_JOIN_GUEST](context, room) {
         return ApiService.get('rooms/join/' + CID + '/' + room.id + '/' + room.guest_name + '/guest');
     },
@@ -83,8 +83,11 @@ export const actions = {
         return ApiService.get('rooms/' + CID + '/' + id + '/status');
     },
 
-    async [ROOM_INFO](context, id) {
-        return ApiService.get('rooms/' + CID + '/' + id + '/info');
+    async [ROOM_INFO](context) {
+        return ApiService.get('rooms/' + CID + '/info')
+            .then(({ data }) => {
+                context.commit(ROOMS_INFO_SET, data.rooms_info);
+            });
     },
 };
 
@@ -93,6 +96,7 @@ export const mutations = {
     [ROOMS_LIST_SET](state, data) {
         state.rooms_list = data;
     },
+
     [ROOM_CLEAR](state) {
         state.room = {
             "name": "",
@@ -101,6 +105,10 @@ export const mutations = {
             "join_as_moderator": "0",
             "features": {}
         }
+    },
+
+    [ROOMS_INFO_SET](state, data) {
+        state.rooms_info = data;
     }
 };
 
