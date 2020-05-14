@@ -1,5 +1,9 @@
 <template>
     <div>
+        <MessageBox v-if="course_config" type="info">
+            <span v-html="course_config.introduction"></span>
+        </MessageBox>
+
         <MessageBox v-if="message" :type="message.type" @hide="message = ''">
             {{ message.text }}
         </MessageBox>

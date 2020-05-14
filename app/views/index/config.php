@@ -23,7 +23,7 @@
 
         <label>
             <?= $_('Einleitungstext') ?>
-            <textarea name="introduction" id="vc_config_introduction" cols="80" rows="10" class="add_toolbar"><?= htmlReady($courseConfig->introduction) ?></textarea>
+            <textarea name="introduction" id="vc_config_introduction" cols="80" rows="10" class="wysiwyg"><?= htmlReady($courseConfig->introduction) ?></textarea>
         </label>
     </fieldset>
 
