@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="meetingcomponent">
         <fieldset>
             <legend>
                 <div class="meeting-item-header">
