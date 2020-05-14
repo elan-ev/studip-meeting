@@ -32,20 +32,39 @@ class RoomInfo extends MeetingsController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
+        global $perm;
+
         try {
             $driver_factory = new DriverFactory(Driver::getConfig());
+            $cache = \StudipCacheFactory::getCache();
 
-            $room_id = $args['room_id'];
             $cid = $args['cid'];
 
-            $meetingCourse = new MeetingCourse([$room_id, $cid ]);
-
-            if (!$meetingCourse->isNew()) {
-                $driver = $driver_factory->getDriver($meetingCourse->meeting->driver, $meetingCourse->meeting->server_index);
-                $info = $driver->getMeetingInfo($meetingCourse->meeting->getMeetingParameters());
-                $info->chdate = $meetingCourse->meeting->chdate;
-                return $this->createResponse(['info' => $info], $response);
+            if ($perm->have_studip_perm('tutor', $cid)) {
+                $meeting_course_list_raw = MeetingCourse::findByCourseId($cid);
+            } else {
+                $meeting_course_list_raw = MeetingCourse::findActiveByCourseId($cid);
             }
+
+            $room_infos = [];
+
+            foreach ($meeting_course_list_raw as $meetingCourse) {
+                if (!$meetingCourse->isNew()) {
+                    if (!$data = $cache->read('meetings/' . $meetingCourse->id)) {
+                        $driver = $driver_factory->getDriver($meetingCourse->meeting->driver, $meetingCourse->meeting->server_index);
+                        $info = $driver->getMeetingInfo($meetingCourse->meeting->getMeetingParameters());
+                        $info->chdate = $meetingCourse->meeting->chdate;
+
+                        $cache->write('meetings/' . $meetingCourse->id, $info->asXML(), 300);   // cache expires after 5 minutes
+                    } else {
+                        $info = simplexml_load_string($data);
+                    }
+
+                    $room_infos[$meetingCourse->id] = $info;
+                }
+            }
+
+            return $this->createResponse(['room_infos' => $room_infos], $response);
         } catch (Exception $e) {
             throw new Error($e->getMessage(), 404);
         }

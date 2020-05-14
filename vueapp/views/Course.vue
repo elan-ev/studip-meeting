@@ -22,8 +22,16 @@
         </span>
 
         <form class="default conference-meeting" v-if="rooms_list_filtered.length">
-                <MeetingComponent v-for="(room, index) in rooms_list_filtered" :key="index" :room="room" v-on:getRecording="showRecording"
-                     v-on:renewRoomList="getRoomList" v-on:getGuestInfo="showGuestDialog" v-on:getFeatures="showEditFeatureDialog" v-on:setMessage="showMessage"></MeetingComponent>
+                <MeetingComponent v-for="(room, index) in rooms_list_filtered"
+                    :key="index"
+                    :room="room"
+                    :info="rooms_info !== undefined ? rooms_info[room.id +'_'+ room.course_id] : {}"
+                    v-on:getRecording="showRecording"
+                    v-on:renewRoomList="getRoomList"
+                    v-on:getGuestInfo="showGuestDialog"
+                    v-on:getFeatures="showEditFeatureDialog"
+                    v-on:setMessage="showMessage">
+                </MeetingComponent>
         </form>
 
         <div v-if="config_list" id="conference-meeting-create" style="display: none" >
@@ -260,7 +268,8 @@ import {
     RECORDING_LIST,
     RECORDING_SHOW,
     RECORDING_DELETE,
-    ROOM_JOIN_GUEST
+    ROOM_JOIN_GUEST,
+    ROOM_INFO
 } from "@/store/actions.type";
 
 import {
@@ -279,7 +288,7 @@ export default {
         MeetingComponent
     },
     computed: {
-        ...mapGetters(['config', 'room', 'rooms_list', 'course_config', 'recording_list', 'recording']),
+        ...mapGetters(['config', 'room', 'rooms_list', 'rooms_info', 'course_config', 'recording_list', 'recording']),
         config_list: function() {
             let config_list = {};
 
@@ -474,6 +483,7 @@ export default {
         },
         getRoomList() {
             this.$store.dispatch(ROOM_LIST);
+            this.$store.dispatch(ROOM_INFO);
         },
         showGuestDialog(room) {
             this.$store.commit(ROOM_CLEAR);
@@ -611,9 +621,18 @@ export default {
             this.message = message;
         }
     },
+
     mounted() {
         store.dispatch(CONFIG_LIST_READ, true);
         this.getRoomList();
+
+        this.interval = setInterval(() => {
+            this.getRoomList();
+        }, 300000);
+    },
+
+    beforeDestroy () {
+        clearInterval(this.interval)
     }
 };
 </script>

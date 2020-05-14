@@ -92,10 +92,8 @@ import { mapGetters } from "vuex";
 import store from "@/store";
 
 import {
-    ROOM_INFO,
     ROOM_UPDATE,
     ROOM_DELETE,
-    ROOM_JOIN
 } from "@/store/actions.type";
 
 export default {
@@ -106,26 +104,37 @@ export default {
         StudipTooltipIcon,
         MessageBox,
     },
+
     computed: {
-        ...mapGetters(['course_config'])
+        ...mapGetters(['course_config']),
+
+        join_url() {
+            return API_URL + '/rooms/join/' + this.room.course_id + '/' + this.room.id;
+        }
     },
+
     props: {
         room: {
             type: Object,
             required: true
+        },
+        info: {
+            type: Object,
+            required: true
         }
     },
+
     data() {
         return {
-            interval: null,
-            info: {},
-            join_url: ''
+            interval: null
         }
     },
+
     methods: {
         editFeatures() {
             this.$emit('getFeatures', this.room);
         },
+
         editRights() {
             $(`#rights-info-text-${this.room.id}`).removeClass('has-changed');
             this.room.join_as_moderator = this.room.join_as_moderator == 1 ? 0 : 1;
@@ -141,6 +150,7 @@ export default {
                 this.room.join_as_moderator = !this.room.join_as_moderator;
             });
         },
+
         editVisibility() {
             $(`#active-info-text-${this.room.id}`).removeClass('has-changed');
             this.room.active = this.room.active == 1 ? 0 : 1;
@@ -156,9 +166,11 @@ export default {
                 this.room.active = !this.room.active;
             });
         },
+
         getRecording() {
             this.$emit('getRecording', this.room);
         },
+
         deleteRoom(event) {
             if (event) {
                 event.preventDefault();
@@ -175,41 +187,9 @@ export default {
             }
         },
 
-        getInfo() {
-            if (this.room.features && this.room.features.maxParticipants && this.room.features.maxParticipants > 140) {
-                this.$store.dispatch(ROOM_INFO, this.room.id)
-                .then(({ data }) => {
-                    this.info = data.info;
-                    if (this.info.chdate != this.room.chdate) {
-                        this.$emit('renewRoomList');
-                    }
-                });
-            }
-        },
         getGuestInfo() {
             this.$emit('getGuestInfo', this.room);
         },
-
-        updateJoinLink() {
-            this.$store.dispatch(ROOM_JOIN, this.room.id)
-            .then(({ data }) => {
-                if (data.join_url != '') {
-                    this.join_url = data.join_url;
-                    //window.open(data.join_url, '_blank');
-                }
-            });
-        }
-    },
-    mounted() {
-        this.getInfo();
-        this.updateJoinLink();
-        // this.interval = setInterval(() => {
-        //     this.getInfo();
-        //     this.updateJoinLink();
-        // }, 120000);
-    },
-    beforeDestroy () {
-    //    clearInterval(this.interval)
     }
 }
 </script>
