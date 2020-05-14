@@ -50,21 +50,21 @@ class RoomInfo extends MeetingsController
 
             foreach ($meeting_course_list_raw as $meetingCourse) {
                 if (!$meetingCourse->isNew()) {
-                    if (!$data = $cache->read('meetings/' . $meetingCourse->id)) {
+                    if (!$data = $cache->read('meetings/' . $meetingCourse->meeting->id)) {
                         $driver = $driver_factory->getDriver($meetingCourse->meeting->driver, $meetingCourse->meeting->server_index);
                         $info = $driver->getMeetingInfo($meetingCourse->meeting->getMeetingParameters());
                         $info->chdate = $meetingCourse->meeting->chdate;
 
-                        $cache->write('meetings/' . $meetingCourse->id, $info->asXML(), 300);   // cache expires after 5 minutes
+                        $cache->write('meetings/' . $meetingCourse->meeting->id, $info->asXML(), 300);   // cache expires after 5 minutes
                     } else {
                         $info = simplexml_load_string($data);
                     }
 
-                    $room_infos[$meetingCourse->id] = $info;
+                    $room_infos[$meetingCourse->meeting->id] = $info;
                 }
             }
 
-            return $this->createResponse(['room_infos' => $room_infos], $response);
+            return $this->createResponse(['rooms_info' => $room_infos], $response);
         } catch (Exception $e) {
             throw new Error($e->getMessage(), 404);
         }

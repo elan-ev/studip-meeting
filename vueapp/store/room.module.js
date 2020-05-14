@@ -86,7 +86,7 @@ export const actions = {
     async [ROOM_INFO](context) {
         return ApiService.get('rooms/' + CID + '/info')
             .then(({ data }) => {
-                context.commit(ROOMS_INFO_SET, data.config);
+                context.commit(ROOMS_INFO_SET, data.rooms_info);
             });
     },
 };

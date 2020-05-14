@@ -25,7 +25,7 @@
                 <MeetingComponent v-for="(room, index) in rooms_list_filtered"
                     :key="index"
                     :room="room"
-                    :info="rooms_info !== undefined ? rooms_info[room.id +'_'+ room.course_id] : {}"
+                    :info="rooms_info !== undefined ? rooms_info[room.id] : {}"
                     v-on:getRecording="showRecording"
                     v-on:renewRoomList="getRoomList"
                     v-on:getGuestInfo="showGuestDialog"
