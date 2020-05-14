@@ -80,23 +80,21 @@ class NewConfigMulti extends Migration {
      */
     public function down()
     {
-        $current_driver = \Config::get()->getValue('VC_DRIVER');
+        $new_config = \Config::get()->getValue('VC_CONFIG');
+        $new_config = json_decode($new_config, true);
 
-        $config = array(
-            'BigBlueButton' => array(
-                'enable'       => ($current_driver == 'bigbluebutton') ? 1 : 0,
-                'display_name' => 'BigBlueButton',
-                'url'          => \Config::get()->getValue('BBB_URL') ? \Config::get()->getValue('BBB_URL') : '',
-                'api-key'      => \Config::get()->getValue('BBB_SALT') ? \Config::get()->getValue('BBB_SALT') : ''
-            ),
-            'DfnVc' => array(
-                'enable' => ($current_driver == 'dfnvc') ? 1 : 0,
-                'display_name' => 'Adobe Connect VC',
-                'url'          => \Config::get()->getValue('DFN_VC_URL') ? \Config::get()->getValue('DFN_VC_URL') : '',
-                'login'        => \Config::get()->getValue('DFN_VC_LOGIN') ? \Config::get()->getValue('DFN_VC_LOGIN') : '',
-                'password'     => \Config::get()->getValue('DFN_VC_PASSWORD') ? \Config::get()->getValue('DFN_VC_PASSWORD') : ''
-            )
-        );
-        \Config::get()->store('VC_CONFIG', json_encode($config));
+        $old_config = [];
+        foreach ($new_config as $driver_name => $value) {
+            $cnf = [];
+            $cnf['enable'] = $value['enable'];
+            $cnf['display_name'] = $value['display_name'];
+            if (count($value['servers']) > 0) {
+                foreach ($value['servers'][0] as $key => $value) {
+                    $cnf[$key] = $value;
+                }
+            } 
+            $old_config[$driver_name] = $cnf;
+        }
+        \Config::get()->store('VC_CONFIG', json_encode($old_config));
     }
 }

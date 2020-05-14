@@ -35,10 +35,15 @@ class RoomJoinGuest extends MeetingsController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
+        global $perm;
         $driver_factory = new DriverFactory(Driver::getConfig());
         $room_id = $args['room_id'];
         $guest_name = $args['guest_name'];
         $cid = $args['cid'];
+
+        if (!$perm->have_studip_perm('tutor', $cid)) {
+            throw new Error(_('Access Denied'), 403);
+        }
 
         $meeting = Meeting::find($room_id);
         if (!($meeting && $meeting->courses->find($cid))) {

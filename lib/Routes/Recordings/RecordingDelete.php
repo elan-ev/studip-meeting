@@ -31,23 +31,26 @@ class RecordingDelete extends MeetingsController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        
+        global $perm;
+        $cid = $args['cid'];
+        if (!$perm->have_studip_perm('tutor', $cid)) {
+            throw new Error(_('Access Denied'), 403);
+        }
         try {
             $recordings_id = $args['recordings_id'];
             $room_id = $args['room_id'];
-            $cid = $args['cid'];
             $driver_factory = new DriverFactory(Driver::getConfig());
             $meetingCourse = new MeetingCourse([$room_id, $cid ]);
             if (!$meetingCourse->isNew()) {
                 $driver = $driver_factory->getDriver($meetingCourse->meeting->driver, $meetingCourse->meeting->server_index);
                 $delete_result = $driver->deleteRecordings($recordings_id);
                 $message = [
-                    'text' => _('Recording wurde gelöscht.'),
+                    'text' => _('Aufzeichnung wurde gelöscht.'),
                     'type' => 'success'
                 ];
                 if (!$delete_result) {
                     $message = [
-                        'text' => _('Unable to delete recording'),
+                        'text' => _('Aufzeichnung kann nicht gelöscht werden'),
                         'type' => 'error'
                     ];
                 }
