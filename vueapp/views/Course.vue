@@ -1,6 +1,6 @@
 <template>
     <div>
-        <MessageBox v-if="course_config && course_config.introduction.replace(/(<([^>]+)>)/ig, '') != ''" type="info">
+        <MessageBox v-if="course_config.introduction && course_config.introduction.replace(/(<([^>]+)>)/ig, '') != ''" type="info">
             <span v-html="course_config.introduction"></span>
         </MessageBox>
 
@@ -21,8 +21,8 @@
             {{ 'Raum hinzufügen' | i18n }}
         </StudipButton>
 
-        <span>
-            <input type="text" placeholder="Räume filtern nach Name" v-model="searchtext">
+        <span v-if="rooms_list.length">
+            <input type="text" :placeholder="`Räume filtern nach Name` | i18n" v-model="searchtext">
         </span>
 
         <form class="default conference-meeting" v-if="rooms_list_filtered.length">
