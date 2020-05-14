@@ -39,12 +39,16 @@ class RoomAdd extends MeetingsController
 
     public function __invoke(Request $request, Response $response, $args)
     {
+        global $perm;
+        $json = $this->getRequestData($request);
+        if (!$perm->have_studip_perm('tutor', $json['cid'])) {
+            throw new Error(_('Access Denied'), 403);
+        }
         try {
             $has_error = false;
             $error_text = '';
             $user = $GLOBALS['user'];
             $driver_factory = new DriverFactory(Driver::getConfig());
-            $json = $this->getRequestData($request);
 
             $exists = false;
             foreach (MeetingCourse::findByUser($user) as $meetingCourse) {
@@ -55,7 +59,7 @@ class RoomAdd extends MeetingsController
             //validations 
             if ($exists) {
                 $has_error = true;
-                $error_text = _('Dieser Raum existiert');
+                $error_text = _('Es existiert bereits ein gleichnamiger Raum.');
             }
 
             if (empty($json['name'])) {
@@ -106,7 +110,7 @@ class RoomAdd extends MeetingsController
                 $meeting = new Meeting();
                 $meeting->courses[] = new \Course($json['cid']);
                 $meeting->user_id = $user->id;
-                $meeting->name = $json['name'];
+                $meeting->name = trim($json['name']);
                 $meeting->driver = $json['driver_name'];
                 $meeting->server_index = $json['server_index'];
                 $meeting->attendee_password = Helper::createPassword();
@@ -164,7 +168,7 @@ class RoomAdd extends MeetingsController
     private function meeting_exists($meetingCourse, $data)
     {
         if ($meetingCourse->course_id == $data['cid']
-            && $meetingCourse->meeting->name == $data['name']
+            && trim($meetingCourse->meeting->name) == trim($data['name'])
             && $meetingCourse->meeting->driver == $data['driver_name']
             && $meetingCourse->meeting->server_index == $data['server_index']) {
                 return true;

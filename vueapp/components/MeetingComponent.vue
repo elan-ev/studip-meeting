@@ -15,7 +15,7 @@
                         </span>
                     </div>
                     <div class="right">
-                        <a v-if="info.recording == 'true'" :title=" 'Dieser Raum kann aufgezeichnet werden!' | i18n " >
+                        <a v-if="room.features.record && room.features.record == 'true'" :title=" 'Dieser Raum kann aufgezeichnet werden!' | i18n " >
                             <StudipIcon icon="exclaim-circle" role="status-yellow" size="20"></StudipIcon>
                         </a>
                         <a v-if="course_config.display.editRoom" style="cursor: pointer;"
@@ -56,10 +56,6 @@
                                         : 'Das Meeting ist für die Teilnehmer unsichtbar' | i18n  }}
                     </span>
                 </div>
-                <!--<div v-if="info.returncode == 'FAILED'">
-                    <StudipIcon class="info-icon" icon="pause" role="status-yellow" size=24></StudipIcon>
-                    <span class="has-changed">{{ "Dieser Raum läuft, es ist aber gerade niemand anwesend." | i18n }}</span>
-                </div>-->
                 <div v-if="info.running == 'true'">
                     <StudipIcon class="info-icon" icon="play" role="accept" size=24></StudipIcon>
                     <span class="has-changed">{{ "Dieser Raum ist aktiv." | i18n }}</span>
@@ -137,10 +133,12 @@ export default {
             .then(({ data }) => {
                 if (data.message.type == 'error') {
                     this.room.join_as_moderator = !this.room.join_as_moderator;
-                    this.message = data.message;
+                    this.$emit('setMessage', data.message);
                 } else {
                     $(`#rights-info-text-${this.room.id}`).addClass('has-changed');
                 }
+            }).catch (({error}) => {
+                this.room.join_as_moderator = !this.room.join_as_moderator;
             });
         },
         editVisibility() {
@@ -150,10 +148,12 @@ export default {
             .then(({ data }) => {
                 if (data.message.type == 'error') {
                     this.room.active = !this.room.active;
-                    this.message = data.message;
+                    this.$emit('setMessage', data.message);
                 } else {
                     $(`#active-info-text-${this.room.id}`).addClass('has-changed');
                 }
+            }).catch (({error}) => {
+                this.room.active = !this.room.active;
             });
         },
         getRecording() {
@@ -166,17 +166,25 @@ export default {
 
             if (confirm('Sind sie sicher, dass sie diesen Raum löschen möchten?')) {
                 this.$store.dispatch(ROOM_DELETE, this.room.id)
+                .then(({data}) => {
+                    this.$emit('setMessage', data.message);
+                    if (data.message.type == 'success') {
+                        this.$emit('renewRoomList');
+                    }
+                });
             }
         },
 
         getInfo() {
-            this.$store.dispatch(ROOM_INFO, this.room.id)
-            .then(({ data }) => {
-                this.info = data.info;
-                if (this.info.chdate != this.room.chdate) {
-                    this.$emit('renewRoomList');
-                }
-            });
+            if (this.room.features && this.room.features.maxParticipants && this.room.features.maxParticipants > 140) {
+                this.$store.dispatch(ROOM_INFO, this.room.id)
+                .then(({ data }) => {
+                    this.info = data.info;
+                    if (this.info.chdate != this.room.chdate) {
+                        this.$emit('renewRoomList');
+                    }
+                });
+            }
         },
         getGuestInfo() {
             this.$emit('getGuestInfo', this.room);
@@ -195,13 +203,13 @@ export default {
     mounted() {
         this.getInfo();
         this.updateJoinLink();
-        this.interval = setInterval(() => {
-            this.getInfo();
-            this.updateJoinLink();
-        }, 120000);
+        // this.interval = setInterval(() => {
+        //     this.getInfo();
+        //     this.updateJoinLink();
+        // }, 120000);
     },
     beforeDestroy () {
-       clearInterval(this.interval)
+    //    clearInterval(this.interval)
     }
 }
 </script>

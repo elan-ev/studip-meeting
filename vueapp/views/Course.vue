@@ -23,7 +23,7 @@
 
         <form class="default conference-meeting" v-if="rooms_list_filtered.length">
                 <MeetingComponent v-for="(room, index) in rooms_list_filtered" :key="index" :room="room" v-on:getRecording="showRecording"
-                     v-on:renewRoomList="getRoomList" v-on:getGuestInfo="showGuestDialog" v-on:getFeatures="showEditFeatureDialog"></MeetingComponent>
+                     v-on:renewRoomList="getRoomList" v-on:getGuestInfo="showGuestDialog" v-on:getFeatures="showEditFeatureDialog" v-on:setMessage="showMessage"></MeetingComponent>
         </form>
 
         <div v-if="config_list" id="conference-meeting-create" style="display: none" >
@@ -35,7 +35,7 @@
                 {{ "Es gibt keine Server für dieses Konferenzsystem, bitte wählen Sie ein anderes Konferenzsystem" | i18n }}
             </MessageBox>
 
-            <form class="default collapsable" @keyup="checkAddRoom($event)" style="position: relative">
+            <form class="default collapsable" @keyup="roomFormSubmit($event)" style="position: relative">
                 <fieldset>
                     <legend>
                         {{ 'Grundeinstellungen' | i18n }}
@@ -54,7 +54,7 @@
                     </label>
                     <label v-if="Object.keys(config_list).length > 1">
                         <span class="required">{{ "Konferenzsystem" | i18n }}</span>
-                        <select id="driver_name" size="1" v-model="room['driver_name']" @change.prevent="handleDriverDefaults()" :disabled="Object.keys(config_list).length == 1">
+                        <select id="driver_name" v-model="room['driver_name']" @change.prevent="handleDriverDefaults()" :disabled="Object.keys(config_list).length == 1">
                             <option value="" disabled> {{ "Bitte wählen Sie ein Konferenzsystem aus" | i18n }} </option>
                             <option v-for="(driver_config, driver_name) in config_list" :key="driver_name"
                                     :value="driver_name">
@@ -66,7 +66,7 @@
                     <label v-if="room['driver_name']
                                 && Object.keys(config_list[room['driver_name']]['servers']).length > 1">
                         <span class="required">{{ "Verfügbare Server" | i18n }}</span>
-                        <select id="server_index" size="1" v-model="room['server_index']"
+                        <select id="server_index" v-model="room['server_index']"
                             :disabled="Object.keys(config_list[room['driver_name']]['servers']).length == 1">
                             <option value="" disabled> {{ "Bitte wählen Sie einen Server aus" | i18n }} </option>
                             <option v-for="(server_config, server_index) in config_list[room['driver_name']]['servers']" :key="server_index"
@@ -97,7 +97,7 @@
                             {{ feature['display_name'] | i18n }}
                             <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
 
-                            <select :id="feature['name']" size="1" v-model.trim="room['features'][feature['name']]">
+                            <select :id="feature['name']" v-model.trim="room['features'][feature['name']]">
                                 <option v-for="(fvalue, findex) in feature['value']" :key="findex"
                                         :value="findex">
                                         {{ fvalue | i18n }}
@@ -107,12 +107,12 @@
 
 
 
-                        <div id="meeting-create-feature-size" class="col-6" v-else-if="feature['name'] == 'roomSizeProfiles'">
+                        <div id="meeting-create-feature-size" class="col-6" v-else-if="feature['name'] == 'roomSizeProfiles'" style="margin-bottom: 15px;">
                             <label>
                                 {{ feature['display_name'] | i18n }}
                                 <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
 
-                                <select :id="feature['name']" size="1" @change="setRoomSize(feature['value'])" v-model.trim="room['features'][feature['name']]">
+                                <select :id="feature['name']" @change="setRoomSize(feature['value'])" v-model.trim="room['features'][feature['name']]">
                                     <option v-for="(fvalue, findex) in feature['value']" :key="findex"
                                             :value="fvalue['name']">
                                             {{ fvalue['display_name'] | i18n }}
@@ -125,14 +125,15 @@
                                         <span class="">{{ fsvalue['display_name'] | i18n }}</span>
                                         <StudipTooltipIcon v-if="Object.keys(fsvalue).includes('info')" :text="fsvalue['info'] | i18n"></StudipTooltipIcon>
                                         <input type="text" v-model.trim="room['features'][fsvalue['name']]"
-                                            :placeholder="fsvalue['value'] ? fsvalue['value'] : ''" :id="fsvalue['name']">
+                                            :placeholder="fsvalue['value'] ? fsvalue['value'] : ''" :id="fsvalue['name'] + findex">
                                     </div>
 
                                     <div v-else>
                                         <input  type="checkbox"
                                             true-value="true"
                                             false-value="false"
-                                            v-model="room['features'][fsvalue['name'] ]">
+                                            :id="fsvalue['name'] + findex"
+                                            v-model="room['features'][fsvalue['name']]">
                                             {{ fsvalue['display_name'] | i18n }}
                                             <StudipTooltipIcon v-if="Object.keys(fsvalue).includes('info')" :text="fsvalue['info'] | i18n"></StudipTooltipIcon>
                                     </div>
@@ -202,7 +203,7 @@
             </table>
         </div>
         <div id="guest-invitation-modal" style="display: none;">
-            <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''" :timer="5000">
+            <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
                 {{ modal_message.text }}
             </MessageBox>
 
@@ -255,7 +256,6 @@ import {
     ROOM_READ,
     ROOM_UPDATE,
     ROOM_CREATE,
-    ROOM_DELETE,
     ROOM_JOIN,
     RECORDING_LIST,
     RECORDING_SHOW,
@@ -383,9 +383,13 @@ export default {
             }
         },
 
-        checkAddRoom(event) {
+        roomFormSubmit(event) {
             if (event.key == 'Enter') {
-                this.addRoom(event);
+                if (Object.keys(this.room).includes('id')) {
+                    this.editRoom(event);
+                } else {
+                    this.addRoom(event);
+                }
             }
         },
 
@@ -416,10 +420,8 @@ export default {
                             this.message = null;
                         }, 3000);
                     }
-                }).catch (error => {
-                    $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
-                    this.$set(this.modal_message, "type" , "error");
-                    this.$set(this.modal_message, "text" , 'System Error: please contact system administrator!');
+                }).catch (({error}) => {
+                    $('#conference-meeting-create').dialog('close');
                 });
             } else {
                 $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
@@ -500,6 +502,11 @@ export default {
                     if (data.join_url != '') {
                         view.guest_link = data.join_url;
                     }
+                    if (data.message) {
+                        this.modal_message = data.message;
+                    }
+                }).catch (({error}) => {
+                    $('#guest-invitation-modal').dialog('close');
                 });
             }
         },
@@ -582,10 +589,12 @@ export default {
 
             $('#conference-meeting-create').dialog(options);
         },
-        editRoom() {
+        editRoom(event) {
+            if (event) {
+                event.preventDefault();
+            }
             this.$store.dispatch(ROOM_UPDATE, this.room)
             .then(({ data }) => {
-                console.log(data.message);
                 this.message = data.message;
                 if (data.message.type == 'success') {
                     $('#conference-meeting-create').dialog('close');
@@ -594,8 +603,13 @@ export default {
                     $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
                     this.modal_message = data.message;
                 }
+            }).catch (({error}) => {
+                $('#conference-meeting-create').dialog('close');
             });
         },
+        showMessage(message) {
+            this.message = message;
+        }
     },
     mounted() {
         store.dispatch(CONFIG_LIST_READ, true);
