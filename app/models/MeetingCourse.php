@@ -70,7 +70,9 @@ class MeetingCourse extends \SimpleORMap
     public static function findByCourseId($courseId)
     {
         return static::findBySQL(
-            'INNER JOIN vc_meetings AS m ON meeting_id = m.id WHERE course_id = :course_id ORDER BY m.name',
+            'INNER JOIN vc_meetings AS m ON meeting_id = m.id
+            WHERE course_id = :course_id
+            ORDER BY m.name + 0, m.name',
             array('course_id' => $courseId)
         );
     }
@@ -85,7 +87,9 @@ class MeetingCourse extends \SimpleORMap
     public static function findActiveByCourseId($courseId)
     {
         return static::findBySQL(
-            'INNER JOIN vc_meetings AS m ON meeting_id = m.id WHERE active = 1 AND course_id = :course_id ORDER BY m.name',
+            'INNER JOIN vc_meetings AS m ON meeting_id = m.id
+            WHERE active = 1 AND course_id = :course_id
+            ORDER BY m.name + 0, m.name',
             array('course_id' => $courseId)
         );
     }
