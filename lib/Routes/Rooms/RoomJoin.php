@@ -87,7 +87,9 @@ class RoomJoin extends MeetingsController
         $error_message = '';
         try {
             if ($join_url = $driver->getJoinMeetingUrl($joinParameters)) {
-                return $this->createResponse(['join_url' => $join_url], $response);
+                // directly redirect to room
+                header('Location: ' . $join_url);
+                exit;
             } else {
                 $error_message = _('Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server fehlgeschlagen.');
             }

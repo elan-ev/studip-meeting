@@ -40,14 +40,14 @@ class RouteMap
         $this->app->get('/course/{cid}/rooms', Routes\Rooms\RoomsList::class);
         $this->app->get('/rooms/{room_id}', Routes\Rooms\RoomShow::class);
         $this->app->get('/rooms/{cid}/{room_id}/status', Routes\Rooms\RoomRunning::class);
-        $this->app->get('/rooms/{cid}/{room_id}/info', Routes\Rooms\RoomInfo::class);
-        
+        $this->app->get('/rooms/{cid}/info', Routes\Rooms\RoomInfo::class);
+
         //Route for joining a meeting
         $this->app->get('/rooms/join/{cid}/{room_id}', Routes\Rooms\RoomJoin::class);
 
         //Routes for recordings
         $this->app->get('/rooms/{cid}/{room_id}/recordings', Routes\Recordings\RecordingList::class);
-        
+
         //following requests contain validation of permissions
         // rooms with perm
         $this->app->post('/rooms', Routes\Rooms\RoomAdd::class);
