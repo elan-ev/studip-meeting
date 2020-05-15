@@ -19,6 +19,7 @@ import {
 } from "./mutations.type";
 
 const initialState = {
+    rooms_checked: false,
     rooms_list: [],
     rooms_info: [],
     room: {
@@ -39,6 +40,9 @@ const getters = {
     },
     room(state) {
         return state.room;
+    },
+    rooms_checked(state) {
+        return state.rooms_checked;
     }
 };
 
@@ -94,6 +98,7 @@ export const actions = {
 /* eslint no-param-reassign: ["error", { "props": false }] */
 export const mutations = {
     [ROOMS_LIST_SET](state, data) {
+        state.rooms_checked = true;
         state.rooms_list = data;
     },
 
