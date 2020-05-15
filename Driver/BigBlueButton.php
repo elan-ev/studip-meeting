@@ -73,6 +73,12 @@ class BigBlueButton implements DriverInterface, RecordingInterface
     {
         // Big Blue Button meetings are not persistent and therefore cannot
         // be removed
+        $recordings = $this->getRecordings($parameters);
+        if (!empty($recordings)) {
+            foreach ($recordings as $recording) {
+                $this->deleteRecordings((string)$recording->recordID);
+            }
+        }
         return true;
     }
 
