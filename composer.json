@@ -17,4 +17,5 @@
         "phpunit/phpunit": "^7.1",
         "phpunit/phpunit-mock-objects": "^6.1.0",
         "codeception/codeception": "^2.4"
+    }
 }
