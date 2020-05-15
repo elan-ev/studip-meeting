@@ -118,9 +118,6 @@ class IndexController extends MeetingsController
         $layout = $this->templateFactory->open('layouts/base');
         $this->set_layout($layout);
 
-        PageLayout::addScript($this->plugin->getAssetsUrl().'/js/jquery.tablesorter.min.js');
-        PageLayout::addScript($this->plugin->getAssetsUrl().'/js/meetings.js');
-        PageLayout::addStylesheet($this->plugin->getAssetsUrl().'/css/meetings.css');
         PageLayout::setHelpKeyword('Basis.Meetings');
 
         if ($action !== 'my' && $action != 'config' && Navigation::hasItem('course/'.MeetingPlugin::NAVIGATION_ITEM_NAME)) {
@@ -147,6 +144,7 @@ class IndexController extends MeetingsController
         /** @var \Seminar_User $user */
         $user = $GLOBALS['user'];
         $course = new Course(Context::getId());
+        $this->cid = Context::getId();
 
         $this->errors = $this->flash['errors'] ?: [];
 
@@ -170,16 +168,6 @@ class IndexController extends MeetingsController
                 [[
                     'label' => $this->courseConfig->title,
                     'url' => PluginEngine::getLink($this->plugin, [], 'index'),
-                ]],
-                [[
-                    'label' => $this->_('Informationen anzeigen'),
-                    'url' => '#',
-                    'icon' => MeetingPlugin::getIcon('info-circle', 'blue'),
-                    'attributes' => [
-                        'class' => 'toggle-info show-info',
-                        'data-show-text' => $this->_('Informationen anzeigen'),
-                        'data-hide-text' => $this->_('Informationen ausblenden'),
-                    ],
                 ]]
             );
         } else {
@@ -383,13 +371,12 @@ class IndexController extends MeetingsController
             throw new Trails_Exception(400);
         }
         $driver = $this->driver_factory->getDriver($meeting->driver);
-
-        // ugly hack for BBB
+        /* // ugly hack for BBB
         if ($driver instanceof ElanEv\Driver\BigBlueButton) {
             // TODO: check if recreation is necessary
             $meetingParameters = $meeting->getMeetingParameters();
             $driver->createMeeting($meetingParameters);
-        }
+        } */
 
         $joinParameters = new JoinParameters();
         $joinParameters->setMeetingId($meetingId);

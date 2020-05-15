@@ -1,9 +1,9 @@
 pluginname=Meetings
 pluginclassname=MeetingPlugin
 origin=elan-ev
-version=1.5.8.1-dq
+version=2.0.1
 studipMinVersion=4.0
-studipMaxVersion=4.5
+studipMaxVersion=4.5.99
 description=Virtueller Raum, mit dem Live-Online-Treffen, ***REMOVED***e und Videokonferenzen durchgeführt werden können.
 
 screenshot = images/screenshots/Der_Meeting-Raum_mit_Adobe_Connect.jpg

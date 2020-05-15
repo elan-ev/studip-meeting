@@ -107,9 +107,11 @@ class Meeting extends \SimpleORMap
         $parameters->setMeetingId($this->id);
         $parameters->setIdentifier($this->identifier);
         $parameters->setRemoteId($this->remote_id);
-        $parameters->setMeetingName($this->name);
+        //Do we need one to many courses relationship anymore?
+        $parameters->setMeetingName($this->courses[0]->name . ' - ' . $this->name);
         $parameters->setAttendeePassword($this->attendee_password);
         $parameters->setModeratorPassword($this->moderator_password);
+        $parameters->setMeetingFeatures($this->features);
 
         return $parameters;
     }

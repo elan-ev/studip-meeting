@@ -177,6 +177,30 @@ class DfnVc implements DriverInterface
         return false;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    function deleteRecordings($recordID)
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    function isMeetingRunning(MeetingParameters $parameters)
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    function getMeetingInfo(MeetingParameters $parameters)
+    {
+        return false;
+    }
+
     private function performRequest(array $params = array())
     {
         $request = $this->client->request('GET', $this->url . '/lmsapi/xml?'.$this->buildQueryString($params));
@@ -340,5 +364,13 @@ class DfnVc implements DriverInterface
             new ConfigOption('login', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Funktionskennung')),
             new ConfigOption('password', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Passwort'))
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCreateFeatures()
+    {
+        return false;
     }
 }

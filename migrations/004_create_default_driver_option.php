@@ -1,7 +1,5 @@
 <?php
 
-require __DIR__.'/../vendor/autoload.php';
-
 /**
  * Adds a config option to select the default driver.
  *
