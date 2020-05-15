@@ -410,7 +410,7 @@ export default {
         },
 
         roomFormSubmit(event) {
-            if (event.key == 'Enter') {
+            if (event.key == 'Enter' && $(event.target).is('input')) {
                 if (Object.keys(this.room).includes('id')) {
                     this.editRoom(event);
                 } else {

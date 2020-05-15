@@ -73,6 +73,12 @@ class BigBlueButton implements DriverInterface, RecordingInterface
     {
         // Big Blue Button meetings are not persistent and therefore cannot
         // be removed
+        $recordings = $this->getRecordings($parameters);
+        if (!empty($recordings)) {
+            foreach ($recordings as $recording) {
+                $this->deleteRecordings((string)$recording->recordID);
+            }
+        }
         return true;
     }
 
@@ -238,6 +244,9 @@ class BigBlueButton implements DriverInterface, RecordingInterface
             new ConfigOption('duration', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Dauer der Konferenz'),
                  _('Wenn leer, wird eine Dauer von "240" Minuten eingestellt'),
                  _('Die maximale Länge (in Minuten) für das Meeting. Nach Ablauf der eingestellen Dauer wird das Meeting automatisch beendet, d.h. der Raum wird geschlossen. Falls bereits vor Ablauf der Zeit alle Teilnehmenden das Meeting verlassen haben, oder ein Moderator das Meeting aktiv beendet wird der Raum ebenfalls geschlossen.')),
+            new ConfigOption('lockSettingsDisablePrivateChat', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Private Chats deaktivieren'),
+                false,
+                 _('Private Chats in dieser Besprechung deaktivieren.')),
         ];
 
         if (Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'record')) {
