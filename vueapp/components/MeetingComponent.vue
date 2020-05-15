@@ -10,7 +10,7 @@
                             :text="`Erstellt von: ${room.details['creator']}, ${room.details['date']}` | i18n">
                         </StudipTooltipIcon>
 
-                        <span v-if="info.participantCount > 0" class="participants">
+                        <span v-if="info && info.participantCount > 0" class="participants">
                             {{ info.participantCount }} {{ 'Teilnehmende/r aktiv' | i18n }}
                         </span>
                     </div>
@@ -112,7 +112,6 @@ export default {
         },
         info: {
             type: Object,
-            required: true
         }
     },
 
