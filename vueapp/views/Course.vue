@@ -8,12 +8,16 @@
             {{ message.text }}
         </MessageBox>
 
-        <MessageBox v-if="!rooms_list.length && config && course_config.display.addRoom" :type="'info'">
+        <MessageBox v-if="rooms_checked && !rooms_list.length && config && course_config.display.addRoom" :type="'info'">
             {{ "Bisher existieren keine Meeting-Räume für diese Veranstaltung. Möchten Sie einen anlegen?" | i18n }}
             <br>
             <StudipButton type="button"  @click="showAddMeeting()">
                 {{ "Neuer Raum" | i18n}}
             </StudipButton>
+        </MessageBox>
+
+        <MessageBox v-if="!rooms_checked" type="warning">
+            {{ "Raumliste wird geladen..." | i18n }}
         </MessageBox>
 
         <StudipButton type="button" icon="add" v-if="rooms_list.length && config && course_config.display.addRoom"
@@ -283,6 +287,7 @@ import {
 
 export default {
     name: "Course",
+
     components: {
         StudipButton,
         StudipIcon,
@@ -291,8 +296,13 @@ export default {
         MeetingStatus,
         MeetingComponent
     },
+
     computed: {
-        ...mapGetters(['config', 'room', 'rooms_list', 'rooms_info', 'course_config', 'recording_list', 'recording']),
+        ...mapGetters([
+            'config', 'room', 'rooms_list', 'rooms_info', 'rooms_checked',
+            'course_config', 'recording_list', 'recording'
+        ]),
+
         config_list: function() {
             let config_list = {};
 
@@ -304,6 +314,7 @@ export default {
 
             return config_list;
         },
+
         rooms_list_filtered: function() {
             let view = this;
 
@@ -316,6 +327,7 @@ export default {
             }
         }
     },
+
     data() {
         return {
             message: null,
@@ -324,6 +336,7 @@ export default {
             searchtext: ''
         }
     },
+
     methods: {
         showAddMeeting() {
             this.modal_message = {};
@@ -443,6 +456,7 @@ export default {
                 this.$set(this.modal_message, "text" , `Bitte füllen Sie folgende Felder aus: (${empty_fields_str})`.toLocaleString());
             }
         },
+
         cancelAddRoom(event) {
             if (event) {
                 event.preventDefault();
@@ -450,6 +464,7 @@ export default {
             $('button.ui-dialog-titlebar-close').trigger('click');
             this.$store.commit(ROOM_CLEAR);
         },
+
         showRecording(room) {
             if (typeof room.recordings_count == 'string') { //opencast url
                 window.open(room.recordings_count, '_blank');
@@ -472,6 +487,7 @@ export default {
                 });
             }
         },
+
         deleteRecording(recording) {
             this.$store.dispatch(RECORDING_DELETE, recording);
             this.$store.dispatch(RECORDING_LIST, recording.room_id).then(({ data }) => {
@@ -485,10 +501,12 @@ export default {
                 }
             });
         },
+
         getRoomList() {
             this.$store.dispatch(ROOM_LIST);
             this.$store.dispatch(ROOM_INFO);
         },
+
         showGuestDialog(room) {
             this.$store.commit(ROOM_CLEAR);
             this.guest_link = '';
@@ -501,6 +519,7 @@ export default {
                 title: 'Gast einladen'.toLocaleString()
             });
         },
+
         generateGuestJoin(event) {
             if (event) {
                 event.preventDefault();
@@ -524,6 +543,7 @@ export default {
                 });
             }
         },
+
         cancelGuest(event) {
             if (event) {
                 event.preventDefault();
@@ -532,6 +552,7 @@ export default {
             this.guest_link = '';
             $('#guest-invitation-modal').dialog('close');
         },
+
         copyGuestLinkClipboard(event) {
             if (event) {
                 event.preventDefault();
@@ -553,6 +574,7 @@ export default {
                 }
             }
         },
+
         setRoomSize(values) {
             setTimeout(() => {
                 values.forEach(profile => { //remove all previuos size features
@@ -571,6 +593,7 @@ export default {
                 });
             }, 100);
         },
+
         showEditFeatureDialog(room) {
             this.$store.commit(ROOM_CLEAR);
             this.$set(this.room, 'driver_name', room.driver);
@@ -603,6 +626,7 @@ export default {
 
             $('#conference-meeting-create').dialog(options);
         },
+
         editRoom(event) {
             if (event) {
                 event.preventDefault();
@@ -621,6 +645,7 @@ export default {
                 $('#conference-meeting-create').dialog('close');
             });
         },
+
         showMessage(message) {
             this.message = message;
         }

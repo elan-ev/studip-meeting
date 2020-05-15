@@ -112,7 +112,6 @@ export default {
         },
         info: {
             type: Object,
-            required: false
         }
     },
 
