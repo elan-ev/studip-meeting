@@ -20,6 +20,9 @@ require_once __DIR__.'/bootstrap.php';
 use ElanEv\Model\CourseConfig;
 use ElanEv\Model\MeetingCourse;
 
+use Meetings\AppFactory;
+use Meetings\RouteMap;
+
 require_once 'compat/StudipVersion.php';
 
 class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
@@ -51,7 +54,7 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
                 Navigation::addItem('/meetings', $item);
             }
 
-            $item = new Navigation($this->_('Meetings konfigurieren'), PluginEngine::getLink($this, array(), 'admin/index'));
+            $item = new Navigation($this->_('Meetings konfigurieren'), PluginEngine::getLink($this, array(), 'admin'));
             $item->setImage(self::getIcon('chat', 'white'));
             if (Navigation::hasItem('/admin/config') && !Navigation::hasItem('/admin/config/meetings')) {
                 Navigation::addItem('/admin/config/meetings', $item);
@@ -227,11 +230,6 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
         return array(self::NAVIGATION_ITEM_NAME => $main);
     }
 
-    //TODO: show error message
-    public function error(){
-        return null;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -239,17 +237,55 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
     {
         require_once __DIR__ . '/vendor/autoload.php';
 
-        $trails_root = $this->getPluginPath() . '/app';
-        $dispatcher  = new Trails_Dispatcher($trails_root,
-            PluginEngine::getURL($this, null, ''),
-            'index');
+        if (substr($unconsumed_path, 0, 3) == 'api') {
+            $appFactory = new AppFactory();
+            $app = $appFactory->makeApp($this);
+            $app->group('/meetingplugin/api', new RouteMap($app));
+            $app->run();
+        } else {
+            PageLayout::addScript($this->getPluginUrl() . '/static/bundle.js');
+            PageLayout::addStylesheet($this->getPluginUrl() . '/static/styles.css');
 
-        $dispatcher->current_plugin = $this;
-        $dispatcher->dispatch($unconsumed_path);
+            $trails_root = $this->getPluginPath() . '/app';
+            $dispatcher  = new Trails_Dispatcher($trails_root,
+                rtrim(PluginEngine::getURL($this, null, ''), '/'),
+                'index'
+            );
+
+            $dispatcher->current_plugin = $this;
+            $dispatcher->dispatch($unconsumed_path);
+        }
     }
 
     public function getAssetsUrl()
     {
         return $this->assetsUrl;
+    }
+
+    /**
+     * Checks if opencast is loaded, and if course id is passed,
+     * returns the series id of the course if opencast has been set for the course
+     *
+     * @param  string  $cid course ID with default null
+     * @return bool | array | string
+    */
+    function checkOpenCast($cid = null) {
+        $opencast_plugin = PluginEngine::getPlugin("OpenCast");
+        if ($opencast_plugin) {
+            if ($cid) {
+                if ($opencast_plugin->isActivated($cid)) {
+                    try {
+                        return \Opencast\Models\OCSeminarSeries::getSeries($cid);
+                    } catch (Exception $ex) {
+                        //Handle Error
+                        return false;
+                    }
+                } else {
+                    return "not active";
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

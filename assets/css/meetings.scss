@@ -1,0 +1,189 @@
+div.vc_introduction {
+    margin: 10px 10px 20px;
+}
+
+table.conference-meetings th, table.conference-meetings td {
+    vertical-align: middle;
+}
+
+table.conference-meetings th.recording-url, table.conference-meetings td.recording-url,
+table.conference-meetings th.active, table.conference-meetings td.active {
+    text-align: center;
+}
+
+table.conference-meetings thead tr th.header {
+    background: #e7ebf1 url(../images/bg.gif) no-repeat left center;
+    cursor: pointer;
+    padding-left: 20px;
+}
+
+table.conference-meetings thead tr th.headerSortUp {
+    background-image: url(../images/asc.gif);
+}
+
+table.conference-meetings thead tr th.headerSortDown {
+    background-image: url(../images/desc.gif);
+}
+
+table.conference-meetings img.info {
+    cursor: pointer;
+}
+
+table.conference-meetings tr.info {
+    display: none;
+}
+
+table.conference-meetings img.accept-button,
+table.conference-meetings img.decline-button,
+table.conference-meetings img.loading-indicator,
+table.conference-meetings input[type="text"] {
+    display: none;
+}
+
+table.conference-meetings input[type="text"] {
+    width: 400px;
+}
+
+table.conference-meetings img.accept-button,
+table.conference-meetings img.decline-button {
+    cursor: pointer;
+}
+
+form.create-conference-meeting fieldset {
+    border-width: 0;
+}
+
+form.create-conference-meeting input[type="text"] {
+    width: 400px;
+    display: inline;
+}
+
+.meeting-recording-url {
+    margin-right: 5px;
+    color: #28497c !important;
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline !important;
+    }
+}
+table.conference-meetings tr.active {
+    background-color: #e2e3e4;
+}
+
+form.conference-meeting {
+    fieldset legend {
+        a img{
+            position: relative;
+            top: 3px;
+        }
+    }
+}
+div.meeting-item-header {
+    .right {
+        float: right;
+        a {
+            margin-right: 10px;
+            padding: 0 0px;
+            line-height: 1em;
+
+            img {
+                margin-top: 5px;
+            }
+            &[data-badge]:not([data-badge="0"]) {
+                position: relative;
+
+                &::before {
+                    position: absolute;
+                    left: 50%;
+                    top: -10px;
+
+                    margin-left: 5px;
+
+                    background-clip: content-box;
+                    background-color: #D60000;
+                    border-radius: 50%;
+                    color: white;
+                    content: attr(data-badge);
+                    display: inline-block;
+                    font-size: 10px;
+                    text-indent: 5px;
+                    z-index: 2;
+                    width: 16px;
+                    height: 16px;
+                }
+            }
+        }
+    }
+    .left {
+        float: left;
+        span.participants {
+            margin-left: 20px;
+            font-size: 14px;
+            font-weight: 200;
+        }
+    }
+}
+
+label#details {
+    img {
+        position: relative;
+        top: 12px;
+        &.info-icon {
+            top: 7px;
+            margin-right: 7px;
+        }
+    }
+    span {
+        &.red {
+            color: #D60000;
+        }
+        &.creator-date {
+            color: #636971;
+            font-size: 12px;
+            float: right;
+            font-style: italic;
+            margin: 10px 0;
+        }
+        &.has-changed {
+            animation: alert 1s;
+        }
+
+        @keyframes alert
+        {
+            0%      {color:#D60000;}
+            50%     {color:darken(#D60000, 7%);}
+            100%    {color:inherit;}
+        }
+    }
+}
+div.meeting-item-btns {
+    clear: both;
+    button.delete {
+        float:right;
+    }
+    a.join {
+        float:left;
+
+    }
+}
+fieldset {
+    label {
+        input[type="checkbox"] {
+            cursor: pointer;
+            &[disabled] {
+                cursor: default;
+            }
+        }
+        span{
+            &.disabled {
+                color: #3c454e;
+            }
+        }
+    }
+}
+
+.meetingcomponent {
+    width: 35em;
+    float: left;
+    margin-right: 1em;
+}

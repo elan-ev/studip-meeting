@@ -24,6 +24,12 @@ class MeetingParameters extends Parameters
      */
     private $attendeePassword;
 
+
+    /**
+     * @var Array features that can be added to create the room (always optional)
+     */
+    private $meetingFeatures;
+
     public function setMeetingName($meetingName)
     {
         $this->meetingName = $meetingName;
@@ -52,5 +58,28 @@ class MeetingParameters extends Parameters
     public function getAttendeePassword()
     {
         return $this->attendeePassword;
+    }
+
+    public function setMeetingFeatures($features)
+    {
+        $this->meetingFeatures = $features;
+    }
+
+    public function getMeetingFeatures()
+    {
+        return $this->meetingFeatures;
+    }
+
+    public function toArray() {
+        return [
+            'meetingName' => self::getMeetingName(),
+            'moderatorPassword' => self::getModeratorPassword(),
+            'attendeePassword' => self::getAttendeePassword(),
+            'attendeePassword' => self::getAttendeePassword(),
+            'meetingId' => self::getMeetingId(),
+            'identifier' => self::getIdentifier(),
+            'remoteId' => self::getRemoteId(),
+            'meetingFeatures' => self::getMeetingFeatures()
+        ];
     }
 }
