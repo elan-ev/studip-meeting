@@ -11,7 +11,7 @@
 
 <form action="<?= PluginEngine::getLink($plugin, array(), 'index/config') ?>" method="post" class="studip_form default">
     <?= CSRFProtection::tokenTag() ?>
-    <fieldset style="padding-top: 0;">
+    <fieldset>
         <legend>
             Einstellungen
         </legend>
