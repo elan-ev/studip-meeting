@@ -20,7 +20,7 @@ class ConfigList extends MeetingsController
         $drivers = Driver::discover(true);
 
         $config = Driver::getConfig();
-        
+
         $course_config = [];
         $cid = $args['cid'];
         if ($cid) {
@@ -39,6 +39,8 @@ class ConfigList extends MeetingsController
                 'editRoom' => $displayEditRoom,
                 'deleteRoom' => $displayDeleteRoom,
             ];
+
+            $course_config['introduction'] = formatReady($course_config['introduction']);
         }
         $response_result = [];
         !$drivers           ?: $response_result['drivers'] = $drivers;
