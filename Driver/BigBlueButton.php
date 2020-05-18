@@ -50,12 +50,19 @@ class BigBlueButton implements DriverInterface, RecordingInterface
             'dialNumber' => '',
             'webVoice' => '',
         );
+
         if ($features = json_decode($parameters->getMeetingFeatures(), true)) {
             if (isset($features['roomSizeProfiles'])) { // keen unwanted params
                 unset($features['roomSizeProfiles']);
             }
+
+            if ($features['guestPolicy'] == 'ALWAYS_DENY') {
+                unset($features['guestPolicy']);
+            }
+
             $params = array_merge($params, $features);
         }
+
         $response = $this->performRequest('create', $params);
         $xml = new \SimpleXMLElement($response);
 
