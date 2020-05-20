@@ -285,7 +285,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
      *
      * @return array consists of nested list of ConfigOptions
     */
-    static private function roomSizeProfile() {
+    static public function roomSizeProfile() {
         return [
             new ConfigOption('small', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Kleiner Raum'), [
                 new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 50, self::getFeatureInfo('maxParticipants')),
