@@ -313,7 +313,7 @@ class IndexController extends MeetingsController
     {
         $meeting = new Meeting($meetingId);
         $name = Request::get('name');
-        $recordingUrl = utf8_decode(Request::get('recording_url'));
+        $recordingUrl = Request::get('recording_url');
 
         if (!$meeting->isNew() && $this->userCanModifyCourse(Context::getId()) && $name) {
             $meeting = new Meeting($meetingId);
