@@ -95,7 +95,7 @@
 
                 <fieldset v-if="room['driver_name'] && Object.keys(config_list[room['driver_name']]).includes('features')
                             && Object.keys(config_list[room['driver_name']]['features']['create']).length"
-                    class="collapsed"
+                    class=""
                 >
                     <legend>{{ "Zusätzliche Funktionen" | i18n }}</legend>
                     <div v-for="(feature, index) in config_list[room['driver_name']]['features']['create']" :key="index">
@@ -381,10 +381,11 @@ export default {
                 if (Object.keys(this.config_list[this.room['driver_name']]['features']['create']).length) {
                     var roomSizeProfiles = this.config_list[this.room['driver_name']]['features']['create'].find(f => f.name == 'roomSizeProfiles');
                     if (roomSizeProfiles) {
-                        var smallProfile = roomSizeProfiles.value.find(s => s.name == 'small');
-                        if (smallProfile) {
-                            this.$set(this.room['features'], "roomSizeProfiles" , "small");
-                            smallProfile.value.forEach(content => {
+                        var defaultProfile = roomSizeProfiles.value.find(s => s.selected == true);
+                        !defaultProfile ? defaultProfile = roomSizeProfiles.value.find(s => s.name == 'small') : '';
+                        if (defaultProfile) {
+                            this.$set(this.room['features'], "roomSizeProfiles" , defaultProfile.name);
+                            defaultProfile.value.forEach(content => {
                                 this.$set(this.room['features'], content.name , content.value);
                             });
                         }
