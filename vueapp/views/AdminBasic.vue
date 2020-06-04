@@ -34,7 +34,8 @@
                         <StudipTooltipIcon v-if="Object.keys(rval).includes('info')" :text="rval['info'] | i18n"></StudipTooltipIcon>
                     </label>
                 </div>
-                <div v-if="Object.keys(config[driver_name].servers).length">
+
+                <div v-if="config[driver_name].servers && Object.keys(config[driver_name].servers).length">
                     <h3>
                         {{ "Folgende Server werden verwendet" | i18n }}
                     </h3>
@@ -67,6 +68,7 @@
                         </tbody>
                     </table>
                 </div>
+
                 <div v-show="server_object[driver_name]">
                     <fieldset>
                         <legend>
@@ -91,6 +93,7 @@
                         </StudipButton>
                     </fieldset>
                 </div>
+
             </fieldset>
             <footer>
                 <StudipButton icon="accept" @click="storeConfig">
@@ -158,6 +161,10 @@ export default {
             }
         },
         addEditServers(driver_name) {
+            if (!this.config[driver_name]['servers']) {
+                this.config[driver_name]['servers'] = {}
+            }
+
             var index = 0;
             // manage the index of the array
             if (this.server_object[driver_name]['index'] == -1) { //new
