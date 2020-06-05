@@ -53,9 +53,11 @@ class RoomInfo extends MeetingsController
                     if (!$data = $cache->read('meetings/' . $meetingCourse->meeting->id)) {
                         $driver = $driver_factory->getDriver($meetingCourse->meeting->driver, $meetingCourse->meeting->server_index);
                         $info = $driver->getMeetingInfo($meetingCourse->meeting->getMeetingParameters());
-                        $info->chdate = $meetingCourse->meeting->chdate;
 
-                        $cache->write('meetings/' . $meetingCourse->meeting->id, $info->asXML(), 300);   // cache expires after 5 minutes
+                        if ($info) {
+                            $info->chdate = $meetingCourse->meeting->chdate;
+                            $cache->write('meetings/' . $meetingCourse->meeting->id, $info->asXML(), 300);   // cache expires after 5 minutes
+                        }
                     } else {
                         $info = simplexml_load_string($data);
                     }
