@@ -1,5 +1,6 @@
 <?php
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
+
 /**
  * Adjusts room size with the number of course members
  *
@@ -24,19 +25,17 @@ class AdjustExistingRoomSize extends Migration
      */
     public function up()
     {
-        $roomSizeProfiles[] = [
-            'maxParticipants' => 0,
-            'roomSizeProfiles' => 'start'
-        ];
-        $roomSizeProfiles_raw = BigBlueButton::roomSizeProfile();
-        foreach ($roomSizeProfiles_raw as $configOption) {
-            $arr = $configOption->toArray();
-            $values = array_column($arr['value'], 'value', 'name');
-            $values['roomSizeProfiles'] = $arr['name'];
-            $roomSizeProfiles[$arr['name']] = $values;
-        }
-        $meetingCourses = MeetingCourse::findAll();
-        foreach ($meetingCourses as $meetingCourse) {
+        $roomSizeProfiles = json_decode('{"0":{"maxParticipants":0,"roomSizeProfiles":"start"},"small":{"maxParticipants":50,"muteOnStart":true,"webcamsOnlyForModerator":false,"lockSettingsDisableCam":false,"lockSettingsDisableMic":false,"lockSettingsDisableNote":false,"roomSizeProfiles":"small"},"medium":{"maxParticipants":150,"muteOnStart":true,"webcamsOnlyForModerator":true,"lockSettingsDisableCam":false,"lockSettingsDisableMic":false,"lockSettingsDisableNote":false,"roomSizeProfiles":"medium"},"large":{"maxParticipants":300,"muteOnStart":true,"webcamsOnlyForModerator":false,"lockSettingsDisableCam":true,"lockSettingsDisableMic":true,"lockSettingsDisableNote":true,"roomSizeProfiles":"large"},"no-limit":{"maxParticipants":null,"muteOnStart":false,"webcamsOnlyForModerator":false,"lockSettingsDisableCam":false,"lockSettingsDisableMic":false,"lockSettingsDisableNote":false,"roomSizeProfiles":"no-limit"}}', true);
+
+        $result = DBManager::get()->query('SELECT * FROM vc_meeting_course
+            INNER JOIN vc_meetings AS m
+                ON meeting_id = m.id ORDER BY m.name');
+
+        while($data = $result->fetch()) {
+            $meetingCourse = MeetingCourse::findBySQL('meeting_id = ? AND course_id = ?', [
+                $data['meeting_id'], $data['course_id']
+            ]);
+
             $members_count = count($meetingCourse->course->members) + 5;
             $maxParticipants = array_column($roomSizeProfiles, 'maxParticipants');
             $profile = 'no-limit';
@@ -47,7 +46,7 @@ class AdjustExistingRoomSize extends Migration
             }
             $preset = $roomSizeProfiles[$profile];
             unset($preset['maxParticipants']);
-            
+
             $features = json_decode($meetingCourse->meeting->features, true);
             if ($features && $preset) {
                 $features['maxParticipants'] = $members_count;
@@ -56,10 +55,12 @@ class AdjustExistingRoomSize extends Migration
                         $features[$feature] = $preset[$feature];
                     }
                 }
-    
+
                 $meetingCourse->meeting->features = json_encode($features);
                 $meetingCourse->meeting->store();
             }
+
+            unset($meetingCourse);
         }
     }
 
@@ -68,6 +69,6 @@ class AdjustExistingRoomSize extends Migration
      */
     public function down()
     {
-        
+
     }
 }
