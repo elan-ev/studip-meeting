@@ -26,16 +26,16 @@ class ConfigAdd extends MeetingsController
                 Driver::setConfigByDriver($driver_name, $config_options);
             }
             $message = [
-                'text' => _('Konfiguration gespeichert'),
+                'text' => _('Konfiguration gespeichert.'),
                 'type' => 'success'
             ];
         } catch ( Exception $e) {
             $message = [
-                'text' => _('Unable to save config'),
+                'text' => _('Konnte Konfiguration nicht speichern!'),
                 'type' => 'error'
             ];
         }
-       
+
         return $this->createResponse([
             'config' => Driver::getConfig(),
             'message'=> $message,

@@ -6,16 +6,9 @@ Vue.use(Router);
 export default new Router({
     routes: [
         {
+            name: "admin",
             path: "/",
-            component: () => import("@/views/AdminWizard"),
-
-            children: [
-                {
-                    name: "admin",
-                    path: "step1",
-                    component: () => import("@/views/AdminBasic")
-                }
-            ]
+            component: () => import("@/views/Admin")
         },
 
         {
