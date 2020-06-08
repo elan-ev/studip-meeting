@@ -1,3 +1,7 @@
+@mixin assets-bg-icon($img) {
+    background-image: url("../../../../../assets/images/icons/${img}");
+}
+
 div.vc_introduction {
     margin: 10px 10px 20px;
 }
@@ -186,4 +190,119 @@ fieldset {
     width: 35em;
     float: left;
     margin-right: 1em;
+}
+
+
+/* DIALOGS */
+
+.meetings {
+    .modal-backdrop {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(40, 73, 124, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1001;
+    }
+    .modal {
+        background: #ffffff;
+        box-shadow: 2px 2px 20px 1px;
+        overflow-x: auto;
+        display: flex;
+        flex-direction: column;
+        padding: 0.2em;
+        min-width: 40em;
+
+        .modal-header,
+        .modal-footer {
+            padding: 7px;
+            display: flex;
+        }
+        .modal-header {
+            background:#28497c none repeat scroll 0% 0%;
+            border-bottom: 1px solid #eeeeee;
+            color: #fff;
+            justify-content: space-between;
+            font-size: 1.3em;
+            padding: 0.5em 1em;
+        }
+        .modal-close-button {
+            @include assets-bg-icon("white/decline.svg");
+            width: 24px;
+            height: 24px;
+            background-size: 20px;
+            background-repeat: no-repeat;
+            background-position-y: center;
+            margin-right: -10px;
+            margin-left: 2em;
+            cursor: pointer;
+        }
+        .modal-body {
+            color: #000;
+            position: relative;
+            padding: 20px 10px;
+
+            input {
+                border: solid thin #ccc;
+                min-width: 14em;
+                padding: 0.5em;
+            }
+            .students-permissions-list,
+            .groups-permissions-list {
+                max-height: 24em;
+                overflow-y: auto;
+                list-style: none;
+                padding: 0 0 0 1em;
+
+                input[type="checkbox"] {
+                    border: none;
+                    min-width: unset;
+                    vertical-align: bottom;
+                }
+                label {
+                    user-select: none;
+
+                    i {
+                        color: #ccc;
+                    }
+                }
+            }
+        }
+        .modal-footer {
+            border-top: 1px solid #eeeeee;
+            justify-content: center;
+
+            button.button {
+                padding: 7px 20px;
+
+                &.button-inactive {
+                    opacity: 0.4;
+                }
+            }
+        }
+        &.alert {
+            .modal-header {
+                background: rgb(214, 0, 0) none repeat scroll 0% 0%;
+            }
+        }
+        &.warning {
+            .modal-header {
+                color: #000;
+                background: #ffad00 none repeat scroll 0% 0%;
+            }
+            .modal-close-button {
+                @include assets-bg-icon("black/decline.svg");
+            }
+        }
+        .modal-progress-spinner {
+            margin: auto;
+        }
+        .modal-progress:hover {
+            background-color: #fff;
+        }
+    }
 }

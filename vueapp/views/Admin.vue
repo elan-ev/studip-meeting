@@ -1,13 +1,21 @@
 <template>
     <div>
+        <h1>{{ "Meetings konfigurieren" | i18n }}</h1>
+
         <MessageBox v-if="message" :type="message.type" @hide="message = ''">
             {{ message.text }}
         </MessageBox>
-        <form class="default" v-if="drivers">
+
+        <MessageBox v-if="changes_made" type="warning">
+            {{ 'Ihre Änderungen sind noch nicht gespeichert!' | i18n }}
+        </MessageBox>
+
+        <form class="default" v-if="drivers" @submit.prevent>
             <fieldset v-for="(driver, driver_name) in drivers" :key="driver_name">
                 <legend>
                     {{ driver.title | i18n }}
                 </legend>
+
                 <label v-if="Object.keys(config[driver_name]).includes('enable')">
                         <input type="checkbox"
                         true-value="1"
@@ -15,10 +23,12 @@
                         v-model="config[driver_name]['enable']">
                         {{ "Verwenden dieses Treibers zulassen" | i18n }}
                 </label>
+
                 <label v-if="Object.keys(config[driver_name]).includes('display_name')">
                     {{ "Display Name" | i18n }}
                     <input type="text" v-model.trim="config[driver_name]['display_name']">
                 </label>
+
                 <div v-if="Object.keys(driver).includes('recording')">
                     <label v-for="(rval, rkey) in driver['recording']" :key="rkey">
                         <input v-if="typeof rval['value'] == 'boolean'" type="checkbox"
@@ -69,30 +79,21 @@
                     </table>
                 </div>
 
-                <div v-show="server_object[driver_name]">
-                    <fieldset>
-                        <legend>
-                            {{ "Serverkonfiguration" | i18n }} ({{ server_object[driver_name]['index'] == -1 ? "Neu" : "Bearbeiten" | i18n }})
-                        </legend>
-                        <div v-for="(value, key) in driver.config" :key="key">
-                            <label v-if="value.name != 'enable'">
-                                {{ value.display_name | i18n }}
-                                <input type="text"
-                                    v-model="server_object[driver_name][value.name]"
-                                    :placeholder="value.value">
-                            </label>
-                        </div>
-                        <StudipButton
-                            :icon="server_object[driver_name]['index'] == -1 ? 'add' : 'accept'"
-                            @click="addEditServers(driver_name)">
-                            {{ server_object[driver_name]['index'] == -1 ? "Server hinzufügen" : "Server bearbeiten" | i18n }}
-                        </StudipButton>
-                        <StudipButton v-if="server_object[driver_name]['index'] != -1"
-                            icon="cancel" @click="clearServer(driver_name)">
-                            {{ "Abbrechen" | i18n }}
-                        </StudipButton>
-                    </fieldset>
-                </div>
+                <StudipButton
+                    icon="add"
+                    @click="addServerDialog(driver_name)">
+                    {{ "Server hinzufügen" | i18n }}
+                </StudipButton>
+
+                <ServerDialog
+                    v-if="server_object[driver_name]"
+                    :DialogVisible="serverDialogVisible == driver_name"
+                    :server_object="server_object"
+                    :driver_name="driver_name"
+                    :driver="driver"
+                    @close="serverDialogVisible = false"
+                    @edit="addEditServers"
+                />
 
             </fieldset>
             <footer>
@@ -112,6 +113,7 @@ import StudipButton from "@/components/StudipButton";
 import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import StudipIcon from "@/components/StudipIcon";
 import MessageBox from "@/components/MessageBox";
+import ServerDialog from "@/components/ServerDialog";
 
 import {
     CONFIG_LIST_READ,
@@ -123,17 +125,20 @@ import {
 } from "@/store/mutations.type";
 
 export default {
-    name: "AdminBasic",
+    name: "Admin",
     components: {
         StudipButton,
         StudipTooltipIcon,
         MessageBox,
-        StudipIcon
+        StudipIcon,
+        ServerDialog
     },
     data() {
         return {
             message: null,
             server_object: {},
+            serverDialogVisible: false,
+            changes_made: false
         }
     },
     computed: {
@@ -145,11 +150,15 @@ export default {
                 .then(({ data }) => {
                     this.message = data.message;
                     this.$store.commit(CONFIG_SET, data.config);
+                    this.changes_made = false;
                 });
         },
+
         deleteServer(driver_name, index) {
+            this.changes_made = true;
             this.config[driver_name]['servers'].splice(index, 1);
         },
+
         clearServer(driver_name) {
             for (var key in this.server_object[driver_name]) {
                 //reset server_object values
@@ -160,40 +169,56 @@ export default {
                 }
             }
         },
-        addEditServers(driver_name) {
+
+        addServerDialog(driver_name) {
+            this.clearServer(driver_name);
+            this.serverDialogVisible = driver_name;
+        },
+
+        addEditServers(params) {
+            this.changes_made = true;
+
+            let driver_name   = params.driver_name;
+            let server_object = params.server;
+
             if (!this.config[driver_name]['servers']) {
                 this.config[driver_name]['servers'] = {}
             }
 
             var index = 0;
             // manage the index of the array
-            if (this.server_object[driver_name]['index'] == -1) { //new
+            if (server_object[driver_name]['index'] == -1) { //new
                 index = Object.keys(this.config[driver_name]['servers']).length;
             } else { //edit
-                index = this.server_object[driver_name]['index'];
+                index = server_object[driver_name]['index'];
             }
             // reset the index
-            this.server_object[driver_name]['index'] = -1;
+            server_object[driver_name]['index'] = -1;
 
             //create a new object out of server_object (without index)
             var new_server_object = new Object();
-            for (var key in this.server_object[driver_name]) {
+            for (var key in server_object[driver_name]) {
                 if (key != 'index') {
-                    new_server_object[key] = this.server_object[driver_name][key];
+                    new_server_object[key] = server_object[driver_name][key];
                     //reset server_object values
-                    this.server_object[driver_name][key] = "";
+                    server_object[driver_name][key] = "";
                 }
             }
             //push to the servers array
             this.$set(this.config[driver_name]['servers'], index , new_server_object);
+            this.serverDialogVisible = false;
         },
+
         prepareEditServer(driver_name, index) {
             var current_obj = this.config[driver_name]['servers'][index];
             for (var key in current_obj) {
                 this.server_object[driver_name][key] = current_obj[key];
             }
             this.server_object[driver_name]['index'] = index;
+
+            this.serverDialogVisible = driver_name;
         },
+
         createServerObject() {
             for (var driver_name in this.drivers) {
                 var server_config = new Object();
@@ -201,6 +226,7 @@ export default {
                 this.$set(this.server_object, driver_name, server_config);
             }
         },
+
         handleRecordings(driver_name) {
             // it is used to disable every other parameters when the recording is off
             setTimeout(() => {
