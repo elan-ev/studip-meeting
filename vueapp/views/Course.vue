@@ -20,14 +20,16 @@
             {{ "Raumliste wird geladen..." | i18n }}
         </MessageBox>
 
-        <StudipButton type="button" icon="add" v-if="rooms_list.length && config && course_config.display.addRoom"
-            @click="showAddMeeting()">
-            {{ 'Raum hinzufügen' | i18n }}
-        </StudipButton>
+        <p>
+            <StudipButton type="button" icon="add" v-if="rooms_list.length && config && course_config.display.addRoom"
+                @click="showAddMeeting()">
+                {{ 'Raum hinzufügen' | i18n }}
+            </StudipButton>
 
-        <span v-if="rooms_list.length">
-            <input type="text" :placeholder="`Räume filtern nach Name` | i18n" v-model="searchtext">
-        </span>
+            <label v-if="rooms_list.length">
+                <input type="text" :placeholder="`Räume filtern nach Name` | i18n" v-model="searchtext">
+            </label>
+        </p>
 
         <form class="default conference-meeting" v-if="rooms_list_filtered.length">
                 <MeetingComponent v-for="(room, index) in rooms_list_filtered"
