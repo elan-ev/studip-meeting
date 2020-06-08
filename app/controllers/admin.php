@@ -110,38 +110,6 @@ class AdminController extends MeetingsController
         $this->drivers = Driver::discover();
     }
 
-    public function save_action()
-    {
-        if ($GLOBALS['perm']->have_perm('root')) {
-            Config::get()->setValue('VC_CONFIG', '');
-
-            foreach (Request::getArray('config') as $driver_name => $options) {
-                $config_options = array();
-
-                if (!isset($options['enable'])) {
-                    $options['enable'] = '0';
-                }
-
-                foreach ($options as $name => $value) {
-                    $config = new \ElanEv\Driver\ConfigOption($name, '');
-                    $config->setValue($value);
-                    $config_options[] = $config;
-                }
-
-                Driver::setConfigByDriver($driver_name, $config_options);
-            }
-
-            $this->flash['messages']= [
-                'success' => [$this->_('Konfiguration wurde gespeichert')]
-            ];
-
-        } else {
-            throw new AccessDeniedException('You need to be root to perform this action!');
-        }
-
-        $this->redirect('admin/index');
-    }
-
     /* * * * * * * * * * * * * * * * * * * * * * * * * */
     /* * * * * H E L P E R   F U N C T I O N S * * * * */
     /* * * * * * * * * * * * * * * * * * * * * * * * * */

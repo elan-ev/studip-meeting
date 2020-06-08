@@ -45,28 +45,10 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
         $perm = $GLOBALS['perm'];
 
         if ($perm->have_perm('root')) {
-            $item = new Navigation($this->_('Meetings'), PluginEngine::getLink($this, array(), 'index/all'));
-            $item->setImage(self::getIcon('chat', 'white'));
-
-            if (Navigation::hasItem('/admin/locations')) {
-                Navigation::addItem('/admin/locations/meetings', $item);
-            } elseif (!Navigation::hasItem('/meetings')) {
-                Navigation::addItem('/meetings', $item);
-            }
-
             $item = new Navigation($this->_('Meetings konfigurieren'), PluginEngine::getLink($this, array(), 'admin'));
             $item->setImage(self::getIcon('chat', 'white'));
             if (Navigation::hasItem('/admin/config') && !Navigation::hasItem('/admin/config/meetings')) {
                 Navigation::addItem('/admin/config/meetings', $item);
-            }
-        } elseif ($perm->have_perm('dozent')) {
-            if (Navigation::hasItem('/profile') && !Navigation::hasItem('/profile/meetings')) {
-                $current_user = User::findByUsername(Request::username('username', $GLOBALS['user']->username));
-
-                if ($current_user->id == $GLOBALS['user']->id) {
-                    $item = new Navigation($this->_('Meine Meetings'), PluginEngine::getLink($this, array(), 'index/my'));
-                    Navigation::addItem('/profile/meetings', $item);
-                }
             }
         }
 
