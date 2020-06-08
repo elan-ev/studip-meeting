@@ -97,7 +97,12 @@
 
             </fieldset>
             <footer>
-                <StudipButton icon="accept" @click="storeConfig">
+                <StudipButton icon="accept"
+                    :class="{
+                        'disabled': !changes_made
+                    }"
+                    @click="storeConfig"
+                >
                     {{ "Einstellungen speichern" | i18n}}
                 </StudipButton>
             </footer>
@@ -126,6 +131,7 @@ import {
 
 export default {
     name: "Admin",
+
     components: {
         StudipButton,
         StudipTooltipIcon,
@@ -133,6 +139,7 @@ export default {
         StudipIcon,
         ServerDialog
     },
+
     data() {
         return {
             message: null,
@@ -141,9 +148,11 @@ export default {
             changes_made: false
         }
     },
+
     computed: {
         ...mapGetters(['config', 'drivers'])
     },
+
     methods: {
         storeConfig() {
             this.$store.dispatch(CONFIG_CREATE, this.config)
@@ -155,7 +164,7 @@ export default {
         },
 
         deleteServer(driver_name, index) {
-            this.changes_made = true;
+            //this.changes_made = true;
             this.config[driver_name]['servers'].splice(index, 1);
         },
 
@@ -176,7 +185,7 @@ export default {
         },
 
         addEditServers(params) {
-            this.changes_made = true;
+            //this.changes_made = true;
 
             let driver_name   = params.driver_name;
             let server_object = params.server;
@@ -240,9 +249,23 @@ export default {
             }, 100);
         }
     },
-    mounted() {
-        store.dispatch(CONFIG_LIST_READ);
+
+    watch: {
+        config: {
+            handler: function() {
+                this.changes_made = true;
+            },
+            deep: true
+        }
     },
+
+    mounted() {
+        store.dispatch(CONFIG_LIST_READ)
+            .then(() => {
+                this.changes_made = false;
+            });
+    },
+
     beforeMount() {
         this.createServerObject();
     }
