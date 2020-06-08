@@ -34,22 +34,22 @@ class RoomInfo extends MeetingsController
     {
         global $perm;
 
-        try {
-            $driver_factory = new DriverFactory(Driver::getConfig());
-            $cache = \StudipCacheFactory::getCache();
+        $driver_factory = new DriverFactory(Driver::getConfig());
+        $cache = \StudipCacheFactory::getCache();
 
-            $cid = $args['cid'];
+        $cid = $args['cid'];
 
-            if ($perm->have_studip_perm('tutor', $cid)) {
-                $meeting_course_list_raw = MeetingCourse::findByCourseId($cid);
-            } else {
-                $meeting_course_list_raw = MeetingCourse::findActiveByCourseId($cid);
-            }
+        if ($perm->have_studip_perm('tutor', $cid)) {
+            $meeting_course_list_raw = MeetingCourse::findByCourseId($cid);
+        } else {
+            $meeting_course_list_raw = MeetingCourse::findActiveByCourseId($cid);
+        }
 
-            $room_infos = [];
+        $room_infos = [];
 
-            foreach ($meeting_course_list_raw as $meetingCourse) {
-                if (!$meetingCourse->isNew()) {
+        foreach ($meeting_course_list_raw as $meetingCourse) {
+            if (!$meetingCourse->isNew()) {
+                try {
                     if (!$data = $cache->read('meetings/' . $meetingCourse->meeting->id)) {
                         $driver = $driver_factory->getDriver($meetingCourse->meeting->driver, $meetingCourse->meeting->server_index);
                         $info = $driver->getMeetingInfo($meetingCourse->meeting->getMeetingParameters());
@@ -63,12 +63,12 @@ class RoomInfo extends MeetingsController
                     }
 
                     $room_infos[$meetingCourse->meeting->id] = $info;
+                } catch (Exception $e) {
                 }
             }
-
-            return $this->createResponse(['rooms_info' => $room_infos], $response);
-        } catch (Exception $e) {
-            throw new Error($e->getMessage(), 404);
         }
+
+        return $this->createResponse(['rooms_info' => $room_infos], $response);
+
     }
 }
