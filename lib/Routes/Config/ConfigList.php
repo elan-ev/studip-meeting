@@ -23,6 +23,7 @@ class ConfigList extends MeetingsController
 
         $course_config = [];
         $cid = $args['cid'];
+
         if ($cid) {
             global $perm;
             $course_config = CourseConfig::findByCourseId($cid)->toArray();
@@ -44,12 +45,13 @@ class ConfigList extends MeetingsController
 
             !$config ?: $config = $this->setDefaultRoomSizeProfile($config, $cid);
         }
+
         $response_result = [];
         !$drivers           ?: $response_result['drivers'] = $drivers;
         !$config            ?: $response_result['config'] = $config;
         !$course_config     ?: $response_result['course_config'] = $course_config;
 
-        if (!empty($config)) {
+        if (!empty($response_result)) {
             return $this->createResponse($response_result, $response);
         }
 
@@ -60,13 +62,13 @@ class ConfigList extends MeetingsController
     /**
      * Automatically sets room size profile based on number of course members!
      * It decides the best room size profile and sets the maxParticipants and make that profile seleted
-     * 
+     *
      * @param $config   plugin general config
      * @param $cid      course id
-     * 
+     *
      * @return $config  plugin general config
      */
-    private function setDefaultRoomSizeProfile ($config, $cid) 
+    private function setDefaultRoomSizeProfile ($config, $cid)
     {
         $course = new \Course($cid);
         $members_count = count($course->members) + 5;
@@ -99,6 +101,6 @@ class ConfigList extends MeetingsController
                 $config[$driver_name]['features']['create'][$index]['value'] = $roomSizeProfiles_raw;
             }
         }
-        return $config;    
+        return $config;
     }
 }
