@@ -1,5 +1,5 @@
 @mixin assets-bg-icon($img) {
-    background-image: url("../../../../../assets/images/icons/${img}");
+    background-image: url("../../../../assets/images/icons/" + $img);
 }
 
 div.vc_introduction {
