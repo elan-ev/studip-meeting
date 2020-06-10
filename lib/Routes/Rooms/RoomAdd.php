@@ -96,8 +96,8 @@ class RoomAdd extends MeetingsController
                         $record = 'true';
                         if (Driver::getConfigValueByDriver($json['driver_name'], 'opencast')) { // config check for opencast
                             $series_id = MeetingPlugin::checkOpenCast($json['cid']);
-                            if ($series_id && is_array($series_id)) {
-                                $opencast_series_id = $series_id[0];
+                            if ($series_id) {
+                                $opencast_series_id = $series_id;
                             } else {
                                 throw new Error(_('Opencast Series id kann nicht gefunden werden!'), 404);
                             }

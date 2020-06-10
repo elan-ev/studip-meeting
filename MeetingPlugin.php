@@ -257,7 +257,11 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
             if ($cid) {
                 if ($opencast_plugin->isActivated($cid)) {
                     try {
-                        return \Opencast\Models\OCSeminarSeries::getSeries($cid);
+                        $OCSeries = \Opencast\Models\OCSeminarSeries::getSeries($cid);
+                        if ($OCSeries && is_array($OCSeries)) {
+                            return $OCSeries[0]['series_id'];
+                        }
+                        return false;
                     } catch (Exception $ex) {
                         //Handle Error
                         return false;
