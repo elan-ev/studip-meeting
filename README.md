@@ -1,8 +1,6 @@
 Stud.IP Video Conference Plugin
 ===============================
 
-[![Build Status](https://travis-ci.org/virtUOS/studip-meeting.svg?branch=master)](https://travis-ci.org/virtUOS/studip-meeting)
-
 Ein Stud.IP-Plugin um Konferenzen aus einer Veranstaltung heraus starten zu können.
 Teilnehmer/innen des Kurses können der Konferenz beitreten.
 
