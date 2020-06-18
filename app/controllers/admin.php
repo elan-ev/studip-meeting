@@ -89,6 +89,11 @@ class AdminController extends MeetingsController
 
         parent::before_filter($action, $args);
 
+        // Permission check
+        if ($GLOBALS['user']->perms !== 'root') {
+            throw new AccessDeniedException();
+        }
+
         // set default layout
         $this->templateFactory = $GLOBALS['template_factory'];
         $layout = $this->templateFactory->open('layouts/base');
