@@ -45,18 +45,12 @@ class ConfigList extends MeetingsController
             !$config ?: $config = $this->setDefaultRoomSizeProfile($config, $cid);
         }
 
-        if($config){
+        if($config && is_array($config)){
             if(!$perm->have_perm('root')){
                 foreach($config as $service => $service_val){
-                    foreach($config[$service] as $service_value => $service_value_val){
-                        if($service_value=='servers'){
-                            foreach($config[$service][$service_value] as $servers => $servers_val){
-                                foreach($config[$service][$service_value][$servers] as $servers_key => $servers_value){
-                                    if(in_array($servers_key,array('password','login','api-key'))){
-                                        $config[$service][$service_value][$servers][$servers_key]=NULL;
-                                    }
-                                }
-                            }
+                    if(isset($config[$service]['servers']) && is_array($config[$service]['servers']) && $config[$service]['servers']){
+                        foreach($config[$service]['servers'] as $servers => $servers_val){
+                            $config[$service]['servers'][$servers]=true;
                         }
                     }
                 }
