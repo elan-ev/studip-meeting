@@ -40,13 +40,16 @@ class RoomJoin extends MeetingsController
         $room_id = $args['room_id'];
         $cid = $args['cid'];
 
+        if (!$perm->have_studip_perm('autor', $cid)) {
+            throw new \AccessDeniedException();
+        }
+
         $meeting = Meeting::find($room_id);
         if (!($meeting && $meeting->courses->find($cid))) {
             throw new Error(_('Dieser Raum in diesem Kurs kann nicht gefunden werden!'), 404);
         }
 
         //putting mandatory logoutURL into features
-        ;
         if ($features = json_decode($meeting->features, true)) {
             if (!isset($features['logoutURL'])) {
                 $hostUrl = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost()
