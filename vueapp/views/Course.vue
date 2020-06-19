@@ -35,7 +35,7 @@
                 <MeetingComponent v-for="(room, index) in rooms_list_filtered"
                     :key="index"
                     :room="room"
-                    :info="rooms_info !== undefined ? rooms_info[room.id] : {}"
+                    :info="rooms_info !== undefined && rooms_info[room.id] ? rooms_info[room.id] : {}"
                     v-on:getRecording="showRecording"
                     v-on:renewRoomList="getRoomList"
                     v-on:getGuestInfo="showGuestDialog"
@@ -82,14 +82,18 @@
                     </label>
 
                     <label v-if="room['driver_name']
-                                && Object.keys(config_list[room['driver_name']]['servers']).length > 1">
-                        <span class="required">{{ "Verfügbare Server" | i18n }}</span>
+                            && Object.keys(config_list[room['driver_name']]['servers']).length > 1"
+                    >
+                        <span class="required">
+                            {{ "Verfügbare Server" | i18n }}
+                        </span>
+
                         <select id="server_index" v-model="room['server_index']"
                             :disabled="Object.keys(config_list[room['driver_name']]['servers']).length == 1">
                             <option value="" disabled> {{ "Bitte wählen Sie einen Server aus" | i18n }} </option>
                             <option v-for="(server_config, server_index) in config_list[room['driver_name']]['servers']" :key="server_index"
                                     :value="'' + server_index">
-                                    {{ (server_index + 1) + '-' + server_config['url'] }}
+                                    Server {{ (server_index + 1) }}
                             </option>
                         </select>
                     </label>
@@ -269,7 +273,7 @@ import MeetingStatus from "@/components/MeetingStatus";
 import MeetingComponent from "@/components/MeetingComponent";
 
 import {
-    CONFIG_LIST_READ,
+    CONFIG_COURSE_READ,
     ROOM_LIST,
     ROOM_READ,
     ROOM_UPDATE,
@@ -655,7 +659,7 @@ export default {
     },
 
     mounted() {
-        store.dispatch(CONFIG_LIST_READ, true);
+        store.dispatch(CONFIG_COURSE_READ, CID);
         this.getRoomList();
 
         this.interval = setInterval(() => {

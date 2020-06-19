@@ -6,12 +6,13 @@ import {
     CONFIG_UPDATE,
     CONFIG_CREATE,
     CONFIG_DELETE,
-    CONFIG_CLEAR,
     CONFIG_LIST_READ,
+    CONFIG_COURSE_READ
 } from "./actions.type";
 
 import {
     CONFIG_SET,
+    CONFIG_COURSE_SET
 } from "./mutations.type";
 
 const initialState = {
@@ -59,11 +60,21 @@ const getters = {
 export const state = { ...initialState };
 
 export const actions = {
-    async [CONFIG_LIST_READ](context, needs_cid = false) {
-        return ApiService.get('config/list/' + (needs_cid ? CID : '0'))
+    async [CONFIG_LIST_READ](context) {
+        return ApiService.get('config/list')
             .then(({ data }) => {
                 if (data != []) {
+                    console.log('set data');
                     context.commit(CONFIG_SET, data);
+                }
+            });
+    },
+
+    async [CONFIG_COURSE_READ](context, cid) {
+        return ApiService.get('course/' + cid + '/config')
+            .then(({ data }) => {
+                if (data != []) {
+                    context.commit(CONFIG_COURSE_SET, data);
                 }
             });
     },
@@ -90,12 +101,7 @@ export const actions = {
         return await ApiService.post('config', {
             config: params
         });
-    },
-
-    [CONFIG_CLEAR](context) {
-        context.commit(CONFIG_SET, {});
-    },
-
+    }
 };
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
@@ -107,10 +113,16 @@ export const mutations = {
         if (data.drivers) {
             state.drivers = data.drivers;
         }
+    },
+
+    [CONFIG_COURSE_SET](state, data) {
+        if (data.config) {
+            state.config = data.config;
+        }
         if (data.course_config) {
             state.course_config = data.course_config;
         }
-    },
+    }
 };
 
 export default {
