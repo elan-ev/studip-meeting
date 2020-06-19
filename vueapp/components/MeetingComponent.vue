@@ -15,7 +15,7 @@
                         </span>
                     </div>
                     <div class="right">
-                        <a v-if="room.features.record && room.features.record == 'true'" :title=" 'Dieser Raum kann aufgezeichnet werden!' | i18n " >
+                        <a v-if="room.features && room.features.record && room.features.record == 'true'" :title=" 'Dieser Raum kann aufgezeichnet werden!' | i18n " >
                             <StudipIcon icon="exclaim-circle" role="status-yellow" size="20"></StudipIcon>
                         </a>
                         <a v-if="course_config.display.editRoom" style="cursor: pointer;"
@@ -55,6 +55,14 @@
                     <span :id="'active-info-text-' + room.id" class="">{{ room.active == 1 ? 'Das Meeting ist für die Teilnehmer sichtbar'
                                         : 'Das Meeting ist für die Teilnehmer unsichtbar' | i18n  }}
                     </span>
+                </div>
+                <div v-if="num_drivers > 1">
+                    <StudipIcon class="info-icon" icon="video2"
+                        role="info" size="24"></StudipIcon>
+
+                    {{ this.config[room.driver].display_name
+                        ? this.config[room.driver].display_name
+                        : room.driver }}
                 </div>
             </label>
             <div class="meeting-item-btns">
@@ -98,10 +106,22 @@ export default {
     },
 
     computed: {
-        ...mapGetters(['course_config']),
+        ...mapGetters(['course_config', 'config']),
 
         join_url() {
             return API_URL + '/rooms/join/' + this.room.course_id + '/' + this.room.id;
+        },
+
+        num_drivers() {
+            let num_drivers = 0;
+
+            for (let driver in this.config) {
+                if (this.config[driver].enable === '1') {
+                    num_drivers++;
+                }
+            }
+
+            return num_drivers;
         }
     },
 
