@@ -60,8 +60,7 @@ class RoomsList extends MeetingsController
                         if ($this->getFeatures($meeting['features'], 'record')) { //room recorded
                             if (Driver::getConfigValueByDriver($meeting['driver'] , 'opencast')) { // config check for opencast
                                 if ($this->getFeatures($meeting['features'], 'meta_opencast-series-id') && 
-                                    in_array($this->getFeatures($meeting['features'], 'meta_opencast-series-id'), 
-                                        MeetingPlugin::checkOpenCast($meetingCourse->course_id)))
+                                    $this->getFeatures($meeting['features'], 'meta_opencast-series-id') == MeetingPlugin::checkOpenCast($meetingCourse->course_id))
                                 {
                                     $meeting['recordings_count'] = \PluginEngine::getURL('OpenCast', ['cid' => $cid], 'course', true);
                                 } else {
