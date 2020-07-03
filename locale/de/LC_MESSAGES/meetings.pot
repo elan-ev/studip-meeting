@@ -103,7 +103,7 @@ msgstr ""
 
 #: app/controllers/index.php:695
 msgid ""
-"Durchführung und Verwaltung von Live-Online-Treffen, ***REMOVED***en und "
+"Durchführung und Verwaltung von Live-Online-Treffen, Veranstaltungen und "
 "Videokonferenzen. Mit Hilfe der Face-to-Face-Kommunikation können "
 "Entfernungen überbrückt, externe Fachleute einbezogen und Studierende in "
 "Projekten und Praktika begleitet werden."
@@ -128,7 +128,7 @@ msgstr ""
 #: app/controllers/admin.php:153
 msgid ""
 "Administrationsseite für das Plugin zur Durchführung und Verwaltung von Live-"
-"Online-Treffen, ***REMOVED***en und Videokonferenzen."
+"Online-Treffen, Veranstaltungen und Videokonferenzen."
 msgstr ""
 
 #: app/views/admin/index.php:10

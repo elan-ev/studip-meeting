@@ -105,12 +105,12 @@ msgstr "Are you sure you want to delete the following meetings?"
 
 #: app/controllers/index.php:695
 msgid ""
-"Durchführung und Verwaltung von Live-Online-Treffen, ***REMOVED***en und "
+"Durchführung und Verwaltung von Live-Online-Treffen, Veranstaltungen und "
 "Videokonferenzen. Mit Hilfe der Face-to-Face-Kommunikation können "
 "Entfernungen überbrückt, externe Fachleute einbezogen und Studierende in "
 "Projekten und Praktika begleitet werden."
 msgstr ""
-"Plug-in for holding and managing live online meetings, ***REMOVED***s and video "
+"Plug-in for holding and managing live online meetings, seminars and video "
 "conferences. With the help of face-to-face communication, distances can be "
 "bridged, external experts can be involved and students can be supervised in "
 "projects and practicals."
@@ -134,10 +134,10 @@ msgstr "Meeting administration"
 #: app/controllers/admin.php:153
 msgid ""
 "Administrationsseite für das Plugin zur Durchführung und Verwaltung von "
-"Live-Online-Treffen, ***REMOVED***en und Videokonferenzen."
+"Live-Online-Treffen, Veranstaltungen und Videokonferenzen."
 msgstr ""
 "Plug-in administration page for holding and managing live online meetings, "
-"***REMOVED***s and video conferences."
+"seminars and video conferences."
 
 #: app/views/admin/index.php:10
 msgid "Verwenden dieses Treibers zulassen"

@@ -232,7 +232,7 @@ class IndexController extends MeetingsController
         switch ($id) {
 
             case 'main':
-                $helpText = $this->_('Durchführung und Verwaltung von Live-Online-Treffen, ***REMOVED***en und Videokonferenzen. '
+                $helpText = $this->_('Durchführung und Verwaltung von Live-Online-Treffen, Veranstaltungen und Videokonferenzen. '
                           . 'Mit Hilfe der Face-to-Face-Kommunikation können Entfernungen überbrückt, externe Fachleute '
                           . 'einbezogen und Studierende in Projekten und Praktika begleitet werden.');
                 $helpBar = Helpbar::get();
