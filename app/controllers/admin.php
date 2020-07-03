@@ -126,7 +126,7 @@ class AdminController extends MeetingsController
         switch ($id) {
 
             case 'main':
-                $helpText = $this->_('Administrationsseite für das Plugin zur Durchführung und Verwaltung von Live-Online-Treffen, ***REMOVED***en und Videokonferenzen.');
+                $helpText = $this->_('Administrationsseite für das Plugin zur Durchführung und Verwaltung von Live-Online-Treffen, Veranstaltungen und Videokonferenzen.');
                 $helpBar = Helpbar::get();
                 $helpBar->addPlainText('', $helpText);
                 break;
