@@ -129,6 +129,7 @@ msgstr ""
 msgid ""
 "Administrationsseite für das Plugin zur Durchführung und Verwaltung von Live-"
 "Online-Treffen, Veranstaltungen und Videokonferenzen."
+
 msgstr ""
 
 #: app/views/admin/index.php:10
