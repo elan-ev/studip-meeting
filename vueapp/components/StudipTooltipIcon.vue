@@ -1,5 +1,5 @@
 <template>
-    <span :class="'tooltip tooltip-icon' + (important ? ' tooltip-important' : '')" data-tooltip :title="!html ? text : ''">
+    <span :class="'tooltip tooltip-icon' + (important ? ' tooltip-important' : '') + (beta ? ' tooltip-beta' : '')" data-tooltip :title="!html ? text : ''">
         <span v-if="html" class="tooltip-content">{{ text }}</span>
     </span>
 </template>
@@ -18,6 +18,11 @@ export default {
             default: false
         },
         html: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
+        beta: {
             type: Boolean,
             required: false,
             default: false

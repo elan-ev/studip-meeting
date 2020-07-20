@@ -13,9 +13,12 @@
                         <span v-if="info && info.participantCount > 0" class="participants">
                             {{ info.participantCount }} {{ 'Teilnehmende/r aktiv' | i18n }}
                         </span>
+                        <span v-if="room.features && room.features.record && room.features.record == 'true'" class="recording-info">
+                            {{'['}}<StudipIcon icon="span-full" role="attention" size="11"></StudipIcon>{{ ' Rec]' | i18n }}
+                        </span>
                     </div>
                     <div class="right">
-                        <a v-if="room.features && room.features.record && room.features.record == 'true'" :title=" 'Dieser Raum kann aufgezeichnet werden!' | i18n " >
+                        <a v-if="room.features && room.features.record && room.features.record == 'true'" :title=" 'Bitte beachten Sie, dass dieser Raum aufgezeichnet wird!' | i18n " >
                             <StudipIcon icon="exclaim-circle" role="status-yellow" size="20"></StudipIcon>
                         </a>
                         <a v-if="course_config.display.editRoom" style="cursor: pointer;"

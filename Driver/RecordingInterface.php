@@ -33,4 +33,12 @@ interface RecordingInterface
      * @return array | bool opencast related configs list, false if OpenCast is not there
      */
     public function useOpenCastForRecording();
+
+
+    /**
+     * Returns recording configOptions required when creating the room
+     *
+     * @return ConfigOption a single configOption record feature 
+     */
+    public function getRecordFeature();
 }

@@ -69,6 +69,11 @@ class Driver
                     self::$config[$driver_name]['features']['create'] = self::convertDriverConfigToArray($create_features);
                 }
             }
+            if (in_array('ElanEv\Driver\RecordingInterface', class_implements($class)) !== false) {
+                if (!empty($record_feature = $class::getRecordFeature())) {
+                    self::$config[$driver_name]['features']['record'] = self::convertDriverConfigToArray($record_feature);
+                }
+            }
         }
     }
 
