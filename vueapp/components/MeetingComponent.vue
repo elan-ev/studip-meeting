@@ -11,7 +11,7 @@
                         </StudipTooltipIcon>
 
                         <span v-if="info && info.participantCount > 0" class="participants">
-                            {{ info.participantCount }} {{ 'Teilnehmende/r aktiv' | i18n }}
+                            {{ info.participantCount }} {{ ((info.participantCount == 1) ? 'Teilnehmender' : 'Teilnehmende') + ' aktiv' | i18n }}
                         </span>
                         <span v-if="room.features && room.features.record && room.features.record == 'true'" class="recording-info">
                             {{'['}}<StudipIcon icon="span-full" role="attention" size="11"></StudipIcon>{{ ' Rec]' | i18n }}
