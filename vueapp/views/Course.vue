@@ -220,7 +220,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <div style="display: inline-block;width:15%; text-align: right;">
+                            <div v-if="course_config.display.deleteRecording" style="display: inline-block;width:15%; text-align: right;">
                                 <a style="cursor: pointer;" @click.prevent="deleteRecording(recording)">
                                     <StudipIcon icon="trash" role="attention"></StudipIcon>
                                 </a>

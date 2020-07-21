@@ -30,17 +30,20 @@ class ConfigListCourse extends MeetingsController
         $displayAddRoom = false;
         $displayEditRoom = false;
         $displayDeleteRoom = false;
+        $displayDeleteRecording = false;
 
         if ($perm->have_studip_perm('tutor', $cid)) {
             $displayAddRoom = true;
             $displayEditRoom = true;
             $displayDeleteRoom = true;
+            $displayDeleteRecording = true;
         }
 
         $course_config['display'] = [
             'addRoom' => $displayAddRoom,
             'editRoom' => $displayEditRoom,
             'deleteRoom' => $displayDeleteRoom,
+            'deleteRecording' => $displayDeleteRecording,
         ];
 
         $course_config['introduction'] = formatReady($course_config['introduction']);
