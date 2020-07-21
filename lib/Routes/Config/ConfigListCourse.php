@@ -10,7 +10,7 @@ use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use ElanEv\Model\Driver;
 use ElanEv\Model\CourseConfig;
-
+use MeetingPlugin;
 class ConfigListCourse extends MeetingsController
 {
     use MeetingsTrait;
@@ -144,7 +144,7 @@ class ConfigListCourse extends MeetingsController
         foreach ($config as $driver_name => $settings) {
             if ((isset($settings['record']) && $settings['record'] == "1") 
                     && (isset($settings['opencast']) && $settings['opencast'] == "1") 
-                   /*  && !empty(MeetingPlugin::checkOpenCast($cid)) */
+                    && !empty(MeetingPlugin::checkOpenCast($cid))
                     && (isset($settings['features']['record']))) {
                 $record_index = array_search('record', array_column($settings['features']['record'], 'name'));
                 if ($record_index !== FALSE) {
