@@ -155,7 +155,7 @@
 
                                 {{ feature['display_name'] | i18n }}
                                 <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"
-                                    :beta="(Object.keys(config_list[room['driver_name']]).includes('opencast') && config_list[room['driver_name']]['opencast'] == '1' && feature['info'].toLowerCase().includes('opencast')) ? true : false"></StudipTooltipIcon>
+                                    :badge="(Object.keys(config_list[room['driver_name']]).includes('opencast') && config_list[room['driver_name']]['opencast'] == '1' && feature['info'].toLowerCase().includes('opencast')) ? true : false">{{'beta'}}</StudipTooltipIcon>
                         </label>
 
                         <label v-else-if="feature['value'] && typeof feature['value'] === 'object'">

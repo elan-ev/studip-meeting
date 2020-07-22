@@ -86,7 +86,7 @@ div.meeting-item-header {
     .right {
         float: right;
         a {
-            margin-right: 10px;
+            margin-right: 5px;
             padding: 0 0px;
             line-height: 1em;
 
@@ -117,6 +117,10 @@ div.meeting-item-header {
                 }
             }
         }
+        span.meeting-badge {
+            vertical-align: text-bottom;
+            margin-right: 5px;
+        }
     }
     .left {
         float: left;
@@ -124,22 +128,6 @@ div.meeting-item-header {
             margin-left: 20px;
             font-size: 14px;
             font-weight: 200;
-        }
-        span.recording-info {
-            margin-left: 10px;
-            font-size: 11px;
-            color: #636971;
-            font-weight: 200;
-            img {
-                vertical-align: middle;
-                margin-bottom: 2px;
-                animation: blinker 2s linear infinite;
-            }
-            @keyframes blinker {
-                50% {
-                  opacity: 0;
-                }
-            }
         }
     }
 }
@@ -323,10 +311,24 @@ fieldset {
     }
 }
 
-span.tooltip.tooltip-icon.tooltip-beta::before {
-    content: '[beta]';
-    font-size: 11px;
-    font-weight: 600;
-    background: none;
-    color: #6e6e6e;
+span.meeting-badge {
+    display: inline-block;
+    padding: .25em .4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+    color: #fff;
+    background-color: #28497c;
+    text-indent: 0;
+    img {
+        vertical-align: middle;
+        margin-bottom: 1px;
+    }
+    &.tooltip {
+        cursor: default;
+    }
 }
