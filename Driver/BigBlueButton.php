@@ -60,6 +60,10 @@ class BigBlueButton implements DriverInterface, RecordingInterface
                 unset($features['guestPolicy']);
             }
 
+            if ($features['record'] == 'true') {
+                $params['name'] = $params['name'] . ' (' . date('Y-m-d H:i:s') . ')';
+            }
+
             $params = array_merge($params, $features);
         }
 
