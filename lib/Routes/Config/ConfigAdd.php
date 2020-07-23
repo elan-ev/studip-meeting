@@ -22,12 +22,17 @@ class ConfigAdd extends MeetingsController
         $json = $this->getRequestData($request);
         $message = [];
         try {
+            $res_message_text = [];
             foreach ($json['config'] as $driver_name => $config_options ) {
-                Driver::setConfigByDriver($driver_name, $config_options);
+                $valid_servers = Driver::setConfigByDriver($driver_name, $config_options);
+                if (!$valid_servers) {
+                    $res_message_text[] = sprintf(_('(%s) hat ungültige Server'), $driver_name);
+                }
             }
+            
             $message = [
-                'text' => _('Konfiguration gespeichert.'),
-                'type' => 'success'
+                'text' => ((!empty($res_message_text)) ? $res_message_text : _('Konfiguration gespeichert.')),
+                'type' => ((!empty($res_message_text)) ? 'error' : 'success')
             ];
         } catch ( Exception $e) {
             $message = [

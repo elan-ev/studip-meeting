@@ -14,6 +14,7 @@
 namespace ElanEv\Model;
 
 use MeetingPlugin;
+use ElanEv\Driver\DriverFactory;
 
 class Driver
 {
@@ -107,11 +108,42 @@ class Driver
     {
         self::loadConfig();
 
+        $valid_servers = true;
+        if ($config_options['enable'] == 1 && (isset($config_options['servers']) && !count($config_options['servers']) || !isset($config_options['servers']))) {
+            $config_options['enable'] = 0;
+            $valid_servers = false;
+        }
+        $approved_servers = [];
         foreach ($config_options as $key => $value) {
-            self::$config[$driver_name][$key] = $value;
+            if ($key == 'servers') {
+                $config_tmp[$driver_name] = $config_options;
+                $config_tmp[$driver_name]['enable'] = 1;
+                $driver_factory = new DriverFactory($config_tmp);
+                foreach ($value as $index => $server_info) {
+                    if (empty(trim($server_info['url']))) {
+                        $valid_servers = false;
+                        continue;
+                    }
+                    $driver = $driver_factory->getDriver($driver_name, $index);
+                    if ($driver->checkServer()) {
+                        $approved_servers[] = $server_info;
+                    } else {
+                        $valid_servers = false;
+                    }
+                }
+                self::$config[$driver_name][$key] = $approved_servers;
+            } else {
+                self::$config[$driver_name][$key] = $value;
+            }
+        }
+
+        if (count($approved_servers) == 0) {
+            self::$config[$driver_name]['enable'] = 0;
         }
 
         \Config::get()->store('VC_CONFIG', json_encode(self::$config));
+
+        return $valid_servers;
     }
 
     static function getConfig()

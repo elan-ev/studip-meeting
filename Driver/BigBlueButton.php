@@ -6,6 +6,7 @@ use MeetingPlugin;
 use GuzzleHttp\ClientInterface;
 use ElanEv\Model\Meeting;
 use ElanEv\Model\Driver;
+use Throwable;
 
 /**
  * Big Blue Button driver implementation.
@@ -329,6 +330,25 @@ class BigBlueButton implements DriverInterface, RecordingInterface
             default:
                 return '';
                 break;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function checkServer() {
+        try {
+            $response = $this->performRequest('getMeetings');
+
+            $xml = new \SimpleXMLElement($response);
+
+            if (!$xml instanceof \SimpleXMLElement) {
+                return false;
+            }
+    
+            return isset($xml->returncode) && strtolower((string)$xml->returncode) === 'success';
+        } catch (Throwable $th) {
+           return false;
         }
     }
 }

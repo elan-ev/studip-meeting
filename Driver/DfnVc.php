@@ -4,6 +4,7 @@ namespace ElanEv\Driver;
 
 use MeetingPlugin;
 use GuzzleHttp\ClientInterface;
+use Throwable;
 
 /**
  * DFN video conference driver implementation.
@@ -372,5 +373,24 @@ class DfnVc implements DriverInterface
     public function getCreateFeatures()
     {
         return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function checkServer() {
+
+        try {
+            $sessionCookie = $this->requestSessionCookie();
+
+            // login using the LMS credentials
+            if (!$this->authenticate($sessionCookie)) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (Throwable $th) {
+            return false;
+        }
     }
 }
