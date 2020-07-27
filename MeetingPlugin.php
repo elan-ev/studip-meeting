@@ -225,7 +225,6 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
             $app->group('/meetingplugin/api', new RouteMap($app));
             $app->run();
         } else {
-            PageLayout::addScript($this->getPluginUrl() . '/static/bundle.js');
             PageLayout::addStylesheet($this->getPluginUrl() . '/static/styles.css');
 
             $trails_root = $this->getPluginPath() . '/app';

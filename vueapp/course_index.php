@@ -7,3 +7,7 @@
     let CID      = '<?= $cid ?>';
     let ICON_URL = '<?= Assets::url('images/icons/') ?>';
 </script>
+
+<% for(var i = 0; i < htmlWebpackPlugin.tags.bodyTags.length; i++) { %>
+<? PageLayout::addScript($this->plugin->getPluginUrl() . '/static<%= htmlWebpackPlugin.tags.bodyTags[i].attributes.src %>'); ?>
+<% } %>

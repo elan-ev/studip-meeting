@@ -1,15 +1,15 @@
 const path = require('path'); // node.js uses CommonJS modules
-const {
-    VueLoaderPlugin
-} = require('vue-loader');
 
-const CleanTerminalPlugin = require('clean-terminal-webpack-plugin');
+const { VueLoaderPlugin }       = require('vue-loader');
+const HtmlWebpackPlugin         = require('html-webpack-plugin');
+const { CleanWebpackPlugin }    = require('clean-webpack-plugin');
 
 module.exports = {
     entry: ['./vueapp/app.js', './assets/css/meetings.scss'], // the entry point
     output: {
-        filename: 'bundle.js', // the output filename
-        path: path.resolve(__dirname, 'static') // fully qualified path
+        filename: '[name].[contenthash].js', // the output filename
+        path: path.resolve(__dirname, 'static'), // fully qualified path
+        publicPath: '/'
     },
     module: {
         rules: [{
@@ -38,8 +38,20 @@ module.exports = {
 		}]
     },
     plugins: [
+        new CleanWebpackPlugin(),
         new VueLoaderPlugin(),
-        new CleanTerminalPlugin()
+        new HtmlWebpackPlugin({
+            template: 'vueapp/course_index.php',
+            inject: false,
+            minify: false,
+            filename: '../app/views/index/index.php'
+        }),
+        new HtmlWebpackPlugin({
+            template: 'vueapp/admin_index.php',
+            inject: false,
+            minify: false,
+            filename: '../app/views/admin/index.php'
+        }),
     ],
     resolve: {
         extensions: ['.vue', '.js'],

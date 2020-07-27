@@ -4,25 +4,26 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "build:dev": "webpack --watch --mode=\"development\"",
-        "build:prod": "webpack --mode=\"production\"",
+        "dev": "webpack --watch --mode=\"development\"",
+        "prod": "webpack --mode=\"production\"",
         "prezip": "npm install && npm run build:prod && composer install --no-dev",
         "zip": "zip -r Meetings-V$npm_package_version.zip app assets compat Driver images lib locale migrations static vendor LICENSE README.md bootstrap.php MeetingPlugin.php plugin.manifest"
     },
     "author": "ELAN e.V. (tgloeggl@uos.de)",
     "dependencies": {
         "install": "^0.12.2",
-        "npm": "^6.14.6"
+        "npm": "^6.14.7"
     },
     "devDependencies": {
         "axios": "^0.18.1",
-        "clean-terminal-webpack-plugin": "^3.0.0",
+        "clean-webpack-plugin": "^3.0.0",
         "css-loader": "^2.1.1",
         "date-fns": "^2.12.0",
         "extract-loader": "^2.0.1",
         "file-loader": "^2.0.0",
+        "html-webpack-plugin": "^4.3.0",
         "jquery": "^3.5.0",
-        "node-sass": "^4.14.0",
+        "node-sass": "^4.14.1",
         "popper.js": "^1.15.0",
         "sass-loader": "^7.3.1",
         "vue": "^2.6.10",
