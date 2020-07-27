@@ -6,7 +6,7 @@
     "scripts": {
         "dev": "webpack --watch --mode=\"development\"",
         "prod": "webpack --mode=\"production\"",
-        "prezip": "npm install && npm run build:prod && composer install --no-dev",
+        "prezip": "npm install && npm run prod && composer install --no-dev",
         "zip": "zip -r Meetings-V$npm_package_version.zip app assets compat Driver images lib locale migrations static vendor LICENSE README.md bootstrap.php MeetingPlugin.php plugin.manifest"
     },
     "author": "ELAN e.V. (tgloeggl@uos.de)",
