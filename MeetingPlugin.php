@@ -45,7 +45,7 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
         $perm = $GLOBALS['perm'];
 
         if ($perm->have_perm('root')) {
-            $item = new Navigation($this->_('Meetings konfigurieren'), PluginEngine::getLink($this, array(), 'admin'));
+            $item = new Navigation($this->_('Meetings konfigurieren'), PluginEngine::getLink($this, array(), 'admin#/admin'));
             $item->setImage(self::getIcon('chat', 'white'));
             if (Navigation::hasItem('/admin/config') && !Navigation::hasItem('/admin/config/meetings')) {
                 Navigation::addItem('/admin/config/meetings', $item);
@@ -225,7 +225,6 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
             $app->group('/meetingplugin/api', new RouteMap($app));
             $app->run();
         } else {
-            PageLayout::addScript($this->getPluginUrl() . '/static/bundle.js');
             PageLayout::addStylesheet($this->getPluginUrl() . '/static/styles.css');
 
             $trails_root = $this->getPluginPath() . '/app';
