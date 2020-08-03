@@ -6,4 +6,5 @@
     let API_URL  = '<?= PluginEngine::getURL('meetingplugin', [], 'api', true) ?>';
     let CID      = '<?= $cid ?>';
     let ICON_URL = '<?= Assets::url('images/icons/') ?>';
+    let PLUGIN_ASSET_URL =  '<?= $plugin->getAssetsUrl() ?>';
 </script>

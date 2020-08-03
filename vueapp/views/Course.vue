@@ -40,7 +40,8 @@
                     v-on:renewRoomList="getRoomList"
                     v-on:getGuestInfo="showGuestDialog"
                     v-on:getFeatures="showEditFeatureDialog"
-                    v-on:setMessage="showMessage">
+                    v-on:setMessage="showMessage"
+                    v-on:getFeedback="showFeedbackDialog">
                 </MeetingComponent>
         </form>
 
@@ -264,6 +265,82 @@
                 </fieldset>
             </form>
         </div>
+         <div id="feedback-modal" style="display: none;">
+            <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
+                {{ modal_message.text }}
+            </MessageBox>
+
+            <form class="default" @submit.prevent="feedbackFormSubmit">
+                <fieldset>
+                    <legend>
+                        {{ 'Beschreibung' | i18n }}
+                    </legend>
+                    <label class="col-6">
+                        <textarea ref="feedbackDescription" v-model="feedback['description']" cols="30" rows="5"></textarea>
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend>
+                        {{ 'Feedback Informationen' | i18n }}
+                    </legend>
+                    <label class="col-3">
+                        <span >{{ "Browser-Name" | i18n }}</span>
+                        <input type="text" v-model.trim="feedback['browser_name']">
+                    </label>
+                    <label class="col-3">
+                        <span >{{ "Browser-Version" | i18n }}</span>
+                        <input type="text" v-model.trim="feedback['browser_version']">
+                    </label>
+                    <label class="col-3">
+                        <span >{{ "Download-Geschw. (Mbps)" | i18n }}</span>
+                        <input type="number" min="1" v-model.trim="feedback['download_speed']">
+                    </label>
+                    <label class="col-3">
+                        <span >{{ "Upload-Geschw. (Mbps)" | i18n }}</span>
+                        <input type="number" min="1" v-model.trim="feedback['upload_speed']">
+                    </label>
+                    <label class="col-3">
+                        <span >{{ "Netzwerk-Typ" | i18n }}</span>
+                        <select id="network-type" v-model="feedback['network_type']">
+                            <option v-for="(nt_value, nt_name) in network_types" :key="nt_name"
+                                    :value="nt_name">
+                                    {{ nt_value }}
+                            </option>
+                        </select>
+                    </label>
+                    <label class="col-3">
+                        <span >{{ "Betriebssystem (OS)" | i18n }}</span>
+                        <input type="text" v-model.trim="feedback['os_name']">
+                    </label>
+                    <label class="col-3">
+                        <span >{{ "Prozessortyp" | i18n }}</span>
+                        <input type="text" v-model.trim="feedback['cpu_type']">
+                    </label>
+                    <label class="col-3">
+                        <span >{{ "Alter des Rechners" | i18n }}</span>
+                        <input type="text" v-model.number="feedback['cpu_old']">
+                    </label>
+                    <label class="col-3">
+                        <span >{{ "Anzahl der CPU-Kerne" | i18n }}</span>
+                        <input type="number" min="1" max="1000" v-model.number="feedback['cpu_num']">
+                    </label>
+                    <label class="col-3">
+                        <span >{{ "RAM (Hauptspeicher) GB" | i18n }}</span>
+                        <input type="number"  min="1" max="1000" v-model.number="feedback['ram']">
+                    </label>
+                </fieldset>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <div class="ui-dialog-buttonset">
+                        <StudipButton icon="accept" type="button" v-on:click="sumbitFeedback($event)" class="ui-button ui-corner-all ui-widget">
+                            {{ "Einsenden" | i18n}}
+                        </StudipButton>
+                        <StudipButton icon="cancel" type="button" v-on:click="cancelFeedback($event)" class="ui-button ui-corner-all ui-widget">
+                            {{ "Abbrechen" | i18n}}
+                        </StudipButton>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </template>
 
@@ -289,12 +366,15 @@ import {
     RECORDING_SHOW,
     RECORDING_DELETE,
     ROOM_JOIN_GUEST,
-    ROOM_INFO
+    ROOM_INFO,
+    FEEDBACK_SUBMIT,
 } from "@/store/actions.type";
 
 import {
     ROOM_CLEAR,
-    RECORDING_LIST_SET
+    RECORDING_LIST_SET,
+    FEEDBACK_CLEAR,
+    FEEDBACK_INIT
 } from "@/store/mutations.type";
 
 export default {
@@ -312,7 +392,7 @@ export default {
     computed: {
         ...mapGetters([
             'config', 'room', 'rooms_list', 'rooms_info', 'rooms_checked',
-            'course_config', 'recording_list', 'recording'
+            'course_config', 'recording_list', 'recording', 'feedback', 'network_types'
         ]),
 
         config_list: function() {
@@ -350,6 +430,64 @@ export default {
     },
 
     methods: {
+        showFeedbackDialog(room) {
+            this.modal_message = {};
+            let options;
+
+            // handle mobile devices
+            if (window.innerWidth < 600) {
+                options = {
+                    width: '100%',
+                    modal: true,
+                    position: { my: "top", at: "top", of: window },
+                    title: 'Feedback'.toLocaleString()
+                }
+            } else {
+                options = {
+                    minWidth: 500,
+                    modal: true,
+                    position: { my: "top", at: "top", of: window },
+                    title: 'Feedback'.toLocaleString()
+                }
+            }
+            this.$store.commit(FEEDBACK_INIT, room.id);
+            $('#feedback-modal').dialog(options);
+        },
+        feedbackFormSubmit(event) {
+            if (event.key == 'Enter' && $(event.target).is('input')) {
+                 this.sumbitFeedback(event);
+            }
+        },
+        sumbitFeedback(event) {
+            if (event) {
+                event.preventDefault();
+            }
+            if ( this.feedback.description ) {
+                this.modal_message = {};
+                this.$store.dispatch(FEEDBACK_SUBMIT, this.feedback)
+                .then(({ data }) => {
+                    this.message = data.message;
+                    this.$store.commit(FEEDBACK_CLEAR);
+                    if (this.message.type == 'error') {
+                        this.$set(this.modal_message, "type" , "error");
+                        this.$set(this.modal_message, "text" , this.message.text);
+                    } else {
+                        $('button.ui-dialog-titlebar-close').trigger('click');
+                    }
+                }).catch (({error}) => {
+                    $('button.ui-dialog-titlebar-close').trigger('click');
+                });
+            } else {
+                this.$set(this.modal_message, "type" , "error");
+                this.$set(this.modal_message, "text" , `Beschreibung darf nicht leer sein`.toLocaleString());
+            }
+            
+        },
+        cancelFeedback() {
+            this.$store.commit(FEEDBACK_CLEAR);
+            $('#feedback-modal').dialog('close');
+        },
+       
         showAddMeeting() {
             this.modal_message = {};
             this.$store.commit(ROOM_CLEAR);

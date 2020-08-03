@@ -24,3 +24,5 @@ export const ROOM_INFO     = "roomInfo";
 export const RECORDING_LIST     = "recordingList";
 export const RECORDING_SHOW     = "recordingShow";
 export const RECORDING_DELETE     = "recordingDelete";
+
+export const FEEDBACK_SUBMIT         = "feedbackSubmit";

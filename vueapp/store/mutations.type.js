@@ -9,3 +9,6 @@ export const ROOM_CLEAR     = "roomClear";
 
 export const RECORDING_LIST_SET     = "recordingListSet";
 export const RECORDING_SET     = "recordingSet";
+
+export const FEEDBACK_CLEAR     = "feedbackClear";
+export const FEEDBACK_INIT      = "feedbackInit";

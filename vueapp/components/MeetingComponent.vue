@@ -32,6 +32,11 @@
                             @click.prevent="editFeatures()">
                             <StudipIcon icon="admin" role="clickable" size="20"></StudipIcon>
                         </a>
+                        <a style="cursor: pointer;"
+                            :title=" 'Schreiben Sie ein Feedback' | i18n "
+                            @click.prevent="writeFeedback()">
+                            <StudipIcon icon="support" role="clickable" size="22"></StudipIcon>
+                        </a>
                         <a v-if="course_config.display.deleteRoom" style="cursor: pointer;"
                             :title=" 'Raum löschen' | i18n "
                             @click.prevent="deleteRoom($event)">
@@ -147,6 +152,10 @@ export default {
     },
 
     methods: {
+        writeFeedback() {
+            this.$emit('getFeedback', this.room);
+        },
+
         editFeatures() {
             this.$emit('getFeatures', this.room);
         },
