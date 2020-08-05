@@ -32,7 +32,6 @@ class FeedbackSubmit extends MeetingsController
     {
         $json = $this->getRequestData($request);
         global $UNI_CONTACT, $user;
-        $UNI_CONTACT = 'frbdzmn@yahoo.com';
         $current_user = $user;
         try {
             $to = filter_var($UNI_CONTACT, FILTER_VALIDATE_EMAIL);
