@@ -7,13 +7,13 @@ export default new Router({
     routes: [
         {
             name: "admin",
-            path: "/",
+            path: "/admin",
             component: () => import("@/views/Admin")
         },
 
         {
             name: "course",
-            path: "/course",
+            path: "/",
             component: () => import("@/views/Course"),
         }
     ]
