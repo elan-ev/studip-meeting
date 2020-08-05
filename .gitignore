@@ -3,3 +3,5 @@
 node_modules
 static
 .vscode
+app/views/index/index.php
+app/views/admin/index.php
