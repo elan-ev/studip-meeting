@@ -64,7 +64,6 @@ export const actions = {
         return ApiService.get('config/list')
             .then(({ data }) => {
                 if (data != []) {
-                    console.log('set data');
                     context.commit(CONFIG_SET, data);
                 }
             });
