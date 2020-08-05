@@ -86,7 +86,7 @@ div.meeting-item-header {
     .right {
         float: right;
         a {
-            margin-right: 10px;
+            margin-right: 5px;
             padding: 0 0px;
             line-height: 1em;
 
@@ -116,6 +116,10 @@ div.meeting-item-header {
                     height: 16px;
                 }
             }
+        }
+        span.meeting-badge {
+            vertical-align: text-bottom;
+            margin-right: 5px;
         }
     }
     .left {
@@ -304,5 +308,27 @@ fieldset {
         .modal-progress:hover {
             background-color: #fff;
         }
+    }
+}
+
+span.meeting-badge {
+    display: inline-block;
+    padding: .25em .4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+    color: #fff;
+    background-color: #28497c;
+    text-indent: 0;
+    img {
+        vertical-align: middle;
+        margin-bottom: 1px;
+    }
+    &.tooltip {
+        cursor: default;
     }
 }

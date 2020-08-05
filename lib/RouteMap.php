@@ -59,6 +59,10 @@ class RouteMap
         //recordings with perm
         $this->app->get('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingShow::class);
         $this->app->delete('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingDelete::class);
+
+        //routes for feedback
+        $this->app->post('/feedback', Routes\Feedback\FeedbackSubmit::class);
+        $this->app->post('/feedback/uploadTest', Routes\Feedback\UploadTest::class);
     }
 
     public function adminRoutes()

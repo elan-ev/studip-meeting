@@ -1,17 +1,20 @@
 <template>
-    <div v-if="error" class="messagebox messagebox_error ">
+    <div v-if="error" class="messagebox messagebox_error">
         <div class="messagebox_buttons">
             <a class="close" href="#" title="Nachrichtenbox schliessen">
                 <span>Nachrichtenbox schliessen</span>
             </a>
         </div>
-        <div v-if="error.data.errors" v-for="err in error.data.errors">
-            {{ err.code }}: {{ err.title }}
+        <div v-if="error.data.errors" class="messagebox_error_text">
+            <span v-for="(err, i) in error.data.errors" :key="i">
+                {{ err.code }}: {{ err.title }}
+            </span>
         </div>
-
-        <div v-if="error.data.error" v-for="err in error.data.error">
-            {{ err.message }}<br>
-            Line {{ err.line }} in file {{ err.file }}
+        <div v-else-if="error.data.error" class="messagebox_error_text">
+            <span v-for="(err, i) in error.data.error" :key="i">
+                {{ err.message }}<br>
+                Line {{ err.line }} in file {{ err.file }}
+            </span>
         </div>
     </div>
 </template>

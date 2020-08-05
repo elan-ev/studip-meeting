@@ -11,23 +11,36 @@
                         </StudipTooltipIcon>
 
                         <span v-if="info && info.participantCount > 0" class="participants">
-                            {{ info.participantCount }} {{ 'Teilnehmende/r aktiv' | i18n }}
+                            {{ info.participantCount }} {{ ((info.participantCount == 1) ? 'Teilnehmender' : 'Teilnehmende') + ' aktiv' | i18n }}
                         </span>
                     </div>
                     <div class="right">
-                        <a v-if="room.features && room.features.record && room.features.record == 'true'" :title=" 'Dieser Raum kann aufgezeichnet werden!' | i18n " >
-                            <StudipIcon icon="exclaim-circle" role="status-yellow" size="20"></StudipIcon>
+                        <StudipTooltipIcon v-if="room.features && room.features.record && room.features.record == 'true'" 
+                                    :text="'Bitte beachten Sie, dass dieser Raum aufgezeichnet wird!' | i18n"
+                                    :badge="true"
+                                    >
+                            <StudipIcon icon="span-full" role="attention" size="11"></StudipIcon> {{'Rec'}}
+                        </StudipTooltipIcon>
+                        <a v-if="room.recordings_count" style="cursor: pointer;"
+                                :title=" typeof room.recordings_count == 'string' ? 'Die vorhandenen Aufzeichnungen auf Opencast' : 'Die vorhandenen Aufzeichnungen' | i18n "
+                                :data-badge="typeof room.recordings_count == 'number' ? room.recordings_count : 0"
+                                @click.prevent="getRecording()">
+                            <StudipIcon :icon="typeof room.recordings_count == 'string' ? 'video2+new' : 'video2'" role="clickable" size="20"></StudipIcon>
                         </a>
                         <a v-if="course_config.display.editRoom" style="cursor: pointer;"
                             :title=" 'Raumeinstellungen' | i18n "
                             @click.prevent="editFeatures()">
                             <StudipIcon icon="admin" role="clickable" size="20"></StudipIcon>
                         </a>
-                        <a v-if="room.recordings_count" style="cursor: pointer;"
-                                :title=" typeof room.recordings_count == 'string' ? 'Die vorhandenen Aufzeichnungen auf Opencast' : 'Die vorhandenen Aufzeichnungen' | i18n "
-                                :data-badge="typeof room.recordings_count == 'number' ? room.recordings_count : 0"
-                                @click.prevent="getRecording()">
-                            <StudipIcon :icon="typeof room.recordings_count == 'string' ? 'video2+new' : 'video2'" role="clickable" size="20"></StudipIcon>
+                        <a style="cursor: pointer;"
+                            :title=" 'Schreiben Sie ein Feedback' | i18n "
+                            @click.prevent="writeFeedback()">
+                            <StudipIcon icon="support" role="clickable" size="22"></StudipIcon>
+                        </a>
+                        <a v-if="course_config.display.deleteRoom" style="cursor: pointer;"
+                            :title=" 'Raum löschen' | i18n "
+                            @click.prevent="deleteRoom($event)">
+                            <StudipIcon icon="trash" role="clickable" size="20"></StudipIcon>
                         </a>
                     </div>
                 </div>
@@ -66,9 +79,6 @@
                 </div>
             </label>
             <div class="meeting-item-btns">
-                <StudipButton v-if="course_config.display.deleteRoom" icon="" class="delete" type="button" v-on:click="deleteRoom($event)">
-                    {{ "Raum löschen" | i18n}}
-                </StudipButton>
                 <StudipButton v-if="course_config.display.editRoom && room.features && room.features.guestPolicy && room.features.guestPolicy != 'ALWAYS_DENY'"
                     type="button" v-on:click="getGuestInfo()"
                     icon="add"
@@ -142,6 +152,10 @@ export default {
     },
 
     methods: {
+        writeFeedback() {
+            this.$emit('getFeedback', this.room);
+        },
+
         editFeatures() {
             this.$emit('getFeatures', this.room);
         },

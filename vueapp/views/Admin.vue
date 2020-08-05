@@ -3,7 +3,12 @@
         <h1>{{ "Meetings konfigurieren" | i18n }}</h1>
 
         <MessageBox v-if="message" :type="message.type" @hide="message = ''">
-            {{ message.text }}
+            <span v-if="typeof message.text == 'string'">{{ message.text }}</span>
+            <ul v-else>
+                <li v-for="(text, i) in message.text" :key="i">
+                    {{text}}
+                </li>
+            </ul>
         </MessageBox>
 
         <MessageBox v-if="changes_made" type="warning">
@@ -159,6 +164,12 @@ export default {
                 .then(({ data }) => {
                     this.message = data.message;
                     this.$store.commit(CONFIG_SET, data.config);
+                    if (data.message.type == 'error') {
+                       this.$store.dispatch(CONFIG_LIST_READ)
+                            .then(() => {
+                                this.changes_made = false;
+                            });
+                    }
                     this.changes_made = false;
                 });
         },

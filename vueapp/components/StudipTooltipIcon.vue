@@ -1,6 +1,7 @@
 <template>
-    <span :class="'tooltip tooltip-icon' + (important ? ' tooltip-important' : '')" data-tooltip :title="!html ? text : ''">
-        <span v-if="html" class="tooltip-content">{{ text }}</span>
+    <span :class="'tooltip ' + (important ? ' tooltip-important' : '') + (badge ? ' meeting-badge' : ' tooltip-icon')" data-tooltip :title="!html ? text : ''">
+        <span v-if="html && !badge" class="tooltip-content">{{ text }}</span>
+        <slot v-else-if="badge"></slot>
     </span>
 </template>
 
@@ -18,6 +19,11 @@ export default {
             default: false
         },
         html: {
+            type: Boolean,
+            required: false,
+            default: false
+        },
+        badge: {
             type: Boolean,
             required: false,
             default: false

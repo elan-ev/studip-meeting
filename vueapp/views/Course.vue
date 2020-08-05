@@ -40,7 +40,8 @@
                     v-on:renewRoomList="getRoomList"
                     v-on:getGuestInfo="showGuestDialog"
                     v-on:getFeatures="showEditFeatureDialog"
-                    v-on:setMessage="showMessage">
+                    v-on:setMessage="showMessage"
+                    v-on:getFeedback="showFeedbackDialog">
                 </MeetingComponent>
         </form>
 
@@ -53,23 +54,20 @@
                 {{ "Es gibt keine Server für dieses Konferenzsystem, bitte wählen Sie ein anderes Konferenzsystem" | i18n }}
             </MessageBox>
 
-            <form class="default collapsable" @keyup="roomFormSubmit($event)" style="position: relative">
+            <form class="default" @keyup="roomFormSubmit($event)" style="position: relative">
                 <fieldset>
                     <legend>
-                        {{ 'Grundeinstellungen' | i18n }}
+                        {{ 'Raumname' | i18n }}
                     </legend>
                     <label>
-                        <span class="required">{{ "Name des Raums" | i18n }}</span>
                         <input type="text" v-model.trim="room['name']" id="name">
                     </label>
-                    <label>
-                        <input type="checkbox"
-                        id="join_as_moderator"
-                        true-value="1"
-                        false-value="0"
-                        v-model="room['join_as_moderator']">
-                        {{ "Administrationsrechte für alle Teilnehmenden" | i18n }}
-                    </label>
+                </fieldset>
+                <fieldset v-if="(Object.keys(config_list).length > 1) || (room['driver_name']
+                            && Object.keys(config_list[room['driver_name']]['servers']).length > 1)">
+                    <legend>
+                        {{ 'Konferenz Systemeinstellung' | i18n }}
+                    </legend>
                     <label v-if="Object.keys(config_list).length > 1">
                         <span class="required">{{ "Konferenzsystem" | i18n }}</span>
                         <select id="driver_name" v-model="room['driver_name']" @change.prevent="handleDriverDefaults()" :disabled="Object.keys(config_list).length == 1">
@@ -80,7 +78,6 @@
                             </option>
                         </select>
                     </label>
-
                     <label v-if="room['driver_name']
                             && Object.keys(config_list[room['driver_name']]['servers']).length > 1"
                     >
@@ -98,24 +95,71 @@
                         </select>
                     </label>
                 </fieldset>
+                <fieldset>
+                    <legend>{{ "Zusätzliche Funktionen" | i18n }}</legend>
+                    <!-- Moderationsrechte -->
+                    <label>
+                        <input type="checkbox"
+                        id="join_as_moderator"
+                        true-value="1"
+                        false-value="0"
+                        v-model="room['join_as_moderator']">
+                        {{ "Alle Teilnehmenden haben Moderationsrechte" | i18n }}
+                    </label>
+                    <div v-if="room['driver_name'] && Object.keys(config_list[room['driver_name']]).includes('features')
+                            && Object.keys(this.config_list[this.room['driver_name']]['features']).includes('create') && 
+                            Object.keys(config_list[room['driver_name']]['features']['create']).length">
+                        <div v-for="(feature, index) in config_list[room['driver_name']]['features']['create']" :key="index">
+                            <label v-if="(feature['value'] === true || feature['value'] === false)">
+                                <input  type="checkbox"
+                                    true-value="true"
+                                    false-value="false"
+                                    v-model="room['features'][feature['name']]">
+
+                                    {{ feature['display_name'] | i18n }}
+                                    <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
+                            </label>
+
+                            <label v-else-if="feature['value'] && typeof feature['value'] === 'object'">
+                                {{ feature['display_name'] | i18n }}
+                                <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
+
+                                <select :id="feature['name']" v-model.trim="room['features'][feature['name']]">
+                                    <option v-for="(fvalue, findex) in feature['value']" :key="findex"
+                                            :value="findex">
+                                            {{ fvalue | i18n }}
+                                    </option>
+                                </select>
+                            </label>
+                            <label v-else>
+                                {{ feature['display_name'] | i18n }}
+                                <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
+
+                                <input :type="(feature['name'] == 'duration' || feature['name'] == 'maxParticipants') ? 'number' : 'text'" v-model.trim="room['features'][feature['name']]" :placeholder="feature['value'] ? feature['value'] : ''" :id="feature['name']">
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
 
                 <fieldset v-if="room['driver_name'] && Object.keys(config_list[room['driver_name']]).includes('features')
-                            && Object.keys(config_list[room['driver_name']]['features']['create']).length"
-                    class=""
-                >
-                    <legend>{{ "Zusätzliche Funktionen" | i18n }}</legend>
-                    <div v-for="(feature, index) in config_list[room['driver_name']]['features']['create']" :key="index">
-                        <label v-if="feature['value'] === true || feature['value'] === false">
+                            && Object.keys(this.config_list[this.room['driver_name']]['features']).includes('record') 
+                            && Object.keys(config_list[room['driver_name']]['features']['record']).length
+                            && Object.keys(config_list[room['driver_name']]).includes('record')
+                            && config_list[room['driver_name']]['record'] == '1'">
+                    <legend>{{ "Aufzeichnung" | i18n }}</legend>
+                    <div v-for="(feature, index) in config_list[room['driver_name']]['features']['record']" :key="index">
+                        <label v-if="(feature['value'] === true || feature['value'] === false)">
                             <input  type="checkbox"
                                 true-value="true"
                                 false-value="false"
                                 v-model="room['features'][feature['name']]">
 
                                 {{ feature['display_name'] | i18n }}
-                                <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
+                                <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"
+                                    :badge="(Object.keys(config_list[room['driver_name']]).includes('opencast') && config_list[room['driver_name']]['opencast'] == '1' && feature['info'].toLowerCase().includes('opencast')) ? true : false">{{'beta'}}</StudipTooltipIcon>
                         </label>
 
-                        <label v-else-if="feature['value'] && typeof feature['value'] === 'object' && feature['name'] != 'roomSizeProfiles'">
+                        <label v-else-if="feature['value'] && typeof feature['value'] === 'object'">
                             {{ feature['display_name'] | i18n }}
                             <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
 
@@ -126,43 +170,6 @@
                                 </option>
                             </select>
                         </label>
-
-
-
-                        <div id="meeting-create-feature-size" class="col-6" v-else-if="feature['name'] == 'roomSizeProfiles'" style="margin-bottom: 15px;">
-                            <label>
-                                {{ feature['display_name'] | i18n }}
-                                <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
-
-                                <select :id="feature['name']" @change="setRoomSize(feature['value'])" v-model.trim="room['features'][feature['name']]">
-                                    <option v-for="(fvalue, findex) in feature['value']" :key="findex"
-                                            :value="fvalue['name']">
-                                            {{ fvalue['display_name'] | i18n }}
-                                    </option>
-                                </select>
-                            </label>
-                            <div style="margin-top: 15px;" v-for="(fvalue, findex) in feature['value']" :key="findex">
-                                <label v-for="(fsvalue, fsindex) in fvalue['value']" :key="fsindex" v-show="room['features'][feature['name']] == fvalue['name']">
-                                    <div v-if="typeof fsvalue['value'] != 'boolean'">
-                                        <span class="">{{ fsvalue['display_name'] | i18n }}</span>
-                                        <StudipTooltipIcon v-if="Object.keys(fsvalue).includes('info')" :text="fsvalue['info'] | i18n"></StudipTooltipIcon>
-                                        <input type="text" v-model.trim="room['features'][fsvalue['name']]"
-                                            :placeholder="fsvalue['value'] ? fsvalue['value'] : ''" :id="fsvalue['name'] + findex">
-                                    </div>
-
-                                    <div v-else>
-                                        <input  type="checkbox"
-                                            true-value="true"
-                                            false-value="false"
-                                            :id="fsvalue['name'] + findex"
-                                            v-model="room['features'][fsvalue['name']]">
-                                            {{ fsvalue['display_name'] | i18n }}
-                                            <StudipTooltipIcon v-if="Object.keys(fsvalue).includes('info')" :text="fsvalue['info'] | i18n"></StudipTooltipIcon>
-                                    </div>
-
-                                </label>
-                            </div>
-                        </div>
                         <label v-else>
                             {{ feature['display_name'] | i18n }}
                             <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
@@ -214,7 +221,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <div style="display: inline-block;width:15%; text-align: right;">
+                            <div v-if="course_config.display.deleteRecording" style="display: inline-block;width:15%; text-align: right;">
                                 <a style="cursor: pointer;" @click.prevent="deleteRecording(recording)">
                                     <StudipIcon icon="trash" role="attention"></StudipIcon>
                                 </a>
@@ -258,6 +265,82 @@
                 </fieldset>
             </form>
         </div>
+         <div id="feedback-modal" style="display: none;">
+            <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
+                {{ modal_message.text }}
+            </MessageBox>
+
+            <form class="default" @submit.prevent="feedbackFormSubmit">
+                <fieldset>
+                    <legend>
+                        {{ 'Beschreibung' | i18n }}
+                    </legend>
+                    <label class="col-6">
+                        <textarea ref="feedbackDescription" v-model="feedback['description']" cols="30" rows="5"></textarea>
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend>
+                        {{ 'Feedback Informationen' | i18n }}
+                    </legend>
+                    <label class="col-3">
+                        <span >{{ "Browser-Name" | i18n }}</span>
+                        <input type="text" v-model.trim="feedback['browser_name']">
+                    </label>
+                    <label class="col-3">
+                        <span >{{ "Browser-Version" | i18n }}</span>
+                        <input type="text" v-model.trim="feedback['browser_version']">
+                    </label>
+                    <label class="col-3">
+                        <span >{{ "Download-Geschw. (Mbps)" | i18n }}</span>
+                        <input type="number" min="1" v-model.trim="feedback['download_speed']">
+                    </label>
+                    <label class="col-3">
+                        <span >{{ "Upload-Geschw. (Mbps)" | i18n }}</span>
+                        <input type="number" min="1" v-model.trim="feedback['upload_speed']">
+                    </label>
+                    <label class="col-3">
+                        <span >{{ "Netzwerk-Typ" | i18n }}</span>
+                        <select id="network-type" v-model="feedback['network_type']">
+                            <option v-for="(nt_value, nt_name) in network_types" :key="nt_name"
+                                    :value="nt_name">
+                                    {{ nt_value }}
+                            </option>
+                        </select>
+                    </label>
+                    <label class="col-3">
+                        <span >{{ "Betriebssystem (OS)" | i18n }}</span>
+                        <input type="text" v-model.trim="feedback['os_name']">
+                    </label>
+                    <label class="col-3">
+                        <span >{{ "Prozessortyp" | i18n }}</span>
+                        <input type="text" v-model.trim="feedback['cpu_type']">
+                    </label>
+                    <label class="col-3">
+                        <span >{{ "Alter des Rechners" | i18n }}</span>
+                        <input type="text" v-model.number="feedback['cpu_old']">
+                    </label>
+                    <label class="col-3">
+                        <span >{{ "Anzahl der CPU-Kerne" | i18n }}</span>
+                        <input type="number" min="1" max="1000" v-model.number="feedback['cpu_num']">
+                    </label>
+                    <label class="col-3">
+                        <span >{{ "RAM (Hauptspeicher) GB" | i18n }}</span>
+                        <input type="number"  min="1" max="1000" v-model.number="feedback['ram']">
+                    </label>
+                </fieldset>
+                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                    <div class="ui-dialog-buttonset">
+                        <StudipButton icon="accept" type="button" v-on:click="sumbitFeedback($event)" class="ui-button ui-corner-all ui-widget">
+                            {{ "Einsenden" | i18n}}
+                        </StudipButton>
+                        <StudipButton icon="cancel" type="button" v-on:click="cancelFeedback($event)" class="ui-button ui-corner-all ui-widget">
+                            {{ "Abbrechen" | i18n}}
+                        </StudipButton>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </template>
 
@@ -283,12 +366,15 @@ import {
     RECORDING_SHOW,
     RECORDING_DELETE,
     ROOM_JOIN_GUEST,
-    ROOM_INFO
+    ROOM_INFO,
+    FEEDBACK_SUBMIT,
 } from "@/store/actions.type";
 
 import {
     ROOM_CLEAR,
-    RECORDING_LIST_SET
+    RECORDING_LIST_SET,
+    FEEDBACK_CLEAR,
+    FEEDBACK_INIT
 } from "@/store/mutations.type";
 
 export default {
@@ -306,7 +392,7 @@ export default {
     computed: {
         ...mapGetters([
             'config', 'room', 'rooms_list', 'rooms_info', 'rooms_checked',
-            'course_config', 'recording_list', 'recording'
+            'course_config', 'recording_list', 'recording', 'feedback', 'network_types'
         ]),
 
         config_list: function() {
@@ -344,6 +430,64 @@ export default {
     },
 
     methods: {
+        showFeedbackDialog(room) {
+            this.modal_message = {};
+            let options;
+
+            // handle mobile devices
+            if (window.innerWidth < 600) {
+                options = {
+                    width: '100%',
+                    modal: true,
+                    position: { my: "top", at: "top", of: window },
+                    title: 'Feedback'.toLocaleString()
+                }
+            } else {
+                options = {
+                    minWidth: 500,
+                    modal: true,
+                    position: { my: "top", at: "top", of: window },
+                    title: 'Feedback'.toLocaleString()
+                }
+            }
+            this.$store.commit(FEEDBACK_INIT, room.id);
+            $('#feedback-modal').dialog(options);
+        },
+        feedbackFormSubmit(event) {
+            if (event.key == 'Enter' && $(event.target).is('input')) {
+                 this.sumbitFeedback(event);
+            }
+        },
+        sumbitFeedback(event) {
+            if (event) {
+                event.preventDefault();
+            }
+            if ( this.feedback.description ) {
+                this.modal_message = {};
+                this.$store.dispatch(FEEDBACK_SUBMIT, this.feedback)
+                .then(({ data }) => {
+                    this.message = data.message;
+                    this.$store.commit(FEEDBACK_CLEAR);
+                    if (this.message.type == 'error') {
+                        this.$set(this.modal_message, "type" , "error");
+                        this.$set(this.modal_message, "text" , this.message.text);
+                    } else {
+                        $('button.ui-dialog-titlebar-close').trigger('click');
+                    }
+                }).catch (({error}) => {
+                    $('button.ui-dialog-titlebar-close').trigger('click');
+                });
+            } else {
+                this.$set(this.modal_message, "type" , "error");
+                this.$set(this.modal_message, "text" , `Beschreibung darf nicht leer sein`.toLocaleString());
+            }
+            
+        },
+        cancelFeedback() {
+            this.$store.commit(FEEDBACK_CLEAR);
+            $('#feedback-modal').dialog('close');
+        },
+       
         showAddMeeting() {
             this.modal_message = {};
             this.$store.commit(ROOM_CLEAR);
@@ -383,20 +527,12 @@ export default {
             //set default features
             this.$set(this.room, "features" , {});
             if (Object.keys(this.config_list[this.room['driver_name']]).includes('features')) {
-                //set size feature
-                if (Object.keys(this.config_list[this.room['driver_name']]['features']['create']).length) {
-                    var roomSizeProfiles = this.config_list[this.room['driver_name']]['features']['create'].find(f => f.name == 'roomSizeProfiles');
-                    if (roomSizeProfiles) {
-                        var defaultProfile = roomSizeProfiles.value.find(s => s.selected == true);
-                        !defaultProfile ? defaultProfile = roomSizeProfiles.value.find(s => s.name == 'small') : '';
-                        if (defaultProfile) {
-                            this.$set(this.room['features'], "roomSizeProfiles" , defaultProfile.name);
-                            defaultProfile.value.forEach(content => {
-                                this.$set(this.room['features'], content.name , content.value);
-                            });
-                        }
-                    }
-
+                //set default value of features
+                if (Object.keys(this.config_list[this.room['driver_name']]['features']).includes('create') &&
+                    Object.keys(this.config_list[this.room['driver_name']]['features']['create']).length) {
+                    this.config_list[this.room['driver_name']]['features']['create'].forEach(feature => { //apply all values for room feature!
+                        this.$set(this.room['features'], feature.name , feature.value);
+                    });
                     // set all selects to first entry
                     for (let index in this.config_list[this.room['driver_name']]['features']['create']) {
                         let feature = this.config_list[this.room['driver_name']]['features']['create'][index];
@@ -407,7 +543,21 @@ export default {
                         }
                     }
                 }
+                if (Object.keys(this.config_list[this.room['driver_name']]['features']).includes('record') &&
+                    Object.keys(this.config_list[this.room['driver_name']]['features']['record']).length) {
+                    this.config_list[this.room['driver_name']]['features']['record'].forEach(feature => { //apply all values for room feature!
+                        this.$set(this.room['features'], feature.name , feature.value);
+                    });
+                    // set all selects to first entry
+                    for (let index in this.config_list[this.room['driver_name']]['features']['record']) {
+                        let feature = this.config_list[this.room['driver_name']]['features']['record'][index];
+                        // console.log(typeof feature.value, feature);
 
+                        if (typeof feature.value === 'object' && !Array.isArray(feature.value)) {
+                            this.room['features'][feature['name']] = Object.keys(feature['value'])[0];
+                        }
+                    }
+                }
 
             }
             //mandatory server selection when there is only one server

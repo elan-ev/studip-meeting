@@ -92,7 +92,7 @@ class RoomEdit extends MeetingsController
                     }
                 }
                 $json['features']['record'] = $record;
-                !$opencast_series_id ?: $json['features']['meta_opencast-series-id'] = $opencast_series_id;
+                !$opencast_series_id ?: $json['features']['meta_opencast-dc-isPartOf'] = $opencast_series_id;
                 $meeting->features = json_encode($json['features']);
             }
             $meeting->chdate = $change_date->getTimestamp();
