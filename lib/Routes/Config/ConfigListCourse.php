@@ -67,9 +67,18 @@ class ConfigListCourse extends MeetingsController
             }
         }
 
+        $course_groups = [];
+        if ($cid) {
+            $groups = \Statusgruppen::findBySeminar_id($cid);
+            foreach ($groups as $one_group) {
+                $course_groups[$one_group->id] = _($one_group->name);
+            }
+        }
+
         $response_result = [];
         !$config            ?: $response_result['config'] = $config;
         !$course_config     ?: $response_result['course_config'] = $course_config;
+        !$course_groups            ?: $response_result['course_groups'] = $course_groups;
 
         if (!empty($response_result)) {
             return $this->createResponse($response_result, $response);

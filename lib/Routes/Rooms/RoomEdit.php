@@ -55,6 +55,10 @@ class RoomEdit extends MeetingsController
                 $meetingCourse->active = $json['active'];
                 $meetingCourse->store();
             }
+            if (isset($json['group_id'])) {
+                $meetingCourse->group_id = ((empty($json['group_id']) ? null : $json['group_id']));
+                $meetingCourse->store();
+            }
             $meeting = $meetingCourse->meeting;
             $meeting->name = $name;
             !isset($json['recordingUrl']) ?: $meeting->recording_url = utf8_decode($json['recording_url']);
