@@ -27,7 +27,8 @@ const initialState = {
         "driver_name": "",
         "server_index": "",
         "join_as_moderator": "0",
-        "features": {}
+        "features": {},
+        "group_id": ""
     }
 };
 
@@ -108,7 +109,8 @@ export const mutations = {
             "driver_name": "",
             "server_index": "",
             "join_as_moderator": "0",
-            "features": {}
+            "features": {},
+            "group_id": ""
         }
     },
 

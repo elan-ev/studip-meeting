@@ -69,6 +69,13 @@
                                         : 'Das Meeting ist für die Teilnehmer unsichtbar' | i18n  }}
                     </span>
                 </div>
+                <div v-if="course_config.display.editRoom && room.group_id != undefined">
+                    <StudipIcon class="info-icon" icon="group2"
+                            role="status-yellow" size="24"></StudipIcon>
+                    <span class="">
+                        {{ "Das Meeting gehört der Gruppe" | i18n }} {{ group_name }}
+                    </span>
+                </div>
                 <div v-if="num_drivers > 1">
                     <StudipIcon class="info-icon" icon="video2"
                         role="info" size="24"></StudipIcon>
@@ -116,7 +123,7 @@ export default {
     },
 
     computed: {
-        ...mapGetters(['course_config', 'config']),
+        ...mapGetters(['course_config', 'config', 'course_groups']),
 
         join_url() {
             return API_URL + '/rooms/join/' + this.room.course_id + '/' + this.room.id;
@@ -132,6 +139,14 @@ export default {
             }
 
             return num_drivers;
+        },
+
+        group_name() {
+            let group_name = '';
+            if (this.room.group_id != undefined) {
+                group_name = this.course_groups[this.room.group_id];
+            }
+            return group_name;
         }
     },
 

@@ -179,6 +179,21 @@
                     </div>
                 </fieldset>
 
+
+                <fieldset v-if="(Object.keys(course_groups).length > 1)">
+                    <legend>{{ "Gruppenraum" | i18n }}</legend>
+                    <label>
+                        {{ 'Wählen sie eine zugehörige Gruppe aus' | i18n }}
+                        <select id="gruppen" v-model.trim="room.group_id">
+                            <option value=""> {{ "Keine Gruppe" | i18n }} </option>
+                            <option v-for="(gname, gid) in course_groups" :key="gid"
+                                    :value="gid">
+                                    {{ gname | i18n }}
+                            </option>
+                        </select>
+                    </label>
+                </fieldset>
+
                 <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
                     <div class="ui-dialog-buttonset">
                         <StudipButton v-if="room['id']" icon="accept" type="button" v-on:click="editRoom($event)" class="ui-button ui-corner-all ui-widget">
@@ -392,7 +407,7 @@ export default {
     computed: {
         ...mapGetters([
             'config', 'room', 'rooms_list', 'rooms_info', 'rooms_checked',
-            'course_config', 'recording_list', 'recording', 'feedback', 'network_types'
+            'course_config', 'recording_list', 'recording', 'feedback', 'network_types', 'course_groups'
         ]),
 
         config_list: function() {
@@ -759,6 +774,7 @@ export default {
             this.$set(this.room, 'name', room.name);
             this.$set(this.room, 'server_index', room.server_index);
             this.$set(this.room, 'id', room.id);
+            this.$set(this.room, "group_id" , ((Object.keys(room).includes('group_id') && room.group_id != undefined) ? room.group_id : ""));
             this.modal_message = {};
 
 
