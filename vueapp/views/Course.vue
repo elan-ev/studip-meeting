@@ -144,8 +144,7 @@
                 <fieldset v-if="room['driver_name'] && Object.keys(config_list[room['driver_name']]).includes('features')
                             && Object.keys(this.config_list[this.room['driver_name']]['features']).includes('record') 
                             && Object.keys(config_list[room['driver_name']]['features']['record']).length
-                            && Object.keys(config_list[room['driver_name']]).includes('record')
-                            && config_list[room['driver_name']]['record'] == '1'">
+                            && Object.keys(config_list[room['driver_name']]).includes('record')">
                     <legend>{{ "Aufzeichnung" | i18n }}</legend>
                     <div v-for="(feature, index) in config_list[room['driver_name']]['features']['record']" :key="index">
                         <label v-if="(feature['value'] === true || feature['value'] === false)">
@@ -210,41 +209,56 @@
             </form>
         </div>
         <div id="recording-modal" style="display: none;">
-            <table v-if="Object.keys(recording_list).length" class="default collapsable">
-                <thead>
-                    <tr>
-                        <th>{{ "Datum" | i18n }}</th>
-                        <th>{{ "Aktionen" | i18n }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(recording, index) in recording_list" :key="index">
-                        <td style="width: 60%">{{ recording['startTime'] }}</td>
-                        <td style="width: 40%">
-                            <div style="display: inline-block;width:80%;">
-                                <div v-if="Array.isArray(recording['playback']['format'])" style="display: flex; flex-direction: column; ">
-                                    <a v-for="(format, index) in recording['playback']['format']" :key="index"
-                                    class="meeting-recording-url" target="_blank"
-                                    :href="format['url']">
-                                        {{ `Aufzeichnung ansehen (${format['type']})`  | i18n}}
-                                    </a>
-                                </div>
-                                <div v-else>
-                                    <a class="meeting-recording-url" target="_blank"
-                                    :href="recording['playback']['format']['url']">
-                                        {{ `Aufzeichnung ansehen`  | i18n}}
-                                    </a>
-                                </div>
-                            </div>
-                            <div v-if="course_config.display.deleteRecording" style="display: inline-block;width:15%; text-align: right;">
-                                <a style="cursor: pointer;" @click.prevent="deleteRecording(recording)">
-                                    <StudipIcon icon="trash" role="attention"></StudipIcon>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <form class="default" method="post" style="position: relative">
+                <fieldset v-if="Object.keys(recording_list).includes('opencast')">
+                    <legend>{{ "Opencast" | i18n }}</legend>
+                    <label>
+                        <a class="meeting-recording-url" target="_blank"
+                        :href="recording_list['opencast']">
+                            {{ 'Die vorhandenen Aufzeichnungen auf Opencast' | i18n}}
+                        </a>
+                    </label>
+                </fieldset>
+                <fieldset v-if="Object.keys(recording_list).includes('default') && Object.keys(recording_list['default']).length">
+                    <label>
+                        <table  class="default collapsable">
+                            <thead>
+                                <tr>
+                                    <th>{{ "Datum" | i18n }}</th>
+                                    <th>{{ "Aktionen" | i18n }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(recording, index) in recording_list.default" :key="index">
+                                    <td style="width: 60%">{{ recording['startTime'] }}</td>
+                                    <td style="width: 40%">
+                                        <div style="display: inline-block;width:80%;">
+                                            <div v-if="Array.isArray(recording['playback']['format'])" style="display: flex; flex-direction: column; ">
+                                                <a v-for="(format, index) in recording['playback']['format']" :key="index"
+                                                class="meeting-recording-url" target="_blank"
+                                                :href="format['url']">
+                                                    {{ `Aufzeichnung ansehen` | i18n}} {{ `(${format['type']})` }}
+                                                </a>
+                                            </div>
+                                            <div v-else>
+                                                <a class="meeting-recording-url" target="_blank"
+                                                :href="recording['playback']['format']['url']">
+                                                    {{ `Aufzeichnung ansehen`  | i18n}}
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div v-if="course_config.display.deleteRecording" style="display: inline-block;width:15%; text-align: right;">
+                                            <a style="cursor: pointer;" @click.prevent="deleteRecording(recording)">
+                                                <StudipIcon icon="trash" role="attention"></StudipIcon>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </label>
+                </fieldset>
+            </form>
         </div>
         <div id="guest-invitation-modal" style="display: none;">
             <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
@@ -638,26 +652,22 @@ export default {
         },
 
         showRecording(room) {
-            if (typeof room.recordings_count == 'string') { //opencast url
-                window.open(room.recordings_count, '_blank');
-            } else { //default
-                this.$store.dispatch(RECORDING_LIST, room.id).then(({ data }) => {
-                    if (data.length) {
-                        this.$store.commit(RECORDING_LIST_SET, data);
-                        $('#recording-modal')
-                        .dialog({
-                            width: '70%',
-                            modal: true,
-                            title: `Aufzeichnungen für Raum "${room.name}"`.toLocaleString()
-                        });
-                    } else {
-                        this.message = {
-                            type: 'info',
-                            text: `Keine Aufzeichnungen für Raum "${room.name}"`.toLocaleString()
-                        };
-                    }
-                });
-            }
+            this.$store.dispatch(RECORDING_LIST, room.id).then(({ data }) => {
+                if (data.default.length || data.opencast) {
+                    this.$store.commit(RECORDING_LIST_SET, data);
+                    $('#recording-modal')
+                    .dialog({
+                        width: '70%',
+                        modal: true,
+                        title: `Aufzeichnungen für Raum "${room.name}"`.toLocaleString()
+                    });
+                } else {
+                    this.message = {
+                        type: 'info',
+                        text: `Keine Aufzeichnungen für Raum "${room.name}"`.toLocaleString()
+                    };
+                }
+            });
         },
 
         deleteRecording(recording) {
@@ -768,6 +778,11 @@ export default {
 
         showEditFeatureDialog(room) {
             this.$store.commit(ROOM_CLEAR);
+            if (Object.keys(this.config_list[room.driver]['features']).includes('record') && !Object.keys(room.features).includes('giveAccessToRecordings')) {
+                var default_feature_obj = this.config_list[room.driver]['features']['record'].find(m => m.name == 'giveAccessToRecordings');
+                console.log(default_feature_obj);
+                this.$set(room.features, 'giveAccessToRecordings', ((default_feature_obj) ? default_feature_obj.value : true));
+            }
             this.$set(this.room, 'driver_name', room.driver);
             this.$set(this.room, 'features', room.features);
             this.$set(this.room, 'join_as_moderator', room.join_as_moderator);

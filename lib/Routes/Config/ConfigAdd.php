@@ -11,6 +11,7 @@ use ElanEv\Model\Driver;
 use Meetings\Errors\Error;
 use Exception;
 use Meetings\Models\I18N as _;
+use ElanEv\Model\MeetingCourse;
 
 class ConfigAdd extends MeetingsController
 {
@@ -24,6 +25,18 @@ class ConfigAdd extends MeetingsController
         try {
             $res_message_text = [];
             foreach ($json['config'] as $driver_name => $config_options ) {
+                //Make every record features to false when the record config is disabled
+                if (isset($config_options['record']) && !filter_var($config_options['record'], FILTER_VALIDATE_BOOLEAN)) {
+                    $courseMeetings = MeetingCourse::findAll();
+                    foreach ($courseMeetings as $courseMeeting) {
+                        $features = json_decode($courseMeeting->meeting->features, true);
+                        if (isset($features['record']) && filter_var($features['record'], FILTER_VALIDATE_BOOLEAN)) {
+                            $features['record'] = false;
+                            $courseMeeting->meeting->features = json_encode($features);
+                            $courseMeeting->meeting->store();
+                        }
+                    }
+                }
                 $valid_servers = Driver::setConfigByDriver($driver_name, $config_options);
                 if (!$valid_servers) {
                     $res_message_text[] = sprintf(_('(%s) hat ungültige Server'), $driver_name);

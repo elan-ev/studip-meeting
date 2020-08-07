@@ -57,6 +57,10 @@ class BigBlueButton implements DriverInterface, RecordingInterface
                 unset($features['roomSizeProfiles']);
             }
 
+            if (isset($features['giveAccessToRecordings'])) { // keen unwanted params
+                unset($features['giveAccessToRecordings']);
+            }
+
             if ($features['guestPolicy'] == 'ALWAYS_DENY') {
                 unset($features['guestPolicy']);
             }
@@ -285,10 +289,14 @@ class BigBlueButton implements DriverInterface, RecordingInterface
     public function getRecordFeature()
     {
         $res = [];
-        if (Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'record')) {
+        if (Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'record')) { // dependet on config record
             $res[] = new ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Sitzungen automatisch aufzeichnen'),
                 false, _('Der Server wird angewiesen, die Medien und Ereignisse in der Sitzung für die spätere Wiedergabe aufzuzeichnen.'));
         }
+
+        //independent from config record
+        $res[] = new ConfigOption('giveAccessToRecordings', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnungen für Teilnehmende sichtbar schalten'),
+                true, _('Legen Sie fest, ob neben Lehrenden auch Teilnehmende Zugriff auf die Aufzeichnungen haben sollen.'));
         return $res;
     }
 

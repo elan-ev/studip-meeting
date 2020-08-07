@@ -21,11 +21,10 @@
                                     >
                             <StudipIcon icon="span-full" role="attention" size="11"></StudipIcon> {{'Rec'}}
                         </StudipTooltipIcon>
-                        <a v-if="room.recordings_count" style="cursor: pointer;"
-                                :title=" typeof room.recordings_count == 'string' ? 'Die vorhandenen Aufzeichnungen auf Opencast' : 'Die vorhandenen Aufzeichnungen' | i18n "
-                                :data-badge="typeof room.recordings_count == 'number' ? room.recordings_count : 0"
+                        <a v-if="room.has_recordings" style="cursor: pointer;"
+                                :title="'Die vorhandenen Aufzeichnungen' | i18n "
                                 @click.prevent="getRecording()">
-                            <StudipIcon :icon="typeof room.recordings_count == 'string' ? 'video2+new' : 'video2'" role="clickable" size="20"></StudipIcon>
+                            <StudipIcon icon="video2" role="clickable" size="20"></StudipIcon>
                         </a>
                         <a v-if="course_config.display.editRoom" style="cursor: pointer;"
                             :title=" 'Raumeinstellungen' | i18n "

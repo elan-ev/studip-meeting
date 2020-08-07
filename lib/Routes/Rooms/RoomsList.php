@@ -56,22 +56,16 @@ class RoomsList extends MeetingsController
                 $driver = $driver_factory->getDriver($meetingCourse->meeting->driver, $meetingCourse->meeting->server_index);
                 $meeting = $meetingCourse->meeting->toArray();
                 $meeting = array_merge($meetingCourse->toArray(), $meeting);
-                $meeting['recordings_count'] = 0;
+                $meeting['has_recordings'] = false;
                 // Recording Capability
                 if (is_subclass_of($driver, 'ElanEv\Driver\RecordingInterface')) {
-                    if (Driver::getConfigValueByDriver($meeting['driver'], 'record')) { //config double check
-                        if ($this->getFeatures($meeting['features'], 'record')) { //room recorded
-                            if (Driver::getConfigValueByDriver($meeting['driver'] , 'opencast')) { // config check for opencast
-                                if ($this->getFeatures($meeting['features'], 'meta_opencast-dc-isPartOf') && 
-                                    $this->getFeatures($meeting['features'], 'meta_opencast-dc-isPartOf') == MeetingPlugin::checkOpenCast($meetingCourse->course_id))
-                                {
-                                    $meeting['recordings_count'] = \PluginEngine::getURL('OpenCast', ['cid' => $cid], 'course', true);
-                                } else {
-                                    $meeting['recordings_count'] = false;
-                                }
-                            } else {
-                                $meeting['recordings_count'] = count($driver->getRecordings($meetingCourse->meeting->getMeetingParameters()));
-                            }
+                    if ($perm->have_studip_perm('tutor', $cid) 
+                        || (!$perm->have_studip_perm('tutor', $cid) && filter_var($this->getFeatures($meeting['features'], 'giveAccessToRecordings'), FILTER_VALIDATE_BOOLEAN))) {
+                        if ((count($driver->getRecordings($meetingCourse->meeting->getMeetingParameters())) > 0) 
+                            || ($this->getFeatures($meeting['features'], 'meta_opencast-dc-isPartOf') && 
+                            $this->getFeatures($meeting['features'], 'meta_opencast-dc-isPartOf') == MeetingPlugin::checkOpenCast($meetingCourse->course_id)))
+                        {
+                            $meeting['has_recordings'] = true;
                         }
                     }
                 }
