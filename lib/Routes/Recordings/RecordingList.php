@@ -15,6 +15,7 @@ use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
 use ElanEv\Driver\DriverFactory;
 use ElanEv\Model\Driver;
+use MeetingPlugin;
 
 class RecordingList extends MeetingsController
 {
@@ -49,9 +50,14 @@ class RecordingList extends MeetingsController
                             $recording->startTime =  date('d.m.Y, H:i:s', (int)$recording->startTime / 1000);
                             $recording->endTime =  date('d.m.Y, H:i:s', (int)$recording->endTime / 1000);
                             $recording->room_id = $room_id;
-                            $recordings_list[] = $recording;
+                            $recordings_list['default'][] = $recording;
                         }
                     }
+                }
+                if ($this->getFeatures($meetingCourse->meeting['features'], 'meta_opencast-dc-isPartOf') && 
+                    $this->getFeatures($meetingCourse->meeting['features'], 'meta_opencast-dc-isPartOf') == MeetingPlugin::checkOpenCast($meetingCourse->course_id))
+                {
+                    $recordings_list['opencast'] = \PluginEngine::getURL('OpenCast', ['cid' => $cid], 'course', true);
                 }
             } catch (Exception $e) {
                 throw new Error('Fehler in der Aufzeichnungliste (' . $e->getMessage() . ')', 404);
@@ -60,5 +66,16 @@ class RecordingList extends MeetingsController
 
         return $this->createResponse($recordings_list, $response);
 
+    }
+
+    private function getFeatures($str_features, $key = null) 
+    {
+        $features = json_decode($str_features, true);
+        if ($key) {
+            $rep = $features[$key];
+            return isset($features[$key]) ? $features[$key] : null;
+        } else {
+            return $features;
+        }
     }
 }
