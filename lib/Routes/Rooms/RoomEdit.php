@@ -69,6 +69,16 @@ class RoomEdit extends MeetingsController
                     $json['features']['duration'] = "240";
                 }
 
+                $servers = Driver::getConfigValueByDriver($meeting->driver, "servers");
+                $maxParticipants = $servers[$meeting->server_index]["maxParticipants"];
+                if (!is_numeric($json['features']['maxParticipants']) || $json['features']['maxParticipants'] > $maxParticipants) {
+                    $message = [
+                                    'text' => sprintf(_('Teilnehmerzahl darf %d nicht überschreiten'), $maxParticipants),
+                                    'type' => 'error'
+                                ];
+                    return $this->createResponse(['message'=> $message], $response);
+                }
+
                 //Handle recording stuff
                 $record = 'false';
                 $opencast_series_id = '';

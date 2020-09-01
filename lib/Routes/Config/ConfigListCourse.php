@@ -61,7 +61,7 @@ class ConfigListCourse extends MeetingsController
                     && $config[$service]['servers']
                 ) {
                     foreach($config[$service]['servers'] as $servers => $servers_val){
-                        $config[$service]['servers'][$servers] = true;
+                        $config[$service]['servers'][$servers] = $servers_val;
                     }
                 }
             }

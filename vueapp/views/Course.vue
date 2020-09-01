@@ -85,12 +85,14 @@
                             {{ "Verfügbare Server" | i18n }}
                         </span>
 
-                        <select id="server_index" v-model="room['server_index']"
+                        <select id="server_index" v-model="room['server_index']" @change="onServerChange($event)"
                             :disabled="Object.keys(config_list[room['driver_name']]['servers']).length == 1">
                             <option value="" disabled> {{ "Bitte wählen Sie einen Server aus" | i18n }} </option>
                             <option v-for="(server_config, server_index) in config_list[room['driver_name']]['servers']" :key="server_index"
                                     :value="'' + server_index">
                                     Server {{ (server_index + 1) }}
+                                    ({{ (server_config['maxParticipants'] > 0)?'max '+server_config['maxParticipants']:'unbegrenzt' }} Teilnehmer)
+
                             </option>
                         </select>
                     </label>
@@ -800,6 +802,13 @@ export default {
                 }
             }).catch (({error}) => {
                 $('#conference-meeting-create').dialog('close');
+            });
+        },
+
+        onServerChange(event) {
+            let maxP = this.config_list[this.room['driver_name']]['servers'][event.target.value]['maxParticipants'];
+            $('#maxParticipants').attr({
+                "max" : maxP
             });
         },
 
