@@ -653,7 +653,7 @@ export default {
 
         showRecording(room) {
             this.$store.dispatch(RECORDING_LIST, room.id).then(({ data }) => {
-                if (data.default.length || data.opencast) {
+                if ((data.default && data.default.length) || data.opencast) {
                     this.$store.commit(RECORDING_LIST_SET, data);
                     $('#recording-modal')
                     .dialog({

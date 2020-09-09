@@ -26,7 +26,7 @@ const initialState = {
         'upload_speed': '',
     },
     network_types: {
-        'bluetooth': 'Bluetooh',
+        'bluetooth': 'Bluetooth',
         'cellular': 'Cellular',
         'ethernet': 'Ethernet',
         'wifi': 'Wifi',
