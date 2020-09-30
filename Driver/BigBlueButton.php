@@ -72,8 +72,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
             $params = array_merge($params, $features);
         }
 
-        $options = array();
-        $options = $this->PrepareSlides($parameters->getMeetingId());
+        $options = $this->prepareSlides($parameters->getMeetingId());
         $response = $this->performRequest('create', $params, $options);
         $xml = new \SimpleXMLElement($response);
 
@@ -394,30 +393,43 @@ class BigBlueButton implements DriverInterface, RecordingInterface
     * @param (type) (name) (desc)
     * @return (type) (name) (desc)
     */
-    private function PrepareSlides ($meetingId) {
-        $options = array();
+    private function PrepareSlides ($meetingId)
+    {
+        $options = [];
+
         $meeting = new Meeting($meetingId);
+
         if ($meeting->isNew()) {
-            return '';
+            return [];
         }
-        $course = $meeting->courses[0];
-        $course_dates = \CourseDate::findBySeminar_id($course->id);
+
+        $course          = $meeting->courses[0];
+        $course_dates    = \CourseDate::findBySeminar_id($course->id);
         $today_timestamp = strtotime(date('d.m.Y'));
-        $today_date = new \DateTime("@$today_timestamp"); 
-        $session_file = array();
+        $today_date      = new \DateTime("@$today_timestamp");
+        $session_file    = [];
+
         foreach ($course_dates as $course_date) {
+
             $session_timestamp = strtotime(date('d.m.Y', $course_date->date));
-            $session_date = new \DateTime("@$session_timestamp"); 
+            $session_date      = new \DateTime("@$session_timestamp");
+
             if ($today_date == $session_date) {
                 $session_files = $course_date->getAccessibleFolderFiles($GLOBALS['user']->id)['files'];
+
                 if (count($session_files) > 0) {
                     foreach ($session_files as $session_file_id => $session_file) {
-                        $path_file = $session_file->file->storage == 'disk' ? $session_file->file->path : $session_file->file->url;
+                        $path_file = $session_file->file->storage == 'disk'
+                            ? $session_file->file->path
+                            : $session_file->file->url;
+
                         $filesize = @filesize($path_file);
                         $filename = $session_file->name;
                         $lowerfilename = strtolower($filename);
+
                         if (strpos($lowerfilename, 'meeting_') !== FALSE && $filesize) {
                             $slide_url = '';
+
                             if ($session_file->file->url) { // url
                                 $slide_url = $session_file->file->url;
                             } else if ($session_file->file->storage == 'disk') {
