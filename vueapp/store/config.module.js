@@ -42,6 +42,8 @@ const initialState = {
         "title": "",
         "introduction": "",
         "display": {}
+    },
+    course_groups: {
     }
 };
 
@@ -54,6 +56,9 @@ const getters = {
     },
     course_config(state) {
         return state.course_config;
+    },
+    course_groups(state) {
+        return state.course_groups;
     }
 };
 
@@ -120,6 +125,9 @@ export const mutations = {
         }
         if (data.course_config) {
             state.course_config = data.course_config;
+        }
+        if (data.course_groups) {
+            state.course_groups = data.course_groups;
         }
     }
 };

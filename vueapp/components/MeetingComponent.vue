@@ -21,11 +21,10 @@
                                     >
                             <StudipIcon icon="span-full" role="attention" size="11"></StudipIcon> {{'Rec'}}
                         </StudipTooltipIcon>
-                        <a v-if="room.recordings_count" style="cursor: pointer;"
-                                :title=" typeof room.recordings_count == 'string' ? 'Die vorhandenen Aufzeichnungen auf Opencast' : 'Die vorhandenen Aufzeichnungen' | i18n "
-                                :data-badge="typeof room.recordings_count == 'number' ? room.recordings_count : 0"
+                        <a v-if="room.has_recordings" style="cursor: pointer;"
+                                :title="'Die vorhandenen Aufzeichnungen' | i18n "
                                 @click.prevent="getRecording()">
-                            <StudipIcon :icon="typeof room.recordings_count == 'string' ? 'video2+new' : 'video2'" role="clickable" size="20"></StudipIcon>
+                            <StudipIcon icon="video2" role="clickable" size="20"></StudipIcon>
                         </a>
                         <a v-if="course_config.display.editRoom" style="cursor: pointer;"
                             :title=" 'Raumeinstellungen' | i18n "
@@ -67,6 +66,13 @@
                     </a>
                     <span :id="'active-info-text-' + room.id" class="">{{ room.active == 1 ? 'Das Meeting ist für die Teilnehmer sichtbar'
                                         : 'Das Meeting ist für die Teilnehmer unsichtbar' | i18n  }}
+                    </span>
+                </div>
+                <div v-if="course_config.display.editRoom && room.group_id != undefined">
+                    <StudipIcon class="info-icon" icon="group2"
+                            role="status-yellow" size="24"></StudipIcon>
+                    <span class="">
+                        {{ "Das Meeting gehört der Gruppe" | i18n }} {{ group_name }}
                     </span>
                 </div>
                 <div v-if="num_drivers > 1">
@@ -116,7 +122,7 @@ export default {
     },
 
     computed: {
-        ...mapGetters(['course_config', 'config']),
+        ...mapGetters(['course_config', 'config', 'course_groups']),
 
         join_url() {
             return API_URL + '/rooms/join/' + this.room.course_id + '/' + this.room.id;
@@ -132,6 +138,14 @@ export default {
             }
 
             return num_drivers;
+        },
+
+        group_name() {
+            let group_name = '';
+            if (this.room.group_id != undefined) {
+                group_name = this.course_groups[this.room.group_id];
+            }
+            return group_name;
         }
     },
 

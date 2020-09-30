@@ -121,6 +121,13 @@ class RoomAdd extends MeetingsController
                 $meeting->store();
                 $meetingParameters = $meeting->getMeetingParameters();
 
+                //adding group into MeetingCourse if exists
+                if (isset($json['group_id']) && !empty($json['group_id'])) {
+                    $meetingCourse = new MeetingCourse([$meeting->id, $json['cid']]);
+                    $meetingCourse->group_id = $json['group_id'];
+                    $meetingCourse->store();
+                }
+
                 $driver = $driver_factory->getDriver($json['driver_name'], $json['server_index']);
 
                 try {
