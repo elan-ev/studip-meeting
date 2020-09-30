@@ -260,17 +260,17 @@ class BigBlueButton implements DriverInterface, RecordingInterface
             new ConfigOption('guestPolicy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugang via Link'),
                  ['ALWAYS_DENY' => _('Nicht gestattet'), 'ASK_MODERATOR' => _('Moderator vor dem Zutritt fragen'), 'ALWAYS_ACCEPT' => _('Gestattet'), ],
                  _('Legen Sie fest, ob Benutzer mit Einladungslink als Gäste an der Besprechung teilnehmen dürfen und ob Gäste dem Meeting direkt beitreten können oder ihre Teilnahme von einem Moderator bestätigt werden muss.'));
-        
+
         $res['duration'] = new ConfigOption('duration', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Minuten Konferenzdauer'),
                     240,
                     _('Die maximale Länge (in Minuten) für das Meeting. Nach Ablauf der eingestellen Dauer wird das Meeting automatisch beendet, d.h. der Raum wird geschlossen. Falls bereits vor Ablauf der Zeit alle Teilnehmenden das Meeting verlassen haben, oder ein Moderator das Meeting aktiv beendet wird der Raum ebenfalls geschlossen.'));
-        
+
         $res['maxParticipants'] = new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 50, self::getFeatureInfo('maxParticipants'));
 
-        
+
         $res['privateChat'] = new ConfigOption('lockSettingsDisablePrivateChat', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Private Chats deaktivieren'),
                     false, null);
-        
+
 
         $res['lockSettingsDisableNote'] = new ConfigOption('lockSettingsDisableNote', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Gemeinsame Notizen deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableNote'));
 
@@ -292,8 +292,8 @@ class BigBlueButton implements DriverInterface, RecordingInterface
     {
         $res = [];
         if (Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'record')) { // dependet on config record
-            $res[] = new ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Sitzungen automatisch aufzeichnen'),
-                false, _('Der Server wird angewiesen, die Medien und Ereignisse in der Sitzung für die spätere Wiedergabe aufzuzeichnen.'));
+            $res[] = new ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Sitzungen können aufgezeichnet werden.'),
+                false, _('Erlaubt es Moderatoren, die Medien und Ereignisse in der Sitzung für die spätere Wiedergabe aufzuzeichnen. Die Aufzeichnung muss innerhalb der Sitzung von einem Moderator gestartet werden.'));
         }
 
         //independent from config record
@@ -355,7 +355,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
             if (!$xml instanceof \SimpleXMLElement) {
                 return false;
             }
-    
+
             return isset($xml->returncode) && strtolower((string)$xml->returncode) === 'success';
         } catch (Throwable $th) {
            return false;
@@ -377,11 +377,11 @@ class BigBlueButton implements DriverInterface, RecordingInterface
         $course = $meeting->courses[0];
         $course_dates = \CourseDate::findBySeminar_id($course->id);
         $today_timestamp = strtotime(date('d.m.Y'));
-        $today_date = new \DateTime("@$today_timestamp"); 
+        $today_date = new \DateTime("@$today_timestamp");
         $session_file = array();
         foreach ($course_dates as $course_date) {
             $session_timestamp = strtotime(date('d.m.Y', $course_date->date));
-            $session_date = new \DateTime("@$session_timestamp"); 
+            $session_date = new \DateTime("@$session_timestamp");
             if ($today_date == $session_date) {
                 $session_files = $course_date->getAccessibleFolderFiles($GLOBALS['user']->id)['files'];
                 if (count($session_files) > 0) {

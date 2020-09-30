@@ -8,108 +8,150 @@
             {{ message.text }}
         </MessageBox>
 
-        <MessageBox v-if="rooms_checked && !rooms_list.length && config && course_config.display.addRoom" :type="'info'">
-            {{ "Bisher existieren keine Meeting-Räume für diese Veranstaltung. Möchten Sie einen anlegen?" | i18n }}
-            <br>
-            <StudipButton type="button"  @click="showAddMeeting()">
-                {{ "Neuer Raum" | i18n}}
-            </StudipButton>
+        <MessageBox v-if="Object.keys(config_list).length === 0" type="error">
+            {{ "Es ist bisher kein Meetingsserver konfiguriert. Bitte wenden Sie sich an eine/n Systemadministrator/in!" | i18n }}
         </MessageBox>
 
-        <MessageBox v-if="!rooms_checked" type="warning">
-            {{ "Raumliste wird geladen..." | i18n }}
-        </MessageBox>
-
-        <p>
-            <StudipButton type="button" icon="add" v-if="rooms_list.length && config && course_config.display.addRoom"
-                @click="showAddMeeting()">
-                {{ 'Raum hinzufügen' | i18n }}
-            </StudipButton>
-
-            <label v-if="rooms_list.length">
-                <input type="text" :placeholder="`Räume filtern nach Name` | i18n" v-model="searchtext">
-            </label>
-        </p>
-
-        <form class="default conference-meeting" v-if="rooms_list_filtered.length">
-                <MeetingComponent v-for="(room, index) in rooms_list_filtered"
-                    :key="index"
-                    :room="room"
-                    :info="rooms_info !== undefined && rooms_info[room.id] ? rooms_info[room.id] : {}"
-                    v-on:getRecording="showRecording"
-                    v-on:renewRoomList="getRoomList"
-                    v-on:getGuestInfo="showGuestDialog"
-                    v-on:getFeatures="showEditFeatureDialog"
-                    v-on:setMessage="showMessage"
-                    v-on:getFeedback="showFeedbackDialog">
-                </MeetingComponent>
-        </form>
-
-        <div v-if="config_list" id="conference-meeting-create" style="display: none" >
-            <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
-                {{ modal_message.text }}
-            </MessageBox>
-            <MessageBox v-else-if="room['driver_name'] && !Object.keys(config_list[room['driver_name']]['servers']).length"
-                 type="error">
-                {{ "Es gibt keine Server für dieses Konferenzsystem, bitte wählen Sie ein anderes Konferenzsystem" | i18n }}
+        <span v-else>
+            <MessageBox v-if="rooms_checked && !rooms_list.length && config && course_config.display.addRoom" :type="'info'">
+                {{ "Bisher existieren keine Meeting-Räume für diese Veranstaltung. Möchten Sie einen anlegen?" | i18n }}
+                <br>
+                <StudipButton type="button"  @click="showAddMeeting()">
+                    {{ "Neuer Raum" | i18n}}
+                </StudipButton>
             </MessageBox>
 
-            <form class="default" @keyup="roomFormSubmit($event)" style="position: relative">
-                <fieldset>
-                    <legend>
-                        {{ 'Raumname' | i18n }}
-                    </legend>
-                    <label>
-                        <input type="text" v-model.trim="room['name']" id="name">
-                    </label>
-                </fieldset>
-                <fieldset v-if="(Object.keys(config_list).length > 1) || (room['driver_name']
-                            && Object.keys(config_list[room['driver_name']]['servers']).length > 1)">
-                    <legend>
-                        {{ 'Konferenz Systemeinstellung' | i18n }}
-                    </legend>
-                    <label v-if="Object.keys(config_list).length > 1">
-                        <span class="required">{{ "Konferenzsystem" | i18n }}</span>
-                        <select id="driver_name" v-model="room['driver_name']" @change.prevent="handleDriverDefaults()" :disabled="Object.keys(config_list).length == 1">
-                            <option value="" disabled> {{ "Bitte wählen Sie ein Konferenzsystem aus" | i18n }} </option>
-                            <option v-for="(driver_config, driver_name) in config_list" :key="driver_name"
-                                    :value="driver_name">
-                                    {{ driver_config['display_name'] }}
-                            </option>
-                        </select>
-                    </label>
-                    <label v-if="room['driver_name']
-                            && Object.keys(config_list[room['driver_name']]['servers']).length > 1"
-                    >
-                        <span class="required">
-                            {{ "Verfügbare Server" | i18n }}
-                        </span>
+            <MessageBox v-if="!rooms_checked" type="warning">
+                {{ "Raumliste wird geladen..." | i18n }}
+            </MessageBox>
 
-                        <select id="server_index" v-model="room['server_index']"
-                            :disabled="Object.keys(config_list[room['driver_name']]['servers']).length == 1">
-                            <option value="" disabled> {{ "Bitte wählen Sie einen Server aus" | i18n }} </option>
-                            <option v-for="(server_config, server_index) in config_list[room['driver_name']]['servers']" :key="server_index"
-                                    :value="'' + server_index">
-                                    Server {{ (server_index + 1) }}
-                            </option>
-                        </select>
-                    </label>
-                </fieldset>
-                <fieldset>
-                    <legend>{{ "Zusätzliche Funktionen" | i18n }}</legend>
-                    <!-- Moderationsrechte -->
-                    <label>
-                        <input type="checkbox"
-                        id="join_as_moderator"
-                        true-value="1"
-                        false-value="0"
-                        v-model="room['join_as_moderator']">
-                        {{ "Alle Teilnehmenden haben Moderationsrechte" | i18n }}
-                    </label>
-                    <div v-if="room['driver_name'] && Object.keys(config_list[room['driver_name']]).includes('features')
-                            && Object.keys(this.config_list[this.room['driver_name']]['features']).includes('create') && 
-                            Object.keys(config_list[room['driver_name']]['features']['create']).length">
-                        <div v-for="(feature, index) in config_list[room['driver_name']]['features']['create']" :key="index">
+            <p>
+                <StudipButton type="button" icon="add" v-if="rooms_list.length && config && course_config.display.addRoom"
+                    @click="showAddMeeting()">
+                    {{ 'Raum hinzufügen' | i18n }}
+                </StudipButton>
+
+                <label v-if="rooms_list.length">
+                    <input type="text" :placeholder="`Räume filtern nach Name` | i18n" v-model="searchtext">
+                </label>
+            </p>
+
+            <form class="default conference-meeting" v-if="rooms_list_filtered.length">
+                    <MeetingComponent v-for="(room, index) in rooms_list_filtered"
+                        :key="index"
+                        :room="room"
+                        :info="rooms_info !== undefined && rooms_info[room.id] ? rooms_info[room.id] : {}"
+                        v-on:getRecording="showRecording"
+                        v-on:renewRoomList="getRoomList"
+                        v-on:getGuestInfo="showGuestDialog"
+                        v-on:getFeatures="showEditFeatureDialog"
+                        v-on:setMessage="showMessage"
+                        v-on:getFeedback="showFeedbackDialog">
+                    </MeetingComponent>
+            </form>
+
+            <div v-if="config_list" id="conference-meeting-create" style="display: none" >
+                <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
+                    {{ modal_message.text }}
+                </MessageBox>
+                <MessageBox v-else-if="room['driver_name'] && !Object.keys(config_list[room['driver_name']]['servers']).length"
+                     type="error">
+                    {{ "Es gibt keine Server für dieses Konferenzsystem, bitte wählen Sie ein anderes Konferenzsystem" | i18n }}
+                </MessageBox>
+
+                <form class="default" @keyup="roomFormSubmit($event)" style="position: relative">
+                    <fieldset>
+                        <legend>
+                            {{ 'Raumname' | i18n }}
+                        </legend>
+                        <label>
+                            <input type="text" v-model.trim="room['name']" id="name">
+                        </label>
+                    </fieldset>
+                    <fieldset v-if="(Object.keys(config_list).length > 1) || (room['driver_name']
+                                && Object.keys(config_list[room['driver_name']]['servers']).length > 1)">
+                        <legend>
+                            {{ 'Konferenz Systemeinstellung' | i18n }}
+                        </legend>
+                        <label v-if="Object.keys(config_list).length > 1">
+                            <span class="required">{{ "Konferenzsystem" | i18n }}</span>
+                            <select id="driver_name" v-model="room['driver_name']" @change.prevent="handleDriverDefaults()" :disabled="Object.keys(config_list).length == 1">
+                                <option value="" disabled> {{ "Bitte wählen Sie ein Konferenzsystem aus" | i18n }} </option>
+                                <option v-for="(driver_config, driver_name) in config_list" :key="driver_name"
+                                        :value="driver_name">
+                                        {{ driver_config['display_name'] }}
+                                </option>
+                            </select>
+                        </label>
+                        <label v-if="room['driver_name']
+                                && Object.keys(config_list[room['driver_name']]['servers']).length > 1"
+                        >
+                            <span class="required">
+                                {{ "Verfügbare Server" | i18n }}
+                            </span>
+
+                            <select id="server_index" v-model="room['server_index']"
+                                :disabled="Object.keys(config_list[room['driver_name']]['servers']).length == 1">
+                                <option value="" disabled> {{ "Bitte wählen Sie einen Server aus" | i18n }} </option>
+                                <option v-for="(server_config, server_index) in config_list[room['driver_name']]['servers']" :key="server_index"
+                                        :value="'' + server_index">
+                                        Server {{ (server_index + 1) }}
+                                </option>
+                            </select>
+                        </label>
+                    </fieldset>
+                    <fieldset>
+                        <legend>{{ "Zusätzliche Funktionen" | i18n }}</legend>
+                        <!-- Moderationsrechte -->
+                        <label>
+                            <input type="checkbox"
+                            id="join_as_moderator"
+                            true-value="1"
+                            false-value="0"
+                            v-model="room['join_as_moderator']">
+                            {{ "Alle Teilnehmenden haben Moderationsrechte" | i18n }}
+                        </label>
+                        <div v-if="room['driver_name'] && Object.keys(config_list[room['driver_name']]).includes('features')
+                                && Object.keys(this.config_list[this.room['driver_name']]['features']).includes('create') &&
+                                Object.keys(config_list[room['driver_name']]['features']['create']).length">
+                            <div v-for="(feature, index) in config_list[room['driver_name']]['features']['create']" :key="index">
+                                <label v-if="(feature['value'] === true || feature['value'] === false)">
+                                    <input  type="checkbox"
+                                        true-value="true"
+                                        false-value="false"
+                                        v-model="room['features'][feature['name']]">
+
+                                        {{ feature['display_name'] | i18n }}
+                                        <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
+                                </label>
+
+                                <label v-else-if="feature['value'] && typeof feature['value'] === 'object'">
+                                    {{ feature['display_name'] | i18n }}
+                                    <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
+
+                                    <select :id="feature['name']" v-model.trim="room['features'][feature['name']]">
+                                        <option v-for="(fvalue, findex) in feature['value']" :key="findex"
+                                                :value="findex">
+                                                {{ fvalue | i18n }}
+                                        </option>
+                                    </select>
+                                </label>
+                                <label v-else>
+                                    {{ feature['display_name'] | i18n }}
+                                    <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
+
+                                    <input :type="(feature['name'] == 'duration' || feature['name'] == 'maxParticipants') ? 'number' : 'text'" v-model.trim="room['features'][feature['name']]" :placeholder="feature['value'] ? feature['value'] : ''" :id="feature['name']">
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset v-if="room['driver_name'] && Object.keys(config_list[room['driver_name']]).includes('features')
+                                && Object.keys(this.config_list[this.room['driver_name']]['features']).includes('record')
+                                && Object.keys(config_list[room['driver_name']]['features']['record']).length
+                                && Object.keys(config_list[room['driver_name']]).includes('record')">
+                        <legend>{{ "Aufzeichnung" | i18n }}</legend>
+                        <div v-for="(feature, index) in config_list[room['driver_name']]['features']['record']" :key="index">
                             <label v-if="(feature['value'] === true || feature['value'] === false)">
                                 <input  type="checkbox"
                                     true-value="true"
@@ -117,7 +159,8 @@
                                     v-model="room['features'][feature['name']]">
 
                                     {{ feature['display_name'] | i18n }}
-                                    <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
+                                    <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"
+                                        :badge="(Object.keys(config_list[room['driver_name']]).includes('opencast') && config_list[room['driver_name']]['opencast'] == '1' && feature['info'].toLowerCase().includes('opencast')) ? true : false">{{'beta'}}</StudipTooltipIcon>
                             </label>
 
                             <label v-else-if="feature['value'] && typeof feature['value'] === 'object'">
@@ -135,241 +178,204 @@
                                 {{ feature['display_name'] | i18n }}
                                 <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
 
-                                <input :type="(feature['name'] == 'duration' || feature['name'] == 'maxParticipants') ? 'number' : 'text'" v-model.trim="room['features'][feature['name']]" :placeholder="feature['value'] ? feature['value'] : ''" :id="feature['name']">
+                                <input type="text" v-model.trim="room['features'][feature['name']]" :placeholder="feature['value'] ? feature['value'] : ''" :id="feature['name']">
                             </label>
                         </div>
-                    </div>
-                </fieldset>
+                    </fieldset>
 
-                <fieldset v-if="room['driver_name'] && Object.keys(config_list[room['driver_name']]).includes('features')
-                            && Object.keys(this.config_list[this.room['driver_name']]['features']).includes('record') 
-                            && Object.keys(config_list[room['driver_name']]['features']['record']).length
-                            && Object.keys(config_list[room['driver_name']]).includes('record')">
-                    <legend>{{ "Aufzeichnung" | i18n }}</legend>
-                    <div v-for="(feature, index) in config_list[room['driver_name']]['features']['record']" :key="index">
-                        <label v-if="(feature['value'] === true || feature['value'] === false)">
-                            <input  type="checkbox"
-                                true-value="true"
-                                false-value="false"
-                                v-model="room['features'][feature['name']]">
 
-                                {{ feature['display_name'] | i18n }}
-                                <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"
-                                    :badge="(Object.keys(config_list[room['driver_name']]).includes('opencast') && config_list[room['driver_name']]['opencast'] == '1' && feature['info'].toLowerCase().includes('opencast')) ? true : false">{{'beta'}}</StudipTooltipIcon>
-                        </label>
-
-                        <label v-else-if="feature['value'] && typeof feature['value'] === 'object'">
-                            {{ feature['display_name'] | i18n }}
-                            <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
-
-                            <select :id="feature['name']" v-model.trim="room['features'][feature['name']]">
-                                <option v-for="(fvalue, findex) in feature['value']" :key="findex"
-                                        :value="findex">
-                                        {{ fvalue | i18n }}
+                    <fieldset v-if="(Object.keys(course_groups).length > 1)">
+                        <legend>{{ "Gruppenraum" | i18n }}</legend>
+                        <label>
+                            {{ 'Wählen sie eine zugehörige Gruppe aus' | i18n }}
+                            <select id="gruppen" v-model.trim="room.group_id">
+                                <option value=""> {{ "Keine Gruppe" | i18n }} </option>
+                                <option v-for="(gname, gid) in course_groups" :key="gid"
+                                        :value="gid">
+                                        {{ gname | i18n }}
                                 </option>
                             </select>
                         </label>
-                        <label v-else>
-                            {{ feature['display_name'] | i18n }}
-                            <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
+                    </fieldset>
 
-                            <input type="text" v-model.trim="room['features'][feature['name']]" :placeholder="feature['value'] ? feature['value'] : ''" :id="feature['name']">
+                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                        <div class="ui-dialog-buttonset">
+                            <StudipButton v-if="room['id']" icon="accept" type="button" v-on:click="editRoom($event)" class="ui-button ui-corner-all ui-widget">
+                                {{ "Änderungen speichern" | i18n}}
+                            </StudipButton>
+                            <StudipButton v-else icon="accept" type="button" v-on:click="addRoom($event)" class="ui-button ui-corner-all ui-widget">
+                                {{ "Raum erstellen" | i18n}}
+                            </StudipButton>
+                            <StudipButton icon="cancel" type="button" v-on:click="cancelAddRoom($event)" class="ui-button ui-corner-all ui-widget">
+                                {{ "Abbrechen" | i18n}}
+                            </StudipButton>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="recording-modal" style="display: none;">
+                <form class="default" method="post" style="position: relative">
+                    <fieldset v-if="Object.keys(recording_list).includes('opencast')">
+                        <legend>{{ "Opencast" | i18n }}</legend>
+                        <label>
+                            <a class="meeting-recording-url" target="_blank"
+                            :href="recording_list['opencast']">
+                                {{ 'Die vorhandenen Aufzeichnungen auf Opencast' | i18n}}
+                            </a>
                         </label>
-                    </div>
-                </fieldset>
-
-
-                <fieldset v-if="(Object.keys(course_groups).length > 1)">
-                    <legend>{{ "Gruppenraum" | i18n }}</legend>
-                    <label>
-                        {{ 'Wählen sie eine zugehörige Gruppe aus' | i18n }}
-                        <select id="gruppen" v-model.trim="room.group_id">
-                            <option value=""> {{ "Keine Gruppe" | i18n }} </option>
-                            <option v-for="(gname, gid) in course_groups" :key="gid"
-                                    :value="gid">
-                                    {{ gname | i18n }}
-                            </option>
-                        </select>
-                    </label>
-                </fieldset>
-
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <div class="ui-dialog-buttonset">
-                        <StudipButton v-if="room['id']" icon="accept" type="button" v-on:click="editRoom($event)" class="ui-button ui-corner-all ui-widget">
-                            {{ "Änderungen speichern" | i18n}}
-                        </StudipButton>
-                        <StudipButton v-else icon="accept" type="button" v-on:click="addRoom($event)" class="ui-button ui-corner-all ui-widget">
-                            {{ "Raum erstellen" | i18n}}
-                        </StudipButton>
-                        <StudipButton icon="cancel" type="button" v-on:click="cancelAddRoom($event)" class="ui-button ui-corner-all ui-widget">
-                            {{ "Abbrechen" | i18n}}
-                        </StudipButton>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div id="recording-modal" style="display: none;">
-            <form class="default" method="post" style="position: relative">
-                <fieldset v-if="Object.keys(recording_list).includes('opencast')">
-                    <legend>{{ "Opencast" | i18n }}</legend>
-                    <label>
-                        <a class="meeting-recording-url" target="_blank"
-                        :href="recording_list['opencast']">
-                            {{ 'Die vorhandenen Aufzeichnungen auf Opencast' | i18n}}
-                        </a>
-                    </label>
-                </fieldset>
-                <fieldset v-if="Object.keys(recording_list).includes('default') && Object.keys(recording_list['default']).length">
-                    <label>
-                        <table  class="default collapsable">
-                            <thead>
-                                <tr>
-                                    <th>{{ "Datum" | i18n }}</th>
-                                    <th>{{ "Aktionen" | i18n }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(recording, index) in recording_list.default" :key="index">
-                                    <td style="width: 60%">{{ recording['startTime'] }}</td>
-                                    <td style="width: 40%">
-                                        <div style="display: inline-block;width:80%;">
-                                            <div v-if="Array.isArray(recording['playback']['format'])" style="display: flex; flex-direction: column; ">
-                                                <a v-for="(format, index) in recording['playback']['format']" :key="index"
-                                                class="meeting-recording-url" target="_blank"
-                                                :href="format['url']">
-                                                    {{ `Aufzeichnung ansehen` | i18n}} {{ `(${format['type']})` }}
+                    </fieldset>
+                    <fieldset v-if="Object.keys(recording_list).includes('default') && Object.keys(recording_list['default']).length">
+                        <label>
+                            <table  class="default collapsable">
+                                <thead>
+                                    <tr>
+                                        <th>{{ "Datum" | i18n }}</th>
+                                        <th>{{ "Aktionen" | i18n }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(recording, index) in recording_list.default" :key="index">
+                                        <td style="width: 60%">{{ recording['startTime'] }}</td>
+                                        <td style="width: 40%">
+                                            <div style="display: inline-block;width:80%;">
+                                                <div v-if="Array.isArray(recording['playback']['format'])" style="display: flex; flex-direction: column; ">
+                                                    <a v-for="(format, index) in recording['playback']['format']" :key="index"
+                                                    class="meeting-recording-url" target="_blank"
+                                                    :href="format['url']">
+                                                        {{ `Aufzeichnung ansehen` | i18n}} {{ `(${format['type']})` }}
+                                                    </a>
+                                                </div>
+                                                <div v-else>
+                                                    <a class="meeting-recording-url" target="_blank"
+                                                    :href="recording['playback']['format']['url']">
+                                                        {{ `Aufzeichnung ansehen`  | i18n}}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div v-if="course_config.display.deleteRecording" style="display: inline-block;width:15%; text-align: right;">
+                                                <a style="cursor: pointer;" @click.prevent="deleteRecording(recording)">
+                                                    <StudipIcon icon="trash" role="attention"></StudipIcon>
                                                 </a>
                                             </div>
-                                            <div v-else>
-                                                <a class="meeting-recording-url" target="_blank"
-                                                :href="recording['playback']['format']['url']">
-                                                    {{ `Aufzeichnung ansehen`  | i18n}}
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div v-if="course_config.display.deleteRecording" style="display: inline-block;width:15%; text-align: right;">
-                                            <a style="cursor: pointer;" @click.prevent="deleteRecording(recording)">
-                                                <StudipIcon icon="trash" role="attention"></StudipIcon>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </label>
-                </fieldset>
-            </form>
-        </div>
-        <div id="guest-invitation-modal" style="display: none;">
-            <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
-                {{ modal_message.text }}
-            </MessageBox>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </label>
+                    </fieldset>
+                </form>
+            </div>
+            <div id="guest-invitation-modal" style="display: none;">
+                <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
+                    {{ modal_message.text }}
+                </MessageBox>
 
-            <form class="default" @submit.prevent="generateGuestJoin">
-                <fieldset>
-                    <label>
-                        <span class="required">{{ "Gastname" | i18n }}</span>
-                        <StudipTooltipIcon :text="'Der Gast bekommt diesen Namen in der Besprechung zugewiesen.' | i18n"></StudipTooltipIcon>
-                        <input type="text" v-model.trim="room['guest_name']" id="guestname" @change="generateGuestJoin($event)">
-                    </label>
+                <form class="default" @submit.prevent="generateGuestJoin">
+                    <fieldset>
+                        <label>
+                            <span class="required">{{ "Gastname" | i18n }}</span>
+                            <StudipTooltipIcon :text="'Der Gast bekommt diesen Namen in der Besprechung zugewiesen.' | i18n"></StudipTooltipIcon>
+                            <input type="text" v-model.trim="room['guest_name']" id="guestname" @change="generateGuestJoin($event)">
+                        </label>
 
-                    <label id="guest_link_label" v-if="guest_link">
-                        <span>{{ "Link" | i18n }}</span>
-                        <StudipTooltipIcon :text="'Bitte geben sie diesen Link dem Gast.' | i18n" :important="true"></StudipTooltipIcon>
-                        <textarea ref="guestLinkArea" v-model="guest_link" cols="30" rows="5"></textarea>
-                    </label>
+                        <label id="guest_link_label" v-if="guest_link">
+                            <span>{{ "Link" | i18n }}</span>
+                            <StudipTooltipIcon :text="'Bitte geben sie diesen Link dem Gast.' | i18n" :important="true"></StudipTooltipIcon>
+                            <textarea ref="guestLinkArea" v-model="guest_link" cols="30" rows="5"></textarea>
+                        </label>
 
-                    <div>
-                        <StudipButton type="button" v-on:click="copyGuestLinkClipboard($event)" v-if="guest_link">
-                            {{ "In Zwischenablage kopieren" | i18n}}
-                        </StudipButton>
-                        <StudipButton id="generate_link_btn" icon="accept" type="button" v-on:click="generateGuestJoin($event)" v-else>
-                            {{ "Einladungslink erstellen" | i18n }}
-                        </StudipButton>
+                        <div>
+                            <StudipButton type="button" v-on:click="copyGuestLinkClipboard($event)" v-if="guest_link">
+                                {{ "In Zwischenablage kopieren" | i18n}}
+                            </StudipButton>
+                            <StudipButton id="generate_link_btn" icon="accept" type="button" v-on:click="generateGuestJoin($event)" v-else>
+                                {{ "Einladungslink erstellen" | i18n }}
+                            </StudipButton>
 
-                        <StudipButton icon="cancel" type="button" v-on:click="cancelGuest($event)">
-                            {{ "Dialog schließen" | i18n}}
-                        </StudipButton>
+                            <StudipButton icon="cancel" type="button" v-on:click="cancelGuest($event)">
+                                {{ "Dialog schließen" | i18n}}
+                            </StudipButton>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+             <div id="feedback-modal" style="display: none;">
+                <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
+                    {{ modal_message.text }}
+                </MessageBox>
+
+                <form class="default" @submit.prevent="feedbackFormSubmit">
+                    <fieldset>
+                        <legend>
+                            {{ 'Beschreibung' | i18n }}
+                        </legend>
+                        <label class="col-6">
+                            <textarea ref="feedbackDescription" v-model="feedback['description']" cols="30" rows="5"></textarea>
+                        </label>
+                    </fieldset>
+                    <fieldset>
+                        <legend>
+                            {{ 'Feedback Informationen' | i18n }}
+                        </legend>
+                        <label class="col-3">
+                            <span >{{ "Browser-Name" | i18n }}</span>
+                            <input type="text" v-model.trim="feedback['browser_name']">
+                        </label>
+                        <label class="col-3">
+                            <span >{{ "Browser-Version" | i18n }}</span>
+                            <input type="text" v-model.trim="feedback['browser_version']">
+                        </label>
+                        <label class="col-3">
+                            <span >{{ "Download-Geschw. (Mbps)" | i18n }}</span>
+                            <input type="number" min="1" v-model.trim="feedback['download_speed']">
+                        </label>
+                        <label class="col-3">
+                            <span >{{ "Upload-Geschw. (Mbps)" | i18n }}</span>
+                            <input type="number" min="1" v-model.trim="feedback['upload_speed']">
+                        </label>
+                        <label class="col-3">
+                            <span >{{ "Netzwerk-Typ" | i18n }}</span>
+                            <select id="network-type" v-model="feedback['network_type']">
+                                <option v-for="(nt_value, nt_name) in network_types" :key="nt_name"
+                                        :value="nt_name">
+                                        {{ nt_value }}
+                                </option>
+                            </select>
+                        </label>
+                        <label class="col-3">
+                            <span >{{ "Betriebssystem (OS)" | i18n }}</span>
+                            <input type="text" v-model.trim="feedback['os_name']">
+                        </label>
+                        <label class="col-3">
+                            <span >{{ "Prozessortyp" | i18n }}</span>
+                            <input type="text" v-model.trim="feedback['cpu_type']">
+                        </label>
+                        <label class="col-3">
+                            <span >{{ "Alter des Rechners" | i18n }}</span>
+                            <input type="text" v-model.number="feedback['cpu_old']">
+                        </label>
+                        <label class="col-3">
+                            <span >{{ "Anzahl der CPU-Kerne" | i18n }}</span>
+                            <input type="number" min="1" max="1000" v-model.number="feedback['cpu_num']">
+                        </label>
+                        <label class="col-3">
+                            <span >{{ "RAM (Hauptspeicher) GB" | i18n }}</span>
+                            <input type="number"  min="1" max="1000" v-model.number="feedback['ram']">
+                        </label>
+                    </fieldset>
+                    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                        <div class="ui-dialog-buttonset">
+                            <StudipButton icon="accept" type="button" v-on:click="sumbitFeedback($event)" class="ui-button ui-corner-all ui-widget">
+                                {{ "Einsenden" | i18n}}
+                            </StudipButton>
+                            <StudipButton icon="cancel" type="button" v-on:click="cancelFeedback($event)" class="ui-button ui-corner-all ui-widget">
+                                {{ "Abbrechen" | i18n}}
+                            </StudipButton>
+                        </div>
                     </div>
-                </fieldset>
-            </form>
-        </div>
-         <div id="feedback-modal" style="display: none;">
-            <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
-                {{ modal_message.text }}
-            </MessageBox>
-
-            <form class="default" @submit.prevent="feedbackFormSubmit">
-                <fieldset>
-                    <legend>
-                        {{ 'Beschreibung' | i18n }}
-                    </legend>
-                    <label class="col-6">
-                        <textarea ref="feedbackDescription" v-model="feedback['description']" cols="30" rows="5"></textarea>
-                    </label>
-                </fieldset>
-                <fieldset>
-                    <legend>
-                        {{ 'Feedback Informationen' | i18n }}
-                    </legend>
-                    <label class="col-3">
-                        <span >{{ "Browser-Name" | i18n }}</span>
-                        <input type="text" v-model.trim="feedback['browser_name']">
-                    </label>
-                    <label class="col-3">
-                        <span >{{ "Browser-Version" | i18n }}</span>
-                        <input type="text" v-model.trim="feedback['browser_version']">
-                    </label>
-                    <label class="col-3">
-                        <span >{{ "Download-Geschw. (Mbps)" | i18n }}</span>
-                        <input type="number" min="1" v-model.trim="feedback['download_speed']">
-                    </label>
-                    <label class="col-3">
-                        <span >{{ "Upload-Geschw. (Mbps)" | i18n }}</span>
-                        <input type="number" min="1" v-model.trim="feedback['upload_speed']">
-                    </label>
-                    <label class="col-3">
-                        <span >{{ "Netzwerk-Typ" | i18n }}</span>
-                        <select id="network-type" v-model="feedback['network_type']">
-                            <option v-for="(nt_value, nt_name) in network_types" :key="nt_name"
-                                    :value="nt_name">
-                                    {{ nt_value }}
-                            </option>
-                        </select>
-                    </label>
-                    <label class="col-3">
-                        <span >{{ "Betriebssystem (OS)" | i18n }}</span>
-                        <input type="text" v-model.trim="feedback['os_name']">
-                    </label>
-                    <label class="col-3">
-                        <span >{{ "Prozessortyp" | i18n }}</span>
-                        <input type="text" v-model.trim="feedback['cpu_type']">
-                    </label>
-                    <label class="col-3">
-                        <span >{{ "Alter des Rechners" | i18n }}</span>
-                        <input type="text" v-model.number="feedback['cpu_old']">
-                    </label>
-                    <label class="col-3">
-                        <span >{{ "Anzahl der CPU-Kerne" | i18n }}</span>
-                        <input type="number" min="1" max="1000" v-model.number="feedback['cpu_num']">
-                    </label>
-                    <label class="col-3">
-                        <span >{{ "RAM (Hauptspeicher) GB" | i18n }}</span>
-                        <input type="number"  min="1" max="1000" v-model.number="feedback['ram']">
-                    </label>
-                </fieldset>
-                <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                    <div class="ui-dialog-buttonset">
-                        <StudipButton icon="accept" type="button" v-on:click="sumbitFeedback($event)" class="ui-button ui-corner-all ui-widget">
-                            {{ "Einsenden" | i18n}}
-                        </StudipButton>
-                        <StudipButton icon="cancel" type="button" v-on:click="cancelFeedback($event)" class="ui-button ui-corner-all ui-widget">
-                            {{ "Abbrechen" | i18n}}
-                        </StudipButton>
-                    </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        </span>
     </div>
 </template>
 
@@ -510,13 +516,13 @@ export default {
                 this.$set(this.modal_message, "type" , "error");
                 this.$set(this.modal_message, "text" , `Beschreibung darf nicht leer sein`.toLocaleString());
             }
-            
+
         },
         cancelFeedback() {
             this.$store.commit(FEEDBACK_CLEAR);
             $('#feedback-modal').dialog('close');
         },
-       
+
         showAddMeeting() {
             this.modal_message = {};
             this.$store.commit(ROOM_CLEAR);

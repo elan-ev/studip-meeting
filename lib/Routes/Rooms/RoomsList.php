@@ -50,6 +50,7 @@ class RoomsList extends MeetingsController
         $course_rooms_list = [];
         foreach ($meeting_course_list_raw as $meetingCourse) {
             try {
+
                 if ($meetingCourse->group_id && !$this->checkPermission($meetingCourse->group_id, $cid)) {
                     continue;
                 }
@@ -57,12 +58,13 @@ class RoomsList extends MeetingsController
                 $meeting = $meetingCourse->meeting->toArray();
                 $meeting = array_merge($meetingCourse->toArray(), $meeting);
                 $meeting['has_recordings'] = false;
+
                 // Recording Capability
                 if (is_subclass_of($driver, 'ElanEv\Driver\RecordingInterface')) {
-                    if ($perm->have_studip_perm('tutor', $cid) 
+                    if ($perm->have_studip_perm('tutor', $cid)
                         || (!$perm->have_studip_perm('tutor', $cid) && filter_var($this->getFeatures($meeting['features'], 'giveAccessToRecordings'), FILTER_VALIDATE_BOOLEAN))) {
-                        if ((count($driver->getRecordings($meetingCourse->meeting->getMeetingParameters())) > 0) 
-                            || ($this->getFeatures($meeting['features'], 'meta_opencast-dc-isPartOf') && 
+                        if ((count($driver->getRecordings($meetingCourse->meeting->getMeetingParameters())) > 0)
+                            || ($this->getFeatures($meeting['features'], 'meta_opencast-dc-isPartOf') &&
                             $this->getFeatures($meeting['features'], 'meta_opencast-dc-isPartOf') == MeetingPlugin::checkOpenCast($meetingCourse->course_id)))
                         {
                             $meeting['has_recordings'] = true;
@@ -73,13 +75,19 @@ class RoomsList extends MeetingsController
                 $meeting['features'] = $this->getFeatures($meeting['features']);
                 $course_rooms_list[] = $meeting;
             } catch (Exception $e) {
+                $errors[] = $e->getMessage();
                 // $error_message = "There are meetings that are not currently reachable!";
             }
         }
-        return $this->createResponse($course_rooms_list, $response);
+
+        if (sizeof($errors)) {
+            throw new Error(implode ("\n", $errors), 500);
+        } else {
+            return $this->createResponse($course_rooms_list, $response);
+        }
     }
 
-    private function getFeatures($str_features, $key = null) 
+    private function getFeatures($str_features, $key = null)
     {
         $features = json_decode($str_features, true);
         if ($key) {
