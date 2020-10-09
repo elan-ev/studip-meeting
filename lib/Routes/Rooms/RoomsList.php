@@ -80,7 +80,7 @@ class RoomsList extends MeetingsController
             }
         }
 
-        if (sizeof($errors)) {
+        if (!empty($errors)) {
             throw new Error(implode ("\n", $errors), 500);
         } else {
             return $this->createResponse($course_rooms_list, $response);
