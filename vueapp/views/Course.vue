@@ -141,7 +141,13 @@
                                     </select>
                                 </label>
                                 <label v-else>
-                                    {{ feature['display_name'] | i18n }}
+                                    {{ feature['display_name'] | i18n }} 
+                                    <span v-if="feature['name'] == 'maxParticipants' 
+                                            && Object.keys(config_list[room['driver_name']]).includes('server_defaults')
+                                            && room['server_index']
+                                            && Object.keys(config_list[room['driver_name']]['server_defaults'][room['server_index']]).includes('maxAllowedParticipants')">
+                                        &nbsp; ({{"Max. Limit: " + config_list[room['driver_name']]['server_defaults'][room['server_index']]['maxAllowedParticipants']}})
+                                    </span>
                                     <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
 
                                     <input :type="(feature['name'] == 'duration' || feature['name'] == 'maxParticipants') ? 'number' : 'text'" 
@@ -153,6 +159,8 @@
                                                 : ''
                                             : ''
                                         )"
+                                        :min="(feature['name'] == 'maxParticipants') ? 0 : ''"
+                                        @change="(feature['name'] == 'maxParticipants') ? checkPresets() : ''"
                                         v-model.trim="room['features'][feature['name']]" 
                                         :placeholder="feature['value'] ? feature['value'] : ''" 
                                         :id="feature['name']">
@@ -871,6 +879,22 @@ export default {
 
         showMessage(message) {
             this.message = message;
+        },
+
+        checkPresets() {
+            if (this.room['driver_name'] && this.room['server_index'] 
+                && Object.keys(this.config_list[this.room['driver_name']]).includes('server_presets')
+                && Object.keys(this.config_list[this.room['driver_name']]['server_presets']).includes(this.room['server_index'])) {
+                for (const [size, featues] of  Object.entries(this.config_list[this.room['driver_name']]['server_presets'][this.room['server_index']])) {
+                    if (this.room['features'] && this.room['features']['maxParticipants'] && parseInt(this.room['features']['maxParticipants']) >= parseInt(featues['minParticipants'])) {
+                        for (const [feature_name, featues_value] of Object.entries(featues)) {
+                            if (feature_name != 'minParticipants') {
+                                this.$set(this.room['features'], feature_name, featues_value);
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
 

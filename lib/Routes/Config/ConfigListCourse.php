@@ -102,6 +102,7 @@ class ConfigListCourse extends MeetingsController
         $members_count = count($course->members) + 5;
         foreach ($config as $driver_name => $settings) {
             $server_defaults = [];
+            $server_presets = [];
             foreach ($settings['servers'] as $server_index => $server_values) {
 
                 //Take care of max participants and maxAllowedParticipants
@@ -114,8 +115,10 @@ class ConfigListCourse extends MeetingsController
                 }
 
                 //Take care of create features
+                // add presets into config as well
                 if (isset($server_values['roomsize-presets']) && count($server_values['roomsize-presets']) > 0) {
                     foreach ($server_values['roomsize-presets'] as $size => $values) {
+                        $server_presets[$server_index][$size] = $values;
                         if ($members_count >= $values['minParticipants']) {
                             unset($values['minParticipants']);
                             foreach ($values as $feature_name => $feature_value) {
@@ -130,6 +133,7 @@ class ConfigListCourse extends MeetingsController
                 }
             }
             $config[$driver_name]['server_defaults'] = $server_defaults;
+            $config[$driver_name]['server_presets'] = $server_presets;
         }
         return $config;
     }
