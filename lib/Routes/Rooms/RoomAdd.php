@@ -77,6 +77,13 @@ class RoomAdd extends MeetingsController
                 $error_text = _('Server ist nicht definiert');
             }
 
+            $servers = Driver::getConfigValueByDriver($json['driver_name'], 'servers');
+            $server_maxParticipants = $servers[$json['server_index']]['maxParticipants'];
+            if (is_numeric($server_maxParticipants) && $server_maxParticipants > 0 && $json['features']['maxParticipants'] > $server_maxParticipants) {
+                $has_error = true;
+                $error_text = sprintf(_('Teilnehmerzahl darf %d nicht überschreiten'), $server_maxParticipants);
+            }
+
             if (!$has_error) {
                 //putting mandatory logoutURL into features
                 $hostUrl = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost()

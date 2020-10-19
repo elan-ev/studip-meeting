@@ -48,9 +48,8 @@ class ConfigListCourse extends MeetingsController
 
         $course_config['introduction'] = formatReady($course_config['introduction']);
 
-        // !$config ?: $config = $this->setDefaultRoomSizeProfile($config, $cid);
         if (!empty($config)) {
-            $config = $this->setDefaultRoomSizeProfile($config, $cid);
+            $config = $this->setDefaultServerProfiles($config, $cid);
             $config = $this->setOpencastTooltipText($config, $cid);
         }
 
@@ -89,53 +88,48 @@ class ConfigListCourse extends MeetingsController
 
 
     /**
-     * Automatically sets room size profile based on number of course members!
-     * It decides the best room size profile and sets the maxParticipants and make that profile seleted
+     * Generates server preset settings and features based on number of participants
+     * it adds another array to config called server_defaults 
      *
      * @param $config   plugin general config
      * @param $cid      course id
      *
      * @return $config  plugin general config
      */
-    private function setDefaultRoomSizeProfile ($config, $cid)
+    private function setDefaultServerProfiles ($config, $cid)
     {
         $course = new \Course($cid);
-        $members_count = count($course->members) + 10;
+        $members_count = count($course->members) + 5;
         foreach ($config as $driver_name => $settings) {
-            if (isset($settings['features']['create'])) {
-                $features = $settings['features']['create'];
-                $maxParticipants = min(20, max(300, $members_counts));
-                $muteOnStart_index = array_search('muteOnStart', array_column($features, 'name'));
-                $webcamsOnlyForModerator_index = array_search('webcamsOnlyForModerator', array_column($features, 'name'));
-                $lockSettingsDisableCam_index = array_search('lockSettingsDisableCam', array_column($features, 'name'));
-                $lockSettingsDisableMic_index = array_search('lockSettingsDisableMic', array_column($features, 'name'));
-                $lockSettingsDisableNote_index = array_search('lockSettingsDisableNote', array_column($features, 'name'));
-                $maxParticipants_index = array_search('maxParticipants', array_column($features, 'name'));
-                if ($maxParticipants_index !== FALSE) {
-                    $config[$driver_name]['features']['create'][$maxParticipants_index]['value'] = $members_count;
-                }
-                if ($maxParticipants >= 50) { //small
-                    if ($muteOnStart_index !== FALSE) {
-                        $config[$driver_name]['features']['create'][$muteOnStart_index]['value'] = true;
+            $server_defaults = [];
+            foreach ($settings['servers'] as $server_index => $server_values) {
+
+                //Take care of max participants and maxAllowedParticipants
+                $server_defaults[$server_index]['totalMembers'] = $members_count;
+                if (isset($server_values['maxParticipants']) && $server_values['maxParticipants'] > 0) {
+                    $server_defaults[$server_index]['maxAllowedParticipants'] = $server_values['maxParticipants'];
+                    if ($members_count >= $server_values['maxParticipants']) {
+                        $server_defaults[$server_index]['totalMembers'] = $server_values['maxParticipants'];
                     }
                 }
-                if ($maxParticipants >= 150) { //medium
-                    if ($webcamsOnlyForModerator_index !== FALSE) {
-                        $config[$driver_name]['features']['create'][$webcamsOnlyForModerator_index]['value'] = true;
-                    }
-                }
-                if ($maxParticipants >= 300) { //large
-                    if ($lockSettingsDisableCam_index !== FALSE) {
-                        $config[$driver_name]['features']['create'][$lockSettingsDisableCam_index]['value'] = true;
-                    }
-                    if ($lockSettingsDisableMic_index !== FALSE) {
-                        $config[$driver_name]['features']['create'][$lockSettingsDisableMic_index]['value'] = true;
-                    }
-                    if ($lockSettingsDisableNote_index !== FALSE) {
-                        $config[$driver_name]['features']['create'][$lockSettingsDisableNote_index]['value'] = true;
+
+                //Take care of create features
+                if (isset($server_values['roomsize-presets']) && count($server_values['roomsize-presets']) > 0) {
+                    foreach ($server_values['roomsize-presets'] as $size => $values) {
+                        if ($members_count >= $values['minParticipants']) {
+                            unset($values['minParticipants']);
+                            foreach ($values as $feature_name => $feature_value) {
+                                $value = $feature_value;
+                                if (filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+                                    $value = filter_var($feature_value, FILTER_VALIDATE_BOOLEAN);
+                                } 
+                                $server_defaults[$server_index][$feature_name] = $value;
+                            }
+                        }
                     }
                 }
             }
+            $config[$driver_name]['server_defaults'] = $server_defaults;
         }
         return $config;
     }

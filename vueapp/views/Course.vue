@@ -75,7 +75,7 @@
                         </legend>
                         <label v-if="Object.keys(config_list).length > 1">
                             <span class="required">{{ "Konferenzsystem" | i18n }}</span>
-                            <select id="driver_name" v-model="room['driver_name']" @change.prevent="handleDriverDefaults()" :disabled="Object.keys(config_list).length == 1">
+                            <select id="driver_name" v-model="room['driver_name']" @change.prevent="handleServerDefaults" :disabled="Object.keys(config_list).length == 1">
                                 <option value="" disabled> {{ "Bitte wählen Sie ein Konferenzsystem aus" | i18n }} </option>
                                 <option v-for="(driver_config, driver_name) in config_list" :key="driver_name"
                                         :value="driver_name">
@@ -90,12 +90,16 @@
                                 {{ "Verfügbare Server" | i18n }}
                             </span>
 
-                            <select id="server_index" v-model="room['server_index']"
+                            <select id="server_index" v-model="room['server_index']" @change.prevent="handleServerDefaults"
                                 :disabled="Object.keys(config_list[room['driver_name']]['servers']).length == 1">
                                 <option value="" disabled> {{ "Bitte wählen Sie einen Server aus" | i18n }} </option>
                                 <option v-for="(server_config, server_index) in config_list[room['driver_name']]['servers']" :key="server_index"
                                         :value="'' + server_index">
                                         Server {{ (server_index + 1) }}
+                                        <span v-if="config_list[room['driver_name']]['server_defaults'] && config_list[room['driver_name']]['server_defaults'][server_index] 
+                                                    &&  config_list[room['driver_name']]['server_defaults'][server_index]['maxAllowedParticipants']">
+                                            ({{ "max. " + config_list[room['driver_name']]['server_defaults'][server_index]['maxAllowedParticipants'] }} {{ "Teilnehmer" | i18n }})
+                                        </span>
                                 </option>
                             </select>
                         </label>
@@ -140,7 +144,18 @@
                                     {{ feature['display_name'] | i18n }}
                                     <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
 
-                                    <input :type="(feature['name'] == 'duration' || feature['name'] == 'maxParticipants') ? 'number' : 'text'" v-model.trim="room['features'][feature['name']]" :placeholder="feature['value'] ? feature['value'] : ''" :id="feature['name']">
+                                    <input :type="(feature['name'] == 'duration' || feature['name'] == 'maxParticipants') ? 'number' : 'text'" 
+                                        :max="(
+                                            (feature['name'] == 'maxParticipants') ? 
+                                            (Object.keys(config_list[room['driver_name']]).includes('server_defaults') && room['server_index']
+                                                && Object.keys(config_list[room['driver_name']]['server_defaults'][room['server_index']]).includes('maxAllowedParticipants')) ? 
+                                                    config_list[room['driver_name']]['server_defaults'][room['server_index']]['maxAllowedParticipants']
+                                                : ''
+                                            : ''
+                                        )"
+                                        v-model.trim="room['features'][feature['name']]" 
+                                        :placeholder="feature['value'] ? feature['value'] : ''" 
+                                        :id="feature['name']">
                                 </label>
                             </div>
                         </div>
@@ -526,7 +541,7 @@ export default {
         showAddMeeting() {
             this.modal_message = {};
             this.$store.commit(ROOM_CLEAR);
-
+            
             let options;
 
             // handle mobile devices
@@ -546,6 +561,8 @@ export default {
                 }
             }
 
+            options.maxHeight = $(window).height();
+
             $('#conference-meeting-create').dialog(options);
 
             this.setDriver();
@@ -554,27 +571,43 @@ export default {
         setDriver() {
             if (Object.keys(this.config_list).length == 1) {
                 this.$set(this.room, "driver_name" , Object.keys(this.config_list)[0]);
-                this.handleDriverDefaults();
+                this.handleServerDefaults();
             }
         },
 
-        handleDriverDefaults() {
+        handleServerDefaults() {
+            //mandatory server selection when there is only one server
+            if (this.room['driver_name'] && Object.keys(this.config_list[this.room['driver_name']]['servers']).length == 1) {
+                this.$set(this.room, "server_index" , "0");
+            }
             //set default features
             this.$set(this.room, "features" , {});
+
             if (Object.keys(this.config_list[this.room['driver_name']]).includes('features')) {
                 //set default value of features
                 if (Object.keys(this.config_list[this.room['driver_name']]['features']).includes('create') &&
                     Object.keys(this.config_list[this.room['driver_name']]['features']['create']).length) {
+                    //applying first level of defaults for create features - important
                     this.config_list[this.room['driver_name']]['features']['create'].forEach(feature => { //apply all values for room feature!
                         this.$set(this.room['features'], feature.name , feature.value);
                     });
-                    // set all selects to first entry
+                    // set all selects to first entry 
                     for (let index in this.config_list[this.room['driver_name']]['features']['create']) {
                         let feature = this.config_list[this.room['driver_name']]['features']['create'][index];
-                        // console.log(typeof feature.value, feature);
 
                         if (typeof feature.value === 'object' && !Array.isArray(feature.value)) {
                             this.room['features'][feature['name']] = Object.keys(feature['value'])[0];
+                        }
+                    }
+
+                    //Applying Second level of defaults from server defaults - if there is any but highly important!
+                    if (this.room['server_index'] && Object.keys(this.config_list[this.room['driver_name']]).includes('server_defaults') &&
+                        Object.keys(this.config_list[this.room['driver_name']]['server_defaults']).length && 
+                        Object.keys(this.config_list[this.room['driver_name']]['server_defaults']).includes(this.room['server_index'])) {
+                        for (const [feature_name, feature_value] of Object.entries(this.config_list[this.room['driver_name']]['server_defaults'][this.room['server_index']])) {
+                            if (feature_name != 'maxAllowedParticipants') {
+                                this.$set(this.room['features'], ((feature_name == 'totalMembers') ? 'maxParticipants' : feature_name ), feature_value);
+                            }
                         }
                     }
                 }
@@ -586,7 +619,6 @@ export default {
                     // set all selects to first entry
                     for (let index in this.config_list[this.room['driver_name']]['features']['record']) {
                         let feature = this.config_list[this.room['driver_name']]['features']['record'][index];
-                        // console.log(typeof feature.value, feature);
 
                         if (typeof feature.value === 'object' && !Array.isArray(feature.value)) {
                             this.room['features'][feature['name']] = Object.keys(feature['value'])[0];
@@ -594,10 +626,6 @@ export default {
                     }
                 }
 
-            }
-            //mandatory server selection when there is only one server
-            if (this.room['driver_name'] && Object.keys(this.config_list[this.room['driver_name']]['servers']).length == 1) {
-                this.$set(this.room, "server_index" , "0");
             }
         },
 
@@ -786,7 +814,6 @@ export default {
             this.$store.commit(ROOM_CLEAR);
             if (Object.keys(this.config_list[room.driver]['features']).includes('record') && !Object.keys(room.features).includes('giveAccessToRecordings')) {
                 var default_feature_obj = this.config_list[room.driver]['features']['record'].find(m => m.name == 'giveAccessToRecordings');
-                console.log(default_feature_obj);
                 this.$set(room.features, 'giveAccessToRecordings', ((default_feature_obj) ? default_feature_obj.value : true));
             }
             this.$set(this.room, 'driver_name', room.driver);
@@ -817,6 +844,8 @@ export default {
                     title: 'Raumeinstellung'.toLocaleString()
                 }
             }
+
+            options.maxHeight = $(window).height();
 
             $('#conference-meeting-create').dialog(options);
         },

@@ -249,8 +249,10 @@ fieldset {
             color: #000;
             position: relative;
             padding: 20px 10px;
+            max-height: 30em; 
+            overflow-y: auto;
 
-            input {
+            input:not([type=checkbox]) {
                 border: solid thin #ccc;
                 min-width: 14em;
                 padding: 0.5em;
