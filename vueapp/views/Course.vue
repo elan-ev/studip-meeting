@@ -909,15 +909,17 @@ export default {
         validateMaxParticipants() {
             var isValid = true;
             if (this.room['driver_name'] && this.room['server_index'] && this.room['features'] && this.room['features']['maxParticipants']
-                && Object.keys(this.config_list[this.room['driver_name']]).includes('server_defaults')
-                && Object.keys(this.config_list[this.room['driver_name']]['server_defaults'][this.room['server_index']]).includes('maxAllowedParticipants')
-                && this.room['features']['maxParticipants'] > this.config_list[this.room['driver_name']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants']) {
+             && Object.keys(this.config_list[this.room['driver_name']]).includes('server_defaults')
+             && Object.keys(this.config_list[this.room['driver_name']]['server_defaults'][this.room['server_index']]).includes('maxAllowedParticipants')
+             && parseInt(this.room['features']['maxParticipants']) > parseInt(this.config_list[this.room['driver_name']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'])) {
+
                 this.$set(this.room['features'], 'maxParticipants', this.config_list[this.room['driver_name']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants']);
                 var maxAllowedParticipants = this.config_list[this.room['driver_name']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants']; 
                 this.modal_message.type = 'error';
                 this.modal_message.text = `Teilnehmerzahl darf ${maxAllowedParticipants} nicht überschreiten`.toLocaleString();
                 $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
                 isValid = false;
+                
             }
             return isValid;
         }
