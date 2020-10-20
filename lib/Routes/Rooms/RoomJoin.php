@@ -40,7 +40,7 @@ class RoomJoin extends MeetingsController
         $room_id = $args['room_id'];
         $cid = $args['cid'];
 
-        if (!$perm->have_studip_perm('autor', $cid)) {
+        if (!$perm->have_studip_perm('user', $cid)) {
             throw new \AccessDeniedException();
         }
 
