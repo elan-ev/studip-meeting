@@ -652,6 +652,10 @@ export default {
                 event.preventDefault();
             }
 
+            if (!this.validateMaxParticipants()) {
+                return;
+            }
+
             var empty_fields_arr = [];
             for (var key in this.room) {
                 if (key != 'join_as_moderator' && key != 'features' && this.room[key] === '' ) {
@@ -799,7 +803,7 @@ export default {
             }
         },
 
-        setRoomSize(values) {
+        /* setRoomSize(values) {
             setTimeout(() => {
                 values.forEach(profile => { //remove all previuos size features
                     profile.value.forEach(profile_content => {
@@ -816,7 +820,7 @@ export default {
                     }
                 });
             }, 100);
-        },
+        }, */
 
         showEditFeatureDialog(room) {
             this.$store.commit(ROOM_CLEAR);
@@ -862,6 +866,11 @@ export default {
             if (event) {
                 event.preventDefault();
             }
+
+            if (!this.validateMaxParticipants()) {
+                return;
+            }
+
             this.$store.dispatch(ROOM_UPDATE, this.room)
             .then(({ data }) => {
                 this.message = data.message;
@@ -895,6 +904,22 @@ export default {
                     }
                 }
             }
+        },
+
+        validateMaxParticipants() {
+            var isValid = true;
+            if (this.room['driver_name'] && this.room['server_index'] && this.room['features'] && this.room['features']['maxParticipants']
+                && Object.keys(this.config_list[this.room['driver_name']]).includes('server_defaults')
+                && Object.keys(this.config_list[this.room['driver_name']]['server_defaults'][this.room['server_index']]).includes('maxAllowedParticipants')
+                && this.room['features']['maxParticipants'] > this.config_list[this.room['driver_name']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants']) {
+                this.$set(this.room['features'], 'maxParticipants', this.config_list[this.room['driver_name']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants']);
+                var maxAllowedParticipants = this.config_list[this.room['driver_name']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants']; 
+                this.modal_message.type = 'error';
+                this.modal_message.text = `Teilnehmerzahl darf ${maxAllowedParticipants} nicht überschreiten`.toLocaleString();
+                $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
+                isValid = false;
+            }
+            return isValid;
         }
     },
 
