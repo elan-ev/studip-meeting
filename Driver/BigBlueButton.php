@@ -245,8 +245,34 @@ class BigBlueButton implements DriverInterface, RecordingInterface
         return array(
             new ConfigOption('url',     dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'URL des BBB-Servers')),
             new ConfigOption('api-key', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Api-Key (Salt)')),
-            new ConfigOption('proxy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugriff über Proxy'))
+            new ConfigOption('proxy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugriff über Proxy')),
+            new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmer')),
+            new ConfigOption('roomsize-presets', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Raumgrößenvoreinstellungen'), self::getRoomSizePresets()
+            ),
         );
+    }
+
+    private function getRoomSizePresets() {
+        return array(
+            new ConfigOption('small', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Kleiner Raum'), self::getRoomSizeFeature(0)),
+            new ConfigOption('medium', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Mittlerer Raum'), self::getRoomSizeFeature(50)),
+            new ConfigOption('large', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Großer Raum'), self::getRoomSizeFeature(150)),
+        );
+    }
+
+    private function getRoomSizeFeature($minParticipants = 0) {
+        $roomsize_features = array_filter(self::getCreateFeatures(), function ($configOption) {
+            return in_array($configOption->getName(), 
+                            [
+                                'lockSettingsDisableNote',
+                                'webcamsOnlyForModerator', 
+                                'lockSettingsDisableCam', 
+                                'lockSettingsDisableMic',
+                                'muteOnStart',
+                            ]);
+        });
+        $roomsize_features['minParticipants'] = new ConfigOption('minParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Min. Teilnehmerzahl'), $minParticipants);
+        return array_reverse($roomsize_features);
     }
 
     /**

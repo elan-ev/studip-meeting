@@ -97,6 +97,20 @@ class RoomEdit extends MeetingsController
                 }
                 $json['features']['record'] = $record;
                 !$opencast_series_id ?: $json['features']['meta_opencast-dc-isPartOf'] = $opencast_series_id;
+
+                //validate maxParticipants if the server has default
+                $servers = Driver::getConfigValueByDriver($json['driver_name'], 'servers');
+                $server_maxParticipants = $servers[$json['server_index']]['maxParticipants'];
+                if (is_numeric($server_maxParticipants) && $server_maxParticipants > 0 && $json['features']['maxParticipants'] > $server_maxParticipants) {
+                    $message = [
+                        'text' => sprintf(_('Teilnehmerzahl darf %d nicht überschreiten'), $server_maxParticipants),
+                        'type' => 'error'
+                    ];
+                    return $this->createResponse([
+                        'message'=> $message,
+                    ], $response);
+                }
+
                 $meeting->features = json_encode($json['features']);
             }
             $meeting->chdate = $change_date->getTimestamp();

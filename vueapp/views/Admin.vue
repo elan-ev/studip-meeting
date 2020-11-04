@@ -59,7 +59,9 @@
                             <tr>
                                 <th>{{ "#" | i18n }}</th>
                                 <th v-for="(value, key) in driver.config" :key="key">
-                                    {{ value.display_name | i18n }}
+                                    <template v-if="value.name != 'roomsize-presets'">
+                                        {{ value.display_name | i18n }}
+                                    </template>
                                 </th>
                                 <th>{{ "Aktionen" | i18n }}</th>
                             </tr>
@@ -69,7 +71,14 @@
                                 :class="{'active nohover': (server_object[driver_name]['index'] == index)}">
                                 <td>{{ index + 1 }}</td>
                                 <td v-for="(value, key) in driver.config" :key="key">
-                                    {{server[value.name]}}
+                                    <template v-if="value.name != 'roomsize-presets'">
+                                        <template v-if="value.name == 'maxParticipants' && (!(server[value.name]) || parseInt(server[value.name]) == 0)">
+                                            {{ 'Ohne Grenze' | i18n }}
+                                        </template>
+                                        <template v-else>
+                                            {{server[value.name]}}
+                                        </template>
+                                    </template>
                                 </td>
                                 <td>
                                     <a style="cursor: pointer;" @click.prevent="prepareEditServer(driver_name, index)">
