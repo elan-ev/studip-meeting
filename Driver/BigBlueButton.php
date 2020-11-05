@@ -65,9 +65,6 @@ class BigBlueButton implements DriverInterface, RecordingInterface
                 $params['name'] = $params['name'] . ' (' . date('Y-m-d H:i:s') . ')';
             }
 
-            //unset maxParticipants untill bug is fixed
-            unset($features['maxParticipants']);
-
             $params = array_merge($params, $features);
         }
 
