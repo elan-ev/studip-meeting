@@ -82,7 +82,7 @@ class DriverFactory
             throw new Error(sprintf('The driver "%s" has not configured the url config option!', $driver), 404);
         }
 
-        $driver_conf['url'] = rtrim($driver_conf['url'], '/');
+        $driver_conf['url'] = trim(rtrim($driver_conf['url'], '/'));
         $client_options = [];
         if (isset($driver_conf['proxy'])) {
             $client_options['proxy'] = $driver_conf['proxy'];
