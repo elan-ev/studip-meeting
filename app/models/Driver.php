@@ -119,7 +119,8 @@ class Driver
                 $config_tmp[$driver_name]['enable'] = 1;
                 $driver_factory = new DriverFactory($config_tmp);
                 foreach ($value as $index => $server_info) {
-                    if (empty(trim($server_info['url']))) {
+                    $server_info['url'] = trim(rtrim($server_info['url'], '/'));
+                    if (!$server_info['url']) {
                         $valid_servers = false;
                         continue;
                     }
@@ -194,7 +195,7 @@ class Driver
                             $value = $feature_value;
                             if (filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
                                 $value = filter_var($feature_value, FILTER_VALIDATE_BOOLEAN);
-                            } 
+                            }
                             $features[$feature_names] = filter_var($feature_value, FILTER_VALIDATE_BOOLEAN);
                         }
                     }
@@ -204,7 +205,7 @@ class Driver
             $meeting->features = json_encode($features);
             $meeting->store();
         }
-    } 
+    }
 
     private static function validateRoomSizes($server_info) {
         $min_participants_arr = [];
@@ -215,7 +216,7 @@ class Driver
                     $isValid = false;
                     break;
                 }
-                if (in_array(array_values($min_participants_arr), $values['minParticipants'])) {
+                if (isset($values['minParticipants']) && in_array($values['minParticipants'], array_values($min_participants_arr))) {
                     $isValid = false;
                     break;
                 }
