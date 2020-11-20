@@ -24,7 +24,7 @@ const initialState = {
     rooms_info: [],
     room: {
         "name": "",
-        "driver_name": "",
+        "driver": "",
         "server_index": "",
         "join_as_moderator": "0",
         "features": {},
@@ -106,7 +106,7 @@ export const mutations = {
     [ROOM_CLEAR](state) {
         state.room = {
             "name": "",
-            "driver_name": "",
+            "driver": "",
             "server_index": "",
             "join_as_moderator": "0",
             "features": {},

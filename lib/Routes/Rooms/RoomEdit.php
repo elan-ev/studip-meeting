@@ -30,7 +30,7 @@ class RoomEdit extends MeetingsController
      * @param boolean $json['join_as_moderator'] moderator permission
      * @param boolean $json['active'] moderator permission
      *
-     * @return json message 
+     * @return json message
      *
      */
     public function __invoke(Request $request, Response $response, $args)
@@ -42,10 +42,10 @@ class RoomEdit extends MeetingsController
         }
 
         $room_id = $args['room_id'];
-        
+
         $meetingCourse = new MeetingCourse([$room_id, $json['cid']]);
         $name = trim($json['name']);
-        $allow_change_driver = (isset($json['driver_name']) && !empty($json['driver_name'])) || !isset($json['driver_name']);
+        $allow_change_driver = (isset($json['driver']) && !empty($json['driver'])) || !isset($json['driver']);
         $allow_change_server_index = (isset($json['server_index']) && is_numeric($json['server_index'])) || !isset($json['server_index']);
 
         $message = [];
@@ -63,7 +63,7 @@ class RoomEdit extends MeetingsController
             $meeting->name = $name;
             !isset($json['recordingUrl']) ?: $meeting->recording_url = utf8_decode($json['recording_url']);
             !isset($json['join_as_moderator']) ?: $meeting->join_as_moderator = $json['join_as_moderator'];
-            !isset($json['driver_name']) ?: $meeting->driver = $json['driver_name'];
+            !isset($json['driver']) ?: $meeting->driver = $json['driver'];
             !isset($json['server_index']) ?: $meeting->server_index = $json['server_index'];
 
             // apply default features
@@ -76,10 +76,10 @@ class RoomEdit extends MeetingsController
                 //Handle recording stuff
                 $record = 'false';
                 $opencast_series_id = '';
-                if (Driver::getConfigValueByDriver($json['driver_name'], 'record')) { //config double check
+                if (Driver::getConfigValueByDriver($json['driver'], 'record')) { //config double check
                     if (isset($json['features']['record']) && $json['features']['record'] == 'true') { //user record request
                         $record = 'true';
-                        if (Driver::getConfigValueByDriver($json['driver_name'], 'opencast')) { // config check for opencast
+                        if (Driver::getConfigValueByDriver($json['driver'], 'opencast')) { // config check for opencast
                             $series_id = MeetingPlugin::checkOpenCast($json['cid']);
                             if ($series_id) {
                                 $opencast_series_id = $series_id;
@@ -99,7 +99,7 @@ class RoomEdit extends MeetingsController
                 !$opencast_series_id ?: $json['features']['meta_opencast-dc-isPartOf'] = $opencast_series_id;
 
                 //validate maxParticipants if the server has default
-                $servers = Driver::getConfigValueByDriver($json['driver_name'], 'servers');
+                $servers = Driver::getConfigValueByDriver($json['driver'], 'servers');
                 $server_maxParticipants = $servers[$json['server_index']]['maxParticipants'];
                 if (is_numeric($server_maxParticipants) && $server_maxParticipants > 0 && $json['features']['maxParticipants'] > $server_maxParticipants) {
                     $message = [
