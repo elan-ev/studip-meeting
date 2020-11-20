@@ -27,7 +27,7 @@
 
             <p>
                 <StudipButton type="button" icon="add" v-if="rooms_list.length && config && course_config.display.addRoom"
-                    @click="create_edit_room = true">
+                    @click="createEditRoom = true">
                     {{ 'Raum hinzufügen' | i18n }}
                 </StudipButton>
 
@@ -50,58 +50,6 @@
                     </MeetingComponent>
             </form>
 
-            <div id="recording-modal" style="display: none;">
-                <form class="default" method="post" style="position: relative">
-                    <fieldset v-if="Object.keys(recording_list).includes('opencast')">
-                        <legend>{{ "Opencast" | i18n }}</legend>
-                        <label>
-                            <a class="meeting-recording-url" target="_blank"
-                            :href="recording_list['opencast']">
-                                {{ 'Die vorhandenen Aufzeichnungen auf Opencast' | i18n}}
-                            </a>
-                        </label>
-                    </fieldset>
-                    <fieldset v-if="Object.keys(recording_list).includes('default') && Object.keys(recording_list['default']).length">
-                        <label>
-                            <table  class="default collapsable">
-                                <thead>
-                                    <tr>
-                                        <th>{{ "Datum" | i18n }}</th>
-                                        <th>{{ "Aktionen" | i18n }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(recording, index) in recording_list.default" :key="index">
-                                        <td style="width: 60%">{{ recording['startTime'] }}</td>
-                                        <td style="width: 40%">
-                                            <div style="display: inline-block;width:80%;">
-                                                <div v-if="Array.isArray(recording['playback']['format'])" style="display: flex; flex-direction: column; ">
-                                                    <a v-for="(format, index) in recording['playback']['format']" :key="index"
-                                                    class="meeting-recording-url" target="_blank"
-                                                    :href="format['url']">
-                                                        {{ `Aufzeichnung ansehen` | i18n}} {{ `(${format['type']})` }}
-                                                    </a>
-                                                </div>
-                                                <div v-else>
-                                                    <a class="meeting-recording-url" target="_blank"
-                                                    :href="recording['playback']['format']['url']">
-                                                        {{ `Aufzeichnung ansehen`  | i18n}}
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div v-if="course_config.display.deleteRecording" style="display: inline-block;width:15%; text-align: right;">
-                                                <a style="cursor: pointer;" @click.prevent="deleteRecording(recording)">
-                                                    <StudipIcon icon="trash" role="attention"></StudipIcon>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </label>
-                    </fieldset>
-                </form>
-            </div>
             <div id="guest-invitation-modal" style="display: none;">
                 <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
                     {{ modal_message.text }}
@@ -215,9 +163,14 @@
         </span>
 
         <!-- dialogs -->
-        <MeetingAdd v-if="create_edit_room"
+        <MeetingAdd v-if="createEditRoom"
             @done="roomEditDone"
-            @cancel="create_edit_room=false"
+            @cancel="createEditRoom = false"
+        />
+
+        <MeetingRecordings v-if="showRecordings"
+            :room="showRecordings"
+            @cancel="showRecordings = false"
         />
     </div>
 </template>
@@ -233,6 +186,7 @@ import MessageBox from "@/components/MessageBox";
 import MeetingStatus from "@/components/MeetingStatus";
 import MeetingComponent from "@/components/MeetingComponent";
 import MeetingAdd from "@/components/MeetingAdd";
+import MeetingRecordings from "@/components/MeetingRecordings";
 
 import {
     CONFIG_COURSE_READ, FEEDBACK_SUBMIT,
@@ -256,13 +210,14 @@ export default {
         MessageBox,
         MeetingStatus,
         MeetingComponent,
-        MeetingAdd
+        MeetingAdd,
+        MeetingRecordings
     },
 
     computed: {
         ...mapGetters([
             'config', 'room', 'rooms_list', 'rooms_info', 'rooms_checked',
-            'course_config', 'recording_list', 'recording', 'feedback', 'network_types', 'course_groups'
+            'course_config', 'feedback', 'network_types', 'course_groups'
         ]),
 
         config_list: function() {
@@ -288,7 +243,8 @@ export default {
             modal_message: {},
             guest_link: '',
             searchtext: '',
-            create_edit_room: false
+            createEditRoom: false,
+            showRecordings: false
         }
     },
 
@@ -349,39 +305,6 @@ export default {
         cancelFeedback() {
             this.$store.commit(FEEDBACK_CLEAR);
             $('#feedback-modal').dialog('close');
-        },
-
-        showRecording(room) {
-            this.$store.dispatch(RECORDING_LIST, room.id).then(({ data }) => {
-                if ((data.default && data.default.length) || data.opencast) {
-                    this.$store.commit(RECORDING_LIST_SET, data);
-                    $('#recording-modal')
-                    .dialog({
-                        width: '70%',
-                        modal: true,
-                        title: `Aufzeichnungen für Raum "${room.name}"`.toLocaleString()
-                    });
-                } else {
-                    this.message = {
-                        type: 'info',
-                        text: `Keine Aufzeichnungen für Raum "${room.name}"`.toLocaleString()
-                    };
-                }
-            });
-        },
-
-        deleteRecording(recording) {
-            this.$store.dispatch(RECORDING_DELETE, recording);
-            this.$store.dispatch(RECORDING_LIST, recording.room_id).then(({ data }) => {
-                this.$store.commit(RECORDING_LIST_SET, data);
-                if (!data.length) {
-                    $('button.ui-dialog-titlebar-close').trigger('click');
-                }
-                var room = this.rooms_list.find(m => m.meeting_id == recording.room_id);
-                if (room) {
-                    room.recordings_count = data.length;
-                }
-            });
         },
 
         getRoomList() {
@@ -484,20 +407,24 @@ export default {
             this.$set(this.room, "group_id" , ((Object.keys(room).includes('group_id') && room.group_id != undefined) ? room.group_id : ""));
             this.modal_message = {};
 
-            this.create_edit_room = true;
+            this.createEditRoom = true;
         },
 
         showMessage(message) {
             this.message = message;
         },
 
+        showRecording(room) {
+            this.showRecordings = room;
+        },
+
         createNewRoom() {
             this.$store.commit(ROOM_CLEAR);
-            this.create_edit_room = true;
+            this.createEditRoom = true;
         },
 
         roomEditDone() {
-            this.create_edit_room = false;
+            this.createEditRoom = false;
             this.getRoomList();
         }
     },
