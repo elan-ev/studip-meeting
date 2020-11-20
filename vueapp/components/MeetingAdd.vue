@@ -30,11 +30,14 @@
                                     <input type="text" v-model.trim="room['name']" id="name">
                                 </label>
                             </fieldset>
+
                             <fieldset v-if="(Object.keys(config).length > 1) || (room['driver_name']
                                         && Object.keys(config[room['driver_name']]['servers']).length > 1)">
+
                                 <legend>
                                     {{ 'Konferenz Systemeinstellung' | i18n }}
                                 </legend>
+
                                 <label v-if="Object.keys(config).length > 1">
                                     <span class="required">{{ "Konferenzsystem" | i18n }}</span>
                                     <select id="driver_name" v-model="room['driver_name']" @change.prevent="handleServerDefaults" :disabled="Object.keys(config).length == 1">
@@ -45,6 +48,7 @@
                                         </option>
                                     </select>
                                 </label>
+
                                 <label v-if="room['driver_name']
                                         && Object.keys(config[room['driver_name']]['servers']).length > 1"
                                 >
@@ -66,9 +70,9 @@
                                     </select>
                                 </label>
                             </fieldset>
+
                             <fieldset>
                                 <legend>{{ "Zusätzliche Funktionen" | i18n }}</legend>
-                                <!-- Moderationsrechte -->
                                 <label>
                                     <input type="checkbox"
                                     id="join_as_moderator"
@@ -77,6 +81,7 @@
                                     v-model="room['join_as_moderator']">
                                     {{ "Alle Teilnehmenden haben Moderationsrechte" | i18n }}
                                 </label>
+
                                 <div v-if="room['driver_name'] && Object.keys(config[room['driver_name']]).includes('features')
                                         && Object.keys(config[room['driver_name']]['features']).includes('create') &&
                                         Object.keys(config[room['driver_name']]['features']['create']).length">
@@ -103,19 +108,25 @@
                                             </select>
                                         </label>
                                         <label v-else>
+
                                             {{ feature['display_name'] | i18n }}
                                             <span v-if="feature['name'] == 'maxParticipants'
                                                     && Object.keys(config[room['driver_name']]).includes('server_defaults')
                                                     && room['server_index']
+                                                    && config[room['driver_name']]['server_defaults'][room['server_index']] != undefined
                                                     && Object.keys(config[room['driver_name']]['server_defaults'][room['server_index']]).includes('maxAllowedParticipants')">
                                                 &nbsp; ({{"Max. Limit: " + config[room['driver_name']]['server_defaults'][room['server_index']]['maxAllowedParticipants']}})
                                             </span>
-                                            <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
+                                            <StudipTooltipIcon v-if="Object.keys(feature).includes('info')"
+                                                :text="feature['info'] | i18n">
+                                            </StudipTooltipIcon>
 
                                             <input :type="(feature['name'] == 'duration' || feature['name'] == 'maxParticipants') ? 'number' : 'text'"
                                                 :max="(
                                                     (feature['name'] == 'maxParticipants') ?
-                                                    (Object.keys(config[room['driver_name']]).includes('server_defaults') && room['server_index']
+                                                    (Object.keys(config[room['driver_name']]).includes('server_defaults')
+                                                        && room['server_index']
+                                                        && config[room['driver_name']]['server_defaults'][room['server_index']] != undefined
                                                         && Object.keys(config[room['driver_name']]['server_defaults'][room['server_index']]).includes('maxAllowedParticipants')) ?
                                                             config[room['driver_name']]['server_defaults'][room['server_index']]['maxAllowedParticipants']
                                                         : ''
@@ -126,6 +137,7 @@
                                                 v-model.trim="room['features'][feature['name']]"
                                                 :placeholder="feature['value'] ? feature['value'] : ''"
                                                 :id="feature['name']">
+
                                         </label>
                                     </div>
                                 </div>
@@ -167,7 +179,6 @@
                                     </label>
                                 </div>
                             </fieldset>
-
 
                             <fieldset v-if="(Object.keys(course_groups).length > 1)">
                                 <legend>{{ "Gruppenraum" | i18n }}</legend>
@@ -254,8 +265,9 @@ export default {
         setDriver() {
             if (Object.keys(this.config).length == 1) {
                 this.$set(this.room, "driver_name" , Object.keys(this.config)[0]);
-                this.handleServerDefaults();
             }
+
+            this.handleServerDefaults();
         },
 
         handleServerDefaults() {
