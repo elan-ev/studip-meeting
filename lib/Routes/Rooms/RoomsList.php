@@ -88,8 +88,11 @@ class RoomsList extends MeetingsController
                         }
                     }
                 }
+
+                $creator = \User::find($meetingCourse->meeting->user_id);
+
                 $meeting['details'] = [
-                    'creator' => \User::find($meetingCourse->meeting->user_id)->getFullname(),
+                    'creator' => $create ? $creator->getFullname() : 'unbekannt',
                     'date'    => date('d.m.Y H:i', $meetingCourse->meeting->mkdate)
                 ];
 
