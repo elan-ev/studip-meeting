@@ -216,7 +216,7 @@
 
         <!-- dialogs -->
         <MeetingAdd v-if="create_edit_room"
-            @done="create_edit_room=false && getRoomList()"
+            @done="roomEditDone"
             @cancel="create_edit_room=false"
         />
     </div>
@@ -494,6 +494,11 @@ export default {
         createNewRoom() {
             this.$store.commit(ROOM_CLEAR);
             this.create_edit_room = true;
+        },
+
+        roomEditDone() {
+            this.create_edit_room = false;
+            this.getRoomList();
         }
     },
 
