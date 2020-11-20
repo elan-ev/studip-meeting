@@ -215,7 +215,10 @@
         </span>
 
         <!-- dialogs -->
-        <MeetingAdd v-if="create_edit_room"/>
+        <MeetingAdd v-if="create_edit_room"
+            @done="create_edit_room=false && getRoomList()"
+            @cancel="create_edit_room=false"
+        />
     </div>
 </template>
 
@@ -469,29 +472,7 @@ export default {
             this.$set(this.room, "group_id" , ((Object.keys(room).includes('group_id') && room.group_id != undefined) ? room.group_id : ""));
             this.modal_message = {};
 
-
-            let options;
-
-            // handle mobile devices
-            if (window.innerWidth < 600) {
-                options = {
-                    width: '100%',
-                    modal: true,
-                    position: { my: "top", at: "top", of: window },
-                    title: 'Raumeinstellung'.toLocaleString()
-                }
-            } else {
-                options = {
-                    minWidth: 500,
-                    modal: true,
-                    position: { my: "top", at: "top", of: window },
-                    title: 'Raumeinstellung'.toLocaleString()
-                }
-            }
-
-            options.maxHeight = $(window).height();
-
-            $('#conference-meeting-create').dialog(options);
+            this.create_edit_room = true;
         },
 
         showMessage(message) {

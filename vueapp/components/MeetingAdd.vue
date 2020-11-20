@@ -382,12 +382,11 @@ export default {
                     } else {
                         $('button.ui-dialog-titlebar-close').trigger('click');
                         store.dispatch(ROOM_LIST);
-                        setTimeout(function() {
-                            this.message = null;
-                        }, 3000);
+                        this.$emit('done');
                     }
                 }).catch (({error}) => {
                     $('#conference-meeting-create').dialog('close');
+                    this.$emit('cancel');
                 });
             } else {
                 $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
@@ -401,8 +400,11 @@ export default {
             if (event) {
                 event.preventDefault();
             }
+
             $('button.ui-dialog-titlebar-close').trigger('click');
+
             this.$store.commit(ROOM_CLEAR);
+            this.$emit('cancel');
         },
 
         roomFormSubmit(event) {
@@ -429,13 +431,14 @@ export default {
                 this.message = data.message;
                 if (data.message.type == 'success') {
                     $('#conference-meeting-create').dialog('close');
-                    this.getRoomList();
+                    this.$emit('done');
                 } else {
                     $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
                     this.modal_message = data.message;
                 }
             }).catch (({error}) => {
                 $('#conference-meeting-create').dialog('close');
+                this.$emit('cancel');
             });
         }
     }
