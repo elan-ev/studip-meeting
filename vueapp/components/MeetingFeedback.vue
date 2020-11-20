@@ -6,7 +6,7 @@
 
                     <header class="modal-header">
                         <slot name="header">
-                            {{ `Aufzeichnungen für Raum ${room.name}` | i18n }}
+                            {{ `Feedback für Raum ${room.name}` | i18n }}
                             <span class="modal-close-button" @click="$emit('cancel')"></span>
                         </slot>
                     </header>
