@@ -26,7 +26,7 @@ class RoomAdd extends MeetingsController
      *
      * @param string $json['cid'] course id
      * @param string $json['name'] meeting room name
-     * @param string $json['driver_name'] name of driver
+     * @param string $json['driver'] name of driver
      * @param string $json['server_index'] driver server index
      * @param boolean $json['join_as_moderator'] moderator permission
      *
@@ -56,7 +56,7 @@ class RoomAdd extends MeetingsController
                     $exists = true;
                 }
             }
-            //validations 
+            //validations
             if ($exists) {
                 $has_error = true;
                 $error_text = _('Es existiert bereits ein gleichnamiger Raum.');
@@ -67,7 +67,7 @@ class RoomAdd extends MeetingsController
                 $error_text = _('Der Raumname darf nicht leer sein');
             }
 
-            if (empty($json['driver_name'])) {
+            if (empty($json['driver'])) {
                 $has_error = true;
                 $error_text = _('Es ist kein Konferenzsystem ausgewählt');
             }
@@ -77,7 +77,7 @@ class RoomAdd extends MeetingsController
                 $error_text = _('Server ist nicht definiert');
             }
 
-            $servers = Driver::getConfigValueByDriver($json['driver_name'], 'servers');
+            $servers = Driver::getConfigValueByDriver($json['driver'], 'servers');
             $server_maxParticipants = $servers[$json['server_index']]['maxParticipants'];
             if (is_numeric($server_maxParticipants) && $server_maxParticipants > 0 && $json['features']['maxParticipants'] > $server_maxParticipants) {
                 $has_error = true;
@@ -98,10 +98,10 @@ class RoomAdd extends MeetingsController
                 //Handle recording stuff
                 $record = 'false';
                 $opencast_series_id = '';
-                if (Driver::getConfigValueByDriver($json['driver_name'], 'record')) { //config double check
+                if (Driver::getConfigValueByDriver($json['driver'], 'record')) { //config double check
                     if (isset($json['features']['record']) && $json['features']['record'] == 'true') { //user record request
                         $record = 'true';
-                        if (Driver::getConfigValueByDriver($json['driver_name'], 'opencast')) { // config check for opencast
+                        if (Driver::getConfigValueByDriver($json['driver'], 'opencast')) { // config check for opencast
                             $series_id = MeetingPlugin::checkOpenCast($json['cid']);
                             if ($series_id) {
                                 $opencast_series_id = $series_id;
@@ -113,12 +113,12 @@ class RoomAdd extends MeetingsController
                 }
                 $json['features']['record'] = $record;
                 !$opencast_series_id ?: $json['features']['meta_opencast-dc-isPartOf'] = $opencast_series_id;
-                
+
                 $meeting = new Meeting();
                 $meeting->courses[] = new \Course($json['cid']);
                 $meeting->user_id = $user->id;
                 $meeting->name = trim($json['name']);
-                $meeting->driver = $json['driver_name'];
+                $meeting->driver = $json['driver'];
                 $meeting->server_index = $json['server_index'];
                 $meeting->attendee_password = Helper::createPassword();
                 $meeting->moderator_password = Helper::createPassword();
@@ -135,12 +135,12 @@ class RoomAdd extends MeetingsController
                     $meetingCourse->store();
                 }
 
-                $driver = $driver_factory->getDriver($json['driver_name'], $json['server_index']);
+                $driver = $driver_factory->getDriver($json['driver'], $json['server_index']);
 
                 try {
                     if (!$driver->createMeeting($meetingParameters)) {
                         self::revert_on_fail($meeting, $json['cid']);
-                        throw new Error(sprintf('Meeting mit %s Treiber kann nicht erstellt werden', $json['driver_name']), 404);
+                        throw new Error(sprintf('Meeting mit %s Treiber kann nicht erstellt werden', $json['driver']), 404);
                     }
                 } catch (Exception $e) {
                     self::revert_on_fail($meeting, $json['cid']);
@@ -164,7 +164,7 @@ class RoomAdd extends MeetingsController
         } catch (Exception $e) {
             throw new Error($e->getMessage(), 404);
         }
-        
+
         return $this->createResponse([
             'message'=> $message,
         ], $response);
@@ -174,16 +174,16 @@ class RoomAdd extends MeetingsController
      * Checks if a meeting is identically exists
      *
      * @param \MeetingCourse $meetingCourse user defined course meeting
-     * 
+     *
      * @param array $data request data
-     * 
+     *
      * @return boolean
      */
     private function meeting_exists($meetingCourse, $data)
     {
         if ($meetingCourse->course_id == $data['cid']
             && trim($meetingCourse->meeting->name) == trim($data['name'])
-            && $meetingCourse->meeting->driver == $data['driver_name']
+            && $meetingCourse->meeting->driver == $data['driver']
             && $meetingCourse->meeting->server_index == $data['server_index']) {
                 return true;
         } else {
@@ -196,7 +196,7 @@ class RoomAdd extends MeetingsController
      *
      * @param \Meeting $meeting
      * @param string $cid course id
-     * 
+     *
      */
     private function revert_on_fail($meeting, $cid)
     {

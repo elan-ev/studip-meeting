@@ -16,7 +16,7 @@
                         <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
                             {{ modal_message.text }}
                         </MessageBox>
-                        <MessageBox v-else-if="room['driver_name'] && !Object.keys(config[room['driver_name']]['servers']).length"
+                        <MessageBox v-else-if="room['driver'] && !Object.keys(config[room['driver']]['servers']).length"
                              type="error">
                             {{ "Es gibt keine Server für dieses Konferenzsystem, bitte wählen Sie ein anderes Konferenzsystem" | i18n }}
                         </MessageBox>
@@ -31,8 +31,8 @@
                                 </label>
                             </fieldset>
 
-                            <fieldset v-if="(Object.keys(config).length > 1) || (room['driver_name']
-                                        && Object.keys(config[room['driver_name']]['servers']).length > 1)">
+                            <fieldset v-if="(Object.keys(config).length > 1) || (room['driver']
+                                        && Object.keys(config[room['driver']]['servers']).length > 1)">
 
                                 <legend>
                                     {{ 'Konferenz Systemeinstellung' | i18n }}
@@ -40,31 +40,31 @@
 
                                 <label v-if="Object.keys(config).length > 1">
                                     <span class="required">{{ "Konferenzsystem" | i18n }}</span>
-                                    <select id="driver_name" v-model="room['driver_name']" @change.prevent="handleServerDefaults" :disabled="Object.keys(config).length == 1">
+                                    <select id="driver" v-model="room['driver']" @change.prevent="handleServerDefaults" :disabled="Object.keys(config).length == 1">
                                         <option value="" disabled> {{ "Bitte wählen Sie ein Konferenzsystem aus" | i18n }} </option>
-                                        <option v-for="(driver_config, driver_name) in config" :key="driver_name"
-                                                :value="driver_name">
+                                        <option v-for="(driver_config, driver) in config" :key="driver"
+                                                :value="driver">
                                                 {{ driver_config['display_name'] }}
                                         </option>
                                     </select>
                                 </label>
 
-                                <label v-if="room['driver_name']
-                                        && Object.keys(config[room['driver_name']]['servers']).length > 1"
+                                <label v-if="room['driver']
+                                        && Object.keys(config[room['driver']]['servers']).length > 1"
                                 >
                                     <span class="required">
                                         {{ "Verfügbare Server" | i18n }}
                                     </span>
 
                                     <select id="server_index" v-model="room['server_index']" @change.prevent="handleServerDefaults"
-                                        :disabled="Object.keys(config[room['driver_name']]['servers']).length == 1">
+                                        :disabled="Object.keys(config[room['driver']]['servers']).length == 1">
                                         <option value="" disabled> {{ "Bitte wählen Sie einen Server aus" | i18n }} </option>
-                                        <option v-for="(server_config, server_index) in config[room['driver_name']]['servers']" :key="server_index"
+                                        <option v-for="(server_config, server_index) in config[room['driver']]['servers']" :key="server_index"
                                                 :value="'' + server_index">
                                                 Server {{ (server_index + 1) }}
-                                                <span v-if="config[room['driver_name']]['server_defaults'] && config[room['driver_name']]['server_defaults'][server_index]
-                                                            &&  config[room['driver_name']]['server_defaults'][server_index]['maxAllowedParticipants']">
-                                                    ({{ "max. " + config[room['driver_name']]['server_defaults'][server_index]['maxAllowedParticipants'] }} {{ "Teilnehmer" | i18n }})
+                                                <span v-if="config[room['driver']]['server_defaults'] && config[room['driver']]['server_defaults'][server_index]
+                                                            &&  config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants']">
+                                                    ({{ "max. " + config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants'] }} {{ "Teilnehmer" | i18n }})
                                                 </span>
                                         </option>
                                     </select>
@@ -82,10 +82,10 @@
                                     {{ "Alle Teilnehmenden haben Moderationsrechte" | i18n }}
                                 </label>
 
-                                <div v-if="room['driver_name'] && Object.keys(config[room['driver_name']]).includes('features')
-                                        && Object.keys(config[room['driver_name']]['features']).includes('create') &&
-                                        Object.keys(config[room['driver_name']]['features']['create']).length">
-                                    <div v-for="(feature, index) in config[room['driver_name']]['features']['create']" :key="index">
+                                <div v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
+                                        && Object.keys(config[room['driver']]['features']).includes('create') &&
+                                        Object.keys(config[room['driver']]['features']['create']).length">
+                                    <div v-for="(feature, index) in config[room['driver']]['features']['create']" :key="index">
                                         <label v-if="(feature['value'] === true || feature['value'] === false)">
                                             <input  type="checkbox"
                                                 true-value="true"
@@ -111,11 +111,11 @@
 
                                             {{ feature['display_name'] | i18n }}
                                             <span v-if="feature['name'] == 'maxParticipants'
-                                                    && Object.keys(config[room['driver_name']]).includes('server_defaults')
+                                                    && Object.keys(config[room['driver']]).includes('server_defaults')
                                                     && room['server_index']
-                                                    && config[room['driver_name']]['server_defaults'][room['server_index']] != undefined
-                                                    && Object.keys(config[room['driver_name']]['server_defaults'][room['server_index']]).includes('maxAllowedParticipants')">
-                                                &nbsp; ({{"Max. Limit: " + config[room['driver_name']]['server_defaults'][room['server_index']]['maxAllowedParticipants']}})
+                                                    && config[room['driver']]['server_defaults'][room['server_index']] != undefined
+                                                    && Object.keys(config[room['driver']]['server_defaults'][room['server_index']]).includes('maxAllowedParticipants')">
+                                                &nbsp; ({{"Max. Limit: " + config[room['driver']]['server_defaults'][room['server_index']]['maxAllowedParticipants']}})
                                             </span>
                                             <StudipTooltipIcon v-if="Object.keys(feature).includes('info')"
                                                 :text="feature['info'] | i18n">
@@ -124,11 +124,11 @@
                                             <input :type="(feature['name'] == 'duration' || feature['name'] == 'maxParticipants') ? 'number' : 'text'"
                                                 :max="(
                                                     (feature['name'] == 'maxParticipants') ?
-                                                    (Object.keys(config[room['driver_name']]).includes('server_defaults')
+                                                    (Object.keys(config[room['driver']]).includes('server_defaults')
                                                         && room['server_index']
-                                                        && config[room['driver_name']]['server_defaults'][room['server_index']] != undefined
-                                                        && Object.keys(config[room['driver_name']]['server_defaults'][room['server_index']]).includes('maxAllowedParticipants')) ?
-                                                            config[room['driver_name']]['server_defaults'][room['server_index']]['maxAllowedParticipants']
+                                                        && config[room['driver']]['server_defaults'][room['server_index']] != undefined
+                                                        && Object.keys(config[room['driver']]['server_defaults'][room['server_index']]).includes('maxAllowedParticipants')) ?
+                                                            config[room['driver']]['server_defaults'][room['server_index']]['maxAllowedParticipants']
                                                         : ''
                                                     : ''
                                                 )"
@@ -143,12 +143,12 @@
                                 </div>
                             </fieldset>
 
-                            <fieldset v-if="room['driver_name'] && Object.keys(config[room['driver_name']]).includes('features')
-                                        && Object.keys(config[room['driver_name']]['features']).includes('record')
-                                        && Object.keys(config[room['driver_name']]['features']['record']).length
-                                        && Object.keys(config[room['driver_name']]).includes('record')">
+                            <fieldset v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
+                                        && Object.keys(config[room['driver']]['features']).includes('record')
+                                        && Object.keys(config[room['driver']]['features']['record']).length
+                                        && Object.keys(config[room['driver']]).includes('record')">
                                 <legend>{{ "Aufzeichnung" | i18n }}</legend>
-                                <div v-for="(feature, index) in config[room['driver_name']]['features']['record']" :key="index">
+                                <div v-for="(feature, index) in config[room['driver']]['features']['record']" :key="index">
                                     <label v-if="(feature['value'] === true || feature['value'] === false)">
                                         <input  type="checkbox"
                                             true-value="true"
@@ -157,7 +157,7 @@
 
                                             {{ feature['display_name'] | i18n }}
                                             <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"
-                                                :badge="(Object.keys(config[room['driver_name']]).includes('opencast') && config[room['driver_name']]['opencast'] == '1' && feature['info'].toLowerCase().includes('opencast')) ? true : false">{{'beta'}}</StudipTooltipIcon>
+                                                :badge="(Object.keys(config[room['driver']]).includes('opencast') && config[room['driver']]['opencast'] == '1' && feature['info'].toLowerCase().includes('opencast')) ? true : false">{{'beta'}}</StudipTooltipIcon>
                                     </label>
 
                                     <label v-else-if="feature['value'] && typeof feature['value'] === 'object'">
@@ -233,6 +233,8 @@ import {
 export default {
     name: "MeetingAdd",
 
+    props: ['room'],
+
     components: {
         StudipButton,
         StudipIcon,
@@ -249,7 +251,7 @@ export default {
 
     computed: {
         ...mapGetters([
-            'config', 'room',
+            'config',
             'course_config', 'course_groups'
         ])
     },
@@ -262,14 +264,14 @@ export default {
     methods: {
         setDriver() {
             if (Object.keys(this.config).length == 1) {
-                this.$set(this.room, "driver_name" , Object.keys(this.config)[0]);
+                this.$set(this.room, "driver" , Object.keys(this.config)[0]);
                 this.handleServerDefaults();
             }
 
             // check, if the selected server is still available for this room
-            if (this.room['driver_name'] !== undefined
-                && this.config[this.room['driver_name']] !== undefined
-                && this.config[this.room['driver_name']]['server_defaults'][this.room['server_index']] === undefined
+            if (this.room['driver'] !== undefined
+                && this.config[this.room['driver']] !== undefined
+                && this.config[this.room['driver']]['server_defaults'][this.room['server_index']] === undefined
             ) {
                 this.$set(this.room, "server_index" , "0");
             }
@@ -277,24 +279,24 @@ export default {
 
         handleServerDefaults() {
             //mandatory server selection when there is only one server
-            if (this.room['driver_name'] && Object.keys(this.config[this.room['driver_name']]['servers']).length == 1) {
+            if (this.room['driver'] && Object.keys(this.config[this.room['driver']]['servers']).length == 1) {
                 this.$set(this.room, "server_index" , "0");
             }
 
             //set default features
             this.$set(this.room, "features" , {});
 
-            if (Object.keys(this.config[this.room['driver_name']]).includes('features')) {
+            if (Object.keys(this.config[this.room['driver']]).includes('features')) {
                 //set default value of features
-                if (Object.keys(this.config[this.room['driver_name']]['features']).includes('create') &&
-                    Object.keys(this.config[this.room['driver_name']]['features']['create']).length) {
+                if (Object.keys(this.config[this.room['driver']]['features']).includes('create') &&
+                    Object.keys(this.config[this.room['driver']]['features']['create']).length) {
                     //applying first level of defaults for create features - important
-                    this.config[this.room['driver_name']]['features']['create'].forEach(feature => { //apply all values for room feature!
+                    this.config[this.room['driver']]['features']['create'].forEach(feature => { //apply all values for room feature!
                         this.$set(this.room['features'], feature.name , feature.value);
                     });
                     // set all selects to first entry
-                    for (let index in this.config[this.room['driver_name']]['features']['create']) {
-                        let feature = this.config[this.room['driver_name']]['features']['create'][index];
+                    for (let index in this.config[this.room['driver']]['features']['create']) {
+                        let feature = this.config[this.room['driver']]['features']['create'][index];
 
                         if (typeof feature.value === 'object' && !Array.isArray(feature.value)) {
                             this.room['features'][feature['name']] = Object.keys(feature['value'])[0];
@@ -302,24 +304,24 @@ export default {
                     }
 
                     //Applying Second level of defaults from server defaults - if there is any but highly important!
-                    if (this.room['server_index'] && Object.keys(this.config[this.room['driver_name']]).includes('server_defaults') &&
-                        Object.keys(this.config[this.room['driver_name']]['server_defaults']).length &&
-                        Object.keys(this.config[this.room['driver_name']]['server_defaults']).includes(this.room['server_index'])) {
-                        for (const [feature_name, feature_value] of Object.entries(this.config[this.room['driver_name']]['server_defaults'][this.room['server_index']])) {
+                    if (this.room['server_index'] && Object.keys(this.config[this.room['driver']]).includes('server_defaults') &&
+                        Object.keys(this.config[this.room['driver']]['server_defaults']).length &&
+                        Object.keys(this.config[this.room['driver']]['server_defaults']).includes(this.room['server_index'])) {
+                        for (const [feature_name, feature_value] of Object.entries(this.config[this.room['driver']]['server_defaults'][this.room['server_index']])) {
                             if (feature_name != 'maxAllowedParticipants') {
                                 this.$set(this.room['features'], ((feature_name == 'totalMembers') ? 'maxParticipants' : feature_name ), feature_value);
                             }
                         }
                     }
                 }
-                if (Object.keys(this.config[this.room['driver_name']]['features']).includes('record') &&
-                    Object.keys(this.config[this.room['driver_name']]['features']['record']).length) {
-                    this.config[this.room['driver_name']]['features']['record'].forEach(feature => { //apply all values for room feature!
+                if (Object.keys(this.config[this.room['driver']]['features']).includes('record') &&
+                    Object.keys(this.config[this.room['driver']]['features']['record']).length) {
+                    this.config[this.room['driver']]['features']['record'].forEach(feature => { //apply all values for room feature!
                         this.$set(this.room['features'], feature.name , feature.value);
                     });
                     // set all selects to first entry
-                    for (let index in this.config[this.room['driver_name']]['features']['record']) {
-                        let feature = this.config[this.room['driver_name']]['features']['record'][index];
+                    for (let index in this.config[this.room['driver']]['features']['record']) {
+                        let feature = this.config[this.room['driver']]['features']['record'][index];
 
                         if (typeof feature.value === 'object' && !Array.isArray(feature.value)) {
                             this.room['features'][feature['name']] = Object.keys(feature['value'])[0];
@@ -331,10 +333,10 @@ export default {
         },
 
         checkPresets() {
-            if (this.room['driver_name'] && this.room['server_index']
-                && Object.keys(this.config[this.room['driver_name']]).includes('server_presets')
-                && Object.keys(this.config[this.room['driver_name']]['server_presets']).includes(this.room['server_index'])) {
-                for (const [size, featues] of  Object.entries(this.config[this.room['driver_name']]['server_presets'][this.room['server_index']])) {
+            if (this.room['driver'] && this.room['server_index']
+                && Object.keys(this.config[this.room['driver']]).includes('server_presets')
+                && Object.keys(this.config[this.room['driver']]['server_presets']).includes(this.room['server_index'])) {
+                for (const [size, featues] of  Object.entries(this.config[this.room['driver']]['server_presets'][this.room['server_index']])) {
                     if (this.room['features'] && this.room['features']['maxParticipants'] && parseInt(this.room['features']['maxParticipants']) >= parseInt(featues['minParticipants'])) {
                         for (const [feature_name, featues_value] of Object.entries(featues)) {
                             if (feature_name != 'minParticipants') {
@@ -348,13 +350,13 @@ export default {
 
         validateMaxParticipants() {
             var isValid = true;
-            if (this.room['driver_name'] && this.room['server_index'] && this.room['features'] && this.room['features']['maxParticipants']
-             && Object.keys(this.config[this.room['driver_name']]).includes('server_defaults')
-             && Object.keys(this.config[this.room['driver_name']]['server_defaults'][this.room['server_index']]).includes('maxAllowedParticipants')
-             && parseInt(this.room['features']['maxParticipants']) > parseInt(this.config[this.room['driver_name']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'])) {
+            if (this.room['driver'] && this.room['server_index'] && this.room['features'] && this.room['features']['maxParticipants']
+             && Object.keys(this.config[this.room['driver']]).includes('server_defaults')
+             && Object.keys(this.config[this.room['driver']]['server_defaults'][this.room['server_index']]).includes('maxAllowedParticipants')
+             && parseInt(this.room['features']['maxParticipants']) > parseInt(this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'])) {
 
-                this.$set(this.room['features'], 'maxParticipants', this.config[this.room['driver_name']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants']);
-                var maxAllowedParticipants = this.config[this.room['driver_name']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'];
+                this.$set(this.room['features'], 'maxParticipants', this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants']);
+                var maxAllowedParticipants = this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'];
                 this.modal_message.type = 'error';
                 this.modal_message.text = `Teilnehmerzahl darf ${maxAllowedParticipants} nicht überschreiten`.toLocaleString();
                 $('section.modal-body').animate({ scrollTop: 0}, 'slow');
