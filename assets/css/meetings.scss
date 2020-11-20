@@ -192,8 +192,9 @@ fieldset {
 
 .meetingcomponent {
     width: 35em;
-    float: left;
+    display: inline-block;
     margin-right: 1em;
+    vertical-align: top;
 }
 
 
@@ -249,7 +250,7 @@ fieldset {
             color: #000;
             position: relative;
             padding: 20px 10px;
-            max-height: 30em; 
+            max-height: 30em;
             overflow-y: auto;
 
             input:not([type=checkbox]) {
