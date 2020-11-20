@@ -49,41 +49,6 @@
                         v-on:getFeedback="showFeedbackDialog">
                     </MeetingComponent>
             </form>
-
-            <div id="guest-invitation-modal" style="display: none;">
-                <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
-                    {{ modal_message.text }}
-                </MessageBox>
-
-                <form class="default" @submit.prevent="generateGuestJoin">
-                    <fieldset>
-                        <label>
-                            <span class="required">{{ "Gastname" | i18n }}</span>
-                            <StudipTooltipIcon :text="'Der Gast bekommt diesen Namen in der Besprechung zugewiesen.' | i18n"></StudipTooltipIcon>
-                            <input type="text" v-model.trim="room['guest_name']" id="guestname" @change="generateGuestJoin($event)">
-                        </label>
-
-                        <label id="guest_link_label" v-if="guest_link">
-                            <span>{{ "Link" | i18n }}</span>
-                            <StudipTooltipIcon :text="'Bitte geben sie diesen Link dem Gast.' | i18n" :important="true"></StudipTooltipIcon>
-                            <textarea ref="guestLinkArea" v-model="guest_link" cols="30" rows="5"></textarea>
-                        </label>
-
-                        <div>
-                            <StudipButton type="button" v-on:click="copyGuestLinkClipboard($event)" v-if="guest_link">
-                                {{ "In Zwischenablage kopieren" | i18n}}
-                            </StudipButton>
-                            <StudipButton id="generate_link_btn" icon="accept" type="button" v-on:click="generateGuestJoin($event)" v-else>
-                                {{ "Einladungslink erstellen" | i18n }}
-                            </StudipButton>
-
-                            <StudipButton icon="cancel" type="button" v-on:click="cancelGuest($event)">
-                                {{ "Dialog schließen" | i18n}}
-                            </StudipButton>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
         </span>
 
         <!-- dialogs -->
@@ -102,6 +67,12 @@
             @done="feedbackDone"
             @cancel="showFeedback = false"
         />
+
+        <MeetingGuest v-if="showGuest"
+            :room="showGuest"
+            @done="showGuest = false"
+            @cancel="showGuest = false"
+        />
     </div>
 </template>
 
@@ -118,6 +89,7 @@ import MeetingComponent from "@/components/MeetingComponent";
 import MeetingAdd from "@/components/MeetingAdd";
 import MeetingRecordings from "@/components/MeetingRecordings";
 import MeetingFeedback from "@/components/MeetingFeedback";
+import MeetingGuest from "@/components/MeetingGuest";
 
 import {
     CONFIG_COURSE_READ, FEEDBACK_SUBMIT,
@@ -143,7 +115,8 @@ export default {
         MeetingComponent,
         MeetingAdd,
         MeetingRecordings,
-        MeetingFeedback
+        MeetingFeedback,
+        MeetingGuest
     },
 
     computed: {
@@ -173,11 +146,11 @@ export default {
         return {
             message: null,
             modal_message: {},
-            guest_link: '',
             searchtext: '',
             createEditRoom: false,
             showRecordings: false,
             showFeedback: false,
+            showGuest: false
         }
     },
 
@@ -185,74 +158,6 @@ export default {
         getRoomList() {
             this.$store.dispatch(ROOM_LIST);
             this.$store.dispatch(ROOM_INFO);
-        },
-
-        showGuestDialog(room) {
-            this.$store.commit(ROOM_CLEAR);
-            this.guest_link = '';
-            this.modal_message.text = '';
-
-            $('#guest-invitation-modal').data('room', room)
-            .dialog({
-                width: '50%',
-                modal: true,
-                title: 'Gast einladen'.toLocaleString()
-            });
-        },
-
-        generateGuestJoin(event) {
-            if (event) {
-                event.preventDefault();
-            }
-            var room = $('#guest-invitation-modal').data('room');
-
-            let view = this;
-
-            if (room && this.room['guest_name']) {
-                room.guest_name = this.room['guest_name'];
-                this.$store.dispatch(ROOM_JOIN_GUEST, room)
-                .then(({ data }) => {
-                    if (data.join_url != '') {
-                        view.guest_link = data.join_url;
-                    }
-                    if (data.message) {
-                        this.modal_message = data.message;
-                    }
-                }).catch (({error}) => {
-                    $('#guest-invitation-modal').dialog('close');
-                });
-            }
-        },
-
-        cancelGuest(event) {
-            if (event) {
-                event.preventDefault();
-            }
-            this.$store.commit(ROOM_CLEAR);
-            this.guest_link = '';
-            $('#guest-invitation-modal').dialog('close');
-        },
-
-        copyGuestLinkClipboard(event) {
-            if (event) {
-                event.preventDefault();
-            }
-
-            let guest_link_element = this.$refs.guestLinkArea;
-
-            if (this.guest_link.trim()) {
-                try {
-                    guest_link_element.select();
-                    document.execCommand("copy");
-                    document.getSelection().removeAllRanges();
-                    this.modal_message = {
-                        type: 'success',
-                        text: 'Der Link wurde in die Zwischenablage kopiert.'.toLocaleString()
-                    }
-                } catch(e) {
-                    console.log(e);
-                }
-            }
         },
 
         showEditFeatureDialog(room) {
@@ -295,6 +200,10 @@ export default {
 
         showFeedbackDialog(room) {
             this.showFeedback = room;
+        },
+
+        showGuestDialog(room) {
+            this.showGuest = room;
         },
 
         createNewRoom() {
