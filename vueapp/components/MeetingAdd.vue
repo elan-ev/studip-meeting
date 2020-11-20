@@ -195,17 +195,15 @@
                             </fieldset>
 
                             <footer class="modal-footer">
-                                <slot name="footer">
-                                    <StudipButton v-if="room['id']" icon="accept" type="button" v-on:click="editRoom($event)" class="ui-button ui-corner-all ui-widget">
-                                        {{ "Änderungen speichern" | i18n}}
-                                    </StudipButton>
-                                    <StudipButton v-else icon="accept" type="button" v-on:click="addRoom($event)" class="ui-button ui-corner-all ui-widget">
-                                        {{ "Raum erstellen" | i18n}}
-                                    </StudipButton>
-                                    <StudipButton icon="cancel" type="button" v-on:click="cancelAddRoom($event)" class="ui-button ui-corner-all ui-widget">
-                                        {{ "Abbrechen" | i18n}}
-                                    </StudipButton>
-                                </slot>
+                                <StudipButton v-if="room['id']" icon="accept" type="button" v-on:click="editRoom($event)" class="ui-button ui-corner-all ui-widget">
+                                    {{ "Änderungen speichern" | i18n}}
+                                </StudipButton>
+                                <StudipButton v-else icon="accept" type="button" v-on:click="addRoom($event)" class="ui-button ui-corner-all ui-widget">
+                                    {{ "Raum erstellen" | i18n}}
+                                </StudipButton>
+                                <StudipButton icon="cancel" type="button" v-on:click="cancelAddRoom($event)" class="ui-button ui-corner-all ui-widget">
+                                    {{ "Abbrechen" | i18n}}
+                                </StudipButton>
                             </footer>
                         </form>
                     </section>
@@ -265,9 +263,13 @@ export default {
         setDriver() {
             if (Object.keys(this.config).length == 1) {
                 this.$set(this.room, "driver_name" , Object.keys(this.config)[0]);
+                this.handleServerDefaults();
             }
 
-            this.handleServerDefaults();
+            // check, if the selected server is still available for this room
+            if (config[room['driver_name']]['server_defaults'][room['server_index']] === undefined) {
+                this.$set(this.room, "server_index" , "0");
+            }
         },
 
         handleServerDefaults() {
@@ -275,6 +277,7 @@ export default {
             if (this.room['driver_name'] && Object.keys(this.config[this.room['driver_name']]['servers']).length == 1) {
                 this.$set(this.room, "server_index" , "0");
             }
+
             //set default features
             this.$set(this.room, "features" , {});
 
@@ -351,7 +354,7 @@ export default {
                 var maxAllowedParticipants = this.config[this.room['driver_name']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'];
                 this.modal_message.type = 'error';
                 this.modal_message.text = `Teilnehmerzahl darf ${maxAllowedParticipants} nicht überschreiten`.toLocaleString();
-                $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
+                $('section.modal-body').animate({ scrollTop: 0}, 'slow');
                 isValid = false;
 
             }
@@ -379,7 +382,7 @@ export default {
                 .then(({ data }) => {
                     this.message = data.message;
                     if (this.message.type == 'error') {
-                        $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
+                        $('section.modal-body').animate({ scrollTop: 0}, 'slow');
                         this.$set(this.modal_message, "type" , "error");
                         this.$set(this.modal_message, "text" , this.message.text);
                     } else {
@@ -390,7 +393,7 @@ export default {
                     this.$emit('cancel');
                 });
             } else {
-                $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
+                $('section.modal-body').animate({ scrollTop: 0}, 'slow');
                 var empty_fields_str = empty_fields_arr.join('), (');
                 this.$set(this.modal_message, "type" , "error");
                 this.$set(this.modal_message, "text" , `Bitte füllen Sie folgende Felder aus: (${empty_fields_str})`.toLocaleString());
@@ -431,7 +434,7 @@ export default {
                 if (data.message.type == 'success') {
                     this.$emit('done');
                 } else {
-                    $('#conference-meeting-create').animate({ scrollTop: 0}, 'slow');
+                    $('section.modal-body').animate({ scrollTop: 0}, 'slow');
                     this.modal_message = data.message;
                 }
             }).catch (({error}) => {
