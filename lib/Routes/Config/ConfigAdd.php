@@ -37,8 +37,10 @@ class ConfigAdd extends MeetingsController
                     }
                 }
                 $valid_servers = Driver::setConfigByDriver($driver_name, $config_options);
+
                 if (!$valid_servers) {
-                    $res_message_text[] = sprintf(_('(%s) hat ungültige Server'), $driver_name);
+                    $res_message_text[] = sprintf(_('Die Überprüfung der Servereinstellungen '
+                        . 'für %s war nicht erfolgreich, wurden aber trotzdem gespeichert.'), $driver_name);
                 }
             }
 
