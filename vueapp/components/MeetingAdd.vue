@@ -267,7 +267,10 @@ export default {
             }
 
             // check, if the selected server is still available for this room
-            if (config[room['driver_name']]['server_defaults'][room['server_index']] === undefined) {
+            if (this.room['driver_name'] !== undefined
+                && this.config[this.room['driver_name']] !== undefined
+                && this.config[this.room['driver_name']]['server_defaults'][this.room['server_index']] === undefined
+            ) {
                 this.$set(this.room, "server_index" , "0");
             }
         },
@@ -387,7 +390,7 @@ export default {
                         this.$set(this.modal_message, "text" , this.message.text);
                     } else {
                         store.dispatch(ROOM_LIST);
-                        this.$emit('done');
+                        this.$emit('done', { message: this.message });
                     }
                 }).catch (({error}) => {
                     this.$emit('cancel');
@@ -432,7 +435,7 @@ export default {
             .then(({ data }) => {
                 this.message = data.message;
                 if (data.message.type == 'success') {
-                    this.$emit('done');
+                    this.$emit('done', { message: this.message });
                 } else {
                     $('section.modal-body').animate({ scrollTop: 0}, 'slow');
                     this.modal_message = data.message;
