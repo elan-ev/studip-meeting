@@ -16,7 +16,7 @@
             <MessageBox v-if="rooms_checked && !rooms_list.length && config && course_config.display.addRoom" :type="'info'">
                 {{ "Bisher existieren keine Meeting-Räume für diese Veranstaltung. Möchten Sie einen anlegen?" | i18n }}
                 <br>
-                <StudipButton type="button"  @click="create_edit_room = true">
+                <StudipButton type="button"  @click="createNewRoom">
                     {{ "Neuer Raum" | i18n}}
                 </StudipButton>
             </MessageBox>
@@ -459,10 +459,22 @@ export default {
 
         showEditFeatureDialog(room) {
             this.$store.commit(ROOM_CLEAR);
-            if (Object.keys(this.config_list[room.driver]['features']).includes('record') && !Object.keys(room.features).includes('giveAccessToRecordings')) {
-                var default_feature_obj = this.config_list[room.driver]['features']['record'].find(m => m.name == 'giveAccessToRecordings');
-                this.$set(room.features, 'giveAccessToRecordings', ((default_feature_obj) ? default_feature_obj.value : true));
+
+            // check, if there are any features for this driver at all!
+            if (this.config_list[room.driver]['features'] !== undefined) {
+                if (Object.keys(this.config_list[room.driver]['features']).includes('record')
+                    && !Object.keys(room.features).includes('giveAccessToRecordings')
+                ) {
+                    var default_feature_obj = this.config_list[room.driver]['features']['record']
+                        .find(m => m.name == 'giveAccessToRecordings');
+
+                    this.$set(room.features, 'giveAccessToRecordings', ((default_feature_obj)
+                        ? default_feature_obj.value
+                        : true)
+                    );
+                }
             }
+
             this.$set(this.room, 'driver_name', room.driver);
             this.$set(this.room, 'features', room.features);
             this.$set(this.room, 'join_as_moderator', room.join_as_moderator);
@@ -477,6 +489,11 @@ export default {
 
         showMessage(message) {
             this.message = message;
+        },
+
+        createNewRoom() {
+            this.$store.commit(ROOM_CLEAR);
+            this.create_edit_room = true;
         }
     },
 
