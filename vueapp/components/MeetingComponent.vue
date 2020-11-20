@@ -2,7 +2,11 @@
     <div class="meetingcomponent">
         <fieldset>
             <legend>
-                <div class="meeting-item-header">
+                <div class="meeting-item-header"
+                    :class="{
+                        'meeting-disabled' : !room.enabled
+                    }"
+                >
                     <div class="left">
                         {{room.name}}
 
@@ -15,7 +19,7 @@
                         </span>
                     </div>
                     <div class="right">
-                        <StudipTooltipIcon v-if="room.features && room.features.record && room.features.record == 'true'" 
+                        <StudipTooltipIcon v-if="room.features && room.features.record && room.features.record == 'true'"
                                     :text="'Bitte beachten Sie, dass dieser Raum aufgezeichnet wird!' | i18n"
                                     :badge="true"
                                     >
@@ -83,6 +87,16 @@
                         ? this.config[room.driver].display_name
                         : room.driver }}
                 </div>
+
+                <div v-if="!room.enabled">
+                    <a>
+                        <StudipIcon class="info-icon" icon="exclaim-circle-full"
+                            role="status-red" size="24"></StudipIcon>
+                    </a>
+                    <span>
+                        {{ `Dieser Raum ist deaktiviert, da der Treiber ${room.driver} nicht aktiviert oder falsch konfiguriert ist.` | i18n }}
+                    </span>
+                </div>
             </label>
             <div class="meeting-item-btns">
                 <StudipButton v-if="course_config.display.editRoom && room.features && room.features.guestPolicy && room.features.guestPolicy != 'ALWAYS_DENY'"
@@ -91,9 +105,17 @@
                 >
                     {{ "Einladungslink erstellen" | i18n }}
                 </StudipButton>
-                <a class="button join" :href="join_url" target="_blank">
+                <a v-if="room.enabled" class="button join"
+                    :href="join_url" target="_blank"
+                >
                     {{ "Teilnehmen" | i18n}}
                 </a>
+
+                <button v-else class="button join"
+                    disabled="disabled"
+                >
+                    {{ "Teilnehmen nicht möglich" | i18n}}
+                </button>
             </div>
         </fieldset>
     </div>

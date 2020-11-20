@@ -8,6 +8,7 @@ use Meetings\Errors\AuthorizationFailedException;
 use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use Meetings\Errors\Error;
+use Meetings\Errors\DriverError;
 use Exception;
 use Meetings\Models\I18N as _;
 
@@ -54,7 +55,19 @@ class RoomsList extends MeetingsController
                 if ($meetingCourse->group_id && !$this->checkPermission($meetingCourse->group_id, $cid)) {
                     continue;
                 }
-                $driver = $driver_factory->getDriver($meetingCourse->meeting->driver, $meetingCourse->meeting->server_index);
+
+                $meetingEnabled = true;
+
+                try {
+                    $driver = $driver_factory->getDriver(
+                        $meetingCourse->meeting->driver,
+                        $meetingCourse->meeting->server_index
+                    );
+                } catch (DriverError $de) {
+                    // disable this room if driver emits an error
+                    $meetingEnabled = false;
+                }
+
                 $meeting = $meetingCourse->meeting->toArray();
                 $meeting = array_merge($meetingCourse->toArray(), $meeting);
                 $meeting['has_recordings'] = false;
@@ -62,7 +75,11 @@ class RoomsList extends MeetingsController
                 // Recording Capability
                 if (is_subclass_of($driver, 'ElanEv\Driver\RecordingInterface')) {
                     if ($perm->have_studip_perm('tutor', $cid)
-                        || (!$perm->have_studip_perm('tutor', $cid) && filter_var($this->getFeatures($meeting['features'], 'giveAccessToRecordings'), FILTER_VALIDATE_BOOLEAN))) {
+                        || (!$perm->have_studip_perm('tutor', $cid)
+                            && filter_var($this->getFeatures($meeting['features'],
+                                'giveAccessToRecordings'
+                            ), FILTER_VALIDATE_BOOLEAN))
+                    ) {
                         if ((count($driver->getRecordings($meetingCourse->meeting->getMeetingParameters())) > 0)
                             || ($this->getFeatures($meeting['features'], 'meta_opencast-dc-isPartOf') &&
                             $this->getFeatures($meeting['features'], 'meta_opencast-dc-isPartOf') == MeetingPlugin::checkOpenCast($meetingCourse->course_id)))
@@ -71,12 +88,17 @@ class RoomsList extends MeetingsController
                         }
                     }
                 }
-                $meeting['details'] = ['creator' => \User::find($meetingCourse->meeting->user_id)->getFullname(), 'date' => date('d.m.Y H:i', $meetingCourse->meeting->mkdate)];
+                $meeting['details'] = [
+                    'creator' => \User::find($meetingCourse->meeting->user_id)->getFullname(),
+                    'date'    => date('d.m.Y H:i', $meetingCourse->meeting->mkdate)
+                ];
+
                 $meeting['features'] = $this->getFeatures($meeting['features']);
+                $meeting['enabled'] = $meetingEnabled;
+
                 $course_rooms_list[] = $meeting;
             } catch (Exception $e) {
                 $errors[] = $e->getMessage();
-                // $error_message = "There are meetings that are not currently reachable!";
             }
         }
 
@@ -90,6 +112,7 @@ class RoomsList extends MeetingsController
     private function getFeatures($str_features, $key = null)
     {
         $features = json_decode($str_features, true);
+
         if ($key) {
             return isset($features[$key]) ? $features[$key] : null;
         } else {
@@ -111,6 +134,7 @@ class RoomsList extends MeetingsController
 
         return $group->isMember($user->id)
             || ($user && is_object($perm)
-                && $perm->have_studip_perm('tutor', $cid, $user->id));
+                && $perm->have_studip_perm('tutor', $cid, $user->id)
+            );
     }
 }

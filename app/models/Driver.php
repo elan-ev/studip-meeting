@@ -127,12 +127,10 @@ class Driver
                     $driver = $driver_factory->getDriver($driver_name, $index);
                     if (!$driver->checkServer()) {
                         $valid_servers = false;
-                        continue;
                     }
 
                     if (!self::validateRoomSizes($server_info)) {
                         $valid_servers = false;
-                        continue;
                     }
 
                     self::adjustCurrentMeetingsDefaultSettings($driver_name, $index, $server_info);
@@ -207,9 +205,11 @@ class Driver
         }
     }
 
-    private static function validateRoomSizes($server_info) {
+    private static function validateRoomSizes($server_info)
+    {
         $min_participants_arr = [];
         $isValid = true;
+
         if (isset($server_info['roomsize-presets']) && count($server_info['roomsize-presets']) > 0) {
             foreach ($server_info['roomsize-presets'] as $size => $values) {
                 if ($values['minParticipants'] < 0) {
