@@ -132,7 +132,7 @@
                                                         : ''
                                                     : ''
                                                 )"
-                                                :min="(feature['name'] == 'maxParticipants') ? 0 : ''"
+                                                :min="(feature['name'] == 'maxParticipants') ? 20 : ''"
                                                 @change="(feature['name'] == 'maxParticipants') ? checkPresets() : ''"
                                                 v-model.trim="room['features'][feature['name']]"
                                                 :placeholder="feature['value'] ? feature['value'] : ''"

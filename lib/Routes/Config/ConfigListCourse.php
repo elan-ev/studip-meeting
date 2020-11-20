@@ -108,7 +108,7 @@ class ConfigListCourse extends MeetingsController
             foreach ($settings['servers'] as $server_index => $server_values) {
 
                 //Take care of max participants and maxAllowedParticipants
-                $server_defaults[$server_index]['totalMembers'] = $members_count;
+                $server_defaults[$server_index]['totalMembers'] = max(20, $members_count + 5);
                 if (isset($server_values['maxParticipants']) && $server_values['maxParticipants'] > 0) {
                     $server_defaults[$server_index]['maxAllowedParticipants'] = $server_values['maxParticipants'];
                     if ($members_count >= $server_values['maxParticipants']) {
