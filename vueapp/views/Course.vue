@@ -200,7 +200,6 @@ export default {
 
         feedbackDone(params) {
             this.showFeedback = false;
-
             if (params != undefined && params.message != undefined) {
                 this.showMessage(params.message);
             }
