@@ -8,11 +8,10 @@
                     }"
                 >
                     <div class="left">
-                        {{room.name}}
-
-                        <StudipTooltipIcon v-if="room.details"
-                            :text="`Erstellt von: ${room.details['creator']}, ${room.details['date']}` | i18n">
-                        </StudipTooltipIcon>
+                      {{room.name}}
+                      <StudipTooltipIcon v-if="room.details"
+                                         :text="`Erstellt von: ${room.details['creator']}, ${room.details['date']}` | i18n">
+                      </StudipTooltipIcon>
 
                         <span v-if="info && info.participantCount > 0" class="participants">
                             {{ info.participantCount }} {{ ((info.participantCount == 1) ? 'Teilnehmender' : 'Teilnehmende') + ' aktiv' | i18n }}

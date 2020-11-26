@@ -66,25 +66,27 @@ form.create-conference-meeting input[type="text"] {
     margin-right: 5px;
     color: #28497c !important;
     cursor: pointer;
+
     &:hover {
         text-decoration: underline !important;
     }
 }
+
 table.conference-meetings tr.active {
     background-color: #e2e3e4;
 }
 
 form.conference-meeting {
     fieldset legend {
-        a img{
+        a img {
             position: relative;
             top: 3px;
         }
     }
 }
+
 div.meeting-item-header {
     .right {
-        float: right;
         a {
             margin-right: 5px;
             padding: 0 0px;
@@ -93,6 +95,7 @@ div.meeting-item-header {
             img {
                 margin-top: 5px;
             }
+
             &[data-badge]:not([data-badge="0"]) {
                 position: relative;
 
@@ -117,34 +120,42 @@ div.meeting-item-header {
                 }
             }
         }
+
         span.meeting-badge {
             vertical-align: text-bottom;
             margin-right: 5px;
         }
     }
+
     .left {
-        float: left;
         span.participants {
-            margin-left: 20px;
             font-size: 14px;
             font-weight: 200;
         }
+        flex: 1;
     }
+    padding: 5px;
+    text-indent: 0;
+    flex-wrap: wrap;
+    display: flex;
 }
 
 label#details {
     img {
         position: relative;
         top: 12px;
+
         &.info-icon {
             top: 7px;
             margin-right: 7px;
         }
     }
+
     span {
         &.red {
             color: #D60000;
         }
+
         &.creator-date {
             color: #636971;
             font-size: 12px;
@@ -152,37 +163,49 @@ label#details {
             font-style: italic;
             margin: 10px 0;
         }
+
         &.has-changed {
             animation: alert 1s;
         }
 
-        @keyframes alert
-        {
-            0%      {color:#D60000;}
-            50%     {color:darken(#D60000, 7%);}
-            100%    {color:inherit;}
+        @keyframes alert {
+            0% {
+                color: #D60000;
+            }
+            50% {
+                color: darken(#D60000, 7%);
+            }
+            100% {
+                color: inherit;
+            }
         }
     }
 }
+
 div.meeting-item-btns {
     clear: both;
+
     button.delete {
-        float:right;
+        float: right;
     }
+
     a.join {
-        float:left;
+        float: left;
 
     }
 }
+
 fieldset {
     label {
         input[type="checkbox"] {
             cursor: pointer;
+
             &[disabled] {
                 cursor: default;
             }
         }
-        span{
+
+        span {
             &.disabled {
                 color: #3c454e;
             }
@@ -190,11 +213,20 @@ fieldset {
     }
 }
 
-.meetingcomponent {
-    width: 35em;
-    display: inline-block;
-    margin-right: 1em;
-    vertical-align: top;
+
+
+.conference-meeting {
+    .meetingcomponent {
+        margin-right: 2px;
+        vertical-align: top;
+        @media only screen and (max-width: 1300px) {
+            width: 100%;
+        }
+        width: 47%;
+    }
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 
@@ -213,6 +245,7 @@ fieldset {
         align-items: center;
         z-index: 1001;
     }
+
     .modal {
         background: #ffffff;
         box-shadow: 2px 2px 20px 1px;
@@ -227,14 +260,16 @@ fieldset {
             padding: 7px;
             display: flex;
         }
+
         .modal-header {
-            background:#28497c none repeat scroll 0% 0%;
+            background: #28497c none repeat scroll 0% 0%;
             border-bottom: 1px solid #eeeeee;
             color: #fff;
             justify-content: space-between;
             font-size: 1.3em;
             padding: 0.5em 1em;
         }
+
         .modal-close-button {
             @include assets-bg-icon("white/decline.svg");
             width: 24px;
@@ -246,6 +281,7 @@ fieldset {
             margin-left: 2em;
             cursor: pointer;
         }
+
         .modal-body {
             color: #000;
             position: relative;
@@ -258,6 +294,7 @@ fieldset {
                 min-width: 14em;
                 padding: 0.5em;
             }
+
             .students-permissions-list,
             .groups-permissions-list {
                 max-height: 24em;
@@ -270,6 +307,7 @@ fieldset {
                     min-width: unset;
                     vertical-align: bottom;
                 }
+
                 label {
                     user-select: none;
 
@@ -279,6 +317,7 @@ fieldset {
                 }
             }
         }
+
         .modal-footer {
             border-top: 1px solid #eeeeee;
             justify-content: center;
@@ -291,23 +330,28 @@ fieldset {
                 }
             }
         }
+
         &.alert {
             .modal-header {
                 background: rgb(214, 0, 0) none repeat scroll 0% 0%;
             }
         }
+
         &.warning {
             .modal-header {
                 color: #000;
                 background: #ffad00 none repeat scroll 0% 0%;
             }
+
             .modal-close-button {
                 @include assets-bg-icon("black/decline.svg");
             }
         }
+
         .modal-progress-spinner {
             margin: auto;
         }
+
         .modal-progress:hover {
             background-color: #fff;
         }
@@ -327,10 +371,12 @@ span.meeting-badge {
     color: #fff;
     background-color: #28497c;
     text-indent: 0;
+
     img {
         vertical-align: middle;
         margin-bottom: 1px;
     }
+
     &.tooltip {
         cursor: default;
     }
