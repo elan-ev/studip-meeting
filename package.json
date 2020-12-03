@@ -1,6 +1,6 @@
 {
     "name": "Meetings",
-    "version": "2.39.0",
+    "version": "2.40.0",
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -19,6 +19,7 @@
         "clean-webpack-plugin": "^3.0.0",
         "css-loader": "^2.1.1",
         "date-fns": "^2.12.0",
+        "easygettext": "^2.16.1",
         "extract-loader": "^2.0.1",
         "file-loader": "^2.0.0",
         "html-webpack-plugin": "^4.3.0",
@@ -28,6 +29,7 @@
         "sass-loader": "^7.3.1",
         "vue": "^2.6.10",
         "vue-axios": "^2.1.4",
+        "vue-gettext": "^2.1.10",
         "vue-loader": "^15.7.0",
         "vue-router": "^3.0.6",
         "vue-template-compiler": "^2.6.10",
