@@ -6,7 +6,7 @@
 
                     <header class="modal-header">
                         <slot name="header">
-                            {{ `Feedback für Raum ${room.name}` | i18n }}
+                            <translate>Feedback für Raum {{ room.name }}</translate>
                             <span class="modal-close-button" @click="$emit('cancel')"></span>
                         </slot>
                     </header>
@@ -20,35 +20,35 @@
                             style="max-width: 50em;"
                         >
                             <fieldset>
-                                <legend>
-                                    {{ 'Beschreibung' | i18n }}
+                                <legend v-translate>
+                                    Beschreibung
                                 </legend>
                                  <label class="col-6">
                                     <textarea ref="feedbackDescription" v-model="feedback['description']" cols="30" rows="5"></textarea>
                                 </label>
                             </fieldset>
                             <fieldset>
-                                <legend>
-                                    {{ 'Feedback Informationen' | i18n }}
+                                <legend v-translate>
+                                    Feedback Informationen
                                 </legend>
                                 <label class="col-3">
-                                    <span >{{ "Browser-Name" | i18n }}</span>
+                                    <span v-translate>Browser-Name</span>
                                     <input type="text" v-model.trim="feedback['browser_name']">
                                 </label>
                                 <label class="col-3">
-                                    <span >{{ "Browser-Version" | i18n }}</span>
+                                    <span v-translate>Browser-Version</span>
                                     <input type="text" v-model.trim="feedback['browser_version']">
                                 </label>
                                 <label class="col-3">
-                                    <span >{{ "Download-Geschw. (Mbps)" | i18n }}</span>
+                                    <span v-translate>Download-Geschw. (Mbps)</span>
                                     <input type="number" min="1" v-model.trim="feedback['download_speed']">
                                 </label>
                                 <label class="col-3">
-                                    <span >{{ "Upload-Geschw. (Mbps)" | i18n }}</span>
+                                    <span v-translate>Upload-Geschw. (Mbps)</span>
                                     <input type="number" min="1" v-model.trim="feedback['upload_speed']">
                                 </label>
                                 <label class="col-3">
-                                    <span >{{ "Netzwerk-Typ" | i18n }}</span>
+                                    <span v-translate>Netzwerk-Typ</span>
                                     <select id="network-type" v-model="feedback['network_type']">
                                         <option v-for="(nt_value, nt_name) in network_types" :key="nt_name"
                                                 :value="nt_name">
@@ -57,34 +57,43 @@
                                     </select>
                                 </label>
                                 <label class="col-3">
-                                    <span >{{ "Betriebssystem (OS)" | i18n }}</span>
+                                    <span v-translate>Betriebssystem (OS)</span>
                                     <input type="text" v-model.trim="feedback['os_name']">
                                 </label>
                                 <label class="col-3">
-                                    <span >{{ "Prozessortyp" | i18n }}</span>
+                                    <span v-translate>Prozessortyp</span>
                                     <input type="text" v-model.trim="feedback['cpu_type']">
                                 </label>
                                 <label class="col-3">
-                                    <span >{{ "Alter des Rechners" | i18n }}</span>
+                                    <span v-translate>Alter des Rechners</span>
                                     <input type="text" v-model.number="feedback['cpu_old']">
                                 </label>
                                 <label class="col-3">
-                                    <span >{{ "Anzahl der CPU-Kerne" | i18n }}</span>
+                                    <span v-translate>Anzahl der CPU-Kerne</span>
                                     <input type="number" min="1" max="1000" v-model.number="feedback['cpu_num']">
                                 </label>
                                 <label class="col-3">
-                                    <span >{{ "RAM (Hauptspeicher) GB" | i18n }}</span>
+                                    <span v-translate>RAM (Hauptspeicher) GB</span>
                                     <input type="number"  min="1" max="1000" v-model.number="feedback['ram']">
                                 </label>
                             </fieldset>
 
 
                             <footer class="modal-footer">
-                                <StudipButton icon="accept" type="button" v-on:click="sumbitFeedback($event)" class="ui-button ui-corner-all ui-widget">
-                                    {{ "Einsenden" | i18n}}
+                                <StudipButton icon="accept" type="button"
+                                    v-on:click="sumbitFeedback($event)"
+                                    class="ui-button ui-corner-all ui-widget"
+                                    v-translate
+                                >
+                                    Einsenden
                                 </StudipButton>
-                                <StudipButton icon="cancel" type="button" v-on:click="cancelFeedback($event)" class="ui-button ui-corner-all ui-widget">
-                                    {{ "Abbrechen" | i18n}}
+
+                                <StudipButton icon="cancel" type="button"
+                                    v-on:click="cancelFeedback($event)"
+                                    class="ui-button ui-corner-all ui-widget"
+                                    v-translate
+                                >
+                                    Abbrechen
                                 </StudipButton>
                             </footer>
                         </form>

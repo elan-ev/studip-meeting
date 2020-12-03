@@ -1,30 +1,30 @@
 <template>
     <div>
-        <h3>{{ roomsize_object.display_name | i18n }}</h3>
+        <h3>{{ roomsize_object.display_name }}</h3>
         <form class="default collapsable" style="position: relative">
             <fieldset v-for="(roomsize, rsk) in roomsize_object.value" :key="rsk" :class="((rsk > 0) ? 'collapsed ' : '') + 'accordion-collapse'">
-                <legend @click.prevent="accordion_handle($event)">{{ roomsize.display_name | i18n }}</legend>
+                <legend @click.prevent="accordion_handle($event)">{{ roomsize.display_name }}</legend>
                 <label v-for="(feature, rsfk) in roomsize.value" :key="rsfk" >
                     <template v-if="(feature['value'] === true || feature['value'] === false)">
                         <input  type="checkbox" true-value="true" false-value="false" v-model="this_server[roomsize_object.name][roomsize.name][feature.name]">
-                        {{ feature['display_name'] | i18n }}
-                        <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
+                        {{ feature['display_name'] }}
+                        <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
                     </template>
                     <template v-else>
-                        {{ feature['display_name'] | i18n }}
-                        <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info'] | i18n"></StudipTooltipIcon>
-                        <input v-model="this_server[roomsize_object.name][roomsize.name][feature.name]" :type="(feature['name'] == 'minParticipants') ? 'number' : 'text'"  
+                        {{ feature['display_name'] }}
+                        <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
+                        <input v-model="this_server[roomsize_object.name][roomsize.name][feature.name]" :type="(feature['name'] == 'minParticipants') ? 'number' : 'text'"
                             :min="(
-                                (roomsize.name == 'large') ? 
+                                (roomsize.name == 'large') ?
                                  ( (parseInt(this_server[roomsize_object.name]['medium']['minParticipants'])) ? parseInt(this_server[roomsize_object.name]['medium']['minParticipants']) + 1 : 0 )
-                                 : ((roomsize.name == 'medium') ? 
+                                 : ((roomsize.name == 'medium') ?
                                  ( (parseInt(this_server[roomsize_object.name]['small']['minParticipants']) >= 0) ? parseInt(this_server[roomsize_object.name]['small']['minParticipants']) + 1 : 0 )
                                  : 0)
                             )"
                             :max="(
-                                (roomsize.name == 'small') ? 
+                                (roomsize.name == 'small') ?
                                 ( (parseInt(this_server[roomsize_object.name]['medium']['minParticipants'])) ? parseInt(this_server[roomsize_object.name]['medium']['minParticipants']) - 1 : '' )
-                                 : ((roomsize.name == 'medium') ? 
+                                 : ((roomsize.name == 'medium') ?
                                  ( (parseInt(this_server[roomsize_object.name]['large']['minParticipants'])) ? parseInt(this_server[roomsize_object.name]['large']['minParticipants']) - 1 : '' )
                                  : ((this_server['maxParticipants'] && parseInt(this_server['maxParticipants']) > 0) ? parseInt(this_server['maxParticipants']) : ''))
                             )"
@@ -64,7 +64,7 @@ export default {
         addPresetsToServer() {
             if (!Object.keys(this.this_server).includes(this.roomsize_object.name) || (this.this_server[this.roomsize_object.name] == "")) {
                 this.this_server[this.roomsize_object.name] = new Object();
-            } 
+            }
             for (const [key, value] of Object.entries(this.roomsize_object.value)) {
                 if (!Object.keys(this.this_server[this.roomsize_object.name]).includes(value.name) || (this.this_server[this.roomsize_object.name][value.name] == "")) {
                     this.this_server[this.roomsize_object.name][value.name] = new Object();

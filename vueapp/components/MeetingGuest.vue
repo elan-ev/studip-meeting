@@ -6,7 +6,7 @@
 
                     <header class="modal-header">
                         <slot name="header">
-                            {{ `Gast einladen` | i18n }}
+                            <translate>Gast einladen</translate>
                             <span class="modal-close-button" @click="$emit('cancel')"></span>
                         </slot>
                     </header>
@@ -19,28 +19,30 @@
                         <form class="default" @submit.prevent="generateGuestJoin">
                             <fieldset>
                                 <label>
-                                    <span class="required">{{ "Gastname" | i18n }}</span>
-                                    <StudipTooltipIcon :text="'Der Gast bekommt diesen Namen in der Besprechung zugewiesen.' | i18n"></StudipTooltipIcon>
+                                    <span class="required" v-translate>Gastname</span>
+                                    <StudipTooltipIcon :text="$gettext('Der Gast bekommt diesen Namen in der Besprechung zugewiesen.')">
+                                    </StudipTooltipIcon>
                                     <input type="text" v-model.trim="guest_name" id="guestname" @change="generateGuestJoin($event)">
                                 </label>
 
                                 <label id="guest_link_label" v-if="guest_link">
-                                    <span>{{ "Link" | i18n }}</span>
-                                    <StudipTooltipIcon :text="'Bitte geben sie diesen Link dem Gast.' | i18n" :important="true"></StudipTooltipIcon>
+                                    <span v-translate>Link</span>
+                                    <StudipTooltipIcon :text="$gettext('Bitte geben sie diesen Link dem Gast.')"
+                                        :important="true"></StudipTooltipIcon>
                                     <textarea ref="guestLinkArea" v-model="guest_link" cols="30" rows="5"></textarea>
                                 </label>
                             </fieldset>
 
                             <footer class="modal-footer">
                                 <StudipButton type="button" v-on:click="copyGuestLinkClipboard($event)" v-if="guest_link">
-                                    {{ "In Zwischenablage kopieren" | i18n}}
+                                    <translate>In Zwischenablage kopieren</translate>
                                 </StudipButton>
                                 <StudipButton id="generate_link_btn" icon="accept" type="button" v-on:click="generateGuestJoin($event)" v-else>
-                                    {{ "Einladungslink erstellen" | i18n }}
+                                    <translate>Einladungslink erstellen</translate>
                                 </StudipButton>
 
                                 <StudipButton icon="cancel" type="button" v-on:click="cancelGuest($event)">
-                                    {{ "Dialog schließen" | i18n}}
+                                    <translate>Dialog schließen</translate>
                                 </StudipButton>
                             </footer>
                         </form>
