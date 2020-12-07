@@ -114,7 +114,7 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
             } elseif ($filesize) {
                 header("Content-Length: $filesize");
             }
-            
+
             header("Expires: Mon, 12 Dec 2001 08:00:00 GMT");
             header("Last-Modified: " . gmdate ("D, d M Y H:i:s") . " GMT");
             if ($_SERVER['HTTPS'] == "on"){
@@ -127,7 +127,7 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
             header("Cache-Control: post-check=0, pre-check=0", false);
             header("Content-Type: $content_type");
             header("Content-Disposition: $content_disposition; " . encode_header_parameter('filename', $file_name));
-            readfile_chunked($path_file, $start, $end);      
+            readfile_chunked($path_file, $start, $end);
         }
 
         // do nothing if plugin is deactivated in this seminar/institute
@@ -293,7 +293,7 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
     /**
      * {@inheritdoc}
      */
-    function perform($unconsumed_path)
+    public function perform($unconsumed_path)
     {
         require_once __DIR__ . '/vendor/autoload.php';
 
@@ -328,7 +328,7 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
      * @param  string  $cid course ID with default null
      * @return bool | array | string
     */
-    function checkOpenCast($cid = null) {
+    public static function checkOpenCast($cid = null) {
         $opencast_plugin = PluginEngine::getPlugin("OpenCast");
         if ($opencast_plugin) {
             if ($cid) {
