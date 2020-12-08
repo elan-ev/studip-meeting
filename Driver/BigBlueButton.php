@@ -457,6 +457,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             $modules .= "</module></modules>";
             $options['body'] = "<?xml version='1.0' encoding='UTF-8'?>" . $modules;
         }
+      
         return $options;
     }
 }
