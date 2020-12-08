@@ -6,7 +6,7 @@
 
                     <header class="modal-header">
                         <slot name="header">
-                            {{ `Aufzeichnungen für Raum ${room.name}` | i18n }}
+                            <translate>Aufzeichnungen für Raum {{ room.name }}</translate>
                             <span class="modal-close-button" @click="$emit('cancel')"></span>
                         </slot>
                     </header>
@@ -15,16 +15,16 @@
                         <MessageBox type="info"
                             v-if="this.recording_list == null"
                         >
-                            {{ `Keine Aufzeichnungen für Raum "${room.name}" vorhanden` | i18n }}
+                            <translate>Keine Aufzeichnungen für Raum "{{ room.name }}" vorhanden</translate>
                         </MessageBox>
 
                         <form class="default" method="post" style="position: relative">
                             <fieldset v-if="Object.keys(recording_list).includes('opencast')">
-                                <legend>{{ "Opencast" | i18n }}</legend>
+                                <legend>Opencast</legend>
                                 <label>
                                     <a class="meeting-recording-url" target="_blank"
-                                    :href="recording_list['opencast']">
-                                        {{ 'Die vorhandenen Aufzeichnungen auf Opencast' | i18n}}
+                                    :href="recording_list['opencast']" v-translate>
+                                        Die vorhandenen Aufzeichnungen auf Opencast
                                     </a>
                                 </label>
                             </fieldset>
@@ -33,8 +33,8 @@
                                     <table  class="default collapsable">
                                         <thead>
                                             <tr>
-                                                <th>{{ "Datum" | i18n }}</th>
-                                                <th>{{ "Aktionen" | i18n }}</th>
+                                                <th v-translate>Datum</th>
+                                                <th v-translate>Aktionen</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -46,13 +46,14 @@
                                                             <a v-for="(format, index) in recording['playback']['format']" :key="index"
                                                             class="meeting-recording-url" target="_blank"
                                                             :href="format['url']">
-                                                                {{ `Aufzeichnung ansehen` | i18n}} {{ `(${format['type']})` }}
+                                                                <translate>Aufzeichnung ansehen</translate>
+                                                                {{ `(${format['type']})` }}
                                                             </a>
                                                         </div>
                                                         <div v-else>
                                                             <a class="meeting-recording-url" target="_blank"
-                                                            :href="recording['playback']['format']['url']">
-                                                                {{ `Aufzeichnung ansehen`  | i18n}}
+                                                            :href="recording['playback']['format']['url']" v-translate>
+                                                                Aufzeichnung ansehen
                                                             </a>
                                                         </div>
                                                     </div>

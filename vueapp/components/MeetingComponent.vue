@@ -8,40 +8,43 @@
                     }"
                 >
                     <div class="left">
-                        {{room.name}}
+                      {{room.name}}
+                      <StudipTooltipIcon v-if="room.details"
+                                         :text="`${room.details['creator']}, ${room.details['date']}`">
+                      </StudipTooltipIcon>
 
-                        <StudipTooltipIcon v-if="room.details"
-                            :text="`Erstellt von: ${room.details['creator']}, ${room.details['date']}` | i18n">
-                        </StudipTooltipIcon>
-
-                        <span v-if="info && info.participantCount > 0" class="participants">
-                            {{ info.participantCount }} {{ ((info.participantCount == 1) ? 'Teilnehmender' : 'Teilnehmende') + ' aktiv' | i18n }}
+                        <span v-if="info && info.participantCount > 0" class="participants"
+                            v-translate="{
+                                count: info.participantCount
+                            }"
+                        >
+                            %{ count } Teilnehmende aktiv
                         </span>
                     </div>
                     <div class="right">
                         <StudipTooltipIcon v-if="room.features && room.features.record && room.features.record == 'true'"
-                                    :text="'Bitte beachten Sie, dass dieser Raum aufgezeichnet wird!' | i18n"
+                                    :text="$gettext('Bitte beachten Sie, dass dieser Raum aufgezeichnet wird!')"
                                     :badge="true"
                                     >
                             <StudipIcon icon="span-full" role="attention" size="11"></StudipIcon> {{'Rec'}}
                         </StudipTooltipIcon>
                         <a v-if="room.has_recordings" style="cursor: pointer;"
-                                :title="'Die vorhandenen Aufzeichnungen' | i18n "
+                                :title="$gettext('Die vorhandenen Aufzeichnungen')"
                                 @click.prevent="getRecording()">
                             <StudipIcon icon="video2" role="clickable" size="20"></StudipIcon>
                         </a>
                         <a v-if="course_config.display.editRoom" style="cursor: pointer;"
-                            :title=" 'Raumeinstellungen' | i18n "
+                            :title="$gettext('Raumeinstellungen')"
                             @click.prevent="editFeatures()">
                             <StudipIcon icon="admin" role="clickable" size="20"></StudipIcon>
                         </a>
                         <a style="cursor: pointer;"
-                            :title=" 'Schreiben Sie ein Feedback' | i18n "
+                            :title="$gettext('Schreiben Sie ein Feedback')"
                             @click.prevent="writeFeedback()">
                             <StudipIcon icon="support" role="clickable" size="22"></StudipIcon>
                         </a>
                         <a v-if="course_config.display.deleteRoom" style="cursor: pointer;"
-                            :title=" 'Raum löschen' | i18n "
+                            :title="$gettext('Raum löschen')"
                             @click.prevent="deleteRoom($event)">
                             <StudipIcon icon="trash" role="clickable" size="20"></StudipIcon>
                         </a>
@@ -51,32 +54,36 @@
             <label id="details">
                 <div v-if="course_config.display.editRoom">
                     <a style="cursor: pointer;" :title=" room.join_as_moderator == 1 ?
-                        'Teilnehmenden nur eingeschränkte Rechte geben' : 'Teilnehmenden Administrationsrechte geben' | i18n "
+                        $gettext('Teilnehmenden nur eingeschränkte Rechte geben')
+                        : $gettext('Teilnehmenden Administrationsrechte geben')"
                         @click.prevent="editRights()">
                         <StudipIcon class="info-icon" :icon="room.join_as_moderator == 1 ? 'lock-unlocked' : 'lock-locked'" role="clickable" size="24"></StudipIcon>
                     </a>
                     <span :id="'rights-info-text-' + room.id" class="">{{ room.join_as_moderator == 1 ?
-                                'Teilnehmende haben Administrations-Rechte' :
-                                'Teilnehmende haben eingeschränkte Rechte' | i18n  }}
+                                $gettext('Teilnehmende haben Administrations-Rechte')
+                                : $gettext('Teilnehmende haben eingeschränkte Rechte') }}
                     </span>
                 </div>
                 <div v-if="course_config.display.editRoom">
                     <a  style="cursor: pointer;"
-                        :title="room.active == 1 ? 'Meeting für Teilnehmende unsichtbar schalten'
-                                    : 'Meeting für Teilnehmende sichtbar schalten' | i18n "
+                        :title="room.active == 1 ?
+                            $gettext('Meeting für Teilnehmende unsichtbar schalten')
+                            : $gettext('Meeting für Teilnehmende sichtbar schalten') "
                         @click.prevent="editVisibility()">
                         <StudipIcon class="info-icon" :icon="room.active == 1 ? 'visibility-visible' : 'visibility-invisible'"
                             role="clickable" size="24"></StudipIcon>
                     </a>
-                    <span :id="'active-info-text-' + room.id" class="">{{ room.active == 1 ? 'Das Meeting ist für die Teilnehmer sichtbar'
-                                        : 'Das Meeting ist für die Teilnehmer unsichtbar' | i18n  }}
+                    <span :id="'active-info-text-' + room.id" class="">{{ room.active == 1 ?
+                        $gettext('Das Meeting ist für die Teilnehmer sichtbar')
+                        : $gettext('Das Meeting ist für die Teilnehmer unsichtbar') }}
                     </span>
                 </div>
                 <div v-if="course_config.display.editRoom && room.group_id != undefined">
                     <StudipIcon class="info-icon" icon="group2"
                             role="status-yellow" size="24"></StudipIcon>
-                    <span class="">
-                        {{ "Das Meeting gehört der Gruppe" | i18n }} {{ group_name }}
+                    <span v-translate>
+                        Das Meeting gehört der Gruppe
+                        {{ group_name }}
                     </span>
                 </div>
                 <div v-if="num_drivers > 1">
@@ -93,28 +100,30 @@
                         <StudipIcon class="info-icon" icon="exclaim-circle-full"
                             role="status-red" size="24"></StudipIcon>
                     </a>
-                    <span>
-                        {{ `Dieser Raum ist deaktiviert, da der Treiber ${room.driver} nicht aktiviert oder falsch konfiguriert ist.` | i18n }}
+                    <span v-translate>
+                        Dieser Raum ist deaktiviert, da der Treiber {{ room.driver }}
+                        nicht aktiviert oder falsch konfiguriert ist.
                     </span>
                 </div>
             </label>
             <div class="meeting-item-btns">
                 <StudipButton v-if="course_config.display.editRoom && room.features && room.features.guestPolicy && room.features.guestPolicy != 'ALWAYS_DENY'"
                     type="button" v-on:click="getGuestInfo()"
-                    icon="add"
+                    icon="add" v-translate
                 >
-                    {{ "Einladungslink erstellen" | i18n }}
+                    Einladungslink erstellen
                 </StudipButton>
                 <a v-if="room.enabled" class="button join"
                     :href="join_url" target="_blank"
+                    v-translate
                 >
-                    {{ "Teilnehmen" | i18n}}
+                    Teilnehmen
                 </a>
 
                 <button v-else class="button join"
-                    disabled="disabled"
+                    disabled="disabled" v-translate
                 >
-                    {{ "Teilnehmen nicht möglich" | i18n}}
+                    Teilnehmen nicht möglich
                 </button>
             </div>
         </fieldset>

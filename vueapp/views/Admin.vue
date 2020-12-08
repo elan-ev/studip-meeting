@@ -1,24 +1,24 @@
 <template>
     <div>
-        <h1>{{ "Meetings konfigurieren" | i18n }}</h1>
+        <h1 v-translate>Meetings konfigurieren</h1>
 
         <MessageBox v-if="message" :type="message.type" @hide="message = ''">
             <span v-if="typeof message.text == 'string'">{{ message.text }}</span>
             <ul v-else>
                 <li v-for="(text, i) in message.text" :key="i">
-                    {{text}}
+                    {{ text }}
                 </li>
             </ul>
         </MessageBox>
 
-        <MessageBox v-if="changes_made" type="warning">
-            {{ 'Ihre Änderungen sind noch nicht gespeichert!' | i18n }}
+        <MessageBox v-if="changes_made" type="warning" v-translate>
+            Ihre Änderungen sind noch nicht gespeichert!
         </MessageBox>
 
         <form class="default" v-if="drivers" @submit.prevent>
             <fieldset v-for="(driver, driver_name) in drivers" :key="driver_name">
                 <legend>
-                    {{ driver.title | i18n }}
+                    driver.title
                 </legend>
 
                 <label v-if="Object.keys(config[driver_name]).includes('enable')">
@@ -26,11 +26,11 @@
                         true-value="1"
                         false-value="0"
                         v-model="config[driver_name]['enable']">
-                        {{ "Verwenden dieses Treibers zulassen" | i18n }}
+                        <translate>Verwenden dieses Treibers zulassen</translate>
                 </label>
 
                 <label v-if="Object.keys(config[driver_name]).includes('display_name')">
-                    {{ "Display Name" | i18n }}
+                    <translate>Anzeigename</translate>
                     <input type="text" v-model.trim="config[driver_name]['display_name']">
                 </label>
 
@@ -44,26 +44,28 @@
                         @click="handleRecordings(driver_name)"
                         v-model="config[driver_name][rval['name']]">
                         <span :class="{'disabled': rval['name'] != 'record' && config[driver_name]['record'] != '1'}">
-                            {{ rval['display_name'] | i18n }}
+                            {{ rval['display_name'] }}
                         </span>
-                        <StudipTooltipIcon v-if="Object.keys(rval).includes('info')" :text="rval['info'] | i18n"></StudipTooltipIcon>
+
+                        <StudipTooltipIcon v-if="Object.keys(rval).includes('info')" :text="rval['info']">
+                        </StudipTooltipIcon>
                     </label>
                 </div>
 
                 <div v-if="config[driver_name].servers && Object.keys(config[driver_name].servers).length">
-                    <h3>
-                        {{ "Folgende Server werden verwendet" | i18n }}
+                    <h3 v-translate>
+                        Folgende Server werden verwendet
                     </h3>
                     <table class="default collapsable tablesorter conference-meetings">
                         <thead>
                             <tr>
-                                <th>{{ "#" | i18n }}</th>
+                                <th>#</th>
                                 <th v-for="(value, key) in driver.config" :key="key">
                                     <template v-if="value.name != 'roomsize-presets'">
-                                        {{ value.display_name | i18n }}
+                                        {{ value.display_name }}
                                     </template>
                                 </th>
-                                <th>{{ "Aktionen" | i18n }}</th>
+                                <th v-translate>Aktionen</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -72,11 +74,14 @@
                                 <td>{{ index + 1 }}</td>
                                 <td v-for="(value, key) in driver.config" :key="key">
                                     <template v-if="value.name != 'roomsize-presets'">
-                                        <template v-if="value.name == 'maxParticipants' && (!(server[value.name]) || parseInt(server[value.name]) == 0)">
-                                            {{ 'Ohne Grenze' | i18n }}
+                                        <template v-if="value.name == 'maxParticipants'
+                                                && (!(server[value.name]) || parseInt(server[value.name]) == 0)"
+                                            v-translate
+                                        >
+                                            Ohne Grenze
                                         </template>
                                         <template v-else>
-                                            {{server[value.name]}}
+                                            {{ server[value.name] }}
                                         </template>
                                     </template>
                                 </td>
@@ -96,7 +101,7 @@
                 <StudipButton
                     icon="add"
                     @click="addServerDialog(driver_name)">
-                    {{ "Server hinzufügen" | i18n }}
+                    <translate>Server hinzufügen</translate>
                 </StudipButton>
 
                 <ServerDialog
@@ -117,7 +122,7 @@
                     }"
                     @click="storeConfig"
                 >
-                    {{ "Einstellungen speichern" | i18n}}
+                    <translate>Einstellungen speichern</translate>
                 </StudipButton>
             </footer>
         </form>

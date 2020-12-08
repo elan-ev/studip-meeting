@@ -1,10 +1,11 @@
 {
     "name": "Meetings",
-    "version": "2.21.0",
+    "version": "2.41.0",
     "description": "",
     "main": "index.js",
     "scripts": {
         "dev": "webpack --watch --mode=\"development\"",
+        "translate": "gettext-extract --attribute v-i18n --attribute v-translate --output locale/en/LC_MESSAGES/meetings_js.pot $(find vueapp -type f -name '*.vue') && sh translate.sh && gettext-compile --output vueapp/i18n/translations.json locale/en/LC_MESSAGES/meetings.po",
         "prod": "webpack --mode=\"production\"",
         "prezip": "npm install && npm run prod && composer install --no-dev",
         "zip": "zip -r Meetings-V$npm_package_version.zip app assets compat Driver images lib locale migrations static vendor LICENSE README.md bootstrap.php MeetingPlugin.php plugin.manifest"
@@ -19,6 +20,7 @@
         "clean-webpack-plugin": "^3.0.0",
         "css-loader": "^2.1.1",
         "date-fns": "^2.12.0",
+        "easygettext": "^2.16.1",
         "extract-loader": "^2.0.1",
         "file-loader": "^2.0.0",
         "html-webpack-plugin": "^4.3.0",
@@ -28,6 +30,7 @@
         "sass-loader": "^7.3.1",
         "vue": "^2.6.10",
         "vue-axios": "^2.1.4",
+        "vue-gettext": "^2.1.10",
         "vue-loader": "^15.7.0",
         "vue-router": "^3.0.6",
         "vue-template-compiler": "^2.6.10",
