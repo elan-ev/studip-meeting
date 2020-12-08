@@ -225,6 +225,104 @@
                                 </label>
                             </fieldset>
 
+                            <fieldset v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
+                                        && Object.keys(config[room['driver']]['features']).includes('folders')
+                                        && config[room['driver']]['features']['folders'] == true">
+                                <legend v-translate>Raum Dateiordner</legend>
+                                <label>
+                                    <translate>Verknüpfen Sie einen Ordner mit diesem Raum</translate>
+                                    <div>
+                                        <translate>Aktuell ausgewählter Ordner</translate>:
+                                        <span v-if="room.folder_id && room.folder_id == folder.id && folder.name != ''">
+                                            {{folder.name}}
+                                        </span>
+                                        <span v-else v-translate>
+                                            Kein Ordner
+                                        </span>
+                                    </div>
+                                    <div class="course-folder-container">
+                                        <table class="default documents">
+                                             <caption>
+                                                <div class="caption-container meetings-caption">
+                                                    <a :title="$gettext('Zum Hauptordner')"
+                                                        @click.prevent="FolderHandler('topFolder')">
+                                                        <StudipIcon class="folder-icon" icon="folder-home-full"
+                                                            role="clickable" size="20"></StudipIcon>
+                                                    </a>
+                                                    <template v-if="Object.keys(folder).includes('breadcrumbs')">
+                                                        <template v-for="(bcname, bcid) in folder.breadcrumbs">
+                                                            &nbsp;/&nbsp;
+                                                            <a  :key="bcid"
+                                                                @click.prevent="(room.folder_id && room.folder_id == bcid) ? null : FolderHandler(bcid)">
+                                                                {{bcname}}
+                                                            </a>
+                                                        </template>
+                                                    </template>
+                                                </div>
+                                             </caption>
+                                            <thead>
+                                                <tr>
+                                                    <th v-translate>Name</th>
+                                                </tr>
+                                            </thead>
+                                            <template v-if="(Object.keys(folder).includes('subfolders') && Object.keys(folder['subfolders']).length > 0) ||
+                                                            (Object.keys(folder).includes('files') && Object.keys(folder['files']).length > 0 && showFilesInFolder)">
+                                                <tbody class="subfolders" v-if="Object.keys(folder['subfolders']).length > 0">
+                                                    <tr v-for="(sfinfo, sfid) in folder.subfolders" :key="sfid" :id="'row_folder_' + sfid">
+                                                        <td>
+                                                            <a :title="$gettext('Als aktueller Ordner auswählen')"
+                                                                @click.prevent="FolderHandler(sfid)">
+                                                                <StudipIcon v-if="sfinfo.icon" :icon="sfinfo.icon"
+                                                                    role="clickable" size="16"></StudipIcon>
+                                                                <span>{{sfinfo.name}}</span>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody class="files" v-if="Object.keys(folder['files']).length > 0 && showFilesInFolder">
+                                                    <tr v-for="(finfo, fid) in folder.files" :key="fid">
+                                                        <td>
+                                                            <div>
+                                                                <StudipIcon v-if="finfo.icon" :icon="finfo.icon"
+                                                                    role="clickable" size="16"></StudipIcon>
+                                                                <span>{{finfo.name}}</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </template>
+                                            <template v-else>
+                                                <tbody>
+                                                    <tr class="empty">
+                                                        <td>
+                                                            <translate>Dieser Ordner ist leer</translate>
+                                                            <span v-translate v-if="Object.keys(folder).includes('files') && Object.keys(folder['files']).length > 0">(Dateien verfügbar)</span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </template>
+                                            <tfoot>
+                                                 <tr>
+                                                    <td>
+                                                        <div class="footer-container">
+                                                            <a class="button" @click.prevent="showAddNewFolder = true" v-translate>
+                                                                Neuer Ordner
+                                                            </a>
+                                                            <a @click.prevent="showFilesInFolder = !showFilesInFolder" class="right">
+                                                                <StudipIcon :icon="(showFilesInFolder) ? 'checkbox-checked' : 'checkbox-unchecked'"
+                                                                    role="clickable" size="14"></StudipIcon>
+                                                                <span v-translate>Dateien anzeigen</span>
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                 </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </label>
+                               
+                            </fieldset>
+
                             <footer class="modal-footer">
                                 <StudipButton v-if="room['id']" icon="accept" type="button"
                                     v-on:click="editRoom($event)"
@@ -255,6 +353,14 @@
                 </div>
             </div>
         </transition>
+
+        <!-- dialog -->
+        <MeetingAddNewFolder v-if="showAddNewFolder"
+            :folder="folder"
+            @done="showAddNewFolder = false"
+            @cancel="showAddNewFolder = false"
+        />
+
     </div>
 </template>
 
@@ -266,9 +372,10 @@ import StudipButton from "@/components/StudipButton";
 import StudipIcon from "@/components/StudipIcon";
 import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import MessageBox from "@/components/MessageBox";
+import MeetingAddNewFolder from "@/components/MeetingAddNewFolder";
 
 import {
-    ROOM_LIST, ROOM_UPDATE, ROOM_CREATE,
+    ROOM_LIST, ROOM_UPDATE, ROOM_CREATE, FOLDER_READ
 } from "@/store/actions.type";
 
 import {
@@ -284,26 +391,30 @@ export default {
         StudipButton,
         StudipIcon,
         StudipTooltipIcon,
-        MessageBox
+        MessageBox,
+        MeetingAddNewFolder
     },
 
     data() {
         return {
             modal_message: {},
-            message: ''
+            message: '',
+            showAddNewFolder: false,
+            showFilesInFolder: false
         }
     },
 
     computed: {
         ...mapGetters([
             'config',
-            'course_config', 'course_groups'
+            'course_config', 'course_groups', 'folder'
         ])
     },
 
     mounted() {
         this.modal_message = {};
         this.setDriver();
+        this.getFolders();
     },
 
     methods: {
@@ -490,7 +601,19 @@ export default {
             }).catch (({error}) => {
                 this.$emit('cancel');
             });
-        }
+        },
+
+        getFolders(folder_id = '') {
+            if (folder_id == '') {
+                folder_id = (this.room.folder_id ? this.room.folder_id : 'topFolder');
+            }
+            this.$store.dispatch(FOLDER_READ, folder_id);
+        },
+        
+        FolderHandler(to) {
+            this.$set(this.room, "folder_id" , (to == 'topFolder' ? null : to));
+            this.getFolders(to);
+        },
     }
 }
 </script>

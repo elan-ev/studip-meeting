@@ -25,6 +25,9 @@ class RouteMap
             ->add(new Middlewares\RemoveTrailingSlashes);
 
         $this->app->get('/discovery', Routes\DiscoveryIndex::class);
+
+        $this->app->group('', [$this, 'unauthenticatedRoutes'])
+            ->add(new Middlewares\RemoveTrailingSlashes);
     }
 
     public function authenticatedRoutes()
@@ -63,6 +66,10 @@ class RouteMap
         //routes for feedback
         $this->app->post('/feedback', Routes\Feedback\FeedbackSubmit::class);
         $this->app->post('/feedback/uploadTest', Routes\Feedback\UploadTest::class);
+
+        //routes for folders
+        $this->app->get('/folders/{cid}/{folder_id}', Routes\Folder\FolderList::class);
+        $this->app->post('/folders/new_folder', Routes\Folder\FolderCreate::class);
     }
 
     public function adminRoutes()
@@ -74,5 +81,10 @@ class RouteMap
         $this->app->put('/config/{id}', Routes\Config\ConfigEdit::class);
         $this->app->delete('/config/{id}', Routes\Config\ConfigDelete::class);
 
+    }
+
+    public function unauthenticatedRoutes() 
+    {
+        $this->app->get('/slides/{meeting_id}/{slide_id}/{token}', Routes\Slides\SlidesShow::class);
     }
 }
