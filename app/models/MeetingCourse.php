@@ -13,23 +13,6 @@ namespace ElanEv\Model;
  */
 class MeetingCourse extends \SimpleORMap
 {
-    public function __construct($id = null)
-    {
-        $this->db_table = 'vc_meeting_course';
-        $this->has_one['meeting'] = array(
-            'class_name' => 'ElanEv\Model\Meeting',
-            'foreign_key' => 'meeting_id',
-            'assoc_foreign_key' => 'id',
-        );
-        $this->has_one['course'] = array(
-            'class_name' => 'Course',
-            'foreign_key' => 'course_id',
-            'assoc_foreign_key' => 'id',
-        );
-
-        parent::__construct($id);
-    }
-
     /**
      * {@inheritdoc}
      */

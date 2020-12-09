@@ -10,17 +10,6 @@ namespace ElanEv\Model;
  */
 class MeetingToken extends \SimpleORMap
 {
-    public function __construct($id = null)
-    {
-        $this->db_table = 'vc_meeting_token';
-        $this->belongs_to['meeting'] = array(
-            'class_name' => 'ElanEv\Model\Meeting',
-            'foreign_key' => 'meeting_id',
-        );
-
-        parent::__construct($id);
-    }
-
     /**
      * {@inheritdoc}
      */

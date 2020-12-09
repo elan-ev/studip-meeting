@@ -28,33 +28,6 @@ class Meeting extends \SimpleORMap
 {
     public function __construct($id = null)
     {
-        $this->db_table = 'vc_meetings';
-        $this->has_many['joins'] = array(
-            'class_name' => 'ElanEv\Model\Join',
-            'assoc_foreign_key' => 'meeting_id',
-            'on_delete' => 'delete',
-        );
-        $config['has_many']['invitations_link'] = array(
-            'class_name' => 'ElanEv\Model\InvitationsLink',
-            'assoc_foreign_key' => 'meeting_id',
-            'on_delete' => 'delete',
-        );
-        $this->has_and_belongs_to_many['courses'] = array(
-            'class_name' => 'Course',
-            'thru_table' => 'vc_meeting_course',
-            'thru_key' => 'meeting_id',
-            'thru_assoc_key' => 'course_id',
-            'assoc_foreign_key' => 'seminar_id',
-            'on_store' => true,
-            'on_delete' => true,
-        );
-
-        $this->has_one['meeting_token'] = array(
-            'class_name' => 'ElanEv\Model\MeetingToken',
-            'assoc_foreign_key' => 'meeting_id',
-            'on_delete' => 'delete'
-        );
-
         parent::__construct($id);
 
         if (!$this->identifier) {

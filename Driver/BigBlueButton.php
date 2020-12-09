@@ -284,11 +284,11 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
     private function getRoomSizeFeature($minParticipants = 0) {
         $roomsize_features = array_filter(self::getCreateFeatures(), function ($configOption) {
-            return in_array($configOption->getName(), 
+            return in_array($configOption->getName(),
                             [
                                 'lockSettingsDisableNote',
-                                'webcamsOnlyForModerator', 
-                                'lockSettingsDisableCam', 
+                                'webcamsOnlyForModerator',
+                                'lockSettingsDisableCam',
                                 'lockSettingsDisableMic',
                                 'muteOnStart',
                             ]);
@@ -411,7 +411,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     /**
      * {@inheritDoc}
     */
-    public function PrepareSlides($meetingId)
+    public function prepareSlides($meetingId)
     {
         $options = [];
 
@@ -434,7 +434,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             $meeting_token->expiration = strtotime("+1 day");
             $meeting_token->store();
         }
-        
+
         foreach ($folder->getTypedFolder()->getFiles() as $file_ref) {
             if ($file_ref->id && $file_ref->name) {
                 $document_url = \PluginEngine::getURL('meetingplugin', [], "api/slides/$meetingId/{$file_ref->id}/$token");
@@ -457,7 +457,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             $modules .= "</module></modules>";
             $options['body'] = "<?xml version='1.0' encoding='UTF-8'?>" . $modules;
         }
-      
+
         return $options;
     }
 }
