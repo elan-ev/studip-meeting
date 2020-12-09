@@ -30,7 +30,7 @@
                                     <textarea name="description" :placeholder="$gettext('Optionale Beschreibung')" v-model.trim="new_folder.desc"></textarea>
                                 </label>
                             </fieldset>
-                            <fieldset v-if="Object.keys(folder).includes('folder_types') && Object.keys(folder['folder_types']).length > 0" 
+                            <fieldset v-if="Object.keys(folder).includes('folder_types') && Object.keys(folder['folder_types']).length > 0"
                                 class="select_terms_of_use">
                                 <legend v-translate>
                                     Ordnertyp auswählen
@@ -44,8 +44,8 @@
                                             <StudipIcon :icon="folder_type.icon"
                                                 role="clickable" size="32"></StudipIcon>
                                         </div>
-                                        <div class="text" v-translate>
-                                            {{folder_type.name}}
+                                        <div class="text">
+                                            {{ folder_type.name }}
                                         </div>
                                         <StudipIcon icon="check-circle" class="check"
                                                 role="clickable" size="32"></StudipIcon>
@@ -107,12 +107,12 @@ export default {
 
     computed: {
         ...mapGetters([
-            
+
         ])
     },
 
     mounted() {
-        
+
     },
 
     methods: {
