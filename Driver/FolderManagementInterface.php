@@ -16,5 +16,5 @@ interface FolderManagementInterface
      *
      * @return array an extra option array for the request
      */
-    public function PrepareSlides($meetingId);
+    public function prepareSlides($meetingId);
 }
