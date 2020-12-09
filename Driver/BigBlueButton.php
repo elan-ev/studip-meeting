@@ -5,6 +5,7 @@ namespace ElanEv\Driver;
 use MeetingPlugin;
 use GuzzleHttp\ClientInterface;
 use ElanEv\Model\Meeting;
+use ElanEv\Model\MeetingToken;
 use ElanEv\Model\Driver;
 use Throwable;
 
@@ -14,7 +15,7 @@ use Throwable;
  * @author Christian Flothmann <christian.flothmann@uos.de>
  * @author Till Glöggler <tgloeggl@uos.de>
  */
-class BigBlueButton implements DriverInterface, RecordingInterface
+class BigBlueButton implements DriverInterface, RecordingInterface, FolderManagementInterface
 {
     /**
      * @var \GuzzleHttp\ClientInterface The HTTP client
@@ -72,8 +73,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface
             $params = array_merge($params, $features);
         }
 
-        $options = array();
-        $options = $this->PrepareSlides($parameters->getMeetingId());
+        $options = $this->prepareSlides($parameters->getMeetingId());
         $response = $this->performRequest('create', $params, $options);
         $xml = new \SimpleXMLElement($response);
 
@@ -108,6 +108,26 @@ class BigBlueButton implements DriverInterface, RecordingInterface
         // if a room has already been created it returns true otherwise it creates the room
         $meeting = new Meeting($parameters->getMeetingId());
         $meetingParameters = $meeting->getMeetingParameters();
+
+        //Handle Meeting Token if the user is moderator!
+        if ($parameters->hasModerationPermissions()) {
+            $meeting_token = $meeting->meeting_token;
+            //make sure it exists (only for those pre-defined rooms)
+            if (!$meeting_token) {
+                $meeting_token = new MeetingToken();
+                $meeting_token->meeting_id = $meeting->id;
+                $meeting_token->token = MeetingToken::generate_token();
+                $meeting_token->expiration = strtotime("+1 day");
+                $meeting_token->store();
+            }
+            //make sure it is valid - if not renew everything
+            if ($meeting_token->is_expired()) {
+                $meeting_token->token = MeetingToken::generate_token();
+                $meeting_token->expiration = strtotime("+1 day");
+                $meeting_token->store();
+            }
+        }
+
         $this->createMeeting($meetingParameters);
 
         if ( $parameters->getUsername() == 'guest') {
@@ -389,55 +409,55 @@ class BigBlueButton implements DriverInterface, RecordingInterface
     }
 
     /**
-    * ::Discription
-    *
-    * @param (type) (name) (desc)
-    * @return (type) (name) (desc)
+     * {@inheritDoc}
     */
-    private function PrepareSlides ($meetingId) {
-        $options = array();
+    public function PrepareSlides($meetingId)
+    {
+        $options = [];
+
         $meeting = new Meeting($meetingId);
-        if ($meeting->isNew()) {
-            return '';
+
+        if ($meeting->isNew() || empty($meeting->folder_id)) {
+            return [];
         }
-        $course = $meeting->courses[0];
-        $course_dates = \CourseDate::findBySeminar_id($course->id);
-        $today_timestamp = strtotime(date('d.m.Y'));
-        $today_date = new \DateTime("@$today_timestamp"); 
-        $session_file = array();
-        foreach ($course_dates as $course_date) {
-            $session_timestamp = strtotime(date('d.m.Y', $course_date->date));
-            $session_date = new \DateTime("@$session_timestamp"); 
-            if ($today_date == $session_date) {
-                $session_files = $course_date->getAccessibleFolderFiles($GLOBALS['user']->id)['files'];
-                if (count($session_files) > 0) {
-                    foreach ($session_files as $session_file_id => $session_file) {
-                        $path_file = $session_file->file->storage == 'disk' ? $session_file->file->path : $session_file->file->url;
-                        $filesize = @filesize($path_file);
-                        $filename = $session_file->name;
-                        $lowerfilename = strtolower($filename);
-                        if (strpos($lowerfilename, 'meeting_') !== FALSE && $filesize) {
-                            $slide_url = '';
-                            if ($session_file->file->url) { // url
-                                $slide_url = $session_file->file->url;
-                            } else if ($session_file->file->storage == 'disk') {
-                                $slide_url = \PluginEngine::getURL('meetingplugin', ['slide_id' => $session_file->id], 'slides');
-                                if (isset($_SERVER['SERVER_NAME']) && strpos($slide_url, $_SERVER['SERVER_NAME']) === FALSE) {
-                                    $base_url = sprintf(
-                                        "%s://%s",
-                                        isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
-                                        $_SERVER['SERVER_NAME']
-                                    );
-                                    $slide_url = $base_url . $slide_url;
-                                }
-                            }
-                            $options['body'] = "<?xml version='1.0' encoding='UTF-8'?> <modules>	<module name='presentation'> <document url='$slide_url' filename='$filename'/> </module></modules>";
-                            return $options;
-                        }
-                    }
+
+        $documents = [];
+        $folder = \Folder::find($meeting->folder_id);
+
+        //generate or get the token
+        $token = ($meeting->meeting_token) ? $meeting->meeting_token->get_token() : null;
+        if (!$token) {
+            $token = MeetingToken::generate_token();
+            $meeting_token = new MeetingToken();
+            $meeting_token->meeting_id = $meetingId;
+            $meeting_token->token = $token;
+            $meeting_token->expiration = strtotime("+1 day");
+            $meeting_token->store();
+        }
+        
+        foreach ($folder->getTypedFolder()->getFiles() as $file_ref) {
+            if ($file_ref->id && $file_ref->name) {
+                $document_url = \PluginEngine::getURL('meetingplugin', [], "api/slides/$meetingId/{$file_ref->id}/$token");
+                if (isset($_SERVER['SERVER_NAME']) && strpos($document_url, $_SERVER['SERVER_NAME']) === FALSE) {
+                    $base_url = sprintf(
+                        "%s://%s",
+                        isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
+                        $_SERVER['SERVER_NAME']
+                    );
+                    $document_url = $base_url . $document_url;
                 }
+                $documents[] = "<document url='$document_url' filename='{$file_ref->name}' />";
             }
         }
+        if (count($documents)) {
+            $modules = " <modules>	<module name='presentation'> ";
+            foreach ($documents as $document) {
+                $modules .= $document;
+            }
+            $modules .= "</module></modules>";
+            $options['body'] = "<?xml version='1.0' encoding='UTF-8'?>" . $modules;
+        }
+      
         return $options;
     }
 }

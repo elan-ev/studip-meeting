@@ -125,6 +125,7 @@ class RoomAdd extends MeetingsController
                 $meeting->join_as_moderator = $json['join_as_moderator'];
                 $meeting->remote_id = md5(uniqid());
                 $meeting->features = json_encode($json['features']);
+                $meeting->folder_id = $json['folder_id'];
                 $meeting->store();
                 $meetingParameters = $meeting->getMeetingParameters();
 

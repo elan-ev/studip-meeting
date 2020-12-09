@@ -113,6 +113,7 @@ class RoomEdit extends MeetingsController
 
                 $meeting->features = json_encode($json['features']);
             }
+            $meeting->folder_id = $json['folder_id'];
             $meeting->chdate = $change_date->getTimestamp();
             $meeting->store();
             $message = [

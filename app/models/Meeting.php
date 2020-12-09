@@ -49,6 +49,12 @@ class Meeting extends \SimpleORMap
             'on_delete' => true,
         );
 
+        $this->has_one['meeting_token'] = array(
+            'class_name' => 'ElanEv\Model\MeetingToken',
+            'assoc_foreign_key' => 'meeting_id',
+            'on_delete' => 'delete'
+        );
+
         parent::__construct($id);
 
         if (!$this->identifier) {
@@ -75,6 +81,12 @@ class Meeting extends \SimpleORMap
             'assoc_foreign_key' => 'seminar_id',
             'on_store' => true,
             'on_delete' => true,
+        );
+
+        $config['has_one']['meeting_token'] = array(
+            'class_name' => 'ElanEv\Model\MeetingToken',
+            'assoc_foreign_key' => 'meeting_id',
+            'on_delete' => 'delete'
         );
 
         parent::configure($config);

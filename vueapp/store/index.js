@@ -6,6 +6,7 @@ import config from "./config.module";
 import rooms_list from "./room.module";
 import recording_list from "./recording.module";
 import feedback from "./feedback.module";
+import folder from "./folder.module";
 
 
 Vue.use(Vuex);
@@ -16,6 +17,7 @@ export default new Vuex.Store({
     config,
     rooms_list,
     recording_list,
-    feedback
+    feedback,
+    folder
   }
 });

@@ -316,6 +316,52 @@ fieldset {
                     }
                 }
             }
+            .course-folder-container {
+                margin-top: 5px;
+                table.documents {
+                    a {
+                        cursor: pointer;
+                    }
+                    .meetings-caption {
+                        display: flex;
+                        justify-content: flex-start;
+                        flex-wrap: wrap;
+                        font-size: 16px !important;
+                    }
+                    tbody.subfolders, tbody.files {
+                        tr {
+                            td {
+                                a, div {
+                                    display: flex;
+                                    align-items: center;
+                                    img {
+                                        margin-right: 5px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    tfoot {
+                        tr {
+                            td {
+                                div.footer-container {
+                                    display: flex;
+                                    align-items: center;
+                                    a.right {
+                                        position: relative;
+                                        margin-left: auto;
+                                        img {
+                                            position: absolute;
+                                            left: -15px;
+                                            top: 2px;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         .modal-footer {
