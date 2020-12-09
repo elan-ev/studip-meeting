@@ -62,6 +62,11 @@ class Meeting extends \SimpleORMap
             'on_delete' => 'delete'
         );
 
+        $config['has_one']['folder'] = array(
+            'class_name' => '\Folder',
+            'foreign_key'  => 'folder_id'
+        );
+
         parent::configure($config);
     }
 

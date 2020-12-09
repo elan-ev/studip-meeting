@@ -64,6 +64,7 @@
                                 : $gettext('Teilnehmende haben eingeschränkte Rechte') }}
                     </span>
                 </div>
+
                 <div v-if="course_config.display.editRoom">
                     <a  style="cursor: pointer;"
                         :title="room.active == 1 ?
@@ -78,6 +79,7 @@
                         : $gettext('Das Meeting ist für die Teilnehmer unsichtbar') }}
                     </span>
                 </div>
+
                 <div v-if="course_config.display.editRoom && room.group_id != undefined">
                     <StudipIcon class="info-icon" icon="group2"
                             role="status-yellow" size="24"></StudipIcon>
@@ -86,6 +88,22 @@
                         {{ group_name }}
                     </span>
                 </div>
+
+                <div v-if="room.folder_id !== null">
+                    <StudipIcon class="info-icon" icon="folder-empty"
+                            role="inactive" size="24">
+                    </StudipIcon>
+
+                    <translate>
+                        Ordner für automatische Uploads:
+                    </translate>
+
+                    <a :href="room.details.folder.link" target="_blank">
+                        {{ room.details.folder.name }}
+                    </a>
+                </div>
+
+
                 <div v-if="num_drivers > 1">
                     <StudipIcon class="info-icon" icon="video2"
                         role="info" size="24"></StudipIcon>
@@ -140,7 +158,7 @@ import store from "@/store";
 
 import {
     ROOM_UPDATE,
-    ROOM_DELETE,
+    ROOM_DELETE
 } from "@/store/actions.type";
 
 export default {

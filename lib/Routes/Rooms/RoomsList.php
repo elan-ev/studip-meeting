@@ -91,6 +91,7 @@ class RoomsList extends MeetingsController
 
                 $creator = \User::find($meetingCourse->meeting->user_id);
                 $meeting['name']= ltrim($meetingCourse->meeting->name);
+
                 $meeting['details'] = [
                     'creator' => $create ? $creator->getFullname() : 'unbekannt',
                     'date'    => date('d.m.Y H:i', $meetingCourse->meeting->mkdate)
@@ -98,6 +99,15 @@ class RoomsList extends MeetingsController
 
                 $meeting['features'] = $this->getFeatures($meeting['features']);
                 $meeting['enabled'] = $meetingEnabled;
+
+                if ($meeting['folder_id']) {
+                    $meeting['details']['folder'] = [
+                        'name' => $meetingCourse->meeting->folder->name,
+                        'link' => \URLHelper::getURL('dispatch.php/course/files/index/' . $meeting['folder_id'], [
+                            'cid' => $cid
+                        ])
+                    ];
+                }
 
                 $course_rooms_list[] = $meeting;
             } catch (Exception $e) {
