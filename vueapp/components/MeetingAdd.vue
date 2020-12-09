@@ -228,13 +228,22 @@
                             <fieldset v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
                                         && Object.keys(config[room['driver']]['features']).includes('folders')
                                         && config[room['driver']]['features']['folders'] == true">
-                                <legend v-translate>Raum Dateiordner</legend>
+                                <legend>
+                                    <translate>
+                                        Automatisches hochladen von Materialien
+                                    </translate>
+
+                                    <StudipTooltipIcon :text="$gettext('Verknüpfen Sie einen Ordner mit diesem Raum. '
+                                        + 'Es werden alle Dateien in diesem Ordner automatisch zu Beginn des Meetings hochgeladen. '
+                                        + 'Sie können im Meeting zwischen den Dateien wechseln.')">
+                                    </StudipTooltipIcon>
+                                </legend>
                                 <label>
-                                    <translate>Verknüpfen Sie einen Ordner mit diesem Raum</translate>
                                     <div>
-                                        <translate>Aktuell ausgewählter Ordner</translate>:
+                                        <translate>Aktuell ausgewählter Ordner: </translate>
+
                                         <span v-if="room.folder_id && room.folder_id == folder.id && folder.name != ''">
-                                            {{folder.name}}
+                                            {{ folder.name }}
                                         </span>
                                         <span v-else v-translate>
                                             Kein Ordner
@@ -244,7 +253,7 @@
                                         <table class="default documents">
                                              <caption>
                                                 <div class="caption-container meetings-caption">
-                                                    <a :title="$gettext('Zum Hauptordner')"
+                                                    <a :title="$gettext('Zum Hauptordner - Ordnerauswahl aufheben')"
                                                         @click.prevent="FolderHandler('topFolder')">
                                                         <StudipIcon class="folder-icon" icon="folder-home-full"
                                                             role="clickable" size="20"></StudipIcon>
@@ -266,7 +275,7 @@
                                                 </tr>
                                             </thead>
                                             <template v-if="(Object.keys(folder).includes('subfolders') && Object.keys(folder['subfolders']).length > 0) ||
-                                                            (Object.keys(folder).includes('files') && Object.keys(folder['files']).length > 0 && showFilesInFolder)">
+                                                            (Object.keys(folder).includes('files') && Object.keys(folder['files']).length > 0)">
                                                 <tbody class="subfolders" v-if="Object.keys(folder['subfolders']).length > 0">
                                                     <tr v-for="(sfinfo, sfid) in folder.subfolders" :key="sfid" :id="'row_folder_' + sfid">
                                                         <td>
@@ -279,7 +288,7 @@
                                                         </td>
                                                     </tr>
                                                 </tbody>
-                                                <tbody class="files" v-if="Object.keys(folder['files']).length > 0 && showFilesInFolder">
+                                                <tbody class="files" v-if="Object.keys(folder['files']).length <= 5 || showFilesInFolder">
                                                     <tr v-for="(finfo, fid) in folder.files" :key="fid">
                                                         <td>
                                                             <div>
@@ -290,17 +299,36 @@
                                                         </td>
                                                     </tr>
                                                 </tbody>
-                                            </template>
-                                            <template v-else>
-                                                <tbody>
+
+                                                <tbody v-else>
                                                     <tr class="empty">
-                                                        <td>
-                                                            <translate>Dieser Ordner ist leer</translate>
-                                                            <span v-translate v-if="Object.keys(folder).includes('files') && Object.keys(folder['files']).length > 0">(Dateien verfügbar)</span>
-                                                        </td>
+                                                        <span v-if="Object.keys(folder).includes('files')
+                                                            && Object.keys(folder['files']).length > 5"
+                                                            v-translate="{
+                                                                count: Object.keys(folder['files']).length
+                                                            }"
+                                                        >
+                                                            In diesem Ordner befinden sich %{ count } Dateien <br>
+                                                            die aus Gründen der Übersichtlichkeit ausgeblendet wurden. <br>
+                                                            Wählen sie "Alle Dateien anzeigen" um diese Dateien aufzulisten
+                                                        </span>
+                                                        <span v-else v-translate>
+                                                            Dieser Ordner ist leer
+                                                        </span>
                                                     </tr>
                                                 </tbody>
                                             </template>
+
+                                            <template v-else>
+                                                <tbody>
+                                                    <tr class="empty">
+                                                        <translate>
+                                                            Dieser Ordner ist leer
+                                                        </translate>
+                                                    </tr>
+                                                </tbody>
+                                            </template>
+
                                             <tfoot>
                                                  <tr>
                                                     <td>
@@ -311,7 +339,7 @@
                                                             <a @click.prevent="showFilesInFolder = !showFilesInFolder" class="right">
                                                                 <StudipIcon :icon="(showFilesInFolder) ? 'checkbox-checked' : 'checkbox-unchecked'"
                                                                     role="clickable" size="14"></StudipIcon>
-                                                                <span v-translate>Dateien anzeigen</span>
+                                                                <span v-translate>Alle Dateien anzeigen</span>
                                                             </a>
                                                         </div>
                                                     </td>
