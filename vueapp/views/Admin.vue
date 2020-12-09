@@ -11,14 +11,16 @@
             </ul>
         </MessageBox>
 
-        <MessageBox v-if="changes_made" type="warning" v-translate>
-            Ihre Änderungen sind noch nicht gespeichert!
+        <MessageBox v-if="changes_made" type="warning">
+            <translate>
+                Ihre Änderungen sind noch nicht gespeichert!
+            </translate>
         </MessageBox>
 
         <form class="default" v-if="drivers" @submit.prevent>
             <fieldset v-for="(driver, driver_name) in drivers" :key="driver_name">
                 <legend>
-                    driver.title
+                    {{ driver.title }}
                 </legend>
 
                 <label v-if="Object.keys(config[driver_name]).includes('enable')">
