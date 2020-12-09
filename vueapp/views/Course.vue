@@ -16,7 +16,7 @@
         </MessageBox>
 
         <span v-else>
-            <MessageBox v-if="rooms_checked && !rooms_list.length && config && course_config.display.addRoom" :type="'info'">
+            <MessageBox v-if="rooms_checked && !rooms_list.length && config && course_config.display.addRoom" type="info">
                 <translate>
                     Bisher existieren keine Meeting-Räume für diese Veranstaltung.
                     Möchten Sie einen anlegen?

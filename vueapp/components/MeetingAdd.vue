@@ -47,7 +47,7 @@
                                         <option value="" disabled v-translate>
                                             Bitte wählen Sie ein Konferenzsystem aus
                                         </option>
-                                        <option v-for="(driver_config, driver) in config" :key="driver"
+                                        <option v-for="(driver_config, driver) in availableServers" :key="driver"
                                                 :value="driver">
                                                 {{ driver_config['display_name'] }}
                                         </option>
@@ -298,7 +298,19 @@ export default {
         ...mapGetters([
             'config',
             'course_config', 'course_groups'
-        ])
+        ]),
+
+        availableServers() {
+            let availableServers = {};
+
+            for (let server in this.config) {
+                if (this.config[server].enable !== 0) {
+                    availableServers[server] = this.config[server];
+                }
+            }
+
+            return availableServers;
+        }
     },
 
     mounted() {
