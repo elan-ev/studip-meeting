@@ -9,7 +9,7 @@ use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use Meetings\Errors\Error;
 use Exception;
-use Meetings\Models\I18N as _;
+use Meetings\Models\I18N;
 
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
@@ -46,11 +46,11 @@ class RoomJoinGuest extends MeetingsController
 
         $meeting = Meeting::find($room_id);
         if (!($meeting && $meeting->courses->find($cid))) {
-            throw new Error(_('Dieser Raum in diesem Kurs kann nicht gefunden werden!'), 404);
+            throw new Error(I18N::_('Dieser Raum in diesem Kurs kann nicht gefunden werden!'), 404);
         }
         $meetingFeatures = json_decode($meeting->features, true);
         if (!$meetingFeatures || !array_key_exists('guestPolicy', $meetingFeatures) || $meetingFeatures['guestPolicy'] == 'ALWAYS_DENY') {
-            throw new Error(_('Gäste können nicht eingeladen werden!'), 404);
+            throw new Error(I18N::_('Gäste können nicht eingeladen werden!'), 404);
         }
 
         $default_data = ['meeting_id' => $room_id, 'default_name' => $guest_name];

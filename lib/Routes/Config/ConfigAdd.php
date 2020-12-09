@@ -10,7 +10,7 @@ use Meetings\MeetingsController;
 use ElanEv\Model\Driver;
 use Meetings\Errors\Error;
 use Exception;
-use Meetings\Models\I18N as _;
+use Meetings\Models\I18N;
 use ElanEv\Model\MeetingCourse;
 
 class ConfigAdd extends MeetingsController
@@ -39,18 +39,18 @@ class ConfigAdd extends MeetingsController
                 $valid_servers = Driver::setConfigByDriver($driver_name, $config_options);
 
                 if (!$valid_servers) {
-                    $res_message_text[] = sprintf(_('Die Überprüfung der Servereinstellungen '
+                    $res_message_text[] = sprintf(I18N::_('Die Überprüfung der Servereinstellungen '
                         . 'für %s war nicht erfolgreich, wurden aber trotzdem gespeichert.'), $driver_name);
                 }
             }
 
             $message = [
-                'text' => ((!empty($res_message_text)) ? $res_message_text : _('Konfiguration gespeichert.')),
+                'text' => ((!empty($res_message_text)) ? $res_message_text : I18N::_('Konfiguration gespeichert.')),
                 'type' => ((!empty($res_message_text)) ? 'error' : 'success')
             ];
         } catch ( Exception $e) {
             $message = [
-                'text' => _('Konnte Konfiguration nicht speichern!'),
+                'text' => I18N::_('Konnte Konfiguration nicht speichern!'),
                 'type' => 'error'
             ];
         }

@@ -72,7 +72,7 @@ class ConfigListCourse extends MeetingsController
         if ($cid) {
             $groups = \Statusgruppen::findBySeminar_id($cid);
             foreach ($groups as $one_group) {
-                $course_groups[$one_group->id] = _($one_group->name);
+                $course_groups[$one_group->id] = $one_group->name;
             }
         }
 
@@ -157,7 +157,7 @@ class ConfigListCourse extends MeetingsController
                     && (isset($settings['features']['record']))) {
                 $record_index = array_search('record', array_column($settings['features']['record'], 'name'));
                 if ($record_index !== FALSE) {
-                    $tooltip_text = _('Opencast wird als Aufzeichnungsserver verwendet. Diese Funktion ist im Testbetrieb und es kann noch zu Fehlern kommen.');
+                    $tooltip_text = I18N::_('Opencast wird als Aufzeichnungsserver verwendet. Diese Funktion ist im Testbetrieb und es kann noch zu Fehlern kommen.');
                     $config[$driver_name]['features']['record'][$record_index]['info'] = $tooltip_text;
                 }
             }

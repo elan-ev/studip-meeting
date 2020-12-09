@@ -4,6 +4,7 @@ namespace Meetings\Models;
 use Meetings\RelationshipTrait;
 use Meetings\Models\UPMap;
 use Meetings\Models\OCSeminarSeries;
+use Meetings\Models\I18N;
 
 class Config extends UPMap
 {
@@ -82,7 +83,7 @@ class Config extends UPMap
             }
 
         } else {
-            throw new \Exception(_("Es wurde kein Servicetyp angegeben."));
+            throw new \Exception(I18N::_("Es wurde kein Servicetyp angegeben."));
         }
     }
 

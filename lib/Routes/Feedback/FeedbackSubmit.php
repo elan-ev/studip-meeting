@@ -10,7 +10,7 @@ use Meetings\MeetingsController;
 use Meetings\Errors\Error;
 use Exception;
 use StudipMail;
-use Meetings\Models\I18N as _;
+use Meetings\Models\I18N;
 
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
@@ -38,21 +38,28 @@ class FeedbackSubmit extends MeetingsController
             $room_id = filter_var($json['room_id'], FILTER_SANITIZE_NUMBER_INT);
             $cid = filter_var($json['cid'], FILTER_SANITIZE_STRING);
             $meetingCourse = new MeetingCourse([$room_id, $cid ]);
-            if ($json && $to && $meetingCourse && $current_user) {
-                $subject = _("Feedback zum Meetings-Plugin");
+
+            if (!$to) {
+                $message = [
+                    'text' => I18N::_('Es ist keine Kontaktadresse hinterlegt! '
+                        . 'Bitte wenden Sie sich an eine/n Systemadministrator/in!'),
+                    'type' => 'error'
+                ];
+            } else if ($json && $meetingCourse && $current_user) {
+                $subject = I18N::_("Feedback zum Meetings-Plugin");
                 $mailbody = $this->generateMessageBody($json, $meetingCourse, $current_user);
                 StudipMail::sendMessage($to, $subject, $mailbody);
                 $message = [
-                    'text' => _("Ihr Feedback wird gesendet."),
+                    'text' => I18N::_("Ihr Feedback wird gesendet."),
                     'type' => 'success'
                 ];
             } else {
                 $message = [
-                    'text' => _('Einige Informationen fehlen!'),
+                    'text' => I18N::_('Einige Informationen fehlen!'),
                     'type' => 'error'
                 ];
             }
-    
+
             return $this->createResponse([
                 'message'=> $message,
             ], $response);
@@ -67,27 +74,32 @@ class FeedbackSubmit extends MeetingsController
     * @param (type) (name) (desc)
     * @return (type) (name) (desc)
     */
-    private function generateMessageBody ($data, $meetingCourse, $current_user) 
-    {    
-        $msg .= _("Grundinformation:") . "\n";
-        $msg = sprintf(_("Seminar ID: %s"), $meetingCourse->course_id) . "\n";
-        $msg .= sprintf(_("Meetings ID: %s"), $meetingCourse->meeting->id) . "\n";
-        $msg .= sprintf(_("User ID: %s"), $current_user->id) . "\n";
+    private function generateMessageBody ($data, $meetingCourse, $current_user)
+    {
+        $course = new \Course($meetingCourse->course_id);
+
+        $msg = "Grundinformationen:" . "\n";
+        $msg .= sprintf("Seminar ID: %s", $meetingCourse->course_id) . "\n";
+        $msg .= sprintf("Seminar: %s", $course->getFullname('number-name-semester')) . "\n";
+        $msg .= sprintf("Meetings ID: %s", $meetingCourse->meeting->id) . "\n";
+        $msg .= sprintf("User ID: %s", $current_user->id) . "\n";
+        $msg .= sprintf("Username: %s", get_fullname($current_user->id)) . "\n";
         $msg .= "==============\n";
-        $msg .= _("Details:") . "\n";
-        $msg .= sprintf(_("Browser-Name: %s"), $data['browser_name']) . "\n";
-        $msg .= sprintf(_("Browser-Version: %s"), $data['browser_version']) . "\n";
-        $msg .= sprintf(_("Download-Geschw. (Mbps): %s"), $data['download_speed']) . "\n";
-        $msg .= sprintf(_("Upload-Geschw. (Mbps): %s"), $data['upload_speed']) . "\n";
-        $msg .= sprintf(_("Netzwerk-Typ: %s"), $data['network_type']) . "\n";
-        $msg .= sprintf(_("Betriebssystem (OS): %s"), $data['os_name']) . "\n";
-        $msg .= sprintf(_("Prozessortyp: %s"), $data['cpu_type']) . "\n";
-        $msg .= sprintf(_("Alter des Rechners: %s"), $data['cpu_old']) . "\n";
-        $msg .= sprintf(_("Anzahl der CPU-Kerne: %s"), $data['cpu_num']) . "\n";
-        $msg .= sprintf(_("RAM (Hauptspeicher) GB: %s"), $data['ram']) . "\n";
+        $msg .= "Details:" . "\n";
+        $msg .= sprintf("Browser-Name: %s", $data['browser_name']) . "\n";
+        $msg .= sprintf("Browser-Version: %s", $data['browser_version']) . "\n";
+        $msg .= sprintf("Download-Geschw. (Mbps): %s", $data['download_speed']) . "\n";
+        $msg .= sprintf("Upload-Geschw. (Mbps): %s", $data['upload_speed']) . "\n";
+        $msg .= sprintf("Netzwerk-Typ: %s", $data['network_type']) . "\n";
+        $msg .= sprintf("Betriebssystem (OS): %s", $data['os_name']) . "\n";
+        $msg .= sprintf("Prozessortyp: %s", $data['cpu_type']) . "\n";
+        $msg .= sprintf("Alter des Rechners: %s", $data['cpu_old']) . "\n";
+        $msg .= sprintf("Anzahl der CPU-Kerne: %s", $data['cpu_num']) . "\n";
+        $msg .= sprintf("RAM (Hauptspeicher) GB: %s", $data['ram']) . "\n";
         $msg .= "==============\n";
-        $msg .= _("Beschreibung:") . "\n";
+        $msg .= "Beschreibung:" . "\n";
         $msg .= $data['description'];
+
         return $msg;
     }
 

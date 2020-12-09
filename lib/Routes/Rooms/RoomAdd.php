@@ -9,7 +9,7 @@ use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use Meetings\Errors\Error;
 use Exception;
-use Meetings\Models\I18N as _;
+use Meetings\Models\I18N;
 
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
@@ -59,29 +59,29 @@ class RoomAdd extends MeetingsController
             //validations
             if ($exists) {
                 $has_error = true;
-                $error_text = _('Es existiert bereits ein gleichnamiger Raum.');
+                $error_text = I18N::_('Es existiert bereits ein gleichnamiger Raum.');
             }
 
             if (empty($json['name'])) {
                 $has_error = true;
-                $error_text = _('Der Raumname darf nicht leer sein');
+                $error_text = I18N::_('Der Raumname darf nicht leer sein');
             }
 
             if (empty($json['driver'])) {
                 $has_error = true;
-                $error_text = _('Es ist kein Konferenzsystem ausgewählt');
+                $error_text = I18N::_('Es ist kein Konferenzsystem ausgewählt');
             }
 
             if (!is_numeric($json['server_index'])) {
                 $has_error = true;
-                $error_text = _('Server ist nicht definiert');
+                $error_text = I18N::_('Server ist nicht definiert');
             }
 
             $servers = Driver::getConfigValueByDriver($json['driver'], 'servers');
             $server_maxParticipants = $servers[$json['server_index']]['maxParticipants'];
             if (is_numeric($server_maxParticipants) && $server_maxParticipants > 0 && $json['features']['maxParticipants'] > $server_maxParticipants) {
                 $has_error = true;
-                $error_text = sprintf(_('Teilnehmerzahl darf %d nicht überschreiten'), $server_maxParticipants);
+                $error_text = sprintf(I18N::_('Teilnehmerzahl darf %d nicht überschreiten'), $server_maxParticipants);
             }
 
             if (!$has_error) {
@@ -106,7 +106,7 @@ class RoomAdd extends MeetingsController
                             if ($series_id) {
                                 $opencast_series_id = $series_id;
                             } else {
-                                throw new Error(_('Opencast Series id kann nicht gefunden werden!'), 404);
+                                throw new Error(I18N::_('Opencast Series id kann nicht gefunden werden!'), 404);
                             }
                         }
                     }
@@ -152,7 +152,7 @@ class RoomAdd extends MeetingsController
                 $meeting->store();
 
                 $message = [
-                    'text' => _('Raum wurde erfolgreich erstellt.'),
+                    'text' => I18N::_('Raum wurde erfolgreich erstellt.'),
                     'type' => 'success'
                 ];
             } else {

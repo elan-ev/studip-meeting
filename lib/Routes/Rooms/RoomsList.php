@@ -10,7 +10,7 @@ use Meetings\MeetingsController;
 use Meetings\Errors\Error;
 use Meetings\Errors\DriverError;
 use Exception;
-use Meetings\Models\I18N as _;
+use Meetings\Models\I18N;
 
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;

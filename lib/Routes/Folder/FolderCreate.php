@@ -14,7 +14,7 @@ use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use Meetings\Errors\Error;
 use Exception;
-use Meetings\Models\I18N as _;
+use Meetings\Models\I18N;
 
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
@@ -46,7 +46,7 @@ class FolderCreate extends MeetingsController
             if (empty($cid) || empty($parent_id) || empty($name) || empty($folder_type)) {
                 return $this->createResponse([
                     'message'=> [
-                        'text' => _('Fehler beim Anlegen des Ordners!'),
+                        'text' => I18N::_('Fehler beim Anlegen des Ordners!'),
                         'type' => 'error'
                     ],
                 ], $response);
@@ -54,13 +54,13 @@ class FolderCreate extends MeetingsController
             }
 
             $message = [
-                'text' => _('Der Ordner wurde angelegt.'),
+                'text' => I18N::_('Der Ordner wurde angelegt.'),
                 'type' => 'success'
             ];
             if (!is_subclass_of($folder_type, 'FolderType')) {
                 return $this->createResponse([
                     'message'=> [
-                        'text' => _('Der gewünschte Ordnertyp ist ungültig!'),
+                        'text' => I18N::_('Der gewünschte Ordnertyp ist ungültig!'),
                         'type' => 'error'
                     ],
                 ], $response);
@@ -76,12 +76,12 @@ class FolderCreate extends MeetingsController
                  'name' => $name,
                  'description' => $desc]
             );
-            
+
             if ($new_folder instanceof \FolderType) {
                 $new_folder->user_id = \User::findCurrent()->id;
                 if (!$parent_folder->createSubfolder($new_folder)) {
                     $message = [
-                        'text' => _('Fehler beim Anlegen des Ordners!'),
+                        'text' => I18N::_('Fehler beim Anlegen des Ordners!'),
                         'type' => 'error'
                     ];
                 }

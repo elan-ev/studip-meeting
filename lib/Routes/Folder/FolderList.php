@@ -14,7 +14,7 @@ use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use Meetings\Errors\Error;
 use Exception;
-use Meetings\Models\I18N as _;
+use Meetings\Models\I18N;
 
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
@@ -52,14 +52,14 @@ class FolderList extends MeetingsController
                 return $this->createResponse([
                     'message'=> [
                         "type" => "error",
-                        "text" => _('Fehler beim Laden des Hauptordners!')
+                        "text" => I18N::_('Fehler beim Laden des Hauptordners!')
                     ],
                 ], $response);
                 die;
             }
 
             $standard_folder = $folder->getTypedFolder();
-            
+
             $folder_obj['name'] =  $folder->name;
             $folder_obj['id']   =  $standard_folder->getId();
             $folder_obj['redirect_link'] = \URLHelper::getUrl('dispatch.php/course/files/index/' . $standard_folder->getId() . '?cid=' . $cid);
@@ -94,7 +94,7 @@ class FolderList extends MeetingsController
 
             $folder_obj['breadcrumbs'] = $breadcrumbs;
 
-            
+
             $folder_obj['folder_types'] = [];
             if (!is_a($standard_folder, 'VirtualFolderType')) {
                 $folder_types = \FileManager::getAvailableFolderTypes($standard_folder->range_id, $GLOBALS['user']->id);
