@@ -34,6 +34,11 @@ class Meeting extends \SimpleORMap
             'assoc_foreign_key' => 'meeting_id',
             'on_delete' => 'delete',
         );
+        $config['has_many']['invitations_link'] = array(
+            'class_name' => 'ElanEv\Model\InvitationsLink',
+            'assoc_foreign_key' => 'meeting_id',
+            'on_delete' => 'delete',
+        );
         $this->has_and_belongs_to_many['courses'] = array(
             'class_name' => 'Course',
             'thru_table' => 'vc_meeting_course',

@@ -19,8 +19,8 @@
                         <form class="default" @submit.prevent="generateGuestJoin">
                             <fieldset>
                                 <label>
-                                    <span class="required" v-translate>Gastname</span>
-                                    <StudipTooltipIcon :text="$gettext('Der Gast bekommt diesen Namen in der Besprechung zugewiesen.')">
+                                    <span class="required" v-translate>Standard-Gastename</span>
+                                    <StudipTooltipIcon :text="$gettext('Sofern der Gast keinen Namen eingibt, wird dieser standardmäßig verwendet.')">
                                     </StudipTooltipIcon>
                                     <input type="text" v-model.trim="guest_name" id="guestname" @change="generateGuestJoin($event)">
                                 </label>
@@ -63,7 +63,8 @@ import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import MessageBox from "@/components/MessageBox";
 
 import {
-    ROOM_JOIN_GUEST
+    ROOM_JOIN_GUEST,
+    ROOM_INVITATION_LINK
 } from "@/store/actions.type";
 
 import {
@@ -99,6 +100,12 @@ export default {
 
     mounted() {
         this.$store.commit(ROOM_CLEAR);
+        this.$store.dispatch(ROOM_INVITATION_LINK, this.room)
+          .then(({ data }) => {
+            if (data.default_name != '') {
+              this.guest_name = data.default_name;
+            }
+        }).catch (({error}) => {});
     },
 
     methods: {
