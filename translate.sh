@@ -9,7 +9,7 @@ MO=locale/en/LC_MESSAGES/meetings.mo
 rm -f $POT
 rm -f $POTPHP
 
-find * \( -iname "*.php" -o -iname "*.ihtml" \) | xargs xgettext --from-code=UTF-8 --add-location=full --package-name=Opencast --language=PHP -o $POTPHP
+find * \( -iname "*.php" -o -iname "*.ihtml" \) | xargs xgettext --from-code=UTF-8 --add-location=full --package-name=Meetings --language=PHP -o $POTPHP
 
 msgcat $POTJS $POTPHP -o $POT
 msgmerge $PO $POT -o $PO
