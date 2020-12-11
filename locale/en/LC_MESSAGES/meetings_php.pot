@@ -1,0 +1,431 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Meetings package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Meetings\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-12-11 12:27+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: Driver/BigBlueButton.php:268
+msgid "URL des BBB-Servers"
+msgstr ""
+
+#: Driver/BigBlueButton.php:269
+msgid "Api-Key (Salt)"
+msgstr ""
+
+#: Driver/BigBlueButton.php:270
+msgid "Zugriff über Proxy"
+msgstr ""
+
+#: Driver/BigBlueButton.php:271
+msgid "Maximale Teilnehmer"
+msgstr ""
+
+#: Driver/BigBlueButton.php:272
+msgid "Raumgrößenvoreinstellungen"
+msgstr ""
+
+#: Driver/BigBlueButton.php:279
+msgid "Kleiner Raum"
+msgstr ""
+
+#: Driver/BigBlueButton.php:280
+msgid "Mittlerer Raum"
+msgstr ""
+
+#: Driver/BigBlueButton.php:281
+msgid "Großer Raum"
+msgstr ""
+
+#: Driver/BigBlueButton.php:296
+msgid "Min. Teilnehmerzahl"
+msgstr ""
+
+#: Driver/BigBlueButton.php:306
+msgid "Zugang via Link"
+msgstr ""
+
+#: Driver/BigBlueButton.php:307
+msgid "Nicht gestattet"
+msgstr ""
+
+#: Driver/BigBlueButton.php:307
+msgid "Moderator vor dem Zutritt fragen"
+msgstr ""
+
+#: Driver/BigBlueButton.php:307
+msgid "Gestattet"
+msgstr ""
+
+#: Driver/BigBlueButton.php:308
+msgid ""
+"Legen Sie fest, ob Benutzer mit Einladungslink als Gäste an der Besprechung "
+"teilnehmen dürfen und ob Gäste dem Meeting direkt beitreten können oder ihre "
+"Teilnahme von einem Moderator bestätigt werden muss."
+msgstr ""
+
+#: Driver/BigBlueButton.php:310
+msgid "Minuten Konferenzdauer"
+msgstr ""
+
+#: Driver/BigBlueButton.php:312
+msgid ""
+"Die maximale Länge (in Minuten) für das Meeting. Nach Ablauf der "
+"eingestellen Dauer wird das Meeting automatisch beendet, d.h. der Raum wird "
+"geschlossen. Falls bereits vor Ablauf der Zeit alle Teilnehmenden das "
+"Meeting verlassen haben, oder ein Moderator das Meeting aktiv beendet wird "
+"der Raum ebenfalls geschlossen."
+msgstr ""
+
+#: Driver/BigBlueButton.php:314
+msgid "Maximale Teilnehmerzahl"
+msgstr ""
+
+#: Driver/BigBlueButton.php:317
+msgid "Private Chats deaktivieren"
+msgstr ""
+
+#: Driver/BigBlueButton.php:321
+msgid "Gemeinsame Notizen deaktivieren"
+msgstr ""
+
+#: Driver/BigBlueButton.php:323
+msgid "Nur Moderatoren können Audio teilen"
+msgstr ""
+
+#: Driver/BigBlueButton.php:325
+msgid "Nur Moderatoren können Webcams teilen"
+msgstr ""
+
+#: Driver/BigBlueButton.php:327
+msgid "Nur Moderatoren können Webcams sehen"
+msgstr ""
+
+#: Driver/BigBlueButton.php:329
+msgid "Alle Teilnehmenden initial stumm schalten"
+msgstr ""
+
+#: Driver/BigBlueButton.php:341
+msgid "Sitzungen können aufgezeichnet werden."
+msgstr ""
+
+#: Driver/BigBlueButton.php:342
+msgid ""
+"Erlaubt es Moderatoren, die Medien und Ereignisse in der Sitzung für die "
+"spätere Wiedergabe aufzuzeichnen. Die Aufzeichnung muss innerhalb der "
+"Sitzung von einem Moderator gestartet werden."
+msgstr ""
+
+#: Driver/BigBlueButton.php:346
+msgid "Aufzeichnungen für Teilnehmende sichtbar schalten"
+msgstr ""
+
+#: Driver/BigBlueButton.php:347
+msgid ""
+"Legen Sie fest, ob neben Lehrenden auch Teilnehmende Zugriff auf die "
+"Aufzeichnungen haben sollen."
+msgstr ""
+
+#: Driver/BigBlueButton.php:357
+msgid "Opencast für Aufzeichnungen verwenden"
+msgstr ""
+
+#: Driver/BigBlueButton.php:369
+msgid ""
+"Bei Aktivierung dieser Option können ausschließlich Moderatoren die von "
+"Teilnehmenden freigegebenen Webcams sehen."
+msgstr ""
+
+#: Driver/DfnVc.php:364
+msgid "API-Endpoint"
+msgstr ""
+
+#: Driver/DfnVc.php:365
+msgid "Funktionskennung"
+msgstr ""
+
+#: Driver/DfnVc.php:366
+msgid "Passwort"
+msgstr ""
+
+#: MeetingPlugin.php:48
+msgid "Meetings konfigurieren"
+msgstr ""
+
+#: MeetingPlugin.php:214 MeetingPlugin.php:356 MeetingPlugin.php:357
+#: app/controllers/index.php:265 app/controllers/index.php:267
+msgid "Meetings"
+msgstr ""
+
+#: MeetingPlugin.php:250
+#, php-format
+msgid "%d Meeting(s), %d neue"
+msgstr ""
+
+#: MeetingPlugin.php:254
+#, php-format
+msgid "%d Meeting(s)"
+msgstr ""
+
+#: MeetingPlugin.php:285
+msgid "Anpassen"
+msgstr ""
+
+#: MeetingPlugin.php:358
+msgid ""
+"Virtueller Raum, mit dem Live-Online-Treffen, Veranstaltungen und "
+"Videokonferenzen durchgeführt werden können. Die Teilnehmenden können sich "
+"während eines Meetings gegenseitig hören und über eine angeschlossene Webcam "
+"- wenn vorhanden - sehen und miteinander arbeiten. Folien können präsentiert "
+"und Abfragen durchgeführt werden. Ein Fenster in der Benutzungsoberfläche "
+"des eigenen Rechners kann für andere sichtbar geschaltet werden, um zum "
+"Beispiel den Teilnehmenden bestimmte Webseiten oder Anwendungen zu zeigen. "
+"Außerdem kann die Veranstaltung aufgezeichnet und Interessierten zur "
+"Verfügung gestellt werden."
+msgstr ""
+
+#: MeetingPlugin.php:359
+msgid "Face-to-face-Kommunikation mit Adobe Connect oder BigBlueButton"
+msgstr ""
+
+#: MeetingPlugin.php:360
+msgid ""
+"Videokonferenz- und Veranstaltungsmöglichkeit;Live im Netz präsentieren "
+"sowie gemeinsam zeichnen und arbeiten;Kommunikation über Mikrofon und Kamera;"
+"Ideal für dezentrale Lern- und Arbeitsgruppen;Verlinkung zu bereits "
+"bestehenden eigenen Räumen"
+msgstr ""
+
+#: app/models/Driver.php:42
+msgid "Aufzeichnungen zulassen"
+msgstr ""
+
+#: app/controllers/index.php:198
+msgid "Aktionen"
+msgstr ""
+
+#: app/controllers/index.php:235
+msgid ""
+"Durchführung und Verwaltung von Live-Online-Treffen, Veranstaltungen und "
+"Videokonferenzen. Mit Hilfe der Face-to-Face-Kommunikation können "
+"Entfernungen überbrückt, externe Fachleute einbezogen und Studierende in "
+"Projekten und Praktika begleitet werden."
+msgstr ""
+
+#: app/controllers/index.php:243
+msgid ""
+"Arbeitsbereich zum Anpassen der Gesamtansicht der Meetings einer "
+"Veranstaltung."
+msgstr ""
+
+#: app/controllers/index.php:249
+msgid ""
+"Gesamtansicht aller von Ihnen erstellten Meetings nach Semestern oder nach "
+"Namen sortiert."
+msgstr ""
+
+#: app/controllers/link.php:58
+msgid "Stud.IP Meeting"
+msgstr ""
+
+#: app/controllers/link.php:62 app/controllers/link.php:76
+msgid "Das gesuchte Meeting existiert nicht mehr!"
+msgstr ""
+
+#: app/controllers/link.php:65
+msgid "Meeting-Name"
+msgstr ""
+
+#: app/controllers/admin.php:112
+msgid "Meetings Administration"
+msgstr ""
+
+#: app/controllers/admin.php:129
+msgid ""
+"Administrationsseite für das Plugin zur Durchführung und Verwaltung von Live-"
+"Online-Treffen, Veranstaltungen und Videokonferenzen."
+msgstr ""
+
+#: app/views/link/index.php:2
+msgid "Sie wurden zur Teilnahme eingeladen"
+msgstr ""
+
+#: app/views/link/index.php:4
+msgid "Geben Sie einen Namen ein"
+msgstr ""
+
+#: app/views/link/index.php:8
+msgid "Meeting betreten"
+msgstr ""
+
+#: app/views/index/config.php:9
+msgid "Die Änderungen wurden gespeichert."
+msgstr ""
+
+#: app/views/index/config.php:19
+msgid "Reitername"
+msgstr ""
+
+#: app/views/index/config.php:25
+msgid "Einleitungstext"
+msgstr ""
+
+#: app/views/index/config.php:31
+msgid "Speichern"
+msgstr ""
+
+#: app/views/index/config.php:32
+msgid "Abbrechen"
+msgstr ""
+
+#: lib/Models/Config.php:86
+msgid "Es wurde kein Servicetyp angegeben."
+msgstr ""
+
+#: lib/Routes/Recordings/RecordingDelete.php:37
+#: lib/Routes/Recordings/RecordingShow.php:39 lib/Routes/Rooms/RoomAdd.php:45
+#: lib/Routes/Rooms/RoomInvitationLink.php:34
+#: lib/Routes/Rooms/RoomDelete.php:38 lib/Routes/Rooms/RoomJoinGuest.php:44
+#: lib/Routes/Rooms/RoomEdit.php:41
+msgid "Access Denied"
+msgstr ""
+
+#: lib/Routes/Recordings/RecordingDelete.php:48
+msgid "Aufzeichnung wurde gelöscht."
+msgstr ""
+
+#: lib/Routes/Recordings/RecordingDelete.php:53
+msgid "Aufzeichnung kann nicht gelöscht werden"
+msgstr ""
+
+#: lib/Routes/Config/ConfigListCourse.php:160
+msgid ""
+"Opencast wird als Aufzeichnungsserver verwendet. Diese Funktion ist im "
+"Testbetrieb und es kann noch zu Fehlern kommen."
+msgstr ""
+
+#: lib/Routes/Config/ConfigAdd.php:42
+#, php-format
+msgid ""
+"Die Überprüfung der Servereinstellungen für %s war nicht erfolgreich, wurden "
+"aber trotzdem gespeichert."
+msgstr ""
+
+#: lib/Routes/Config/ConfigAdd.php:48
+msgid "Konfiguration gespeichert."
+msgstr ""
+
+#: lib/Routes/Config/ConfigAdd.php:53
+msgid "Konnte Konfiguration nicht speichern!"
+msgstr ""
+
+#: lib/Routes/Folder/FolderList.php:55
+msgid "Fehler beim Laden des Hauptordners!"
+msgstr ""
+
+#: lib/Routes/Folder/FolderCreate.php:49 lib/Routes/Folder/FolderCreate.php:84
+msgid "Fehler beim Anlegen des Ordners!"
+msgstr ""
+
+#: lib/Routes/Folder/FolderCreate.php:57
+msgid "Der Ordner wurde angelegt."
+msgstr ""
+
+#: lib/Routes/Folder/FolderCreate.php:63
+msgid "Der gewünschte Ordnertyp ist ungültig!"
+msgstr ""
+
+#: lib/Routes/Feedback/FeedbackSubmit.php:44
+msgid ""
+"Es ist keine Kontaktadresse hinterlegt! Bitte wenden Sie sich an eine/n "
+"Systemadministrator/in!"
+msgstr ""
+
+#: lib/Routes/Feedback/FeedbackSubmit.php:49
+msgid "Feedback zum Meetings-Plugin"
+msgstr ""
+
+#: lib/Routes/Feedback/FeedbackSubmit.php:53
+msgid "Ihr Feedback wird gesendet."
+msgstr ""
+
+#: lib/Routes/Feedback/FeedbackSubmit.php:58
+msgid "Einige Informationen fehlen!"
+msgstr ""
+
+#: lib/Routes/Rooms/RoomJoin.php:49 lib/Routes/Rooms/RoomJoinGuest.php:49
+msgid "Dieser Raum in diesem Kurs kann nicht gefunden werden!"
+msgstr ""
+
+#: lib/Routes/Rooms/RoomJoin.php:97
+msgid ""
+"Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server "
+"fehlgeschlagen."
+msgstr ""
+
+#: lib/Routes/Rooms/RoomJoin.php:100
+msgid ""
+"Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server "
+"fehlgeschlagen. ("
+msgstr ""
+
+#: lib/Routes/Rooms/RoomAdd.php:62
+msgid "Es existiert bereits ein gleichnamiger Raum."
+msgstr ""
+
+#: lib/Routes/Rooms/RoomAdd.php:67
+msgid "Der Raumname darf nicht leer sein"
+msgstr ""
+
+#: lib/Routes/Rooms/RoomAdd.php:72
+msgid "Es ist kein Konferenzsystem ausgewählt"
+msgstr ""
+
+#: lib/Routes/Rooms/RoomAdd.php:77
+msgid "Server ist nicht definiert"
+msgstr ""
+
+#: lib/Routes/Rooms/RoomAdd.php:84 lib/Routes/Rooms/RoomEdit.php:106
+#, php-format
+msgid "Teilnehmerzahl darf %d nicht überschreiten"
+msgstr ""
+
+#: lib/Routes/Rooms/RoomAdd.php:109 lib/Routes/Rooms/RoomEdit.php:88
+msgid "Opencast Series id kann nicht gefunden werden!"
+msgstr ""
+
+#: lib/Routes/Rooms/RoomAdd.php:155
+msgid "Raum wurde erfolgreich erstellt."
+msgstr ""
+
+#: lib/Routes/Rooms/RoomDelete.php:44
+msgid "Dieser Raum konnte nicht gefunden werden"
+msgstr ""
+
+#: lib/Routes/Rooms/RoomDelete.php:70
+msgid "Meeting wurde gelöscht."
+msgstr ""
+
+#: lib/Routes/Rooms/RoomJoinGuest.php:53
+msgid "Gäste können nicht eingeladen werden!"
+msgstr ""
+
+#: lib/Routes/Rooms/RoomEdit.php:120
+msgid "Die Bearbeitung wurde erfolgreich abgeschlossen."
+msgstr ""
+
+#: lib/Routes/Rooms/RoomEdit.php:125
+msgid "Raumeinstellung kann nicht bearbeitet werden!"
+msgstr ""
