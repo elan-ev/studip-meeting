@@ -10,11 +10,12 @@ import { CHECK_AUTH, LOGOUT, ERROR_COMMIT } from "./store/actions.type";
 import ApiService from "./common/api.service";
 import DateFilter from "./common/date.filter";
 import ErrorFilter from "./common/error.filter";
-import I18N from "./common/i18n.filter";
+
+import GetTextPlugin from 'vue-gettext';
+import translations from './i18n/translations.json';
 
 Vue.filter("date", DateFilter);
 Vue.filter("error", ErrorFilter);
-Vue.filter("i18n", I18N);
 
 ApiService.init();
 
@@ -28,6 +29,15 @@ Vue.axios.interceptors.response.use((response) => { // intercept the global erro
         return Promise.reject(error)
     }
 );
+
+Vue.use(GetTextPlugin, {
+    availableLanguages: {
+        en_GB: 'British English',
+    },
+    defaultLanguage: String.locale.replace('-', '_'),
+    translations: translations,
+    silent: true,
+});
 
 $(function() {
     window.Vue = new Vue({

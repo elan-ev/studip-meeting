@@ -9,7 +9,7 @@ use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use Meetings\Errors\Error;
 use Exception;
-use Meetings\Models\I18N as _;
+use Meetings\Models\I18N;
 
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
@@ -45,12 +45,12 @@ class RecordingDelete extends MeetingsController
                 $driver = $driver_factory->getDriver($meetingCourse->meeting->driver, $meetingCourse->meeting->server_index);
                 $delete_result = $driver->deleteRecordings($recordings_id);
                 $message = [
-                    'text' => _('Aufzeichnung wurde gelöscht.'),
+                    'text' => I18N::_('Aufzeichnung wurde gelöscht.'),
                     'type' => 'success'
                 ];
                 if (!$delete_result) {
                     $message = [
-                        'text' => _('Aufzeichnung kann nicht gelöscht werden'),
+                        'text' => I18N::_('Aufzeichnung kann nicht gelöscht werden'),
                         'type' => 'error'
                     ];
                 }

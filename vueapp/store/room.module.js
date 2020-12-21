@@ -9,7 +9,8 @@ import {
     ROOM_DELETE,
     ROOM_STATUS,
     ROOM_INFO,
-    ROOM_JOIN_GUEST
+    ROOM_JOIN_GUEST,
+    ROOM_INVITATION_LINK
 } from "./actions.type";
 
 import {
@@ -24,7 +25,7 @@ const initialState = {
     rooms_info: [],
     room: {
         "name": "",
-        "driver_name": "",
+        "driver": "",
         "server_index": "",
         "join_as_moderator": "0",
         "features": {},
@@ -84,6 +85,10 @@ export const actions = {
         return ApiService.get('rooms/join/' + CID + '/' + room.id + '/' + room.guest_name + '/guest');
     },
 
+    async [ROOM_INVITATION_LINK](context, room) {
+        return ApiService.get('rooms/invitationLink/' + CID + '/' + room.id);
+    },
+
     async [ROOM_STATUS](context, id) {
         return ApiService.get('rooms/' + CID + '/' + id + '/status');
     },
@@ -95,7 +100,6 @@ export const actions = {
             });
     },
 };
-
 /* eslint no-param-reassign: ["error", { "props": false }] */
 export const mutations = {
     [ROOMS_LIST_SET](state, data) {
@@ -106,7 +110,7 @@ export const mutations = {
     [ROOM_CLEAR](state) {
         state.room = {
             "name": "",
-            "driver_name": "",
+            "driver": "",
             "server_index": "",
             "join_as_moderator": "0",
             "features": {},

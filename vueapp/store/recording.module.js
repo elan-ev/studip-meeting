@@ -13,7 +13,7 @@ import {
 } from "./mutations.type";
 
 const initialState = {
-    recording_list: [],
+    recording_list: null,
     recording: {}
 };
 
@@ -30,7 +30,14 @@ export const state = { ...initialState };
 
 export const actions = {
     async [RECORDING_LIST](context, room_id) {
-        return ApiService.get('rooms/' + CID + '/' + room_id + '/recordings');
+        context.commit(RECORDING_LIST_SET, null);
+
+        return ApiService.get('rooms/' + CID + '/' + room_id + '/recordings')
+            .then(({ data }) => {
+                if ((data.default && data.default.length) || data.opencast) {
+                    context.commit(RECORDING_LIST_SET, data);
+                }
+            });
     },
 
     async [RECORDING_SHOW](context, id) {

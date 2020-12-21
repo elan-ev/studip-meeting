@@ -9,7 +9,7 @@ use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use Meetings\Errors\Error;
 use Exception;
-use Meetings\Models\I18N as _;
+use Meetings\Models\I18N;
 
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
@@ -46,7 +46,7 @@ class RoomJoin extends MeetingsController
 
         $meeting = Meeting::find($room_id);
         if (!($meeting && $meeting->courses->find($cid))) {
-            throw new Error(_('Dieser Raum in diesem Kurs kann nicht gefunden werden!'), 404);
+            throw new Error(I18N::_('Dieser Raum in diesem Kurs kann nicht gefunden werden!'), 404);
         }
 
         //putting mandatory logoutURL into features
@@ -94,10 +94,10 @@ class RoomJoin extends MeetingsController
                 header('Location: ' . $join_url);
                 exit;
             } else {
-                $error_message = _('Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server fehlgeschlagen.');
+                $error_message = I18N::_('Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server fehlgeschlagen.');
             }
         } catch (Exception $e) {
-            $error_message = _('Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server fehlgeschlagen. ('. $e->getMessage() .')');
+            $error_message = I18N::_('Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server fehlgeschlagen. ('. $e->getMessage() .')');
         }
 
         throw new Error($error_message, 404);

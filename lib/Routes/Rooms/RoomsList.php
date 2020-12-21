@@ -10,7 +10,7 @@ use Meetings\MeetingsController;
 use Meetings\Errors\Error;
 use Meetings\Errors\DriverError;
 use Exception;
-use Meetings\Models\I18N as _;
+use Meetings\Models\I18N;
 
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
@@ -88,13 +88,26 @@ class RoomsList extends MeetingsController
                         }
                     }
                 }
+
+                $creator = \User::find($meetingCourse->meeting->user_id);
+                $meeting['name']= ltrim($meetingCourse->meeting->name);
+
                 $meeting['details'] = [
-                    'creator' => \User::find($meetingCourse->meeting->user_id)->getFullname(),
+                    'creator' => $create ? $creator->getFullname() : 'unbekannt',
                     'date'    => date('d.m.Y H:i', $meetingCourse->meeting->mkdate)
                 ];
 
                 $meeting['features'] = $this->getFeatures($meeting['features']);
                 $meeting['enabled'] = $meetingEnabled;
+
+                if ($meeting['folder_id']) {
+                    $meeting['details']['folder'] = [
+                        'name' => $meetingCourse->meeting->folder->name,
+                        'link' => \URLHelper::getURL('dispatch.php/course/files/index/' . $meeting['folder_id'], [
+                            'cid' => $cid
+                        ])
+                    ];
+                }
 
                 $course_rooms_list[] = $meeting;
             } catch (Exception $e) {

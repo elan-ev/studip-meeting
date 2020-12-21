@@ -5,6 +5,7 @@ namespace ElanEv\Driver;
 use MeetingPlugin;
 use GuzzleHttp\ClientInterface;
 use ElanEv\Model\Meeting;
+use ElanEv\Model\MeetingToken;
 use ElanEv\Model\Driver;
 use Throwable;
 
@@ -14,7 +15,7 @@ use Throwable;
  * @author Christian Flothmann <christian.flothmann@uos.de>
  * @author Till Glöggler <tgloeggl@uos.de>
  */
-class BigBlueButton implements DriverInterface, RecordingInterface
+class BigBlueButton implements DriverInterface, RecordingInterface, FolderManagementInterface
 {
     /**
      * @var \GuzzleHttp\ClientInterface The HTTP client
@@ -72,7 +73,8 @@ class BigBlueButton implements DriverInterface, RecordingInterface
             $params = array_merge($params, $features);
         }
 
-        $response = $this->performRequest('create', $params);
+        $options = $this->prepareSlides($parameters->getMeetingId());
+        $response = $this->performRequest('create', $params, $options);
         $xml = new \SimpleXMLElement($response);
 
         if (!$xml instanceof \SimpleXMLElement) {
@@ -106,6 +108,26 @@ class BigBlueButton implements DriverInterface, RecordingInterface
         // if a room has already been created it returns true otherwise it creates the room
         $meeting = new Meeting($parameters->getMeetingId());
         $meetingParameters = $meeting->getMeetingParameters();
+
+        //Handle Meeting Token if the user is moderator!
+        if ($parameters->hasModerationPermissions()) {
+            $meeting_token = $meeting->meeting_token;
+            //make sure it exists (only for those pre-defined rooms)
+            if (!$meeting_token) {
+                $meeting_token = new MeetingToken();
+                $meeting_token->meeting_id = $meeting->id;
+                $meeting_token->token = MeetingToken::generate_token();
+                $meeting_token->expiration = strtotime("+1 day");
+                $meeting_token->store();
+            }
+            //make sure it is valid - if not renew everything
+            if ($meeting_token->is_expired()) {
+                $meeting_token->token = MeetingToken::generate_token();
+                $meeting_token->expiration = strtotime("+1 day");
+                $meeting_token->store();
+            }
+        }
+
         $this->createMeeting($meetingParameters);
 
         if ( $parameters->getUsername() == 'guest') {
@@ -213,11 +235,11 @@ class BigBlueButton implements DriverInterface, RecordingInterface
 
     }
 
-    private function performRequest($endpoint, array $params = array())
+    private function performRequest($endpoint, array $params = array(), array $options = [])
     {
         $params['checksum'] = $this->createSignature($endpoint, $params);
         $uri = 'api/'.$endpoint.'?'.$this->buildQueryString($params);
-        $request = $this->client->request('GET', $this->url .'/'. $uri);
+        $request = $this->client->request('GET', $this->url .'/'. $uri, $options);
 
         return $request->getBody(true);
     }
@@ -262,11 +284,11 @@ class BigBlueButton implements DriverInterface, RecordingInterface
 
     private function getRoomSizeFeature($minParticipants = 0) {
         $roomsize_features = array_filter(self::getCreateFeatures(), function ($configOption) {
-            return in_array($configOption->getName(), 
+            return in_array($configOption->getName(),
                             [
                                 'lockSettingsDisableNote',
-                                'webcamsOnlyForModerator', 
-                                'lockSettingsDisableCam', 
+                                'webcamsOnlyForModerator',
+                                'lockSettingsDisableCam',
                                 'lockSettingsDisableMic',
                                 'muteOnStart',
                             ]);
@@ -384,5 +406,58 @@ class BigBlueButton implements DriverInterface, RecordingInterface
         } catch (Throwable $th) {
            return false;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+    */
+    public function prepareSlides($meetingId)
+    {
+        $options = [];
+
+        $meeting = new Meeting($meetingId);
+
+        if ($meeting->isNew() || empty($meeting->folder_id)) {
+            return [];
+        }
+
+        $documents = [];
+        $folder = \Folder::find($meeting->folder_id);
+
+        //generate or get the token
+        $token = ($meeting->meeting_token) ? $meeting->meeting_token->get_token() : null;
+        if (!$token) {
+            $token = MeetingToken::generate_token();
+            $meeting_token = new MeetingToken();
+            $meeting_token->meeting_id = $meetingId;
+            $meeting_token->token = $token;
+            $meeting_token->expiration = strtotime("+1 day");
+            $meeting_token->store();
+        }
+
+        foreach ($folder->getTypedFolder()->getFiles() as $file_ref) {
+            if ($file_ref->id && $file_ref->name) {
+                $document_url = \PluginEngine::getURL('meetingplugin', [], "api/slides/$meetingId/{$file_ref->id}/$token");
+                if (isset($_SERVER['SERVER_NAME']) && strpos($document_url, $_SERVER['SERVER_NAME']) === FALSE) {
+                    $base_url = sprintf(
+                        "%s://%s",
+                        isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
+                        $_SERVER['SERVER_NAME']
+                    );
+                    $document_url = $base_url . $document_url;
+                }
+                $documents[] = "<document url='$document_url' filename='{$file_ref->name}' />";
+            }
+        }
+        if (count($documents)) {
+            $modules = " <modules>	<module name='presentation'> ";
+            foreach ($documents as $document) {
+                $modules .= $document;
+            }
+            $modules .= "</module></modules>";
+            $options['body'] = "<?xml version='1.0' encoding='UTF-8'?>" . $modules;
+        }
+
+        return $options;
     }
 }

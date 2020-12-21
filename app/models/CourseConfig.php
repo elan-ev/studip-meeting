@@ -13,13 +13,6 @@ namespace ElanEv\Model;
  */
 class CourseConfig extends \SimpleORMap
 {
-    public function __construct($id = null)
-    {
-        $this->db_table = 'vc_course_config';
-
-        parent::__construct($id);
-    }
-
     /**
      * {@inheritdoc}
      */

@@ -16,12 +16,6 @@ class Join extends \SimpleORMap
 {
     public function __construct($id = null)
     {
-        $this->db_table = 'vc_joins';
-        $this->belongs_to['meeting'] = array(
-            'class_name' => 'ElanEv\Model\Meeting',
-            'foreign_key' => 'meeting_id',
-        );
-
         parent::__construct($id);
 
         if ($this->last_join === null) {

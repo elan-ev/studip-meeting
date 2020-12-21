@@ -74,6 +74,9 @@ class Driver
             if (in_array('ElanEv\Driver\RecordingInterface', class_implements($class)) !== false) {
                 self::$config[$driver_name]['features']['record'] = self::convertDriverConfigToArray($class::getRecordFeature());
             }
+            if (in_array('ElanEv\Driver\FolderManagementInterface', class_implements($class)) !== false) {
+                self::$config[$driver_name]['features']['folders'] = true;
+            }
         }
     }
 

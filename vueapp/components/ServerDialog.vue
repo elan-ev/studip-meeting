@@ -5,7 +5,7 @@
                 <div class="modal" role="dialog">
                     <header class="modal-header">
                         <slot name="header">
-                            {{ 'Serverkonfiguration' | i18n }}
+                            <translate>Serverkonfiguration</translate>
                             <span class="modal-close-button" @click="close"></span>
                         </slot>
                     </header>
@@ -16,10 +16,10 @@
                         </MessageBox>
                         <div v-for="(value, key) in driver.config" :key="key">
                             <label v-if="value.name != 'enable' && value.name != 'roomsize-presets'" class="large">
-                                {{ value.display_name | i18n }}
+                                {{ value.display_name }}
                                 <input class="size-l" :type="(value.name == 'maxParticipants') ? 'number' : 'text'" min="0" @change="(value.name == 'maxParticipants') ? reduceMins() : ''"
                                     v-model="server[driver_name][value.name]"
-                                    :placeholder="value.value"> 
+                                    :placeholder="value.value">
                             </label>
                             <ServerRoomSize v-else-if="value.name == 'roomsize-presets'" :roomsize_object="value" :this_server="server[driver_name]"/>
                         </div>
@@ -28,15 +28,17 @@
                     <footer class="modal-footer">
                         <slot name="footer">
                             <StudipButton
-                                icon="accept"
-                                @click="edit">
-                                {{ 'Übernehmen' | i18n }}
+                                icon="accept" @click="edit"
+                                v-translate
+                            >
+                                Übernehmen
                             </StudipButton>
 
                             <StudipButton
-                                icon="cancel"
-                                @click="close">
-                                {{ "Abbrechen" | i18n }}
+                                icon="cancel" @click="close"
+                                v-translate
+                            >
+                                Abbrechen
                             </StudipButton>
                         </slot>
                     </footer>
@@ -120,7 +122,7 @@ export default {
             return validity;
         },
         reduceMins() {
-            if (this.server[this.driver_name]['maxParticipants'] && 
+            if (this.server[this.driver_name]['maxParticipants'] &&
                  parseInt(this.server[this.driver_name]['maxParticipants']) > 0 &&
                  this.server[this.driver_name]['roomsize-presets']) {
                 if (parseInt(this.server[this.driver_name]['maxParticipants']) > 0 && parseInt(this.server[this.driver_name]['maxParticipants']) < 3) {

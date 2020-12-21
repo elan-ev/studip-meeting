@@ -25,6 +25,9 @@ class RouteMap
             ->add(new Middlewares\RemoveTrailingSlashes);
 
         $this->app->get('/discovery', Routes\DiscoveryIndex::class);
+
+        $this->app->group('', [$this, 'unauthenticatedRoutes'])
+            ->add(new Middlewares\RemoveTrailingSlashes);
     }
 
     public function authenticatedRoutes()
@@ -53,9 +56,9 @@ class RouteMap
         $this->app->put('/rooms/{room_id}', Routes\Rooms\RoomEdit::class);
         $this->app->delete('/rooms/{cid}/{room_id}', Routes\Rooms\RoomDelete::class);
 
-        //generate guest invitaion link
+        //generate guest invitation link
         $this->app->get('/rooms/join/{cid}/{room_id}/{guest_name}/guest', Routes\Rooms\RoomJoinGuest::class);
-
+        $this->app->get('/rooms/invitationLink/{cid}/{room_id}',  Routes\Rooms\RoomInvitationLink::class);
         //recordings with perm
         $this->app->get('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingShow::class);
         $this->app->delete('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingDelete::class);
@@ -63,6 +66,10 @@ class RouteMap
         //routes for feedback
         $this->app->post('/feedback', Routes\Feedback\FeedbackSubmit::class);
         $this->app->post('/feedback/uploadTest', Routes\Feedback\UploadTest::class);
+
+        //routes for folders
+        $this->app->get('/folders/{cid}/{folder_id}', Routes\Folder\FolderList::class);
+        $this->app->post('/folders/new_folder', Routes\Folder\FolderCreate::class);
     }
 
     public function adminRoutes()
@@ -74,5 +81,10 @@ class RouteMap
         $this->app->put('/config/{id}', Routes\Config\ConfigEdit::class);
         $this->app->delete('/config/{id}', Routes\Config\ConfigDelete::class);
 
+    }
+
+    public function unauthenticatedRoutes() 
+    {
+        $this->app->get('/slides/{meeting_id}/{slide_id}/{token}', Routes\Slides\SlidesShow::class);
     }
 }
