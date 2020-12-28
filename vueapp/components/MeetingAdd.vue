@@ -1,386 +1,371 @@
 <template>
-
     <div v-if="config" id="conference-meeting-create">
-        <transition name="modal-fade">
-            <div class="modal-backdrop">
-                <div class="modal" role="dialog">
+        <MeetingDialog :title="$gettext('Raumkonfiguration')" @close="cancelAddRoom($event)">
+            <template v-slot:content>
+                <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
+                    {{ modal_message.text }}
+                </MessageBox>
+                <MessageBox v-else-if="room['driver'] && !Object.keys(config[room['driver']]['servers']).length"
+                        type="error" v-translate>
+                    Es gibt keine Server für dieses Konferenzsystem, bitte wählen Sie ein anderes Konferenzsystem
+                </MessageBox>
 
-                    <header class="modal-header">
-                        <slot name="header">
-                            <translate>Raumkonfiguration</translate>
-                            <span class="modal-close-button" @click="$emit('cancel')"></span>
-                        </slot>
-                    </header>
+                <form class="default" @keyup="roomFormSubmit($event)" style="position: relative">
+                    <fieldset>
+                        <legend v-translate>
+                            Raumname
+                        </legend>
+                        <label>
+                            <input type="text" v-model.trim="room['name']" id="name">
+                        </label>
+                    </fieldset>
 
-                    <section class="modal-body">
-                        <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
-                            {{ modal_message.text }}
-                        </MessageBox>
-                        <MessageBox v-else-if="room['driver'] && !Object.keys(config[room['driver']]['servers']).length"
-                             type="error" v-translate>
-                            Es gibt keine Server für dieses Konferenzsystem, bitte wählen Sie ein anderes Konferenzsystem
-                        </MessageBox>
+                    <fieldset v-if="(Object.keys(config).length > 1) || (room['driver']
+                                && Object.keys(config[room['driver']]['servers']).length > 1)">
 
-                        <form class="default" @keyup="roomFormSubmit($event)" style="position: relative">
-                            <fieldset>
-                                <legend v-translate>
-                                    Raumname
-                                </legend>
-                                <label>
-                                    <input type="text" v-model.trim="room['name']" id="name">
+                        <legend v-translate>
+                            Konferenz Systemeinstellung
+                        </legend>
+
+                        <label v-if="Object.keys(config).length > 1">
+                            <span class="required" v-translate>
+                                Konferenzsystem
+                            </span>
+
+                            <select id="driver" v-model="room['driver']" @change.prevent="handleServerDefaults" :disabled="Object.keys(config).length == 1">
+                                <option value="" disabled v-translate>
+                                    Bitte wählen Sie ein Konferenzsystem aus
+                                </option>
+                                <option v-for="(driver_config, driver) in availableServers" :key="driver"
+                                        :value="driver">
+                                        {{ driver_config['display_name'] }}
+                                </option>
+                            </select>
+                        </label>
+
+                        <label v-if="room['driver']
+                                && Object.keys(config[room['driver']]['servers']).length > 1"
+                        >
+                            <span class="required" v-translate>
+                                Verfügbare Server
+                            </span>
+
+                            <select id="server_index" v-model="room['server_index']" @change.prevent="handleServerDefaults"
+                                :disabled="Object.keys(config[room['driver']]['servers']).length == 1">
+                                <option value="" disabled v-translate>
+                                    Bitte wählen Sie einen Server aus
+                                </option>
+                                <option v-for="(server_config, server_index) in config[room['driver']]['servers']" :key="server_index"
+                                        :value="'' + server_index">
+                                        <translate>Server {{ (server_index + 1) }}</translate>
+                                        <span v-if="config[room['driver']]['server_defaults'] && config[room['driver']]['server_defaults'][server_index]
+                                                    &&  config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants']"
+                                            v-translate="{
+                                                count: config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants']
+                                            }"
+                                        >
+                                            (max. %{ count } Teilnehmer)
+                                        </span>
+                                </option>
+                            </select>
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend v-translate>
+                            Zusätzliche Funktionen
+                        </legend>
+                        <label>
+                            <input type="checkbox"
+                            id="join_as_moderator"
+                            true-value="1"
+                            false-value="0"
+                            v-model="room['join_as_moderator']">
+                            <translate>
+                                Alle Teilnehmenden haben Moderationsrechte
+                            </translate>
+                        </label>
+
+                        <div v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
+                                && Object.keys(config[room['driver']]['features']).includes('create') &&
+                                Object.keys(config[room['driver']]['features']['create']).length">
+                            <div v-for="(feature, index) in config[room['driver']]['features']['create']" :key="index">
+                                <label v-if="(feature['value'] === true || feature['value'] === false)">
+                                    <input  type="checkbox"
+                                        true-value="true"
+                                        false-value="false"
+                                        v-model="room['features'][feature['name']]">
+
+                                        {{ feature['display_name'] }}
+                                        <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
                                 </label>
-                            </fieldset>
 
-                            <fieldset v-if="(Object.keys(config).length > 1) || (room['driver']
-                                        && Object.keys(config[room['driver']]['servers']).length > 1)">
+                                <label v-else-if="feature['value'] && typeof feature['value'] === 'object'">
+                                    {{ feature['display_name'] }}
+                                    <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
 
-                                <legend v-translate>
-                                    Konferenz Systemeinstellung
-                                </legend>
-
-                                <label v-if="Object.keys(config).length > 1">
-                                    <span class="required" v-translate>
-                                        Konferenzsystem
-                                    </span>
-
-                                    <select id="driver" v-model="room['driver']" @change.prevent="handleServerDefaults" :disabled="Object.keys(config).length == 1">
-                                        <option value="" disabled v-translate>
-                                            Bitte wählen Sie ein Konferenzsystem aus
-                                        </option>
-                                        <option v-for="(driver_config, driver) in availableServers" :key="driver"
-                                                :value="driver">
-                                                {{ driver_config['display_name'] }}
+                                    <select :id="feature['name']" v-model.trim="room['features'][feature['name']]">
+                                        <option v-for="(fvalue, findex) in feature['value']" :key="findex"
+                                                :value="findex" v-translate>
+                                                {{ fvalue }}
                                         </option>
                                     </select>
                                 </label>
+                                <label v-else>
 
-                                <label v-if="room['driver']
-                                        && Object.keys(config[room['driver']]['servers']).length > 1"
-                                >
-                                    <span class="required" v-translate>
-                                        Verfügbare Server
+                                    {{ feature['display_name'] }}
+                                    <span v-if="feature['name'] == 'maxParticipants'
+                                            && Object.keys(config[room['driver']]).includes('server_defaults')
+                                            && room['server_index']
+                                            && config[room['driver']]['server_defaults'][room['server_index']] != undefined
+                                            && Object.keys(config[room['driver']]['server_defaults'][room['server_index']]).includes('maxAllowedParticipants')"
+                                        v-translate="{
+                                            count: config[room['driver']]['server_defaults'][room['server_index']]
+                                        }"
+                                    >
+                                        &nbsp; (Max. Limit: %{ count })
                                     </span>
+                                    <StudipTooltipIcon v-if="Object.keys(feature).includes('info')"
+                                        :text="feature['info']">
+                                    </StudipTooltipIcon>
 
-                                    <select id="server_index" v-model="room['server_index']" @change.prevent="handleServerDefaults"
-                                        :disabled="Object.keys(config[room['driver']]['servers']).length == 1">
-                                        <option value="" disabled v-translate>
-                                            Bitte wählen Sie einen Server aus
-                                        </option>
-                                        <option v-for="(server_config, server_index) in config[room['driver']]['servers']" :key="server_index"
-                                                :value="'' + server_index">
-                                                <translate>Server {{ (server_index + 1) }}</translate>
-                                                <span v-if="config[room['driver']]['server_defaults'] && config[room['driver']]['server_defaults'][server_index]
-                                                            &&  config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants']"
+                                    <input :type="(feature['name'] == 'duration' || feature['name'] == 'maxParticipants') ? 'number' : 'text'"
+                                        :max="(
+                                            (feature['name'] == 'maxParticipants') ?
+                                            (Object.keys(config[room['driver']]).includes('server_defaults')
+                                                && room['server_index']
+                                                && config[room['driver']]['server_defaults'][room['server_index']] != undefined
+                                                && Object.keys(config[room['driver']]['server_defaults'][room['server_index']]).includes('maxAllowedParticipants')) ?
+                                                    config[room['driver']]['server_defaults'][room['server_index']]['maxAllowedParticipants']
+                                                : ''
+                                            : ''
+                                        )"
+                                        :min="(feature['name'] == 'maxParticipants') ? 20 : ''"
+                                        @change="(feature['name'] == 'maxParticipants') ? checkPresets() : ''"
+                                        v-model.trim="room['features'][feature['name']]"
+                                        :placeholder="feature['value'] ? feature['value'] : ''"
+                                        :id="feature['name']">
+
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
+                                && Object.keys(config[room['driver']]['features']).includes('record')
+                                && Object.keys(config[room['driver']]['features']['record']).length
+                                && Object.keys(config[room['driver']]).includes('record')">
+                        <legend v-translate>
+                            Aufzeichnung
+                        </legend>
+
+                        <div v-for="(feature, index) in config[room['driver']]['features']['record']" :key="index">
+                            <label v-if="(feature['value'] === true || feature['value'] === false)">
+                                <input  type="checkbox"
+                                    true-value="true"
+                                    false-value="false"
+                                    v-model="room['features'][feature['name']]">
+
+                                    {{ feature['display_name'] }}
+                                    <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"
+                                        :badge="(Object.keys(config[room['driver']]).includes('opencast') && config[room['driver']]['opencast'] == '1'
+                                            && feature['info'].toLowerCase().includes('opencast')) ? true : false" v-translate>
+                                            beta
+                                    </StudipTooltipIcon>
+                            </label>
+
+                            <label v-else-if="feature['value'] && typeof feature['value'] === 'object'">
+                                {{ feature['display_name'] }}
+                                <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
+
+                                <select :id="feature['name']" v-model.trim="room['features'][feature['name']]">
+                                    <option v-for="(fvalue, findex) in feature['value']" :key="findex"
+                                            :value="findex">
+                                            {{ fvalue }}
+                                    </option>
+                                </select>
+                            </label>
+                            <label v-else>
+                                {{ feature['display_name'] }}
+                                <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
+
+                                <input type="text" v-model.trim="room['features'][feature['name']]" :placeholder="feature['value'] ? feature['value'] : ''" :id="feature['name']">
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset v-if="(Object.keys(course_groups).length > 1)">
+                        <legend v-translate>
+                            Gruppenraum
+                        </legend>
+
+                        <label>
+                            <translate>Wählen sie eine zugehörige Gruppe aus</translate>
+                            <select id="gruppen" v-model.trim="room.group_id">
+                                <option value="" v-translate>
+                                    Keine Gruppe
+                                </option>
+
+                                <option v-for="(gname, gid) in course_groups" :key="gid"
+                                        :value="gid">
+                                        {{ gname }}
+                                </option>
+                            </select>
+                        </label>
+                    </fieldset>
+
+                    <fieldset v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
+                                && Object.keys(config[room['driver']]['features']).includes('folders')
+                                && config[room['driver']]['features']['folders'] == true">
+                        <legend>
+                            <translate>
+                                Automatisches hochladen von Materialien
+                            </translate>
+
+                            <StudipTooltipIcon :text="$gettext('Verknüpfen Sie einen Ordner mit diesem Raum. '
+                                + 'Es werden alle Dateien in diesem Ordner automatisch zu Beginn des Meetings hochgeladen. '
+                                + 'Sie können im Meeting zwischen den Dateien wechseln.')">
+                            </StudipTooltipIcon>
+                        </legend>
+                        <label>
+                            <div>
+                                <translate>Aktuell ausgewählter Ordner: </translate>
+
+                                <span v-if="room.folder_id && room.folder_id == folder.id && folder.name != ''">
+                                    {{ folder.name }}
+                                </span>
+                                <span v-else v-translate>
+                                    Kein Ordner
+                                </span>
+                            </div>
+                            <div class="course-folder-container">
+                                <table class="default documents">
+                                        <caption>
+                                        <div class="caption-container meetings-caption">
+                                            <a :title="$gettext('Zum Hauptordner - Ordnerauswahl aufheben')"
+                                                @click.prevent="FolderHandler('topFolder')">
+                                                <StudipIcon class="folder-icon" icon="folder-home-full"
+                                                    role="clickable" size="20"></StudipIcon>
+                                            </a>
+                                            <template v-if="Object.keys(folder).includes('breadcrumbs')">
+                                                <template v-for="(bcname, bcid) in folder.breadcrumbs">
+                                                    &nbsp;/&nbsp;
+                                                    <a  :key="bcid"
+                                                        @click.prevent="(room.folder_id && room.folder_id == bcid) ? null : FolderHandler(bcid)">
+                                                        {{bcname}}
+                                                    </a>
+                                                </template>
+                                            </template>
+                                        </div>
+                                        </caption>
+                                    <thead>
+                                        <tr>
+                                            <th v-translate>Name</th>
+                                        </tr>
+                                    </thead>
+                                    <template v-if="(Object.keys(folder).includes('subfolders') && Object.keys(folder['subfolders']).length > 0) ||
+                                                    (Object.keys(folder).includes('files') && Object.keys(folder['files']).length > 0)">
+                                        <tbody class="subfolders" v-if="Object.keys(folder['subfolders']).length > 0">
+                                            <tr v-for="(sfinfo, sfid) in folder.subfolders" :key="sfid" :id="'row_folder_' + sfid">
+                                                <td>
+                                                    <a :title="$gettext('Als aktueller Ordner auswählen')"
+                                                        @click.prevent="FolderHandler(sfid)">
+                                                        <StudipIcon v-if="sfinfo.icon" :icon="sfinfo.icon"
+                                                            role="clickable" size="16"></StudipIcon>
+                                                        <span>{{sfinfo.name}}</span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tbody class="files" v-if="Object.keys(folder['files']).length <= 5 || showFilesInFolder">
+                                            <tr v-for="(finfo, fid) in folder.files" :key="fid">
+                                                <td>
+                                                    <div>
+                                                        <StudipIcon v-if="finfo.icon" :icon="finfo.icon"
+                                                            role="clickable" size="16"></StudipIcon>
+                                                        <span>{{finfo.name}}</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+
+                                        <tbody v-else>
+                                            <tr class="empty">
+                                                <span v-if="Object.keys(folder).includes('files')
+                                                    && Object.keys(folder['files']).length > 5"
                                                     v-translate="{
-                                                        count: config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants']
+                                                        count: Object.keys(folder['files']).length
                                                     }"
                                                 >
-                                                    (max. %{ count } Teilnehmer)
+                                                    In diesem Ordner befinden sich %{ count } Dateien <br>
+                                                    die aus Gründen der Übersichtlichkeit ausgeblendet wurden. <br>
+                                                    Wählen sie "Alle Dateien anzeigen" um diese Dateien aufzulisten
                                                 </span>
-                                        </option>
-                                    </select>
-                                </label>
-                            </fieldset>
+                                                <span v-else v-translate>
+                                                    Dieser Ordner ist leer
+                                                </span>
+                                            </tr>
+                                        </tbody>
+                                    </template>
 
-                            <fieldset>
-                                <legend v-translate>
-                                    Zusätzliche Funktionen
-                                </legend>
-                                <label>
-                                    <input type="checkbox"
-                                    id="join_as_moderator"
-                                    true-value="1"
-                                    false-value="0"
-                                    v-model="room['join_as_moderator']">
-                                    <translate>
-                                        Alle Teilnehmenden haben Moderationsrechte
-                                    </translate>
-                                </label>
+                                    <template v-else>
+                                        <tbody>
+                                            <tr class="empty">
+                                                <translate>
+                                                    Dieser Ordner ist leer
+                                                </translate>
+                                            </tr>
+                                        </tbody>
+                                    </template>
 
-                                <div v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
-                                        && Object.keys(config[room['driver']]['features']).includes('create') &&
-                                        Object.keys(config[room['driver']]['features']['create']).length">
-                                    <div v-for="(feature, index) in config[room['driver']]['features']['create']" :key="index">
-                                        <label v-if="(feature['value'] === true || feature['value'] === false)">
-                                            <input  type="checkbox"
-                                                true-value="true"
-                                                false-value="false"
-                                                v-model="room['features'][feature['name']]">
-
-                                                {{ feature['display_name'] }}
-                                                <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
-                                        </label>
-
-                                        <label v-else-if="feature['value'] && typeof feature['value'] === 'object'">
-                                            {{ feature['display_name'] }}
-                                            <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
-
-                                            <select :id="feature['name']" v-model.trim="room['features'][feature['name']]">
-                                                <option v-for="(fvalue, findex) in feature['value']" :key="findex"
-                                                        :value="findex" v-translate>
-                                                        {{ fvalue }}
-                                                </option>
-                                            </select>
-                                        </label>
-                                        <label v-else>
-
-                                            {{ feature['display_name'] }}
-                                            <span v-if="feature['name'] == 'maxParticipants'
-                                                    && Object.keys(config[room['driver']]).includes('server_defaults')
-                                                    && room['server_index']
-                                                    && config[room['driver']]['server_defaults'][room['server_index']] != undefined
-                                                    && Object.keys(config[room['driver']]['server_defaults'][room['server_index']]).includes('maxAllowedParticipants')"
-                                                v-translate="{
-                                                    count: config[room['driver']]['server_defaults'][room['server_index']]
-                                                }"
-                                            >
-                                                &nbsp; (Max. Limit: %{ count })
-                                            </span>
-                                            <StudipTooltipIcon v-if="Object.keys(feature).includes('info')"
-                                                :text="feature['info']">
-                                            </StudipTooltipIcon>
-
-                                            <input :type="(feature['name'] == 'duration' || feature['name'] == 'maxParticipants') ? 'number' : 'text'"
-                                                :max="(
-                                                    (feature['name'] == 'maxParticipants') ?
-                                                    (Object.keys(config[room['driver']]).includes('server_defaults')
-                                                        && room['server_index']
-                                                        && config[room['driver']]['server_defaults'][room['server_index']] != undefined
-                                                        && Object.keys(config[room['driver']]['server_defaults'][room['server_index']]).includes('maxAllowedParticipants')) ?
-                                                            config[room['driver']]['server_defaults'][room['server_index']]['maxAllowedParticipants']
-                                                        : ''
-                                                    : ''
-                                                )"
-                                                :min="(feature['name'] == 'maxParticipants') ? 20 : ''"
-                                                @change="(feature['name'] == 'maxParticipants') ? checkPresets() : ''"
-                                                v-model.trim="room['features'][feature['name']]"
-                                                :placeholder="feature['value'] ? feature['value'] : ''"
-                                                :id="feature['name']">
-
-                                        </label>
-                                    </div>
-                                </div>
-                            </fieldset>
-
-                            <fieldset v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
-                                        && Object.keys(config[room['driver']]['features']).includes('record')
-                                        && Object.keys(config[room['driver']]['features']['record']).length
-                                        && Object.keys(config[room['driver']]).includes('record')">
-                                <legend v-translate>
-                                    Aufzeichnung
-                                </legend>
-
-                                <div v-for="(feature, index) in config[room['driver']]['features']['record']" :key="index">
-                                    <label v-if="(feature['value'] === true || feature['value'] === false)">
-                                        <input  type="checkbox"
-                                            true-value="true"
-                                            false-value="false"
-                                            v-model="room['features'][feature['name']]">
-
-                                            {{ feature['display_name'] }}
-                                            <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"
-                                                :badge="(Object.keys(config[room['driver']]).includes('opencast') && config[room['driver']]['opencast'] == '1'
-                                                    && feature['info'].toLowerCase().includes('opencast')) ? true : false" v-translate>
-                                                    beta
-                                            </StudipTooltipIcon>
-                                    </label>
-
-                                    <label v-else-if="feature['value'] && typeof feature['value'] === 'object'">
-                                        {{ feature['display_name'] }}
-                                        <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
-
-                                        <select :id="feature['name']" v-model.trim="room['features'][feature['name']]">
-                                            <option v-for="(fvalue, findex) in feature['value']" :key="findex"
-                                                    :value="findex">
-                                                    {{ fvalue }}
-                                            </option>
-                                        </select>
-                                    </label>
-                                    <label v-else>
-                                        {{ feature['display_name'] }}
-                                        <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
-
-                                        <input type="text" v-model.trim="room['features'][feature['name']]" :placeholder="feature['value'] ? feature['value'] : ''" :id="feature['name']">
-                                    </label>
-                                </div>
-                            </fieldset>
-
-                            <fieldset v-if="(Object.keys(course_groups).length > 1)">
-                                <legend v-translate>
-                                    Gruppenraum
-                                </legend>
-
-                                <label>
-                                    <translate>Wählen sie eine zugehörige Gruppe aus</translate>
-                                    <select id="gruppen" v-model.trim="room.group_id">
-                                        <option value="" v-translate>
-                                            Keine Gruppe
-                                        </option>
-
-                                        <option v-for="(gname, gid) in course_groups" :key="gid"
-                                                :value="gid">
-                                                {{ gname }}
-                                        </option>
-                                    </select>
-                                </label>
-                            </fieldset>
-
-                            <fieldset v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
-                                        && Object.keys(config[room['driver']]['features']).includes('folders')
-                                        && config[room['driver']]['features']['folders'] == true">
-                                <legend>
-                                    <translate>
-                                        Automatisches hochladen von Materialien
-                                    </translate>
-
-                                    <StudipTooltipIcon :text="$gettext('Verknüpfen Sie einen Ordner mit diesem Raum. '
-                                        + 'Es werden alle Dateien in diesem Ordner automatisch zu Beginn des Meetings hochgeladen. '
-                                        + 'Sie können im Meeting zwischen den Dateien wechseln.')">
-                                    </StudipTooltipIcon>
-                                </legend>
-                                <label>
-                                    <div>
-                                        <translate>Aktuell ausgewählter Ordner: </translate>
-
-                                        <span v-if="room.folder_id && room.folder_id == folder.id && folder.name != ''">
-                                            {{ folder.name }}
-                                        </span>
-                                        <span v-else v-translate>
-                                            Kein Ordner
-                                        </span>
-                                    </div>
-                                    <div class="course-folder-container">
-                                        <table class="default documents">
-                                             <caption>
-                                                <div class="caption-container meetings-caption">
-                                                    <a :title="$gettext('Zum Hauptordner - Ordnerauswahl aufheben')"
-                                                        @click.prevent="FolderHandler('topFolder')">
-                                                        <StudipIcon class="folder-icon" icon="folder-home-full"
-                                                            role="clickable" size="20"></StudipIcon>
+                                    <tfoot>
+                                            <tr>
+                                            <td>
+                                                <div class="footer-container">
+                                                    <a class="button" @click.prevent="showAddNewFolder = true" v-translate>
+                                                        Neuer Ordner
                                                     </a>
-                                                    <template v-if="Object.keys(folder).includes('breadcrumbs')">
-                                                        <template v-for="(bcname, bcid) in folder.breadcrumbs">
-                                                            &nbsp;/&nbsp;
-                                                            <a  :key="bcid"
-                                                                @click.prevent="(room.folder_id && room.folder_id == bcid) ? null : FolderHandler(bcid)">
-                                                                {{bcname}}
-                                                            </a>
-                                                        </template>
-                                                    </template>
+                                                    <a @click.prevent="showFilesInFolder = !showFilesInFolder" class="right">
+                                                        <StudipIcon :icon="(showFilesInFolder) ? 'checkbox-checked' : 'checkbox-unchecked'"
+                                                            role="clickable" size="14"></StudipIcon>
+                                                        <span v-translate>Alle Dateien anzeigen</span>
+                                                    </a>
                                                 </div>
-                                             </caption>
-                                            <thead>
-                                                <tr>
-                                                    <th v-translate>Name</th>
-                                                </tr>
-                                            </thead>
-                                            <template v-if="(Object.keys(folder).includes('subfolders') && Object.keys(folder['subfolders']).length > 0) ||
-                                                            (Object.keys(folder).includes('files') && Object.keys(folder['files']).length > 0)">
-                                                <tbody class="subfolders" v-if="Object.keys(folder['subfolders']).length > 0">
-                                                    <tr v-for="(sfinfo, sfid) in folder.subfolders" :key="sfid" :id="'row_folder_' + sfid">
-                                                        <td>
-                                                            <a :title="$gettext('Als aktueller Ordner auswählen')"
-                                                                @click.prevent="FolderHandler(sfid)">
-                                                                <StudipIcon v-if="sfinfo.icon" :icon="sfinfo.icon"
-                                                                    role="clickable" size="16"></StudipIcon>
-                                                                <span>{{sfinfo.name}}</span>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                                <tbody class="files" v-if="Object.keys(folder['files']).length <= 5 || showFilesInFolder">
-                                                    <tr v-for="(finfo, fid) in folder.files" :key="fid">
-                                                        <td>
-                                                            <div>
-                                                                <StudipIcon v-if="finfo.icon" :icon="finfo.icon"
-                                                                    role="clickable" size="16"></StudipIcon>
-                                                                <span>{{finfo.name}}</span>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
+                                            </td>
+                                            </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </label>
+                    </fieldset>
+                </form>
+            </template>
+            <template v-slot:buttons>
+                <StudipButton v-if="room['id']" icon="accept" type="button"
+                    v-on:click="editRoom($event)"
+                    class="ui-button ui-corner-all ui-widget"
+                    v-translate
+                >
+                    Änderungen speichern
+                </StudipButton>
 
-                                                <tbody v-else>
-                                                    <tr class="empty">
-                                                        <span v-if="Object.keys(folder).includes('files')
-                                                            && Object.keys(folder['files']).length > 5"
-                                                            v-translate="{
-                                                                count: Object.keys(folder['files']).length
-                                                            }"
-                                                        >
-                                                            In diesem Ordner befinden sich %{ count } Dateien <br>
-                                                            die aus Gründen der Übersichtlichkeit ausgeblendet wurden. <br>
-                                                            Wählen sie "Alle Dateien anzeigen" um diese Dateien aufzulisten
-                                                        </span>
-                                                        <span v-else v-translate>
-                                                            Dieser Ordner ist leer
-                                                        </span>
-                                                    </tr>
-                                                </tbody>
-                                            </template>
+                <StudipButton v-else icon="accept" type="button"
+                    v-on:click="addRoom($event)"
+                    class="ui-button ui-corner-all ui-widget"
+                    v-translate
+                >
+                    Raum erstellen
+                </StudipButton>
 
-                                            <template v-else>
-                                                <tbody>
-                                                    <tr class="empty">
-                                                        <translate>
-                                                            Dieser Ordner ist leer
-                                                        </translate>
-                                                    </tr>
-                                                </tbody>
-                                            </template>
-
-                                            <tfoot>
-                                                 <tr>
-                                                    <td>
-                                                        <div class="footer-container">
-                                                            <a class="button" @click.prevent="showAddNewFolder = true" v-translate>
-                                                                Neuer Ordner
-                                                            </a>
-                                                            <a @click.prevent="showFilesInFolder = !showFilesInFolder" class="right">
-                                                                <StudipIcon :icon="(showFilesInFolder) ? 'checkbox-checked' : 'checkbox-unchecked'"
-                                                                    role="clickable" size="14"></StudipIcon>
-                                                                <span v-translate>Alle Dateien anzeigen</span>
-                                                            </a>
-                                                        </div>
-                                                    </td>
-                                                 </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
-                                </label>
-
-                            </fieldset>
-
-                            <footer class="modal-footer">
-                                <StudipButton v-if="room['id']" icon="accept" type="button"
-                                    v-on:click="editRoom($event)"
-                                    class="ui-button ui-corner-all ui-widget"
-                                    v-translate
-                                >
-                                    Änderungen speichern
-                                </StudipButton>
-
-                                <StudipButton v-else icon="accept" type="button"
-                                    v-on:click="addRoom($event)"
-                                    class="ui-button ui-corner-all ui-widget"
-                                    v-translate
-                                >
-                                    Raum erstellen
-                                </StudipButton>
-
-                                <StudipButton icon="cancel" type="button"
-                                    v-on:click="cancelAddRoom($event)"
-                                    class="ui-button ui-corner-all ui-widget"
-                                    v-translate
-                                >
-                                    Abbrechen
-                                </StudipButton>
-                            </footer>
-                        </form>
-                    </section>
-                </div>
-            </div>
-        </transition>
+                <StudipButton icon="cancel" type="button"
+                    v-on:click="cancelAddRoom($event)"
+                    class="ui-button ui-corner-all ui-widget"
+                    v-translate
+                >
+                    Abbrechen
+                </StudipButton>
+            </template>
+        </MeetingDialog>
 
         <!-- dialog -->
         <MeetingAddNewFolder v-if="showAddNewFolder"
@@ -388,7 +373,6 @@
             @done="showAddNewFolder = false"
             @cancel="showAddNewFolder = false"
         />
-
     </div>
 </template>
 
@@ -402,6 +386,8 @@ import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import MessageBox from "@/components/MessageBox";
 import MeetingAddNewFolder from "@/components/MeetingAddNewFolder";
 
+import { dialog } from '@/common/dialog.mixins'
+
 import {
     ROOM_LIST, ROOM_UPDATE, ROOM_CREATE, FOLDER_READ
 } from "@/store/actions.type";
@@ -414,6 +400,8 @@ export default {
     name: "MeetingAdd",
 
     props: ['room'],
+
+    mixins: [dialog],
 
     components: {
         StudipButton,

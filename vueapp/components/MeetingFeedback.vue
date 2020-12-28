@@ -1,106 +1,92 @@
 <template>
     <div>
-        <transition name="modal-fade">
-            <div class="modal-backdrop">
-                <div class="modal" role="dialog">
+        <MeetingDialog :title="$gettext('Feedback für Raum') + ' ' +  room.name" @close="cancelFeedback($event)">
+            <template v-slot:content>
+                <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
+                    {{ modal_message.text }}
+                </MessageBox>
 
-                    <header class="modal-header">
-                        <slot name="header">
-                            <translate>Feedback für Raum {{ room.name }}</translate>
-                            <span class="modal-close-button" @click="$emit('cancel')"></span>
-                        </slot>
-                    </header>
+                <form class="default" @submit.prevent="feedbackFormSubmit"
+                    style="max-width: 50em;"
+                >
+                    <fieldset>
+                        <legend v-translate>
+                            Beschreibung
+                        </legend>
+                            <label class="col-6">
+                            <textarea ref="feedbackDescription" v-model="feedback['description']" cols="30" rows="5"></textarea>
+                        </label>
+                    </fieldset>
+                    <fieldset>
+                        <legend v-translate>
+                            Feedback Informationen
+                        </legend>
+                        <label class="col-3">
+                            <span v-translate>Browser-Name</span>
+                            <input type="text" v-model.trim="feedback['browser_name']">
+                        </label>
+                        <label class="col-3">
+                            <span v-translate>Browser-Version</span>
+                            <input type="text" v-model.trim="feedback['browser_version']">
+                        </label>
+                        <label class="col-3">
+                            <span v-translate>Download-Geschw. (Mbps)</span>
+                            <input type="number" min="1" v-model.trim="feedback['download_speed']">
+                        </label>
+                        <label class="col-3">
+                            <span v-translate>Upload-Geschw. (Mbps)</span>
+                            <input type="number" min="1" v-model.trim="feedback['upload_speed']">
+                        </label>
+                        <label class="col-3">
+                            <span v-translate>Netzwerk-Typ</span>
+                            <select id="network-type" v-model="feedback['network_type']">
+                                <option v-for="(nt_value, nt_name) in network_types" :key="nt_name"
+                                        :value="nt_name">
+                                        {{ nt_value }}
+                                </option>
+                            </select>
+                        </label>
+                        <label class="col-3">
+                            <span v-translate>Betriebssystem (OS)</span>
+                            <input type="text" v-model.trim="feedback['os_name']">
+                        </label>
+                        <label class="col-3">
+                            <span v-translate>Prozessortyp</span>
+                            <input type="text" v-model.trim="feedback['cpu_type']">
+                        </label>
+                        <label class="col-3">
+                            <span v-translate>Alter des Rechners</span>
+                            <input type="text" v-model.number="feedback['cpu_old']">
+                        </label>
+                        <label class="col-3">
+                            <span v-translate>Anzahl der CPU-Kerne</span>
+                            <input type="number" min="1" max="1000" v-model.number="feedback['cpu_num']">
+                        </label>
+                        <label class="col-3">
+                            <span v-translate>RAM (Hauptspeicher) GB</span>
+                            <input type="number"  min="1" max="1000" v-model.number="feedback['ram']">
+                        </label>
+                    </fieldset>
+                </form>
+            </template>
+            <template v-slot:buttons>
+                <StudipButton icon="accept" type="button"
+                    v-on:click="sumbitFeedback($event)"
+                    class="ui-button ui-corner-all ui-widget"
+                    v-translate
+                >
+                    Einsenden
+                </StudipButton>
 
-                    <section class="modal-body">
-                        <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
-                            {{ modal_message.text }}
-                        </MessageBox>
-
-                        <form class="default" @submit.prevent="feedbackFormSubmit"
-                            style="max-width: 50em;"
-                        >
-                            <fieldset>
-                                <legend v-translate>
-                                    Beschreibung
-                                </legend>
-                                 <label class="col-6">
-                                    <textarea ref="feedbackDescription" v-model="feedback['description']" cols="30" rows="5"></textarea>
-                                </label>
-                            </fieldset>
-                            <fieldset>
-                                <legend v-translate>
-                                    Feedback Informationen
-                                </legend>
-                                <label class="col-3">
-                                    <span v-translate>Browser-Name</span>
-                                    <input type="text" v-model.trim="feedback['browser_name']">
-                                </label>
-                                <label class="col-3">
-                                    <span v-translate>Browser-Version</span>
-                                    <input type="text" v-model.trim="feedback['browser_version']">
-                                </label>
-                                <label class="col-3">
-                                    <span v-translate>Download-Geschw. (Mbps)</span>
-                                    <input type="number" min="1" v-model.trim="feedback['download_speed']">
-                                </label>
-                                <label class="col-3">
-                                    <span v-translate>Upload-Geschw. (Mbps)</span>
-                                    <input type="number" min="1" v-model.trim="feedback['upload_speed']">
-                                </label>
-                                <label class="col-3">
-                                    <span v-translate>Netzwerk-Typ</span>
-                                    <select id="network-type" v-model="feedback['network_type']">
-                                        <option v-for="(nt_value, nt_name) in network_types" :key="nt_name"
-                                                :value="nt_name">
-                                                {{ nt_value }}
-                                        </option>
-                                    </select>
-                                </label>
-                                <label class="col-3">
-                                    <span v-translate>Betriebssystem (OS)</span>
-                                    <input type="text" v-model.trim="feedback['os_name']">
-                                </label>
-                                <label class="col-3">
-                                    <span v-translate>Prozessortyp</span>
-                                    <input type="text" v-model.trim="feedback['cpu_type']">
-                                </label>
-                                <label class="col-3">
-                                    <span v-translate>Alter des Rechners</span>
-                                    <input type="text" v-model.number="feedback['cpu_old']">
-                                </label>
-                                <label class="col-3">
-                                    <span v-translate>Anzahl der CPU-Kerne</span>
-                                    <input type="number" min="1" max="1000" v-model.number="feedback['cpu_num']">
-                                </label>
-                                <label class="col-3">
-                                    <span v-translate>RAM (Hauptspeicher) GB</span>
-                                    <input type="number"  min="1" max="1000" v-model.number="feedback['ram']">
-                                </label>
-                            </fieldset>
-
-
-                            <footer class="modal-footer">
-                                <StudipButton icon="accept" type="button"
-                                    v-on:click="sumbitFeedback($event)"
-                                    class="ui-button ui-corner-all ui-widget"
-                                    v-translate
-                                >
-                                    Einsenden
-                                </StudipButton>
-
-                                <StudipButton icon="cancel" type="button"
-                                    v-on:click="cancelFeedback($event)"
-                                    class="ui-button ui-corner-all ui-widget"
-                                    v-translate
-                                >
-                                    Abbrechen
-                                </StudipButton>
-                            </footer>
-                        </form>
-                    </section>
-                </div>
-            </div>
-        </transition>
+                <StudipButton icon="cancel" type="button"
+                    v-on:click="cancelFeedback($event)"
+                    class="ui-button ui-corner-all ui-widget"
+                    v-translate
+                >
+                    Abbrechen
+                </StudipButton>
+            </template>
+        </MeetingDialog>
     </div>
 </template>
 
@@ -112,6 +98,7 @@ import StudipButton from "@/components/StudipButton";
 import StudipIcon from "@/components/StudipIcon";
 import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import MessageBox from "@/components/MessageBox";
+import { dialog } from '@/common/dialog.mixins'
 
 import {
     FEEDBACK_SUBMIT
@@ -125,6 +112,8 @@ export default {
     name: "MeetingFeedback",
 
     props: ['room'],
+
+    mixins: [dialog],
 
     components: {
         StudipButton,

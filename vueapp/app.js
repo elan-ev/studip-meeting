@@ -13,6 +13,7 @@ import ErrorFilter from "./common/error.filter";
 
 import GetTextPlugin from 'vue-gettext';
 import translations from './i18n/translations.json';
+import MeetingDialog from '@/components/MeetingDialog.vue';
 
 Vue.filter("date", DateFilter);
 Vue.filter("error", ErrorFilter);
@@ -29,6 +30,8 @@ Vue.axios.interceptors.response.use((response) => { // intercept the global erro
         return Promise.reject(error)
     }
 );
+
+Vue.component('MeetingDialog', MeetingDialog)
 
 Vue.use(GetTextPlugin, {
     availableLanguages: {
