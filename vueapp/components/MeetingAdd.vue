@@ -131,7 +131,7 @@
                                                     && config[room['driver']]['server_defaults'][room['server_index']] != undefined
                                                     && Object.keys(config[room['driver']]['server_defaults'][room['server_index']]).includes('maxAllowedParticipants')"
                                                 v-translate="{
-                                                    count: config[room['driver']]['server_defaults'][room['server_index']]
+                                                    count: config[room['driver']]['server_defaults'][room['server_index']]['maxAllowedParticipants']
                                                 }"
                                             >
                                                 &nbsp; (Max. Limit: %{ count })
