@@ -370,7 +370,7 @@ class DfnVc implements DriverInterface
     /**
      * {@inheritDoc}
      */
-    public function getCreateFeatures()
+    public static function getCreateFeatures()
     {
         return false;
     }

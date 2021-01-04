@@ -300,7 +300,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     /**
      * {@inheritDoc}
      */
-    public function getCreateFeatures()
+    public static function getCreateFeatures()
     {
         $res['guestPolicy'] =
             new ConfigOption('guestPolicy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugang via Link'),

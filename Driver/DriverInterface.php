@@ -71,7 +71,7 @@ interface DriverInterface
      *
      * @return ConfigOption[] list of ConfigOption-objects
      */
-    public function getCreateFeatures();
+    public static function getCreateFeatures();
 
     /**
      * Makes an test API call in order to check if the server is correctly intialized
