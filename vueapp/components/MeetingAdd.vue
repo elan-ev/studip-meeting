@@ -151,7 +151,7 @@
                                                         : ''
                                                     : ''
                                                 )"
-                                                :min="(feature['name'] == 'maxParticipants') ? 20 : ''"
+                                                :min="(feature['name'] == 'maxParticipants') ? 20 : ((feature['name'] == 'duration') ? 1 : '')"
                                                 @change="(feature['name'] == 'maxParticipants') ? checkPresets() : ''"
                                                 v-model.trim="room['features'][feature['name']]"
                                                 :placeholder="feature['value'] ? feature['value'] : ''"
@@ -562,9 +562,71 @@ export default {
             return isValid;
         },
 
+        validateFeatureInputs() {
+            var isValid = true;
+            var invalidInputs = [];
+            if (Object.keys(this.config[this.room['driver']]).includes('features') && Object.keys(this.room).includes('features')) {
+                //loop through the config features...
+                for (const [config_feature_cat, config_feature_contents] of Object.entries(this.config[this.room['driver']]['features'])) {
+                    if (Array.isArray(config_feature_contents)) {
+                        //loop through room features
+                        config_feature_contents.forEach(config_feature => {
+                            if (Object.keys(this.room['features']).includes(config_feature.name)) {
+                                //Apply validation based on type of input
+                                switch (typeof config_feature.value) {
+                                    case 'boolean':
+                                        if ((typeof this.room['features'][config_feature.name] == 'string' && 
+                                            this.room['features'][config_feature.name] != 'true' && this.room['features'][config_feature.name] != 'false') 
+                                            || (typeof this.room['features'][config_feature.name] != 'string' 
+                                                && typeof this.room['features'][config_feature.name] != 'boolean')) {
+                                            invalidInputs.push(config_feature.display_name)
+                                            isValid = false;
+                                        }
+                                    break;
+                                    case 'number':
+                                        var value = parseInt(this.room['features'][config_feature.name]);
+                                        if ((typeof value != 'number') || (typeof value == 'number' && value < 1)) {
+                                            invalidInputs.push(config_feature.display_name)
+                                            isValid = false;
+                                        } else { // in case it is validated, make sure the value is a correct integer! e.g. without leading zeros
+                                            this.$set(this.room['features'], config_feature.name, value);
+                                        }
+                                    break;
+                                    case 'object':
+                                        if (!Object.keys(config_feature.value).includes(this.room['features'][config_feature.name])) {
+                                            invalidInputs.push(config_feature.display_name)
+                                            isValid = false;
+                                        }
+                                    break;
+                                    default: // Should be String
+                                        //TOADD: string features can be handled here
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+            
+            if (invalidInputs.length > 0) {
+                 var invalid_inputs_str = invalidInputs.join(') \n(');
+                this.$set(this.modal_message, "type" , "error");
+                setTimeout(() => {
+                    $('.messagebox_error').css('white-space', 'pre-line');
+                    this.$set(this.modal_message, "text" , `Bitte beachten Sie die folgenden Felder: \n(${invalid_inputs_str})`.toLocaleString());
+                }, 150);
+                this.$set(this.modal_message, "text" , 'Es gibt fehler!'.toLocaleString());
+                $('section.modal-body').animate({ scrollTop: 0}, 'slow');
+            }
+            return isValid;
+        },
+
         addRoom(event) {
             if (event) {
                 event.preventDefault();
+            }
+
+            if (!this.validateFeatureInputs()) {
+                return;
             }
 
             if (!this.validateMaxParticipants()) {
@@ -623,6 +685,10 @@ export default {
         editRoom(event) {
             if (event) {
                 event.preventDefault();
+            }
+
+            if (!this.validateFeatureInputs()) {
+                return;
             }
 
             if (!this.validateMaxParticipants()) {
