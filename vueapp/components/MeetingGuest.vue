@@ -1,55 +1,41 @@
 <template>
     <div>
-        <transition name="modal-fade">
-            <div class="modal-backdrop">
-                <div class="modal" role="dialog">
+        <MeetingDialog :title="$gettext('Gast einladen')" @close="cancelGuest($event)">
+            <template v-slot:content>
+                <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
+                    {{ modal_message.text }}
+                </MessageBox>
+                <form class="default" @submit.prevent="generateGuestJoin">
+                    <fieldset>
+                        <label>
+                            <span class="required" v-translate>Standard-Gastename</span>
+                            <StudipTooltipIcon :text="$gettext('Sofern der Gast keinen Namen eingibt, wird dieser standardmäßig verwendet.')">
+                            </StudipTooltipIcon>
+                            <input type="text" v-model.trim="guest_name" id="guestname" @change="generateGuestJoin($event)">
+                        </label>
 
-                    <header class="modal-header">
-                        <slot name="header">
-                            <translate>Gast einladen</translate>
-                            <span class="modal-close-button" @click="$emit('cancel')"></span>
-                        </slot>
-                    </header>
+                        <label id="guest_link_label" v-if="guest_link">
+                            <span v-translate>Link</span>
+                            <StudipTooltipIcon :text="$gettext('Bitte geben sie diesen Link dem Gast.')"
+                                :important="true"></StudipTooltipIcon>
+                            <textarea ref="guestLinkArea" v-model="guest_link" cols="30" rows="5"></textarea>
+                        </label>
+                    </fieldset>
+                </form>
+            </template>
+            <template v-slot:buttons>
+                <StudipButton type="button" v-on:click="copyGuestLinkClipboard($event)" v-if="guest_link">
+                    <translate>In Zwischenablage kopieren</translate>
+                </StudipButton>
+                <StudipButton id="generate_link_btn" icon="accept" type="button" v-on:click="generateGuestJoin($event)" v-else>
+                    <translate>Einladungslink erstellen</translate>
+                </StudipButton>
 
-                    <section class="modal-body">
-                        <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
-                            {{ modal_message.text }}
-                        </MessageBox>
-
-                        <form class="default" @submit.prevent="generateGuestJoin">
-                            <fieldset>
-                                <label>
-                                    <span class="required" v-translate>Standard-Gastename</span>
-                                    <StudipTooltipIcon :text="$gettext('Sofern der Gast keinen Namen eingibt, wird dieser standardmäßig verwendet.')">
-                                    </StudipTooltipIcon>
-                                    <input type="text" v-model.trim="guest_name" id="guestname" @change="generateGuestJoin($event)">
-                                </label>
-
-                                <label id="guest_link_label" v-if="guest_link">
-                                    <span v-translate>Link</span>
-                                    <StudipTooltipIcon :text="$gettext('Bitte geben sie diesen Link dem Gast.')"
-                                        :important="true"></StudipTooltipIcon>
-                                    <textarea ref="guestLinkArea" v-model="guest_link" cols="30" rows="5"></textarea>
-                                </label>
-                            </fieldset>
-
-                            <footer class="modal-footer">
-                                <StudipButton type="button" v-on:click="copyGuestLinkClipboard($event)" v-if="guest_link">
-                                    <translate>In Zwischenablage kopieren</translate>
-                                </StudipButton>
-                                <StudipButton id="generate_link_btn" icon="accept" type="button" v-on:click="generateGuestJoin($event)" v-else>
-                                    <translate>Einladungslink erstellen</translate>
-                                </StudipButton>
-
-                                <StudipButton icon="cancel" type="button" v-on:click="cancelGuest($event)">
-                                    <translate>Dialog schließen</translate>
-                                </StudipButton>
-                            </footer>
-                        </form>
-                    </section>
-                </div>
-            </div>
-        </transition>
+                <StudipButton icon="cancel" type="button" v-on:click="cancelGuest($event)">
+                    <translate>Dialog schließen</translate>
+                </StudipButton>
+            </template>
+        </MeetingDialog>
     </div>
 </template>
 
@@ -61,6 +47,7 @@ import StudipButton from "@/components/StudipButton";
 import StudipIcon from "@/components/StudipIcon";
 import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import MessageBox from "@/components/MessageBox";
+import { dialog } from '@/common/dialog.mixins'
 
 import {
     ROOM_JOIN_GUEST,
@@ -76,6 +63,8 @@ export default {
 
     props: ['room'],
 
+    mixins: [dialog],
+    
     components: {
         StudipButton,
         StudipIcon,
@@ -94,7 +83,7 @@ export default {
 
     computed: {
         ...mapGetters([
-            'feedback', 'network_types'
+            'feedback'
         ])
     },
 
@@ -109,19 +98,6 @@ export default {
     },
 
     methods: {
-        showGuestDialog(room) {
-            this.$store.commit(ROOM_CLEAR);
-            this.guest_link = '';
-            this.modal_message.text = '';
-
-            $('#guest-invitation-modal').data('room', room)
-            .dialog({
-                width: '50%',
-                modal: true,
-                title: 'Gast einladen'.toLocaleString()
-            });
-        },
-
         generateGuestJoin(event) {
             if (event) {
                 event.preventDefault();

@@ -1,78 +1,68 @@
 <template>
     <div>
-        <transition name="modal-fade">
-            <div class="modal-backdrop">
-                <div class="modal" role="dialog">
+         <MeetingDialog :title="$gettext('Aufzeichnungen für Raum') + ' ' +  room.name" @close="$emit('cancel')">
+            <template v-slot:content>
+                <MessageBox type="info"
+                    v-if="this.recording_list == null"
+                >
+                    <translate>Keine Aufzeichnungen für Raum "{{ room.name }}" vorhanden</translate>
+                </MessageBox>
 
-                    <header class="modal-header">
-                        <slot name="header">
-                            <translate>Aufzeichnungen für Raum {{ room.name }}</translate>
-                            <span class="modal-close-button" @click="$emit('cancel')"></span>
-                        </slot>
-                    </header>
-
-                    <section class="modal-body">
-                        <MessageBox type="info"
-                            v-if="this.recording_list == null"
-                        >
-                            <translate>Keine Aufzeichnungen für Raum "{{ room.name }}" vorhanden</translate>
-                        </MessageBox>
-
-                        <form class="default" method="post" style="position: relative">
-                            <fieldset v-if="Object.keys(recording_list).includes('opencast')">
-                                <legend>Opencast</legend>
-                                <label>
-                                    <a class="meeting-recording-url" target="_blank"
-                                    :href="recording_list['opencast']" v-translate>
-                                        Die vorhandenen Aufzeichnungen auf Opencast
-                                    </a>
-                                </label>
-                            </fieldset>
-                            <fieldset v-if="Object.keys(recording_list).includes('default') && Object.keys(recording_list['default']).length">
-                                <label>
-                                    <table  class="default collapsable">
-                                        <thead>
-                                            <tr>
-                                                <th v-translate>Datum</th>
-                                                <th v-translate>Aktionen</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="(recording, index) in recording_list.default" :key="index">
-                                                <td style="width: 60%">{{ recording['startTime'] }}</td>
-                                                <td style="width: 40%">
-                                                    <div style="display: inline-block;width:80%;">
-                                                        <div v-if="Array.isArray(recording['playback']['format'])" style="display: flex; flex-direction: column; ">
-                                                            <a v-for="(format, index) in recording['playback']['format']" :key="index"
-                                                            class="meeting-recording-url" target="_blank"
-                                                            :href="format['url']">
-                                                                <translate>Aufzeichnung ansehen</translate>
-                                                                {{ `(${format['type']})` }}
-                                                            </a>
-                                                        </div>
-                                                        <div v-else>
-                                                            <a class="meeting-recording-url" target="_blank"
-                                                            :href="recording['playback']['format']['url']" v-translate>
-                                                                Aufzeichnung ansehen
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    <div v-if="course_config.display.deleteRecording" style="display: inline-block;width:15%; text-align: right;">
-                                                        <a style="cursor: pointer;" @click.prevent="deleteRecording(recording)">
-                                                            <StudipIcon icon="trash" role="attention"></StudipIcon>
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </label>
-                            </fieldset>
-                        </form>
-                    </section>
-                </div>
-            </div>
-        </transition>
+                <form class="default" method="post" style="position: relative">
+                    <fieldset v-if="Object.keys(recording_list).includes('opencast')">
+                        <legend>Opencast</legend>
+                        <label>
+                            <a class="meeting-recording-url" target="_blank"
+                            :href="recording_list['opencast']" v-translate>
+                                Die vorhandenen Aufzeichnungen auf Opencast
+                            </a>
+                        </label>
+                    </fieldset>
+                    <fieldset v-if="Object.keys(recording_list).includes('default') && Object.keys(recording_list['default']).length">
+                        <label>
+                            <table  class="default collapsable">
+                                <thead>
+                                    <tr>
+                                        <th v-translate>Datum</th>
+                                        <th v-translate>Aktionen</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(recording, index) in recording_list.default" :key="index">
+                                        <td style="width: 60%">{{ recording['startTime'] }}</td>
+                                        <td style="width: 40%">
+                                            <div style="display: inline-block;width:80%;">
+                                                <div v-if="Array.isArray(recording['playback']['format'])" style="display: flex; flex-direction: column; ">
+                                                    <a v-for="(format, index) in recording['playback']['format']" :key="index"
+                                                    class="meeting-recording-url" target="_blank"
+                                                    :href="format['url']">
+                                                        <translate>Aufzeichnung ansehen</translate>
+                                                        {{ `(${format['type']})` }}
+                                                    </a>
+                                                </div>
+                                                <div v-else>
+                                                    <a class="meeting-recording-url" target="_blank"
+                                                    :href="recording['playback']['format']['url']" v-translate>
+                                                        Aufzeichnung ansehen
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div v-if="course_config.display.deleteRecording" style="display: inline-block;width:15%; text-align: right;">
+                                                <a style="cursor: pointer;" @click.prevent="deleteRecording(recording)">
+                                                    <StudipIcon icon="trash" role="attention"></StudipIcon>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </label>
+                    </fieldset>
+                </form>
+            </template>
+            <template v-slot:buttons>
+            </template>
+         </MeetingDialog>
     </div>
 </template>
 
@@ -84,6 +74,8 @@ import StudipButton from "@/components/StudipButton";
 import StudipIcon from "@/components/StudipIcon";
 import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import MessageBox from "@/components/MessageBox";
+import { dialog } from '@/common/dialog.mixins'
+
 
 import {
     RECORDING_LIST, RECORDING_SHOW, RECORDING_DELETE,
@@ -97,6 +89,8 @@ export default {
     name: "MeetingRecordings",
 
     props: ['room'],
+
+    mixins: [dialog],
 
     components: {
         StudipButton,
