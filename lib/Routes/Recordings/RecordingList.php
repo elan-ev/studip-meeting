@@ -60,7 +60,7 @@ class RecordingList extends MeetingsController
                     $recordings_list['opencast'] = \PluginEngine::getURL('OpenCast', ['cid' => $cid], 'course', true);
                 }
             } catch (Exception $e) {
-                throw new Error('Fehler in der Aufzeichnungliste (' . $e->getMessage() . ')', 404);
+                throw new Error('Fehler in der Aufzeichnungliste (' . $e->getMessage() . ')', ($e->getCode() ? $e->getCode() : 404));
             }
         }
 

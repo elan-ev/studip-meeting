@@ -8,6 +8,8 @@ use ElanEv\Model\Meeting;
 use ElanEv\Model\MeetingToken;
 use ElanEv\Model\Driver;
 use Throwable;
+use GuzzleHttp\Exception\BadResponseException;
+use Meetings\Errors\Error;
 
 /**
  * Big Blue Button driver implementation.
@@ -250,8 +252,23 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             $options['timeout'] = floatval($this->request_timeout);
         }
 
-        $request = $this->client->request('GET', $this->url .'/'. $uri, $options);
-
+        try {
+            $request = $this->client->request('GET', $this->url .'/'. $uri, $options);
+            return $request->getBody(true);
+        } catch (BadResponseException $e) {
+            $response = $e->getResponse()->getBody(true);
+            $xml = new \SimpleXMLElement($response);
+            $status_code = 500;
+            $error = _('Internal Error');
+            $message = _('Please contact a system administrator!');
+            if ($xml instanceof \SimpleXMLElement) {
+                $message = (string) $xml->message ? (string) $xml->message : $message;
+                $error = (string) $xml->error ? (string) $xml->error : $error;
+                $status_code = (string) $xml->status ? (string) $xml->status : $status_code;
+            }
+            throw new Error(_($error) . ': ' . _($message), $status_code);
+        }
+      
         return $request->getBody(true);
     }
 

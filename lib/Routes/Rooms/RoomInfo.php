@@ -64,6 +64,7 @@ class RoomInfo extends MeetingsController
 
                     $room_infos[$meetingCourse->meeting->id] = $info;
                 } catch (Exception $e) {
+                    throw new Error($e->getMessage(), ($e->getCode() ? $e->getCode() : 404));
                 }
             }
         }

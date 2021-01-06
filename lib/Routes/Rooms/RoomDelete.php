@@ -62,7 +62,7 @@ class RoomDelete extends MeetingsController
                     try {
                         $driver->deleteMeeting($meeting->getMeetingParameters());
                     } catch (Exception $e) {
-                        throw new Error($e->getMessage(), 404);
+                        throw new Error($e->getMessage(), ($e->getCode() ? $e->getCode() : 404));
                     }
 
                     $meeting->delete();
@@ -77,7 +77,7 @@ class RoomDelete extends MeetingsController
             ], $response);
 
         } catch (Exception $e) {
-            throw new Error($e->getMessage(), 404);
+            throw new Error($e->getMessage(), ($e->getCode() ? $e->getCode() : 404));
         }
     }
 }
