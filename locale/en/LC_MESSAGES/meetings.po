@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-11 12:27+0100\n"
+"POT-Creation-Date: 2021-01-06 15:29+0100\n"
 "PO-Revision-Date: 2020-12-09 14:05+0100\n"
 "Last-Translator: April Suddendorf, 2020\n"
 "Language-Team: English (https://www.transifex.com/uol-it/teams/52597/en/)\n"
@@ -473,6 +473,102 @@ msgstr "Back to main folder - revoke selected folder"
 msgid "Zusätzliche Funktionen"
 msgstr "Additional functions"
 
+#: app/views/index/config.php:9
+msgid "Die Änderungen wurden gespeichert."
+msgstr "The changes have been saved."
+
+#: app/views/index/config.php:19
+msgid "Reitername"
+msgstr "Tab name"
+
+#: app/views/index/config.php:25
+msgid "Einleitungstext"
+msgstr "Introductory text"
+
+#: app/views/index/config.php:31
+msgid "Speichern"
+msgstr "Save"
+
+#: app/views/link/index.php:2
+msgid "Sie wurden zur Teilnahme eingeladen"
+msgstr "You have been invited"
+
+#: app/views/link/index.php:4
+msgid "Geben Sie einen Namen ein"
+msgstr "State your name"
+
+#: app/views/link/index.php:8
+msgid "Meeting betreten"
+msgstr "Join meeting"
+
+#: app/controllers/link.php:58
+msgid "Stud.IP Meeting"
+msgstr "Stud.IP meeting"
+
+#: app/controllers/link.php:62 app/controllers/link.php:76
+msgid "Das gesuchte Meeting existiert nicht mehr!"
+msgstr "The meeting does not exists anymore!"
+
+#: app/controllers/link.php:65
+msgid "Meeting-Name"
+msgstr "Meetingname"
+
+#: app/controllers/admin.php:112
+msgid "Meetings Administration"
+msgstr "Meeting administration"
+
+#: app/controllers/admin.php:129
+msgid ""
+"Administrationsseite für das Plugin zur Durchführung und Verwaltung von Live-"
+"Online-Treffen, Veranstaltungen und Videokonferenzen."
+msgstr ""
+"Plug-in administration page for holding and managing live online meetings, "
+"seminars and video conferences."
+
+#: app/controllers/index.php:235
+msgid ""
+"Durchführung und Verwaltung von Live-Online-Treffen, Veranstaltungen und "
+"Videokonferenzen. Mit Hilfe der Face-to-Face-Kommunikation können "
+"Entfernungen überbrückt, externe Fachleute einbezogen und Studierende in "
+"Projekten und Praktika begleitet werden."
+msgstr ""
+"Conduct and manage live online meetings, events and  video conferencing. "
+"Face-to-face communication can be used to bridge distances, external experts "
+"can be involved and students can be accompanied in projects and internships."
+
+#: app/controllers/index.php:243
+msgid ""
+"Arbeitsbereich zum Anpassen der Gesamtansicht der Meetings einer "
+"Veranstaltung."
+msgstr "Workspace to customize the overall view of a course meeting."
+
+#: app/controllers/index.php:249
+msgid ""
+"Gesamtansicht aller von Ihnen erstellten Meetings nach Semestern oder nach "
+"Namen sortiert."
+msgstr "View of all meetings you have created sorted by semester or by name."
+
+#: app/controllers/index.php:265 app/controllers/index.php:267
+#: MeetingPlugin.php:214 MeetingPlugin.php:366 MeetingPlugin.php:367
+msgid "Meetings"
+msgstr "Meetings"
+
+#: app/models/Driver.php:42
+msgid "Aufzeichnungen zulassen"
+msgstr "Allow recording"
+
+#: Driver/DfnVc.php:364
+msgid "API-Endpoint"
+msgstr "API endpoint"
+
+#: Driver/DfnVc.php:365
+msgid "Funktionskennung"
+msgstr "Function ID"
+
+#: Driver/DfnVc.php:366
+msgid "Passwort"
+msgstr "Password"
+
 #: Driver/BigBlueButton.php:268
 msgid "URL des BBB-Servers"
 msgstr "URL of the BBB server"
@@ -608,161 +704,15 @@ msgstr ""
 "If this option is activated, only moderators can see the webcams shared by "
 "participants."
 
-#: Driver/DfnVc.php:364
-msgid "API-Endpoint"
-msgstr "API endpoint"
-
-#: Driver/DfnVc.php:365
-msgid "Funktionskennung"
-msgstr "Function ID"
-
-#: Driver/DfnVc.php:366
-msgid "Passwort"
-msgstr "Password"
-
-#: MeetingPlugin.php:214 MeetingPlugin.php:356 MeetingPlugin.php:357
-#: app/controllers/index.php:265 app/controllers/index.php:267
-msgid "Meetings"
-msgstr "Meetings"
-
-#: MeetingPlugin.php:250
-#, php-format
-msgid "%d Meeting(s), %d neue"
-msgstr "%d meeting(s), %d new"
-
-#: MeetingPlugin.php:254
-#, php-format
-msgid "%d Meeting(s)"
-msgstr "%d meeting(s)"
-
-#: MeetingPlugin.php:285
-msgid "Anpassen"
-msgstr "Customize"
-
-#: MeetingPlugin.php:358
-msgid ""
-"Virtueller Raum, mit dem Live-Online-Treffen, Veranstaltungen und "
-"Videokonferenzen durchgeführt werden können. Die Teilnehmenden können sich "
-"während eines Meetings gegenseitig hören und über eine angeschlossene Webcam "
-"- wenn vorhanden - sehen und miteinander arbeiten. Folien können präsentiert "
-"und Abfragen durchgeführt werden. Ein Fenster in der Benutzungsoberfläche "
-"des eigenen Rechners kann für andere sichtbar geschaltet werden, um zum "
-"Beispiel den Teilnehmenden bestimmte Webseiten oder Anwendungen zu zeigen. "
-"Außerdem kann die Veranstaltung aufgezeichnet und Interessierten zur "
-"Verfügung gestellt werden."
-msgstr ""
-"Virtual room with which live online meetings, courses and  video conferences "
-"can be held. Participants can hear each other  during a meeting and, via a "
-"connected webcam, see and work with each other, if available. Slides can be "
-"presented and queries can be carried out. A window in the user interface of "
-"one's own computer can be made visible to others in order to show certain "
-"websites or applications to the participants, for example. In addition, the "
-"course can be recorded and made available to interested parties."
-
-#: MeetingPlugin.php:359
-msgid "Face-to-face-Kommunikation mit Adobe Connect oder BigBlueButton"
-msgstr "Face-to-face communication with Adobe Connect or BigBlueButton"
-
-#: MeetingPlugin.php:360
-msgid ""
-"Videokonferenz- und Veranstaltungsmöglichkeit;Live im Netz präsentieren "
-"sowie gemeinsam zeichnen und arbeiten;Kommunikation über Mikrofon und Kamera;"
-"Ideal für dezentrale Lern- und Arbeitsgruppen;Verlinkung zu bereits "
-"bestehenden eigenen Räumen"
-msgstr ""
-"Video conferencing and event facility;Present live on the web and draw and "
-"work together;Communication via microphone and camera;Ideal for "
-"decentralised learning and working groups;Linking to already existing own "
-"rooms"
-
-#: app/models/Driver.php:42
-msgid "Aufzeichnungen zulassen"
-msgstr "Allow recording"
-
-#: app/controllers/index.php:235
-msgid ""
-"Durchführung und Verwaltung von Live-Online-Treffen, Veranstaltungen und "
-"Videokonferenzen. Mit Hilfe der Face-to-Face-Kommunikation können "
-"Entfernungen überbrückt, externe Fachleute einbezogen und Studierende in "
-"Projekten und Praktika begleitet werden."
-msgstr ""
-"Conduct and manage live online meetings, events and  video conferencing. "
-"Face-to-face communication can be used to bridge distances, external experts "
-"can be involved and students can be accompanied in projects and internships."
-
-#: app/controllers/index.php:243
-msgid ""
-"Arbeitsbereich zum Anpassen der Gesamtansicht der Meetings einer "
-"Veranstaltung."
-msgstr "Workspace to customize the overall view of a course meeting."
-
-#: app/controllers/index.php:249
-msgid ""
-"Gesamtansicht aller von Ihnen erstellten Meetings nach Semestern oder nach "
-"Namen sortiert."
-msgstr "View of all meetings you have created sorted by semester or by name."
-
-#: app/controllers/link.php:58
-msgid "Stud.IP Meeting"
-msgstr "Stud.IP meeting"
-
-#: app/controllers/link.php:62 app/controllers/link.php:76
-msgid "Das gesuchte Meeting existiert nicht mehr!"
-msgstr "The meeting does not exists anymore!"
-
-#: app/controllers/link.php:65
-msgid "Meeting-Name"
-msgstr "Meetingname"
-
-#: app/controllers/admin.php:112
-msgid "Meetings Administration"
-msgstr "Meeting administration"
-
-#: app/controllers/admin.php:129
-msgid ""
-"Administrationsseite für das Plugin zur Durchführung und Verwaltung von Live-"
-"Online-Treffen, Veranstaltungen und Videokonferenzen."
-msgstr ""
-"Plug-in administration page for holding and managing live online meetings, "
-"seminars and video conferences."
-
-#: app/views/link/index.php:2
-msgid "Sie wurden zur Teilnahme eingeladen"
-msgstr "You have been invited"
-
-#: app/views/link/index.php:4
-msgid "Geben Sie einen Namen ein"
-msgstr "State your name"
-
-#: app/views/link/index.php:8
-msgid "Meeting betreten"
-msgstr "Join meeting"
-
-#: app/views/index/config.php:9
-msgid "Die Änderungen wurden gespeichert."
-msgstr "The changes have been saved."
-
-#: app/views/index/config.php:19
-msgid "Reitername"
-msgstr "Tab name"
-
-#: app/views/index/config.php:25
-msgid "Einleitungstext"
-msgstr "Introductory text"
-
-#: app/views/index/config.php:31
-msgid "Speichern"
-msgstr "Save"
-
 #: lib/Models/Config.php:86
 msgid "Es wurde kein Servicetyp angegeben."
 msgstr "No service type was specified."
 
 #: lib/Routes/Recordings/RecordingDelete.php:37
-#: lib/Routes/Recordings/RecordingShow.php:39 lib/Routes/Rooms/RoomAdd.php:45
-#: lib/Routes/Rooms/RoomInvitationLink.php:34
-#: lib/Routes/Rooms/RoomDelete.php:38 lib/Routes/Rooms/RoomJoinGuest.php:44
-#: lib/Routes/Rooms/RoomEdit.php:41
+#: lib/Routes/Recordings/RecordingShow.php:39
+#: lib/Routes/Rooms/RoomInvitationLink.php:34 lib/Routes/Rooms/RoomEdit.php:41
+#: lib/Routes/Rooms/RoomJoinGuest.php:44 lib/Routes/Rooms/RoomAdd.php:45
+#: lib/Routes/Rooms/RoomDelete.php:38
 msgid "Access Denied"
 msgstr "Access Denied"
 
@@ -774,71 +724,30 @@ msgstr "Recording was deleted."
 msgid "Aufzeichnung kann nicht gelöscht werden"
 msgstr "Recording cannot be deleted"
 
-#: lib/Routes/Config/ConfigListCourse.php:160
-msgid ""
-"Opencast wird als Aufzeichnungsserver verwendet. Diese Funktion ist im "
-"Testbetrieb und es kann noch zu Fehlern kommen."
-msgstr ""
-"Opencast is used as recording server. This function is in test mode and "
-"errors may still occur."
+#: lib/Routes/Rooms/RoomEdit.php:88 lib/Routes/Rooms/RoomAdd.php:109
+msgid "Opencast Series id kann nicht gefunden werden!"
+msgstr "Opencast series ID cannot be found!"
 
-#: lib/Routes/Config/ConfigAdd.php:42
+#: lib/Routes/Rooms/RoomEdit.php:106 lib/Routes/Rooms/RoomAdd.php:84
 #, php-format
-msgid ""
-"Die Überprüfung der Servereinstellungen für %s war nicht erfolgreich, wurden "
-"aber trotzdem gespeichert."
-msgstr ""
-"The verification of the server settings for %s was not successful, but was "
-"saved anyway."
+msgid "Teilnehmerzahl darf %d nicht überschreiten"
+msgstr "Number of participants cannot exceed %d"
 
-#: lib/Routes/Config/ConfigAdd.php:48
-msgid "Konfiguration gespeichert."
-msgstr "Configuration was saved."
+#: lib/Routes/Rooms/RoomEdit.php:120
+msgid "Die Bearbeitung wurde erfolgreich abgeschlossen."
+msgstr "The editing was successfully completed."
 
-#: lib/Routes/Config/ConfigAdd.php:53
-msgid "Konnte Konfiguration nicht speichern!"
-msgstr "Configuration could not be saved!"
+#: lib/Routes/Rooms/RoomEdit.php:125
+msgid "Raumeinstellung kann nicht bearbeitet werden!"
+msgstr "Room settings cannot be edited!"
 
-#: lib/Routes/Folder/FolderList.php:55
-msgid "Fehler beim Laden des Hauptordners!"
-msgstr "Error loading main folder!"
-
-#: lib/Routes/Folder/FolderCreate.php:49 lib/Routes/Folder/FolderCreate.php:84
-msgid "Fehler beim Anlegen des Ordners!"
-msgstr "Error during folder creation!"
-
-#: lib/Routes/Folder/FolderCreate.php:57
-msgid "Der Ordner wurde angelegt."
-msgstr "The folder has been created."
-
-#: lib/Routes/Folder/FolderCreate.php:63
-msgid "Der gewünschte Ordnertyp ist ungültig!"
-msgstr "The select folder type is invalid!"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:44
-#, fuzzy
-msgid ""
-"Es ist keine Kontaktadresse hinterlegt! Bitte wenden Sie sich an eine/n "
-"Systemadministrator/in!"
-msgstr ""
-"A video conferencing system has not yet been configured yet.\n"
-"\t\tPlease contact a system administrator!"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:49
-msgid "Feedback zum Meetings-Plugin"
-msgstr "Feedback on the Meetings Plugin"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:53
-msgid "Ihr Feedback wird gesendet."
-msgstr "Your Feedback is being sent."
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:58
-msgid "Einige Informationen fehlen!"
-msgstr "Some information is missing!"
-
-#: lib/Routes/Rooms/RoomJoin.php:49 lib/Routes/Rooms/RoomJoinGuest.php:49
+#: lib/Routes/Rooms/RoomJoinGuest.php:49 lib/Routes/Rooms/RoomJoin.php:49
 msgid "Dieser Raum in diesem Kurs kann nicht gefunden werden!"
 msgstr "This room in this course cannot be found!"
+
+#: lib/Routes/Rooms/RoomJoinGuest.php:53
+msgid "Gäste können nicht eingeladen werden!"
+msgstr "Guests cannot be invited!"
 
 #: lib/Routes/Rooms/RoomJoin.php:97
 msgid ""
@@ -870,15 +779,6 @@ msgstr "No conference system is selected"
 msgid "Server ist nicht definiert"
 msgstr "Server is not defined"
 
-#: lib/Routes/Rooms/RoomAdd.php:84 lib/Routes/Rooms/RoomEdit.php:106
-#, php-format
-msgid "Teilnehmerzahl darf %d nicht überschreiten"
-msgstr "Number of participants cannot exceed %d"
-
-#: lib/Routes/Rooms/RoomAdd.php:109 lib/Routes/Rooms/RoomEdit.php:88
-msgid "Opencast Series id kann nicht gefunden werden!"
-msgstr "Opencast series ID cannot be found!"
-
 #: lib/Routes/Rooms/RoomAdd.php:155
 msgid "Raum wurde erfolgreich erstellt."
 msgstr "Room was created successfully."
@@ -891,17 +791,116 @@ msgstr "This room could not be found"
 msgid "Meeting wurde gelöscht."
 msgstr "Meeting was deleted."
 
-#: lib/Routes/Rooms/RoomJoinGuest.php:53
-msgid "Gäste können nicht eingeladen werden!"
-msgstr "Guests cannot be invited!"
+#: lib/Routes/Feedback/FeedbackSubmit.php:44
+msgid ""
+"Es ist keine Kontaktadresse hinterlegt! Bitte wenden Sie sich an eine/n "
+"Systemadministrator/in!"
+msgstr ""
+"There is no contact address configured! Please contact a system "
+"administrator!"
 
-#: lib/Routes/Rooms/RoomEdit.php:120
-msgid "Die Bearbeitung wurde erfolgreich abgeschlossen."
-msgstr "The editing was successfully completed."
+#: lib/Routes/Feedback/FeedbackSubmit.php:49
+msgid "Feedback zum Meetings-Plugin"
+msgstr "Feedback on the Meetings Plugin"
 
-#: lib/Routes/Rooms/RoomEdit.php:125
-msgid "Raumeinstellung kann nicht bearbeitet werden!"
-msgstr "Room settings cannot be edited!"
+#: lib/Routes/Feedback/FeedbackSubmit.php:53
+msgid "Ihr Feedback wird gesendet."
+msgstr "Your Feedback is being sent."
+
+#: lib/Routes/Feedback/FeedbackSubmit.php:58
+msgid "Einige Informationen fehlen!"
+msgstr "Some information is missing!"
+
+#: lib/Routes/Folder/FolderCreate.php:49 lib/Routes/Folder/FolderCreate.php:84
+msgid "Fehler beim Anlegen des Ordners!"
+msgstr "Error during folder creation!"
+
+#: lib/Routes/Folder/FolderCreate.php:57
+msgid "Der Ordner wurde angelegt."
+msgstr "The folder has been created."
+
+#: lib/Routes/Folder/FolderCreate.php:63
+msgid "Der gewünschte Ordnertyp ist ungültig!"
+msgstr "The select folder type is invalid!"
+
+#: lib/Routes/Folder/FolderList.php:55
+msgid "Fehler beim Laden des Hauptordners!"
+msgstr "Error loading main folder!"
+
+#: lib/Routes/Config/ConfigListCourse.php:160
+msgid ""
+"Opencast wird als Aufzeichnungsserver verwendet. Diese Funktion ist im "
+"Testbetrieb und es kann noch zu Fehlern kommen."
+msgstr ""
+"Opencast is used as recording server. This function is in test mode and "
+"errors may still occur."
+
+#: lib/Routes/Config/ConfigAdd.php:42
+#, php-format
+msgid ""
+"Die Überprüfung der Servereinstellungen für %s war nicht erfolgreich, wurden "
+"aber trotzdem gespeichert."
+msgstr ""
+"The verification of the server settings for %s was not successful, but was "
+"saved anyway."
+
+#: lib/Routes/Config/ConfigAdd.php:48
+msgid "Konfiguration gespeichert."
+msgstr "Configuration was saved."
+
+#: lib/Routes/Config/ConfigAdd.php:53
+msgid "Konnte Konfiguration nicht speichern!"
+msgstr "Configuration could not be saved!"
+
+#: MeetingPlugin.php:250
+#, php-format
+msgid "%d Meeting(s), %d neue"
+msgstr "%d meeting(s), %d new"
+
+#: MeetingPlugin.php:254
+#, php-format
+msgid "%d Meeting(s)"
+msgstr "%d meeting(s)"
+
+#: MeetingPlugin.php:285
+msgid "Anpassen"
+msgstr "Customize"
+
+#: MeetingPlugin.php:369
+msgid ""
+"Virtueller Raum, mit dem Live-Online-Treffen, Veranstaltungen und "
+"Videokonferenzen durchgeführt werden können. Die Teilnehmenden können sich "
+"während eines Meetings gegenseitig hören und über eine angeschlossene Webcam "
+"- wenn vorhanden - sehen und miteinander arbeiten. Folien können präsentiert "
+"und Abfragen durchgeführt werden. Ein Fenster in der Benutzungsoberfläche "
+"des eigenen Rechners kann für andere sichtbar geschaltet werden, um zum "
+"Beispiel den Teilnehmenden bestimmte Webseiten oder Anwendungen zu zeigen. "
+"Außerdem kann die Veranstaltung aufgezeichnet und Interessierten zur "
+"Verfügung gestellt werden."
+msgstr ""
+"Virtual room with which live online meetings, courses and  video conferences "
+"can be held. Participants can hear each other  during a meeting and, via a "
+"connected webcam, see and work with each other, if available. Slides can be "
+"presented and queries can be carried out. A window in the user interface of "
+"one's own computer can be made visible to others in order to show certain "
+"websites or applications to the participants, for example. In addition, the "
+"course can be recorded and made available to interested parties."
+
+#: MeetingPlugin.php:378
+msgid "Face-to-face-Kommunikation mit Adobe Connect oder BigBlueButton"
+msgstr "Face-to-face communication with Adobe Connect or BigBlueButton"
+
+#: MeetingPlugin.php:380
+msgid ""
+"Videokonferenz- und Veranstaltungsmöglichkeit; Live im Netz präsentieren "
+"sowie gemeinsam zeichnen und arbeiten;Kommunikation über Mikrofon und "
+"Kamera; Ideal für dezentrale Lern- und Arbeitsgruppen; Verlinkung zu bereits "
+"bestehenden eigenen Räumen"
+msgstr ""
+"Video conferencing and event facility;Present live on the web and draw and "
+"work together;Communication via microphone and camera;Ideal for "
+"decentralised learning and working groups;Linking to already existing own "
+"rooms"
 
 #~ msgid "Grundinformation:"
 #~ msgstr "Basic information:"
