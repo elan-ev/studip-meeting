@@ -351,4 +351,38 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
         }
         return false;
     }
+
+    /**
+     * @inherits
+     *
+     * Overwrite default metadata-function to translate the descriptions
+     *
+     * @return Array the plugins metadata as an array
+     */
+    public function getMetadata()
+    {
+        $metadata = parent::getMetadata();
+
+        $metadata['pluginname']  = $this->_("Meetings");
+        $metadata['displayname'] = $this->_("Meetings");
+
+        $metadata['descriptionlong'] = $this->_("Virtueller Raum, mit dem Live-Online-Treffen, Veranstaltungen "
+            . "und Videokonferenzen durchgeführt werden können. Die Teilnehmenden können sich während "
+            . "eines Meetings gegenseitig hören und über eine angeschlossene Webcam - wenn vorhanden - "
+            . "sehen und miteinander arbeiten. Folien können präsentiert und Abfragen durchgeführt werden. "
+            . "Ein Fenster in der Benutzungsoberfläche des eigenen Rechners kann für andere sichtbar "
+            . "geschaltet werden, um zum Beispiel den Teilnehmenden bestimmte Webseiten oder Anwendungen "
+            . "zu zeigen. Außerdem kann die Veranstaltung aufgezeichnet und Interessierten zur Verfügung gestellt werden."
+        );
+
+        $metadata['descriptionshort'] = $this->_("Face-to-face-Kommunikation mit Adobe Connect oder BigBlueButton");
+
+        $metadata['keywords'] = $this->_("Videokonferenz- und Veranstaltungsmöglichkeit; "
+            . "Live im Netz präsentieren sowie gemeinsam zeichnen und arbeiten;Kommunikation über Mikrofon und Kamera; "
+            . "Ideal für dezentrale Lern- und Arbeitsgruppen; "
+            . "Verlinkung zu bereits bestehenden eigenen Räumen"
+        );
+
+        return $metadata;
+    }
 }

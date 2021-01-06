@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-09 14:05+0100\n"
+"POT-Creation-Date: 2021-01-06 15:29+0100\n"
 "PO-Revision-Date: 2020-12-09 14:05+0100\n"
 "Last-Translator: April Suddendorf, 2020\n"
 "Language-Team: English (https://www.transifex.com/uol-it/teams/52597/en/)\n"
@@ -473,22 +473,6 @@ msgstr "Back to main folder - revoke selected folder"
 msgid "Zusätzliche Funktionen"
 msgstr "Additional functions"
 
-#: app/models/Driver.php:42
-msgid "Aufzeichnungen zulassen"
-msgstr "Allow recording"
-
-#: app/views/link/index.php:2
-msgid "Sie wurden zur Teilnahme eingeladen"
-msgstr "You have been invited"
-
-#: app/views/link/index.php:4
-msgid "Geben Sie einen Namen ein"
-msgstr "State your name"
-
-#: app/views/link/index.php:8
-msgid "Meeting betreten"
-msgstr "Join meeting"
-
 #: app/views/index/config.php:9
 msgid "Die Änderungen wurden gespeichert."
 msgstr "The changes have been saved."
@@ -505,6 +489,18 @@ msgstr "Introductory text"
 msgid "Speichern"
 msgstr "Save"
 
+#: app/views/link/index.php:2
+msgid "Sie wurden zur Teilnahme eingeladen"
+msgstr "You have been invited"
+
+#: app/views/link/index.php:4
+msgid "Geben Sie einen Namen ein"
+msgstr "State your name"
+
+#: app/views/link/index.php:8
+msgid "Meeting betreten"
+msgstr "Join meeting"
+
 #: app/controllers/link.php:58
 msgid "Stud.IP Meeting"
 msgstr "Stud.IP meeting"
@@ -517,6 +513,18 @@ msgstr "The meeting does not exists anymore!"
 msgid "Meeting-Name"
 msgstr "Meetingname"
 
+#: app/controllers/admin.php:112
+msgid "Meetings Administration"
+msgstr "Meeting administration"
+
+#: app/controllers/admin.php:129
+msgid ""
+"Administrationsseite für das Plugin zur Durchführung und Verwaltung von Live-"
+"Online-Treffen, Veranstaltungen und Videokonferenzen."
+msgstr ""
+"Plug-in administration page for holding and managing live online meetings, "
+"seminars and video conferences."
+
 #: app/controllers/index.php:235
 msgid ""
 "Durchführung und Verwaltung von Live-Online-Treffen, Veranstaltungen und "
@@ -524,6 +532,9 @@ msgid ""
 "Entfernungen überbrückt, externe Fachleute einbezogen und Studierende in "
 "Projekten und Praktika begleitet werden."
 msgstr ""
+"Conduct and manage live online meetings, events and  video conferencing. "
+"Face-to-face communication can be used to bridge distances, external experts "
+"can be involved and students can be accompanied in projects and internships."
 
 #: app/controllers/index.php:243
 msgid ""
@@ -538,21 +549,25 @@ msgid ""
 msgstr "View of all meetings you have created sorted by semester or by name."
 
 #: app/controllers/index.php:265 app/controllers/index.php:267
-#: MeetingPlugin.php:214
+#: MeetingPlugin.php:214 MeetingPlugin.php:366 MeetingPlugin.php:367
 msgid "Meetings"
 msgstr "Meetings"
 
-#: app/controllers/admin.php:112
-msgid "Meetings Administration"
-msgstr "Meeting administration"
+#: app/models/Driver.php:42
+msgid "Aufzeichnungen zulassen"
+msgstr "Allow recording"
 
-#: app/controllers/admin.php:129
-msgid ""
-"Administrationsseite für das Plugin zur Durchführung und Verwaltung von Live-"
-"Online-Treffen, Veranstaltungen und Videokonferenzen."
-msgstr ""
-"Plug-in administration page for holding and managing live online meetings, "
-"seminars and video conferences."
+#: Driver/DfnVc.php:364
+msgid "API-Endpoint"
+msgstr "API endpoint"
+
+#: Driver/DfnVc.php:365
+msgid "Funktionskennung"
+msgstr "Function ID"
+
+#: Driver/DfnVc.php:366
+msgid "Passwort"
+msgstr "Password"
 
 #: Driver/BigBlueButton.php:268
 msgid "URL des BBB-Servers"
@@ -689,48 +704,15 @@ msgstr ""
 "If this option is activated, only moderators can see the webcams shared by "
 "participants."
 
-#: Driver/DfnVc.php:364
-msgid "API-Endpoint"
-msgstr "API endpoint"
-
-#: Driver/DfnVc.php:365
-msgid "Funktionskennung"
-msgstr "Function ID"
-
-#: Driver/DfnVc.php:366
-msgid "Passwort"
-msgstr "Password"
-
-#: lib/Routes/Config/ConfigAdd.php:42
-#, php-format
-msgid ""
-"Die Überprüfung der Servereinstellungen für %s war nicht erfolgreich, wurden "
-"aber trotzdem gespeichert."
-msgstr ""
-"The verification of the server settings for %s was not successful, but was "
-"saved anyway."
-
-#: lib/Routes/Config/ConfigAdd.php:48
-msgid "Konfiguration gespeichert."
-msgstr "Configuration was saved."
-
-#: lib/Routes/Config/ConfigAdd.php:53
-msgid "Konnte Konfiguration nicht speichern!"
-msgstr "Configuration could not be saved!"
-
-#: lib/Routes/Config/ConfigListCourse.php:160
-msgid ""
-"Opencast wird als Aufzeichnungsserver verwendet. Diese Funktion ist im "
-"Testbetrieb und es kann noch zu Fehlern kommen."
-msgstr ""
-"Opencast is used as recording server. This function is in test mode and "
-"errors may still occur."
+#: lib/Models/Config.php:86
+msgid "Es wurde kein Servicetyp angegeben."
+msgstr "No service type was specified."
 
 #: lib/Routes/Recordings/RecordingDelete.php:37
 #: lib/Routes/Recordings/RecordingShow.php:39
-#: lib/Routes/Rooms/RoomDelete.php:38 lib/Routes/Rooms/RoomEdit.php:41
-#: lib/Routes/Rooms/RoomInvitationLink.php:34
+#: lib/Routes/Rooms/RoomInvitationLink.php:34 lib/Routes/Rooms/RoomEdit.php:41
 #: lib/Routes/Rooms/RoomJoinGuest.php:44 lib/Routes/Rooms/RoomAdd.php:45
+#: lib/Routes/Rooms/RoomDelete.php:38
 msgid "Access Denied"
 msgstr "Access Denied"
 
@@ -741,14 +723,6 @@ msgstr "Recording was deleted."
 #: lib/Routes/Recordings/RecordingDelete.php:53
 msgid "Aufzeichnung kann nicht gelöscht werden"
 msgstr "Recording cannot be deleted"
-
-#: lib/Routes/Rooms/RoomDelete.php:44
-msgid "Dieser Raum konnte nicht gefunden werden"
-msgstr "This room could not be found"
-
-#: lib/Routes/Rooms/RoomDelete.php:70
-msgid "Meeting wurde gelöscht."
-msgstr "Meeting was deleted."
 
 #: lib/Routes/Rooms/RoomEdit.php:88 lib/Routes/Rooms/RoomAdd.php:109
 msgid "Opencast Series id kann nicht gefunden werden!"
@@ -767,9 +741,13 @@ msgstr "The editing was successfully completed."
 msgid "Raumeinstellung kann nicht bearbeitet werden!"
 msgstr "Room settings cannot be edited!"
 
-#: lib/Routes/Rooms/RoomJoin.php:49 lib/Routes/Rooms/RoomJoinGuest.php:49
+#: lib/Routes/Rooms/RoomJoinGuest.php:49 lib/Routes/Rooms/RoomJoin.php:49
 msgid "Dieser Raum in diesem Kurs kann nicht gefunden werden!"
 msgstr "This room in this course cannot be found!"
+
+#: lib/Routes/Rooms/RoomJoinGuest.php:53
+msgid "Gäste können nicht eingeladen werden!"
+msgstr "Guests cannot be invited!"
 
 #: lib/Routes/Rooms/RoomJoin.php:97
 msgid ""
@@ -784,10 +762,6 @@ msgid ""
 "fehlgeschlagen. ("
 msgstr ""
 "Could not join the meeting, communication with the meeting server failed. ("
-
-#: lib/Routes/Rooms/RoomJoinGuest.php:53
-msgid "Gäste können nicht eingeladen werden!"
-msgstr "Guests cannot be invited!"
 
 #: lib/Routes/Rooms/RoomAdd.php:62
 msgid "Es existiert bereits ein gleichnamiger Raum."
@@ -809,94 +783,33 @@ msgstr "Server is not defined"
 msgid "Raum wurde erfolgreich erstellt."
 msgstr "Room was created successfully."
 
-#: lib/Routes/Feedback/FeedbackSubmit.php:42
+#: lib/Routes/Rooms/RoomDelete.php:44
+msgid "Dieser Raum konnte nicht gefunden werden"
+msgstr "This room could not be found"
+
+#: lib/Routes/Rooms/RoomDelete.php:70
+msgid "Meeting wurde gelöscht."
+msgstr "Meeting was deleted."
+
+#: lib/Routes/Feedback/FeedbackSubmit.php:44
+msgid ""
+"Es ist keine Kontaktadresse hinterlegt! Bitte wenden Sie sich an eine/n "
+"Systemadministrator/in!"
+msgstr ""
+"There is no contact address configured! Please contact a system "
+"administrator!"
+
+#: lib/Routes/Feedback/FeedbackSubmit.php:49
 msgid "Feedback zum Meetings-Plugin"
 msgstr "Feedback on the Meetings Plugin"
 
-#: lib/Routes/Feedback/FeedbackSubmit.php:46
+#: lib/Routes/Feedback/FeedbackSubmit.php:53
 msgid "Ihr Feedback wird gesendet."
 msgstr "Your Feedback is being sent."
 
-#: lib/Routes/Feedback/FeedbackSubmit.php:51
+#: lib/Routes/Feedback/FeedbackSubmit.php:58
 msgid "Einige Informationen fehlen!"
 msgstr "Some information is missing!"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:72
-msgid "Grundinformation:"
-msgstr "Basic information:"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:73
-#, php-format
-msgid "Seminar ID: %s"
-msgstr "Seminar ID: %s"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:74
-#, php-format
-msgid "Meetings ID: %s"
-msgstr "Meetings ID: %s"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:75
-#, php-format
-msgid "User ID: %s"
-msgstr "User ID: %s"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:77
-msgid "Details:"
-msgstr "Details:"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:78
-#, php-format
-msgid "Browser-Name: %s"
-msgstr "Browser name: %s"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:79
-#, php-format
-msgid "Browser-Version: %s"
-msgstr "Browser-Version: %s"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:80
-#, php-format
-msgid "Download-Geschw. (Mbps): %s"
-msgstr "Download speed (Mbps): %s"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:81
-#, php-format
-msgid "Upload-Geschw. (Mbps): %s"
-msgstr "Upload speed (Mbps): %s"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:82
-#, php-format
-msgid "Netzwerk-Typ: %s"
-msgstr "Network type: %s"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:83
-#, php-format
-msgid "Betriebssystem (OS): %s"
-msgstr "Operating system (OS): %s"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:84
-#, php-format
-msgid "Prozessortyp: %s"
-msgstr "Processor type: %s"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:85
-#, php-format
-msgid "Alter des Rechners: %s"
-msgstr "Age of computer: %s"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:86
-#, php-format
-msgid "Anzahl der CPU-Kerne: %s"
-msgstr "Number of CPU cores: %s"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:87
-#, php-format
-msgid "RAM (Hauptspeicher) GB: %s"
-msgstr "RAM (main storage) GB: %s"
-
-#: lib/Routes/Feedback/FeedbackSubmit.php:89
-msgid "Beschreibung:"
-msgstr "Description:"
 
 #: lib/Routes/Folder/FolderCreate.php:49 lib/Routes/Folder/FolderCreate.php:84
 msgid "Fehler beim Anlegen des Ordners!"
@@ -914,9 +827,30 @@ msgstr "The select folder type is invalid!"
 msgid "Fehler beim Laden des Hauptordners!"
 msgstr "Error loading main folder!"
 
-#: lib/Models/Config.php:85
-msgid "Es wurde kein Servicetyp angegeben."
-msgstr "No service type was specified."
+#: lib/Routes/Config/ConfigListCourse.php:160
+msgid ""
+"Opencast wird als Aufzeichnungsserver verwendet. Diese Funktion ist im "
+"Testbetrieb und es kann noch zu Fehlern kommen."
+msgstr ""
+"Opencast is used as recording server. This function is in test mode and "
+"errors may still occur."
+
+#: lib/Routes/Config/ConfigAdd.php:42
+#, php-format
+msgid ""
+"Die Überprüfung der Servereinstellungen für %s war nicht erfolgreich, wurden "
+"aber trotzdem gespeichert."
+msgstr ""
+"The verification of the server settings for %s was not successful, but was "
+"saved anyway."
+
+#: lib/Routes/Config/ConfigAdd.php:48
+msgid "Konfiguration gespeichert."
+msgstr "Configuration was saved."
+
+#: lib/Routes/Config/ConfigAdd.php:53
+msgid "Konnte Konfiguration nicht speichern!"
+msgstr "Configuration could not be saved!"
 
 #: MeetingPlugin.php:250
 #, php-format
@@ -931,6 +865,103 @@ msgstr "%d meeting(s)"
 #: MeetingPlugin.php:285
 msgid "Anpassen"
 msgstr "Customize"
+
+#: MeetingPlugin.php:369
+msgid ""
+"Virtueller Raum, mit dem Live-Online-Treffen, Veranstaltungen und "
+"Videokonferenzen durchgeführt werden können. Die Teilnehmenden können sich "
+"während eines Meetings gegenseitig hören und über eine angeschlossene Webcam "
+"- wenn vorhanden - sehen und miteinander arbeiten. Folien können präsentiert "
+"und Abfragen durchgeführt werden. Ein Fenster in der Benutzungsoberfläche "
+"des eigenen Rechners kann für andere sichtbar geschaltet werden, um zum "
+"Beispiel den Teilnehmenden bestimmte Webseiten oder Anwendungen zu zeigen. "
+"Außerdem kann die Veranstaltung aufgezeichnet und Interessierten zur "
+"Verfügung gestellt werden."
+msgstr ""
+"Virtual room with which live online meetings, courses and  video conferences "
+"can be held. Participants can hear each other  during a meeting and, via a "
+"connected webcam, see and work with each other, if available. Slides can be "
+"presented and queries can be carried out. A window in the user interface of "
+"one's own computer can be made visible to others in order to show certain "
+"websites or applications to the participants, for example. In addition, the "
+"course can be recorded and made available to interested parties."
+
+#: MeetingPlugin.php:378
+msgid "Face-to-face-Kommunikation mit Adobe Connect oder BigBlueButton"
+msgstr "Face-to-face communication with Adobe Connect or BigBlueButton"
+
+#: MeetingPlugin.php:380
+msgid ""
+"Videokonferenz- und Veranstaltungsmöglichkeit; Live im Netz präsentieren "
+"sowie gemeinsam zeichnen und arbeiten;Kommunikation über Mikrofon und "
+"Kamera; Ideal für dezentrale Lern- und Arbeitsgruppen; Verlinkung zu bereits "
+"bestehenden eigenen Räumen"
+msgstr ""
+"Video conferencing and event facility;Present live on the web and draw and "
+"work together;Communication via microphone and camera;Ideal for "
+"decentralised learning and working groups;Linking to already existing own "
+"rooms"
+
+#~ msgid "Grundinformation:"
+#~ msgstr "Basic information:"
+
+#, php-format
+#~ msgid "Seminar ID: %s"
+#~ msgstr "Seminar ID: %s"
+
+#, php-format
+#~ msgid "Meetings ID: %s"
+#~ msgstr "Meetings ID: %s"
+
+#, php-format
+#~ msgid "User ID: %s"
+#~ msgstr "User ID: %s"
+
+#~ msgid "Details:"
+#~ msgstr "Details:"
+
+#, php-format
+#~ msgid "Browser-Name: %s"
+#~ msgstr "Browser name: %s"
+
+#, php-format
+#~ msgid "Browser-Version: %s"
+#~ msgstr "Browser-Version: %s"
+
+#, php-format
+#~ msgid "Download-Geschw. (Mbps): %s"
+#~ msgstr "Download speed (Mbps): %s"
+
+#, php-format
+#~ msgid "Upload-Geschw. (Mbps): %s"
+#~ msgstr "Upload speed (Mbps): %s"
+
+#, php-format
+#~ msgid "Netzwerk-Typ: %s"
+#~ msgstr "Network type: %s"
+
+#, php-format
+#~ msgid "Betriebssystem (OS): %s"
+#~ msgstr "Operating system (OS): %s"
+
+#, php-format
+#~ msgid "Prozessortyp: %s"
+#~ msgstr "Processor type: %s"
+
+#, php-format
+#~ msgid "Alter des Rechners: %s"
+#~ msgstr "Age of computer: %s"
+
+#, php-format
+#~ msgid "Anzahl der CPU-Kerne: %s"
+#~ msgstr "Number of CPU cores: %s"
+
+#, php-format
+#~ msgid "RAM (Hauptspeicher) GB: %s"
+#~ msgstr "RAM (main storage) GB: %s"
+
+#~ msgid "Beschreibung:"
+#~ msgstr "Description:"
 
 #~ msgid "Der Gast bekommt diesen Namen in der Besprechung zugewiesen."
 #~ msgstr "The guest is assigned this name in the meeting."

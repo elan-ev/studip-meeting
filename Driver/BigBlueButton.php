@@ -39,6 +39,8 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
         $this->salt = $config['api-key'];
         $this->url  = $config['url'];
+        $this->connection_timeout = $config['connection_timeout'];
+        $this->request_timeout =  $config['request_timeout'];
     }
 
     /**
@@ -241,6 +243,15 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     {
         $params['checksum'] = $this->createSignature($endpoint, $params);
         $uri = 'api/'.$endpoint.'?'.$this->buildQueryString($params);
+
+        if (preg_match("/^[\d\.]+$/", $this->connection_timeout)) {
+            $options['connect_timeout'] = floatval($this->connection_timeout);
+        }
+
+        if (preg_match("/^[\d\.]+$/", $this->request_timeout)) {
+            $options['timeout'] = floatval($this->request_timeout);
+        }
+
         try {
             $request = $this->client->request('GET', $this->url .'/'. $uri, $options);
             return $request->getBody(true);
@@ -257,6 +268,8 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             }
             throw new Error(_($error) . ': ' . _($message), $status_code);
         }
+      
+        return $request->getBody(true);
     }
 
     private function createSignature($prefix, array $params = array())
@@ -283,6 +296,8 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             new ConfigOption('url',     dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'URL des BBB-Servers')),
             new ConfigOption('api-key', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Api-Key (Salt)')),
             new ConfigOption('proxy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugriff über Proxy')),
+            new ConfigOption('connection_timeout', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Connection Timeout (e.g. 0.5)')),
+            new ConfigOption('request_timeout', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Request Timeout (e.g. 3.4)')),
             new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmer')),
             new ConfigOption('roomsize-presets', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Raumgrößenvoreinstellungen'), self::getRoomSizePresets()
             ),
