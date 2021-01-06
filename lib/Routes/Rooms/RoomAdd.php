@@ -145,7 +145,7 @@ class RoomAdd extends MeetingsController
                     }
                 } catch (Exception $e) {
                     self::revert_on_fail($meeting, $json['cid']);
-                    throw new Error($e->getMessage(), 404);
+                    throw new Error($e->getMessage(), ($e->getCode() ? $e->getCode() : 404));
                 }
 
                 $meeting->remote_id = $meetingParameters->getRemoteId();
@@ -163,7 +163,7 @@ class RoomAdd extends MeetingsController
             }
 
         } catch (Exception $e) {
-            throw new Error($e->getMessage(), 404);
+            throw new Error($e->getMessage(), ($e->getCode() ? $e->getCode() : 404));
         }
 
         return $this->createResponse([

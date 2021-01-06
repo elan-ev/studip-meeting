@@ -62,7 +62,7 @@ class RecordingDelete extends MeetingsController
             }
 
         } catch (Exception $e) {
-            throw new Error($e->getMessage(), 404);
+            throw new Error($e->getMessage(), ($e->getCode() ? $e->getCode() : 404));
         }
     }
 }

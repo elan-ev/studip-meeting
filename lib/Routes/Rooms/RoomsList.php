@@ -111,12 +111,20 @@ class RoomsList extends MeetingsController
 
                 $course_rooms_list[] = $meeting;
             } catch (Exception $e) {
-                $errors[] = $e->getMessage();
+                $errorCode = 500;
+                if ($e->getCode()) {
+                    $errorCode = $e->getCode();
+                }
+                if (!in_array($e->getMessage(), $errors[$errorCode])) {
+                    $errors[$errorCode][] = $e->getMessage();
+                }
             }
         }
 
         if (!empty($errors)) {
-            throw new Error(implode ("\n", $errors), 500);
+            foreach ($errors as $error_code => $error_messages) {
+                throw new Error(implode ("\n", $error_messages), $error_code);
+            }
         } else {
             return $this->createResponse($course_rooms_list, $response);
         }

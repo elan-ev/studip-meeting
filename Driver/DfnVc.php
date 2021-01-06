@@ -5,6 +5,8 @@ namespace ElanEv\Driver;
 use MeetingPlugin;
 use GuzzleHttp\ClientInterface;
 use Throwable;
+use GuzzleHttp\Exception\BadResponseException;
+use Meetings\Errors\Error;
 
 /**
  * DFN video conference driver implementation.
@@ -204,9 +206,22 @@ class DfnVc implements DriverInterface
 
     private function performRequest(array $params = array())
     {
-        $request = $this->client->request('GET', $this->url . '/lmsapi/xml?'.$this->buildQueryString($params));
-
-        return $request->getBody(true);
+        try {
+            $request = $this->client->request('GET', $this->url . '/lmsapi/xml?'.$this->buildQueryString($params));
+            return $request->getBody(true);
+        } catch (BadResponseException $e) {
+            $response = $e->getResponse()->getBody(true);
+            $xml = new \SimpleXMLElement($response);
+            $status_code = 500;
+            $error = _('Internal Error');
+            $message = _('Please contact a system administrator!');
+            if ($xml instanceof \SimpleXMLElement) {
+                $message = (string) $xml->message ? (string) $xml->message : $message;
+                $error = (string) $xml->error ? (string) $xml->error : $error;
+                $status_code = (string) $xml->status ? (string) $xml->status : $status_code;
+            }
+            throw new Error(_($error) . ': ' . _($message), $status_code);
+        }
     }
 
     private function buildQueryString($params)
