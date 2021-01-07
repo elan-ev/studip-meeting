@@ -585,7 +585,7 @@ export default {
                                     break;
                                     case 'number':
                                         var value = parseInt(this.room['features'][config_feature.name]);
-                                        if ((typeof value != 'number') || (typeof value == 'number' && value < 1)) {
+                                        if ((typeof value != 'number') || (typeof value == 'number' && (value < 1 || isNaN(value)))) {
                                             invalidInputs.push(config_feature.display_name)
                                             isValid = false;
                                         } else { // in case it is validated, make sure the value is a correct integer! e.g. without leading zeros
@@ -612,6 +612,8 @@ export default {
                 this.$set(this.modal_message, "type" , "error");
                 setTimeout(() => {
                     $('.messagebox_error').css('white-space', 'pre-line');
+                    $('.messagebox_error div:not(:first-child)').css('position', 'relative'); // not important
+                    $('.messagebox_error div:not(:first-child)').css('top', '-25px'); // not important
                     this.$set(this.modal_message, "text" , `Bitte beachten Sie die folgenden Felder: \n(${invalid_inputs_str})`.toLocaleString());
                 }, 150);
                 this.$set(this.modal_message, "text" , 'Es gibt fehler!'.toLocaleString());
