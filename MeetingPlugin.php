@@ -326,7 +326,7 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
      * returns the series id of the course if opencast has been set for the course
      *
      * @param  string  $cid course ID with default null
-     * @return bool | array | string
+     * @return bool | array | string(empty - in case opencast is not activated for this course)
     */
     public static function checkOpenCast($cid = null) {
         $opencast_plugin = PluginEngine::getPlugin("OpenCast");
@@ -344,7 +344,7 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
                         return false;
                     }
                 } else {
-                    return "not active";
+                    return ""; //because of checkers along the flow (empty string is a sign of Opencast not activated!)
                 }
             }
             return true;

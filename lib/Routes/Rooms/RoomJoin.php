@@ -18,6 +18,7 @@ use ElanEv\Model\Join;
 use ElanEv\Model\Helper;
 use ElanEv\Driver\DriverFactory;
 use ElanEv\Model\Driver;
+use MeetingPlugin;
 
 class RoomJoin extends MeetingsController
 {
@@ -55,9 +56,24 @@ class RoomJoin extends MeetingsController
                 $hostUrl = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost()
                     .($request->getUri()->getPort() ? ':' . $request->getUri()->getPort() : '');
                 $features['logoutURL'] =  $hostUrl . \PluginEngine::getLink('meetingplugin', array('cid' => $cid), 'index');
-                $meeting->features = json_encode($features);
-                $meeting->store();
             }
+            
+            //update/removing opencast series id if the OpenCast is not activated in the course or it has been changed unnoticed!
+            if (isset($features['meta_opencast-dc-isPartOf']) && !empty($features['meta_opencast-dc-isPartOf'])) {
+                if (isset($features['record']) && $features['record'] == true
+                    && Driver::getConfigValueByDriver($meeting->driver, 'opencast') == 1) {
+                    $current_series_id = MeetingPlugin::checkOpenCast($cid);
+                    if (empty($current_series_id)) { // Opencast is not activated for this course
+                        unset($features['meta_opencast-dc-isPartOf']);
+                    } else if ($current_series_id != $features['meta_opencast-dc-isPartOf']) {
+                        $features['meta_opencast-dc-isPartOf'] = $current_series_id;
+                    }
+                } else {
+                    unset($features['meta_opencast-dc-isPartOf']);
+                }
+            }
+            $meeting->features = json_encode($features);
+            $meeting->store();
         }
 
         $driver = $driver_factory->getDriver($meeting->driver, $meeting->server_index);
