@@ -13,7 +13,7 @@ import {
 } from "./mutations.type";
 
 const initialState = {
-    recording_list: null,
+    recording_list: {},
     recording: {}
 };
 
@@ -30,7 +30,7 @@ export const state = { ...initialState };
 
 export const actions = {
     async [RECORDING_LIST](context, room_id) {
-        context.commit(RECORDING_LIST_SET, null);
+        context.commit(RECORDING_LIST_SET, {});
 
         return ApiService.get('rooms/' + CID + '/' + room_id + '/recordings')
             .then(({ data }) => {

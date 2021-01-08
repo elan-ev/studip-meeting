@@ -3,7 +3,7 @@
          <MeetingDialog :title="$gettext('Aufzeichnungen für Raum') + ' ' +  room.name" @close="$emit('cancel')">
             <template v-slot:content>
                 <MessageBox type="info"
-                    v-if="this.recording_list == null"
+                    v-if="Object.keys(recording_list).length == 0"
                 >
                     <translate>Keine Aufzeichnungen für Raum "{{ room.name }}" vorhanden</translate>
                 </MessageBox>

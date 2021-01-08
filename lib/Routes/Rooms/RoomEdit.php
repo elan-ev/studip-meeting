@@ -83,7 +83,7 @@ class RoomEdit extends MeetingsController
                             $series_id = MeetingPlugin::checkOpenCast($json['cid']);
                             if ($series_id) {
                                 $opencast_series_id = $series_id;
-                            } else {
+                            } else if ($series_id === false) {
                                 $message = [
                                     'text' => I18N::_('Opencast Series id kann nicht gefunden werden!'),
                                     'type' => 'error'
@@ -91,6 +91,8 @@ class RoomEdit extends MeetingsController
                                 return $this->createResponse([
                                     'message'=> $message,
                                 ], $response);
+                            } else if ($series_id === '') {
+                                //TODO: handel if the opencast is not activated!
                             }
                         }
                     }
