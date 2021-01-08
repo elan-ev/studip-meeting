@@ -10,8 +10,9 @@ use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use ElanEv\Model\Driver;
 use ElanEv\Model\CourseConfig;
-use MeetingPlugin;
 use Meetings\Models\I18N;
+use MeetingPlugin;
+
 class ConfigListCourse extends MeetingsController
 {
     use MeetingsTrait;
