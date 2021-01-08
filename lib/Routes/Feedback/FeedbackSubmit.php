@@ -14,6 +14,7 @@ use Meetings\Models\I18N;
 
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
+use ElanEv\Model\Driver;
 
 class FeedbackSubmit extends MeetingsController
 {
@@ -34,7 +35,9 @@ class FeedbackSubmit extends MeetingsController
         global $UNI_CONTACT, $user;
         $current_user = $user;
         try {
-            $to = filter_var($UNI_CONTACT, FILTER_VALIDATE_EMAIL);
+            $feedback_contact_address = Driver::getGeneralConfigValue('feedback_contact_address');
+            $feedback_contact_address = ($feedback_contact_address ?: $UNI_CONTACT);
+            $to = filter_var($feedback_contact_address, FILTER_VALIDATE_EMAIL);
             $room_id = filter_var($json['room_id'], FILTER_SANITIZE_NUMBER_INT);
             $cid = filter_var($json['cid'], FILTER_SANITIZE_STRING);
             $meetingCourse = new MeetingCourse([$room_id, $cid ]);

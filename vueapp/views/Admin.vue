@@ -18,6 +18,15 @@
         </MessageBox>
 
         <form class="default" v-if="drivers" @submit.prevent>
+            <fieldset>
+                <legend v-translate>
+                    Allgemeine Konfiguration
+                </legend>
+                <label>
+                    <translate>Feedback Support-Adresse</translate>
+                    <input type="text" v-model.trim="general_config['feedback_contact_address']">
+                </label>
+            </fieldset>
             <fieldset v-for="(driver, driver_name) in drivers" :key="driver_name">
                 <legend>
                     {{ driver.title }}
@@ -171,12 +180,12 @@ export default {
     },
 
     computed: {
-        ...mapGetters(['config', 'drivers'])
+        ...mapGetters(['config', 'drivers', 'general_config'])
     },
 
     methods: {
         storeConfig() {
-            this.$store.dispatch(CONFIG_CREATE, this.config)
+            this.$store.dispatch(CONFIG_CREATE, {'config': this.config, 'general_config': this.general_config})
                 .then(({ data }) => {
                     this.message = data.message;
                     this.$store.commit(CONFIG_SET, data.config);
@@ -279,6 +288,12 @@ export default {
 
     watch: {
         config: {
+            handler: function() {
+                this.changes_made = true;
+            },
+            deep: true
+        },
+        general_config: {
             handler: function() {
                 this.changes_made = true;
             },

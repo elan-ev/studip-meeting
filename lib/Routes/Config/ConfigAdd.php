@@ -44,6 +44,15 @@ class ConfigAdd extends MeetingsController
                 }
             }
 
+            if (isset($json['general_config']) && !empty($json['general_config'])) {
+                if (isset($json['general_config']['feedback_contact_address']) && !empty($json['general_config']['feedback_contact_address'])
+                    && !filter_var($json['general_config']['feedback_contact_address'], FILTER_VALIDATE_EMAIL)) {
+                    $res_message_text[] = I18N::_('Die Adresse des Feedback-Supports muss eine gültige E-Mail-Adresse sein');
+                    $json['general_config']['feedback_contact_address'] = '';
+                }
+                Driver::setGeneralConfig($json['general_config']);
+            }
+
             $message = [
                 'text' => ((!empty($res_message_text)) ? $res_message_text : I18N::_('Konfiguration gespeichert.')),
                 'type' => ((!empty($res_message_text)) ? 'error' : 'success')

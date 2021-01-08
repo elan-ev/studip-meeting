@@ -44,6 +44,9 @@ const initialState = {
         "display": {}
     },
     course_groups: {
+    },
+    general_config: {
+        
     }
 };
 
@@ -59,6 +62,9 @@ const getters = {
     },
     course_groups(state) {
         return state.course_groups;
+    },
+    general_config() {
+        return state.general_config;
     }
 };
 
@@ -103,7 +109,8 @@ export const actions = {
 
     async [CONFIG_CREATE](context, params) {
         return await ApiService.post('config', {
-            config: params
+            config: params.config,
+            general_config: params.general_config
         });
     }
 };
@@ -116,6 +123,9 @@ export const mutations = {
         }
         if (data.drivers) {
             state.drivers = data.drivers;
+        }
+        if (data.general_config) {
+            state.general_config = data.general_config;
         }
     },
 
