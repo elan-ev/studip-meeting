@@ -128,7 +128,6 @@ export default {
                 if (this.new_folder.name != '') {
                     text = 'Bitte wählen Sie einen Ordner Typ aus'.toLocaleString();
                 }
-                $('section.modal-body').animate({ scrollTop: 0}, 'slow');
                 this.$set(this.modal_message, "type" , "error");
                 this.$set(this.modal_message, "text" , text);
                 return;
@@ -140,7 +139,6 @@ export default {
             .then(({ data }) => {
                 this.message = data.message;
                 if (this.message.type == 'error') {
-                    $('section.modal-body').animate({ scrollTop: 0}, 'slow');
                     this.$set(this.modal_message, "type" , "error");
                     this.$set(this.modal_message, "text" , this.message.text);
                 } else {

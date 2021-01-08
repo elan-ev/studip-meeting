@@ -543,7 +543,6 @@ export default {
                 var maxAllowedParticipants = this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'];
                 this.modal_message.type = 'error';
                 this.modal_message.text = `Teilnehmerzahl darf ${maxAllowedParticipants} nicht überschreiten`.toLocaleString();
-                $('section.modal-body').animate({ scrollTop: 0}, 'slow');
                 isValid = false;
 
             }
@@ -571,7 +570,6 @@ export default {
                 .then(({ data }) => {
                     this.message = data.message;
                     if (this.message.type == 'error') {
-                        $('section.modal-body').animate({ scrollTop: 0}, 'slow');
                         this.$set(this.modal_message, "type" , "error");
                         this.$set(this.modal_message, "text" , this.message.text);
                     } else {
@@ -582,7 +580,6 @@ export default {
                     this.$emit('cancel');
                 });
             } else {
-                $('section.modal-body').animate({ scrollTop: 0}, 'slow');
                 var empty_fields_str = empty_fields_arr.join('), (');
                 this.$set(this.modal_message, "type" , "error");
                 this.$set(this.modal_message, "text" , `Bitte füllen Sie folgende Felder aus: (${empty_fields_str})`.toLocaleString());
@@ -623,7 +620,6 @@ export default {
                 if (data.message.type == 'success') {
                     this.$emit('done', { message: this.message });
                 } else {
-                    $('section.modal-body').animate({ scrollTop: 0}, 'slow');
                     this.modal_message = data.message;
                 }
             }).catch (({error}) => {

@@ -142,6 +142,13 @@ export default {
                 $('#' + self.id).dialog('destroy');
             }
             $('#' + this.id).dialog(options);
+        },
+        scrollToTop() {
+            if ($('#' + this.id).find('.messagebox.messagebox_error:not(.shown)').length) {
+                $('#' + this.id).animate({ scrollTop: 0}, 'slow', () => {
+                    $('#' + this.id).find('.messagebox.messagebox_error').addClass('shown');
+                });
+            }
         }
     },
     mounted () {
@@ -149,6 +156,7 @@ export default {
     }, 
     updated () {
         this.showDialog();
+        this.scrollToTop();
     }
 }
 </script>
