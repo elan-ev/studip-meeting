@@ -12,7 +12,6 @@ class InvitationsLink extends \SimpleORMap
             'class_name' => 'ElanEv\Model\Meeting',
             'foreign_key' => 'meeting_id',
         );
-
         parent::configure($config);
     }
 }

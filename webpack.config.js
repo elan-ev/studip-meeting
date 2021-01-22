@@ -52,6 +52,12 @@ module.exports = {
             minify: false,
             filename: '../app/views/admin/index.php'
         }),
+        new HtmlWebpackPlugin({
+            template: 'vueapp/lobby_index.php',
+            inject: false,
+            minify: false,
+            filename: '../app/views/room/lobby.php'
+        }),
     ],
     resolve: {
         extensions: ['.vue', '.js'],

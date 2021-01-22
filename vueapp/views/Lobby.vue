@@ -24,7 +24,7 @@ import {
   CONFIG_CREATE, CONFIG_DELETE
 } from "@/store/actions.type";
 
-import {ii
+import {
   CONFIG_SET,
 } from "@/store/mutations.type";
 
