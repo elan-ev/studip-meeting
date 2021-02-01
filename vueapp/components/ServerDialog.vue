@@ -6,7 +6,7 @@
                     {{ dialog_message.text }}
                 </MessageBox>
 
-                <form class="default" style="position: relative">
+                <form class="default" style="position: relative" @submit="edit">
                     <div v-for="(value, key) in driver.config" :key="key">
                         <label v-if="value.name != 'enable' && value.name != 'roomsize-presets'" class="large">
                             {{ value.display_name }}
@@ -79,6 +79,7 @@ export default {
             this.dialogClose();
             this.$emit('close');
         },
+
         edit() {
             if (this.validateForm()) {
                 this.dialogClose();
@@ -93,6 +94,7 @@ export default {
                 }
             }
         },
+
         validateForm() {
             var isValid = true;
             if (!this.validateRoomSizeNumberInputs()) {
@@ -100,6 +102,7 @@ export default {
             }
             return isValid;
         },
+
         validateRoomSizeNumberInputs() {
             var cmp = this.$children.find(child => { return child.$options.name === "ServerRoomSize"; });
             let validity = true;
