@@ -277,7 +277,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             }
             throw new Error(_($error) . ': ' . _($message), $status_code);
         }
-      
+
         return $request->getBody(true);
     }
 
@@ -299,7 +299,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     /**
      * {@inheritDoc}
      */
-    public function getConfigOptions()
+    public static function getConfigOptions()
     {
         return array(
             new ConfigOption('url',     dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'URL des BBB-Servers')),
@@ -313,7 +313,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         );
     }
 
-    private function getRoomSizePresets() {
+    private static function getRoomSizePresets() {
         return array(
             new ConfigOption('small', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Kleiner Raum'), self::getRoomSizeFeature(0)),
             new ConfigOption('medium', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Mittlerer Raum'), self::getRoomSizeFeature(50)),
@@ -321,7 +321,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         );
     }
 
-    private function getRoomSizeFeature($minParticipants = 0) {
+    private static function getRoomSizeFeature($minParticipants = 0) {
         $roomsize_features = array_filter(self::getCreateFeatures(), function ($configOption) {
             return in_array($configOption->getName(),
                             [
@@ -339,7 +339,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     /**
      * {@inheritDoc}
      */
-    public function getCreateFeatures()
+    public static function getCreateFeatures()
     {
         $res['guestPolicy'] =
             new ConfigOption('guestPolicy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugang via Link'),
@@ -373,7 +373,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     /**
      * {@inheritDoc}
      */
-    public function getRecordFeature()
+    public static function getRecordFeature()
     {
         $res = [];
         if (Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'record')) { // dependet on config record
@@ -390,7 +390,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     /**
      * {@inheritDoc}
      */
-    public function useOpenCastForRecording()
+    public static function useOpenCastForRecording()
     {
         $res = false;
         !MeetingPlugin::checkOpenCast() ?: $res = new ConfigOption('opencast', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Opencast für Aufzeichnungen verwenden'), false);

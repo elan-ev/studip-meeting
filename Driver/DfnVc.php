@@ -373,7 +373,7 @@ class DfnVc implements DriverInterface
     /**
      * {@inheritDoc}
      */
-    public function getConfigOptions()
+    public static function getConfigOptions()
     {
         return array(
             new ConfigOption('url', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'API-Endpoint'), 'https://connect.vc.dfn.de'),
@@ -385,7 +385,7 @@ class DfnVc implements DriverInterface
     /**
      * {@inheritDoc}
      */
-    public function getCreateFeatures()
+    public static function getCreateFeatures()
     {
         return false;
     }

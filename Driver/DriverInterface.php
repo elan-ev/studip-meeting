@@ -48,7 +48,7 @@ interface DriverInterface
      *
      * @return ConfigOption[] list of ConfigOption-objects
      */
-    public function getConfigOptions();
+    public static function getConfigOptions();
 
     /**
      * Return true when a meeting is running
@@ -71,12 +71,12 @@ interface DriverInterface
      *
      * @return ConfigOption[] list of ConfigOption-objects
      */
-    public function getCreateFeatures();
+    public static function getCreateFeatures();
 
     /**
      * Makes an test API call in order to check if the server is correctly intialized
      *
-     * @return boolean true if connection is made and server is accessible 
+     * @return boolean true if connection is made and server is accessible
      */
     public function checkServer();
 }

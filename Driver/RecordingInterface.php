@@ -20,7 +20,7 @@ interface RecordingInterface
     public function getRecordings(MeetingParameters $parameters);
 
     /**
-     * Deletes single or multi recordings 
+     * Deletes single or multi recordings
      *
      * @param  array | string  $recordID recording ID
      * @return bool
@@ -32,13 +32,13 @@ interface RecordingInterface
      *
      * @return array | bool opencast related configs list, false if OpenCast is not there
      */
-    public function useOpenCastForRecording();
+    public static function useOpenCastForRecording();
 
 
     /**
      * Returns recording configOptions required when creating the room
      *
-     * @return ConfigOption a single configOption record feature 
+     * @return ConfigOption a single configOption record feature
      */
-    public function getRecordFeature();
+    public static function getRecordFeature();
 }
