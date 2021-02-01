@@ -77,6 +77,15 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             $params = array_merge($params, $features);
         }
 
+        //additional information using meta_
+        if ($manifest = MeetingPlugin::getMeetingManifestInfo()) {
+            !isset($manifest["pluginname"]) ?: $params['meta_bbb-origin'] = 'Stud.IP - ' . $manifest["pluginname"] . 
+                                                (strpos(strtolower($manifest["pluginname"]), 'plugin') !== FALSE ?: ' Plugin');
+            !isset($manifest['version']) ?: $params['meta_bbb-origin-version'] = $manifest['version'];
+        }
+        !$GLOBALS['ABSOLUTE_URI_STUDIP'] ?: $params['meta_bbb-origin-server-name'] = $GLOBALS['ABSOLUTE_URI_STUDIP'];
+
+
         $options = $this->prepareSlides($parameters->getMeetingId());
         $response = $this->performRequest('create', $params, $options);
         $xml = new \SimpleXMLElement($response);

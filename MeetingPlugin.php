@@ -385,4 +385,20 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
 
         return $metadata;
     }
+
+    /**
+     * getMeetingManifestInfo
+     * 
+     * get the plugin manifest from PluginManager getPluginManifest method
+     * 
+     * @return Array $metadata the manifest metadata of this plugin
+     */
+    public static function getMeetingManifestInfo() 
+    {
+        $plugin_manager = \PluginManager::getInstance();
+        $this_plugin = $plugin_manager->getPluginInfo(__CLASS__);
+        $plugin_path = \get_config('PLUGINS_PATH') . '/' .$this_plugin['path'];
+        $manifest = $plugin_manager->getPluginManifest($plugin_path);
+        return $manifest;
+    }
 }
