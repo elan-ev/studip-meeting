@@ -47,7 +47,8 @@ class Driver
 
             if ($title && $config_options) {
                 $drivers[$title] = array(
-                    'title'     => $title,
+                    'title'        => $title,
+                    'display_name' => $title,
                     'config'    => $toArray ? self::convertDriverConfigToArray($config_options) : $config_options,
                 );
 
@@ -88,11 +89,15 @@ class Driver
             $class = 'ElanEv\\Driver\\' . $driver_name;
 
             if (!isset(self::$config[$driver_name]['title'])) {
-                self::$config[$driver_name]['title'] = substr(basename($filename), 0, -4);
+                self::$config[$driver_name]['title'] = $driver_name;
             }
 
             if (!isset(self::$config[$driver_name]['config'])) {
                 self::$config[$driver_name]['config'] = $class::getConfigOptions();
+            }
+
+            if (!isset(self::$config[$driver_name]['display_name'])) {
+                self::$config[$driver_name]['display_name'] = $driver_name;
             }
 
             if (in_array('ElanEv\Driver\DriverInterface', class_implements($class)) !== false) {

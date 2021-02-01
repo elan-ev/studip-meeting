@@ -192,8 +192,7 @@ export default {
         },
 
         deleteServer(driver_name, index) {
-            //this.changes_made = true;
-            this.config[driver_name]['servers'].splice(index, 1);
+            this.$delete(this.config[driver_name]['servers'], index);
         },
 
         clearServer(driver_name) {
@@ -219,7 +218,7 @@ export default {
             let server_object = params.server;
 
             if (!this.config[driver_name]['servers']) {
-                this.config[driver_name]['servers'] = {}
+                this.$set(this.config[driver_name], 'servers', []);
             }
 
             var index = 0;
