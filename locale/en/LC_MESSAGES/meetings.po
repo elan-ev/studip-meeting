@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-06 15:29+0100\n"
+"POT-Creation-Date: 2021-02-01 13:57+0100\n"
 "PO-Revision-Date: 2020-12-09 14:05+0100\n"
 "Last-Translator: April Suddendorf, 2020\n"
 "Language-Team: English (https://www.transifex.com/uol-it/teams/52597/en/)\n"
@@ -18,15 +18,15 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.4.1\n"
 
-#: vueapp/components/MeetingAdd.vue:65
+#: vueapp/components/MeetingAdd.vue:55 vueapp/components/MeetingAdd.vue:52
 msgid "(max. %{ count } Teilnehmer)"
 msgstr "(max. %{ count } participants)"
 
-#: vueapp/components/MeetingAdd.vue:103
+#: vueapp/components/MeetingAdd.vue:93 vueapp/components/MeetingAdd.vue:90
 msgid "{{ fvalue }}"
 msgstr "{{ fvalue }}"
 
-#: vueapp/components/MeetingAdd.vue:111
+#: vueapp/components/MeetingAdd.vue:101 vueapp/components/MeetingAdd.vue:98
 msgid "&nbsp; (Max. Limit: %{ count })"
 msgstr "&nbsp; (Max. Limit: %{ count })"
 
@@ -34,76 +34,94 @@ msgstr "&nbsp; (Max. Limit: %{ count })"
 msgid "%{ count } Teilnehmende aktiv"
 msgstr "%{ count } active participants"
 
-#: vueapp/components/MeetingAdd.vue:322
-#: vueapp/components/MeetingFeedback.vue:83
-#: vueapp/components/ServerDialog.vue:31 app/views/index/config.php:32
+#: vueapp/views/Lobby.vue:4
+msgid ""
+"<img :src=\"loadingURL\">\n"
+"      Sie treten dem Meeting automatisch bei, sobald es begonnen hat.\n"
+"    </img>"
+msgstr ""
+
+#: vueapp/components/MeetingAdd.vue:312 vueapp/components/MeetingAdd.vue:9
+#: vueapp/components/MeetingFeedback.vue:74
+#: vueapp/components/MeetingFeedback.vue:5
+#: vueapp/components/ServerDialog.vue:25 vueapp/components/ServerDialog.vue:5
+#: app/views/index/config.php:32
 msgid "Abbrechen"
 msgstr "Cancel"
 
-#: vueapp/components/MeetingRecordings.vue:33 vueapp/views/Admin.vue:60
+#: vueapp/components/MeetingRecordings.vue:23
+#: vueapp/components/MeetingRecordings.vue:20 vueapp/views/Admin.vue:53
 #: app/controllers/index.php:198
 msgid "Aktionen"
 msgstr "Actions"
 
-#: vueapp/components/MeetingAdd.vue:211
+#: vueapp/components/MeetingAdd.vue:201 vueapp/components/MeetingAdd.vue:198
 msgid "Aktuell ausgewählter Ordner:"
 msgstr "Currently selected folder:"
 
-#: vueapp/components/MeetingAdd.vue:301
+#: vueapp/components/MeetingAdd.vue:291 vueapp/components/MeetingAdd.vue:288
 msgid "Alle Dateien anzeigen"
 msgstr "Show all files"
 
-#: vueapp/components/MeetingAdd.vue:82
+#: vueapp/components/MeetingAdd.vue:72 vueapp/components/MeetingAdd.vue:69
 msgid "Alle Teilnehmenden haben Moderationsrechte"
 msgstr "All participants have moderation rights"
 
-#: vueapp/components/MeetingAdd.vue:525
+#: vueapp/components/MeetingAdd.vue:503
 msgid "Als aktueller Ordner auswählen"
 msgstr "Select folder"
 
-#: vueapp/components/MeetingFeedback.vue:64
+#: vueapp/components/MeetingFeedback.vue:55
+#: vueapp/components/MeetingFeedback.vue:52
 msgid "Alter des Rechners"
 msgstr "Age of computer"
 
-#: vueapp/components/MeetingAdd.vue:314
+#: vueapp/components/MeetingAdd.vue:304 vueapp/components/MeetingAdd.vue:1
 msgid "Änderungen speichern"
 msgstr "Save changes"
 
-#: vueapp/components/MeetingFeedback.vue:68
+#: vueapp/components/MeetingFeedback.vue:59
+#: vueapp/components/MeetingFeedback.vue:56
 msgid "Anzahl der CPU-Kerne"
 msgstr "Number of CPU cores"
 
-#: vueapp/views/Admin.vue:31
+#: vueapp/views/Admin.vue:24
 msgid "Anzeigename"
 msgstr "Display name"
 
-#: vueapp/components/MeetingAdd.vue:143
+#: vueapp/components/MeetingAdd.vue:133 vueapp/components/MeetingAdd.vue:130
 msgid "Aufzeichnung"
 msgstr "Recording"
 
-#: vueapp/components/MeetingRecordings.vue:43
-#: vueapp/components/MeetingRecordings.vue:48
+#: vueapp/components/MeetingRecordings.vue:33
+#: vueapp/components/MeetingRecordings.vue:38
+#: vueapp/components/MeetingRecordings.vue:30
+#: vueapp/components/MeetingRecordings.vue:35
 msgid "Aufzeichnung ansehen"
 msgstr "View recording"
 
-#: vueapp/components/MeetingRecordings.vue:8
-msgid "Aufzeichnungen für Raum {{ room.name }}"
+#: vueapp/components/MeetingRecordings.vue:35
+#, fuzzy
+msgid "Aufzeichnungen für Raum"
 msgstr "Recordings for room {{ room.name }}"
 
-#: vueapp/components/MeetingAdd.vue:200
+#: vueapp/components/MeetingAdd.vue:190 vueapp/components/MeetingAdd.vue:187
 msgid "Automatisches hochladen von Materialien"
 msgstr "Automatically upload materials"
 
-#: vueapp/components/MeetingAddNewFolder.vue:28
-#: vueapp/components/MeetingFeedback.vue:20
+#: vueapp/components/MeetingAddNewFolder.vue:18
+#: vueapp/components/MeetingAddNewFolder.vue:15
+#: vueapp/components/MeetingFeedback.vue:10
+#: vueapp/components/MeetingFeedback.vue:7
 msgid "Beschreibung"
 msgstr "Description"
 
-#: vueapp/components/MeetingAdd.vue:152
+#: vueapp/components/MeetingAdd.vue:142 vueapp/components/MeetingAdd.vue:139
 msgid "beta"
 msgstr "beta"
 
-#: vueapp/components/MeetingFeedback.vue:56
+#: vueapp/components/MeetingFeedback.vue:47
+#: vueapp/components/MeetingFeedback.vue:44
 msgid "Betriebssystem (OS)"
 msgstr "Operating system (OS)"
 
@@ -119,23 +137,31 @@ msgstr ""
 msgid "Bitte beachten Sie, dass dieser Raum aufgezeichnet wird!"
 msgstr "Please note that this room is being recorded!"
 
-#: vueapp/components/MeetingGuest.vue:92
+#: vueapp/components/MeetingFeedback.vue:14
+#: vueapp/components/MeetingFeedback.vue:11
+#, fuzzy
+msgid "Bitte beschreiben Sie das aufgetretene Problem"
+msgstr "Please note that this room is being recorded!"
+
+#: vueapp/components/MeetingGuest.vue:70
 msgid "Bitte geben sie diesen Link dem Gast."
 msgstr "Please give this link to the guest."
 
-#: vueapp/components/MeetingAdd.vue:44
+#: vueapp/components/MeetingAdd.vue:34 vueapp/components/MeetingAdd.vue:31
 msgid "Bitte wählen Sie ein Konferenzsystem aus"
 msgstr "Please select a conference system"
 
-#: vueapp/components/MeetingAdd.vue:60
+#: vueapp/components/MeetingAdd.vue:50 vueapp/components/MeetingAdd.vue:47
 msgid "Bitte wählen Sie einen Server aus"
 msgstr "Please select a server"
 
-#: vueapp/components/MeetingFeedback.vue:32
+#: vueapp/components/MeetingFeedback.vue:23
+#: vueapp/components/MeetingFeedback.vue:20
 msgid "Browser-Name"
 msgstr "Browser name"
 
-#: vueapp/components/MeetingFeedback.vue:36
+#: vueapp/components/MeetingFeedback.vue:27
+#: vueapp/components/MeetingFeedback.vue:24
 msgid "Browser-Version"
 msgstr "Browser version"
 
@@ -145,6 +171,10 @@ msgid ""
 "                        {{ group_name }}"
 msgstr "This meetings belongs to the group {{ group_name }}"
 
+#: vueapp/views/Lobby.vue:2
+msgid "Das Meeting hat noch nicht begonnen"
+msgstr ""
+
 #: vueapp/components/MeetingComponent.vue:177
 msgid "Das Meeting ist für die Teilnehmer sichtbar"
 msgstr "The meeting is visible to the participants"
@@ -153,11 +183,12 @@ msgstr "The meeting is visible to the participants"
 msgid "Das Meeting ist für die Teilnehmer unsichtbar"
 msgstr "The meeting is not visible to the participants"
 
-#: vueapp/components/MeetingRecordings.vue:32
+#: vueapp/components/MeetingRecordings.vue:22
+#: vueapp/components/MeetingRecordings.vue:19
 msgid "Datum"
 msgstr "Date"
 
-#: vueapp/components/MeetingGuest.vue:43
+#: vueapp/components/MeetingGuest.vue:33 vueapp/components/MeetingGuest.vue:9
 msgid "Dialog schließen"
 msgstr "Close dialogue"
 
@@ -165,11 +196,13 @@ msgstr "Close dialogue"
 msgid "Die vorhandenen Aufzeichnungen"
 msgstr "The existing recordings"
 
-#: vueapp/components/MeetingRecordings.vue:22
+#: vueapp/components/MeetingRecordings.vue:12
+#: vueapp/components/MeetingRecordings.vue:9
 msgid "Die vorhandenen Aufzeichnungen auf Opencast"
 msgstr "The existing recording on Opencast"
 
-#: vueapp/components/MeetingAdd.vue:275 vueapp/components/MeetingAdd.vue:285
+#: vueapp/components/MeetingAdd.vue:265 vueapp/components/MeetingAdd.vue:275
+#: vueapp/components/MeetingAdd.vue:262 vueapp/components/MeetingAdd.vue:272
 #: vueapp/components/MeetingAdd.vue:32 vueapp/components/MeetingAdd.vue:3
 msgid "Dieser Ordner ist leer"
 msgstr "This folder is empty"
@@ -186,28 +219,31 @@ msgstr ""
 msgid "Dieser Raum wird momentan aufgezeichnet!"
 msgstr "This room is currently being recorded!"
 
-#: vueapp/components/MeetingFeedback.vue:40
+#: vueapp/components/MeetingFeedback.vue:31
+#: vueapp/components/MeetingFeedback.vue:28
 msgid "Download-Geschw. (Mbps)"
 msgstr "Download speed (Mbps)"
 
 #: vueapp/components/MeetingComponent.vue:103
-#: vueapp/components/MeetingGuest.vue:39
+#: vueapp/components/MeetingGuest.vue:29 vueapp/components/MeetingGuest.vue:5
 msgid "Einladungslink erstellen"
 msgstr "Create invitation link"
 
-#: vueapp/components/MeetingFeedback.vue:79
+#: vueapp/components/MeetingFeedback.vue:70
+#: vueapp/components/MeetingFeedback.vue:1
 msgid "Einsenden"
 msgstr "Submit"
 
-#: vueapp/views/Admin.vue:101
+#: vueapp/views/Admin.vue:97
 msgid "Einstellungen speichern"
 msgstr "Save settings"
 
-#: vueapp/components/MeetingAddNewFolder.vue:51
+#: vueapp/components/MeetingAddNewFolder.vue:42
+#: vueapp/components/MeetingAddNewFolder.vue:1
 msgid "Erstellen"
 msgstr "Create"
 
-#: vueapp/components/MeetingAdd.vue:17
+#: vueapp/components/MeetingAdd.vue:7 vueapp/components/MeetingAdd.vue:4
 msgid ""
 "Es gibt keine Server für dieses Konferenzsystem, bitte wählen Sie ein "
 "anderes Konferenzsystem"
@@ -223,38 +259,42 @@ msgstr ""
 "A video conferencing system has not yet been configured yet.\n"
 "\t\tPlease contact a system administrator!"
 
-#: vueapp/components/MeetingFeedback.vue:8
-msgid "Feedback für Raum {{ room.name }}"
+#: vueapp/components/MeetingFeedback.vue:25
+#, fuzzy
+msgid "Feedback für Raum"
 msgstr "Feedback for room {{ room.name }}"
 
-#: vueapp/components/MeetingFeedback.vue:28
+#: vueapp/components/MeetingFeedback.vue:19
+#: vueapp/components/MeetingFeedback.vue:16
 msgid "Feedback Informationen"
 msgstr "Feedback information"
 
-#: vueapp/views/Admin.vue:48
+#: vueapp/views/Admin.vue:41
 msgid "Folgende Server werden verwendet"
 msgstr "Following servers are being used"
 
-#: vueapp/components/MeetingGuest.vue:8
+#: vueapp/components/MeetingGuest.vue:22
 msgid "Gast einladen"
 msgstr "Invite guest"
 
-#: vueapp/components/MeetingAdd.vue:178
+#: vueapp/components/MeetingAdd.vue:168 vueapp/components/MeetingAdd.vue:165
 msgid "Gruppenraum"
 msgstr "Group room"
 
-#: vueapp/views/Admin.vue:14
+#: vueapp/views/Admin.vue:7
 msgid "Ihre Änderungen sind noch nicht gespeichert!"
 msgstr "Your changes have not been saved yet!"
 
-#: vueapp/components/MeetingAdd.vue:267 vueapp/components/MeetingAdd.vue:24
+#: vueapp/components/MeetingAdd.vue:257 vueapp/components/MeetingAdd.vue:254
+#: vueapp/components/MeetingAdd.vue:24
+#, fuzzy
 msgid ""
 "In diesem Ordner befinden sich %{ count } Dateien <br>\n"
-"                                                            die aus Gründen "
-"der Übersichtlichkeit ausgeblendet wurden. <br>\n"
-"                                                            Wählen sie "
-"\"Alle Dateien anzeigen\" um diese Dateien aufzulisten\n"
-"                                                        </br></br>"
+"                                                    die aus Gründen der "
+"Übersichtlichkeit ausgeblendet wurden. <br>\n"
+"                                                    Wählen sie \"Alle "
+"Dateien anzeigen\" um diese Dateien aufzulisten\n"
+"                                                </br></br>"
 msgstr ""
 "There are %{ count } files in this folder. <br>\n"
 "                                                            They are hidden "
@@ -263,31 +303,32 @@ msgstr ""
 "files\" to list them\n"
 "                                                        </br></br>"
 
-#: vueapp/components/MeetingGuest.vue:36
+#: vueapp/components/MeetingGuest.vue:26 vueapp/components/MeetingGuest.vue:2
 msgid "In Zwischenablage kopieren"
 msgstr "Copy to clipboard"
 
-#: vueapp/components/MeetingAdd.vue:216
+#: vueapp/components/MeetingAdd.vue:206 vueapp/components/MeetingAdd.vue:203
 msgid "Kein Ordner"
 msgstr "No folder"
 
-#: vueapp/components/MeetingRecordings.vue:15
+#: vueapp/components/MeetingRecordings.vue:5
+#: vueapp/components/MeetingRecordings.vue:2
 msgid "Keine Aufzeichnungen für Raum \"{{ room.name }}\" vorhanden"
 msgstr "No recordings available for room \"{{ room.name }}"
 
-#: vueapp/components/MeetingAdd.vue:185
+#: vueapp/components/MeetingAdd.vue:175 vueapp/components/MeetingAdd.vue:172
 msgid "Keine Gruppe"
 msgstr "No group"
 
-#: vueapp/components/MeetingAdd.vue:34
+#: vueapp/components/MeetingAdd.vue:24 vueapp/components/MeetingAdd.vue:21
 msgid "Konferenz Systemeinstellung"
 msgstr "Conference system setting"
 
-#: vueapp/components/MeetingAdd.vue:39
+#: vueapp/components/MeetingAdd.vue:29 vueapp/components/MeetingAdd.vue:26
 msgid "Konferenzsystem"
 msgstr "Conference system"
 
-#: vueapp/components/MeetingGuest.vue:28
+#: vueapp/components/MeetingGuest.vue:17 vueapp/components/MeetingGuest.vue:14
 msgid "Link"
 msgstr "Link"
 
@@ -303,18 +344,20 @@ msgstr "Hide meeting for participants"
 msgid "Meetings konfigurieren"
 msgstr "Configure meetings"
 
-#: vueapp/components/MeetingAdd.vue:239
-#: vueapp/components/MeetingAddNewFolder.vue:24
-#: vueapp/components/MeetingAddNewFolder.vue:81
+#: vueapp/components/MeetingAdd.vue:229 vueapp/components/MeetingAdd.vue:226
+#: vueapp/components/MeetingAddNewFolder.vue:14
+#: vueapp/components/MeetingAddNewFolder.vue:11
+#: vueapp/components/MeetingAddNewFolder.vue:60
 msgid "Name"
 msgstr "Name"
 
-#: vueapp/components/MeetingFeedback.vue:48
+#: vueapp/components/MeetingFeedback.vue:39
+#: vueapp/components/MeetingFeedback.vue:36
 msgid "Netzwerk-Typ"
 msgstr "Network type"
 
-#: vueapp/components/MeetingAdd.vue:296
-#: vueapp/components/MeetingAddNewFolder.vue:8
+#: vueapp/components/MeetingAdd.vue:286 vueapp/components/MeetingAdd.vue:283
+#: vueapp/components/MeetingAddNewFolder.vue:28
 msgid "Neuer Ordner"
 msgstr "New folder"
 
@@ -322,11 +365,11 @@ msgstr "New folder"
 msgid "Neuer Raum"
 msgstr "New room"
 
-#: vueapp/views/Admin.vue:68 vueapp/views/Admin.vue:1
+#: vueapp/views/Admin.vue:61 vueapp/views/Admin.vue:1
 msgid "Ohne Grenze"
 msgstr "Without limit"
 
-#: vueapp/components/MeetingAddNewFolder.vue:101
+#: vueapp/components/MeetingAddNewFolder.vue:80
 msgid "Optionale Beschreibung"
 msgstr "Optional description"
 
@@ -334,23 +377,27 @@ msgstr "Optional description"
 msgid "Ordner für automatische Uploads:"
 msgstr "Folder for automatic uploads:"
 
-#: vueapp/components/MeetingAddNewFolder.vue:20
+#: vueapp/components/MeetingAddNewFolder.vue:10
+#: vueapp/components/MeetingAddNewFolder.vue:7
 msgid "Ordnereigenschaften"
 msgstr "Foldersettings"
 
-#: vueapp/components/MeetingAddNewFolder.vue:33
+#: vueapp/components/MeetingAddNewFolder.vue:23
+#: vueapp/components/MeetingAddNewFolder.vue:20
 msgid "Ordnertyp auswählen"
 msgstr "Choose folder type"
 
-#: vueapp/components/MeetingFeedback.vue:60
+#: vueapp/components/MeetingFeedback.vue:51
+#: vueapp/components/MeetingFeedback.vue:48
 msgid "Prozessortyp"
 msgstr "Processor type"
 
-#: vueapp/components/MeetingFeedback.vue:72
+#: vueapp/components/MeetingFeedback.vue:63
+#: vueapp/components/MeetingFeedback.vue:60
 msgid "RAM (Hauptspeicher) GB"
 msgstr "RAM (main storage) GB"
 
-#: vueapp/components/MeetingAdd.vue:318
+#: vueapp/components/MeetingAdd.vue:308 vueapp/components/MeetingAdd.vue:5
 msgid "Raum erstellen"
 msgstr "Create room"
 
@@ -370,7 +417,7 @@ msgstr "Filter rooms by name"
 msgid "Raumeinstellungen"
 msgstr "Room settings"
 
-#: vueapp/components/MeetingAdd.vue:8
+#: vueapp/components/MeetingAdd.vue:93
 msgid "Raumkonfiguration"
 msgstr "Room configuration"
 
@@ -378,11 +425,12 @@ msgstr "Room configuration"
 msgid "Raumliste wird geladen..."
 msgstr "Loading room list…"
 
-#: vueapp/components/MeetingAdd.vue:23
+#: vueapp/components/MeetingAdd.vue:13 vueapp/components/MeetingAdd.vue:10
 msgid "Raumname"
 msgstr "Room name"
 
-#: vueapp/components/MeetingAddNewFolder.vue:54
+#: vueapp/components/MeetingAddNewFolder.vue:45
+#: vueapp/components/MeetingAddNewFolder.vue:4
 msgid "Schließen"
 msgstr "Close"
 
@@ -390,25 +438,25 @@ msgstr "Close"
 msgid "Schreiben Sie ein Feedback"
 msgstr "Write feedback"
 
-#: vueapp/components/MeetingAdd.vue:64
+#: vueapp/components/MeetingAdd.vue:54 vueapp/components/MeetingAdd.vue:51
 msgid "Server {{ (server_index + 1) }}"
 msgstr "Server {{ (server_index + 1) }}"
 
-#: vueapp/views/Admin.vue:91
+#: vueapp/views/Admin.vue:84
 msgid "Server hinzufügen"
 msgstr "Add server"
 
-#: vueapp/components/ServerDialog.vue:7
+#: vueapp/components/ServerDialog.vue:21
 msgid "Serverkonfiguration"
 msgstr "Server configuration"
 
-#: vueapp/components/MeetingGuest.vue:70
+#: vueapp/components/MeetingGuest.vue:48
 msgid ""
 "Sofern der Gast keinen Namen eingibt, wird dieser standardmäßig verwendet."
 msgstr "This name will be used if the guest does not state one."
 
-#: vueapp/components/MeetingGuest.vue:21
-msgid "Standard-Gastename"
+#: vueapp/components/MeetingGuest.vue:10 vueapp/components/MeetingGuest.vue:7
+msgid "Standard-Gästename"
 msgstr "Default guestname"
 
 #: vueapp/components/MeetingComponent.vue:106
@@ -435,19 +483,20 @@ msgstr "Give participants administration rights"
 msgid "Teilnehmenden nur eingeschränkte Rechte geben"
 msgstr "Give participants only limited rights"
 
-#: vueapp/components/ServerDialog.vue:27
+#: vueapp/components/ServerDialog.vue:21 vueapp/components/ServerDialog.vue:1
 msgid "Übernehmen"
 msgstr "Apply"
 
-#: vueapp/components/MeetingFeedback.vue:44
+#: vueapp/components/MeetingFeedback.vue:35
+#: vueapp/components/MeetingFeedback.vue:32
 msgid "Upload-Geschw. (Mbps)"
 msgstr "Upload speed (Mbps)"
 
-#: vueapp/components/MeetingAdd.vue:55
+#: vueapp/components/MeetingAdd.vue:45 vueapp/components/MeetingAdd.vue:42
 msgid "Verfügbare Server"
 msgstr "Available servers"
 
-#: vueapp/components/MeetingAdd.vue:459
+#: vueapp/components/MeetingAdd.vue:437
 msgid ""
 "Verknüpfen Sie einen Ordner mit diesem Raum. Es werden alle Dateien in "
 "diesem Ordner automatisch zu Beginn des Meetings hochgeladen. Sie können im "
@@ -457,21 +506,33 @@ msgstr ""
 "automatically when the meeting starts. You can switch between files in the "
 "meeting."
 
-#: vueapp/views/Admin.vue:27
+#: vueapp/views/Admin.vue:20
 msgid "Verwenden dieses Treibers zulassen"
 msgstr "Allow this driver to be used"
 
-#: vueapp/components/MeetingAdd.vue:183
+#: vueapp/components/MeetingAdd.vue:173 vueapp/components/MeetingAdd.vue:170
 msgid "Wählen sie eine zugehörige Gruppe aus"
 msgstr "Select a corresponding group"
 
-#: vueapp/components/MeetingAdd.vue:483
+#: vueapp/components/MeetingAdd.vue:461
 msgid "Zum Hauptordner - Ordnerauswahl aufheben"
 msgstr "Back to main folder - revoke selected folder"
 
-#: vueapp/components/MeetingAdd.vue:77
+#: vueapp/components/MeetingAdd.vue:67 vueapp/components/MeetingAdd.vue:64
 msgid "Zusätzliche Funktionen"
 msgstr "Additional functions"
+
+#: app/views/room/index.php:2
+msgid "Sie wurden zur Teilnahme eingeladen"
+msgstr "You have been invited"
+
+#: app/views/room/index.php:4
+msgid "Geben Sie einen Namen ein"
+msgstr "State your name"
+
+#: app/views/room/index.php:8
+msgid "Meeting betreten"
+msgstr "Join meeting"
 
 #: app/views/index/config.php:9
 msgid "Die Änderungen wurden gespeichert."
@@ -488,30 +549,6 @@ msgstr "Introductory text"
 #: app/views/index/config.php:31
 msgid "Speichern"
 msgstr "Save"
-
-#: app/views/link/index.php:2
-msgid "Sie wurden zur Teilnahme eingeladen"
-msgstr "You have been invited"
-
-#: app/views/link/index.php:4
-msgid "Geben Sie einen Namen ein"
-msgstr "State your name"
-
-#: app/views/link/index.php:8
-msgid "Meeting betreten"
-msgstr "Join meeting"
-
-#: app/controllers/link.php:58
-msgid "Stud.IP Meeting"
-msgstr "Stud.IP meeting"
-
-#: app/controllers/link.php:62 app/controllers/link.php:76
-msgid "Das gesuchte Meeting existiert nicht mehr!"
-msgstr "The meeting does not exists anymore!"
-
-#: app/controllers/link.php:65
-msgid "Meeting-Name"
-msgstr "Meetingname"
 
 #: app/controllers/admin.php:112
 msgid "Meetings Administration"
@@ -553,86 +590,115 @@ msgstr "View of all meetings you have created sorted by semester or by name."
 msgid "Meetings"
 msgstr "Meetings"
 
+#: app/controllers/room.php:60
+msgid "Stud.IP Meeting"
+msgstr "Stud.IP meeting"
+
+#: app/controllers/room.php:64 app/controllers/room.php:97
+#: app/controllers/room.php:121
+msgid "Das gesuchte Meeting existiert nicht mehr!"
+msgstr "The meeting does not exists anymore!"
+
+#: app/controllers/room.php:82
+msgid "Meeting-Name"
+msgstr "Meetingname"
+
 #: app/models/Driver.php:42
 msgid "Aufzeichnungen zulassen"
 msgstr "Allow recording"
 
-#: Driver/DfnVc.php:364
+#: Driver/Zoom.php:119 Driver/Teams.php:126 Driver/DfnVc.php:379
 msgid "API-Endpoint"
 msgstr "API endpoint"
 
-#: Driver/DfnVc.php:365
+#: Driver/DfnVc.php:216 Driver/BigBlueButton.php:271
+msgid "Internal Error"
+msgstr ""
+
+#: Driver/DfnVc.php:217 Driver/BigBlueButton.php:272
+msgid "Please contact a system administrator!"
+msgstr ""
+
+#: Driver/DfnVc.php:380
 msgid "Funktionskennung"
 msgstr "Function ID"
 
-#: Driver/DfnVc.php:366
+#: Driver/DfnVc.php:381
 msgid "Passwort"
 msgstr "Password"
 
-#: Driver/BigBlueButton.php:268
+#: Driver/BigBlueButton.php:305
 msgid "URL des BBB-Servers"
 msgstr "URL of the BBB server"
 
-#: Driver/BigBlueButton.php:269
+#: Driver/BigBlueButton.php:306
 msgid "Api-Key (Salt)"
 msgstr "API key (Salt)"
 
-#: Driver/BigBlueButton.php:270
+#: Driver/BigBlueButton.php:307
 msgid "Zugriff über Proxy"
 msgstr "Access via Proxy"
 
-#: Driver/BigBlueButton.php:271
+#: Driver/BigBlueButton.php:308
+msgid "Connection Timeout (e.g. 0.5)"
+msgstr ""
+
+#: Driver/BigBlueButton.php:309
+msgid "Request Timeout (e.g. 3.4)"
+msgstr ""
+
+#: Driver/BigBlueButton.php:310
 msgid "Maximale Teilnehmer"
 msgstr "Maximum participants"
 
-#: Driver/BigBlueButton.php:272
+#: Driver/BigBlueButton.php:311
 msgid "Raumgrößenvoreinstellungen"
 msgstr "Room size presets"
 
-#: Driver/BigBlueButton.php:279
+#: Driver/BigBlueButton.php:318
 msgid "Kleiner Raum"
 msgstr "Small room"
 
-#: Driver/BigBlueButton.php:280
+#: Driver/BigBlueButton.php:319
 msgid "Mittlerer Raum"
 msgstr "Medium room"
 
-#: Driver/BigBlueButton.php:281
+#: Driver/BigBlueButton.php:320
 msgid "Großer Raum"
 msgstr "Large room"
 
-#: Driver/BigBlueButton.php:296
+#: Driver/BigBlueButton.php:335
 msgid "Min. Teilnehmerzahl"
 msgstr "Minimum number of participants"
 
-#: Driver/BigBlueButton.php:306
+#: Driver/BigBlueButton.php:345
 msgid "Zugang via Link"
 msgstr "Access via link"
 
-#: Driver/BigBlueButton.php:307
+#: Driver/BigBlueButton.php:346
 msgid "Nicht gestattet"
 msgstr "Not permitted"
 
-#: Driver/BigBlueButton.php:307
+#: Driver/BigBlueButton.php:346
 msgid "Moderator vor dem Zutritt fragen"
 msgstr "Ask moderator before accessing"
 
-#: Driver/BigBlueButton.php:307
+#: Driver/BigBlueButton.php:346
 msgid "Gestattet"
 msgstr "Permitted"
 
-#: Driver/BigBlueButton.php:308
+#: Driver/BigBlueButton.php:347
 msgid ""
 "Legen Sie fest, ob Benutzer mit Einladungslink als Gäste an der Besprechung "
 "teilnehmen dürfen und ob Gäste dem Meeting direkt beitreten können oder ihre "
 "Teilnahme von einem Moderator bestätigt werden muss."
 msgstr ""
 
-#: Driver/BigBlueButton.php:310
+#: Driver/BigBlueButton.php:349
 msgid "Minuten Konferenzdauer"
 msgstr "Minutes duration of conference"
 
-#: Driver/BigBlueButton.php:312
+#: Driver/BigBlueButton.php:351
 msgid ""
 "Die maximale Länge (in Minuten) für das Meeting. Nach Ablauf der "
 "eingestellen Dauer wird das Meeting automatisch beendet, d.h. der Raum wird "
@@ -641,50 +707,54 @@ msgid ""
 "der Raum ebenfalls geschlossen."
 msgstr ""
 
-#: Driver/BigBlueButton.php:314
+#: Driver/BigBlueButton.php:353
 msgid "Maximale Teilnehmerzahl"
 msgstr "Maximum number of participants"
 
-#: Driver/BigBlueButton.php:317
+#: Driver/BigBlueButton.php:356
 msgid "Private Chats deaktivieren"
 msgstr "Deactivate private chats"
 
-#: Driver/BigBlueButton.php:321
+#: Driver/BigBlueButton.php:360
 msgid "Gemeinsame Notizen deaktivieren"
 msgstr "Deactivate shared notes"
 
-#: Driver/BigBlueButton.php:323
+#: Driver/BigBlueButton.php:362
 msgid "Nur Moderatoren können Audio teilen"
 msgstr "Only moderators can share audio"
 
-#: Driver/BigBlueButton.php:325
+#: Driver/BigBlueButton.php:364
 msgid "Nur Moderatoren können Webcams teilen"
 msgstr "Only moderators can share webcams"
 
-#: Driver/BigBlueButton.php:327
+#: Driver/BigBlueButton.php:366
 msgid "Nur Moderatoren können Webcams sehen"
 msgstr "Only moderators can see webcams"
 
-#: Driver/BigBlueButton.php:329
+#: Driver/BigBlueButton.php:367
+msgid "Jeder Teilnehmer kann die Konferenz starten"
+msgstr ""
+
+#: Driver/BigBlueButton.php:368
 msgid "Alle Teilnehmenden initial stumm schalten"
 msgstr "Mute all participants initially"
 
-#: Driver/BigBlueButton.php:341
+#: Driver/BigBlueButton.php:380
 msgid "Sitzungen können aufgezeichnet werden."
 msgstr "Meetings can be recorded."
 
-#: Driver/BigBlueButton.php:342
+#: Driver/BigBlueButton.php:381
 msgid ""
 "Erlaubt es Moderatoren, die Medien und Ereignisse in der Sitzung für die "
 "spätere Wiedergabe aufzuzeichnen. Die Aufzeichnung muss innerhalb der "
 "Sitzung von einem Moderator gestartet werden."
 msgstr ""
 
-#: Driver/BigBlueButton.php:346
+#: Driver/BigBlueButton.php:385
 msgid "Aufzeichnungen für Teilnehmende sichtbar schalten"
 msgstr "Make recordings visible for participants"
 
-#: Driver/BigBlueButton.php:347
+#: Driver/BigBlueButton.php:386
 msgid ""
 "Legen Sie fest, ob neben Lehrenden auch Teilnehmende Zugriff auf die "
 "Aufzeichnungen haben sollen."
@@ -692,11 +762,11 @@ msgstr ""
 "Specify whether not only teachers but also participants should have access "
 "to the recordings."
 
-#: Driver/BigBlueButton.php:357
+#: Driver/BigBlueButton.php:396
 msgid "Opencast für Aufzeichnungen verwenden"
 msgstr "Use Opencast for recordings"
 
-#: Driver/BigBlueButton.php:369
+#: Driver/BigBlueButton.php:408
 msgid ""
 "Bei Aktivierung dieser Option können ausschließlich Moderatoren die von "
 "Teilnehmenden freigegebenen Webcams sehen."
@@ -728,20 +798,20 @@ msgstr "Recording cannot be deleted"
 msgid "Opencast Series id kann nicht gefunden werden!"
 msgstr "Opencast series ID cannot be found!"
 
-#: lib/Routes/Rooms/RoomEdit.php:106 lib/Routes/Rooms/RoomAdd.php:84
+#: lib/Routes/Rooms/RoomEdit.php:108 lib/Routes/Rooms/RoomAdd.php:84
 #, php-format
 msgid "Teilnehmerzahl darf %d nicht überschreiten"
 msgstr "Number of participants cannot exceed %d"
 
-#: lib/Routes/Rooms/RoomEdit.php:120
+#: lib/Routes/Rooms/RoomEdit.php:122
 msgid "Die Bearbeitung wurde erfolgreich abgeschlossen."
 msgstr "The editing was successfully completed."
 
-#: lib/Routes/Rooms/RoomEdit.php:125
+#: lib/Routes/Rooms/RoomEdit.php:127
 msgid "Raumeinstellung kann nicht bearbeitet werden!"
 msgstr "Room settings cannot be edited!"
 
-#: lib/Routes/Rooms/RoomJoinGuest.php:49 lib/Routes/Rooms/RoomJoin.php:49
+#: lib/Routes/Rooms/RoomJoinGuest.php:49 lib/Routes/Rooms/RoomJoin.php:51
 msgid "Dieser Raum in diesem Kurs kann nicht gefunden werden!"
 msgstr "This room in this course cannot be found!"
 
@@ -749,14 +819,14 @@ msgstr "This room in this course cannot be found!"
 msgid "Gäste können nicht eingeladen werden!"
 msgstr "Guests cannot be invited!"
 
-#: lib/Routes/Rooms/RoomJoin.php:97
+#: lib/Routes/Rooms/RoomJoin.php:133
 msgid ""
 "Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server "
 "fehlgeschlagen."
 msgstr ""
 "Could not join the meeting, communication with the meeting server failed."
 
-#: lib/Routes/Rooms/RoomJoin.php:100
+#: lib/Routes/Rooms/RoomJoin.php:136
 msgid ""
 "Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server "
 "fehlgeschlagen. ("
@@ -779,7 +849,7 @@ msgstr "No conference system is selected"
 msgid "Server ist nicht definiert"
 msgstr "Server is not defined"
 
-#: lib/Routes/Rooms/RoomAdd.php:155
+#: lib/Routes/Rooms/RoomAdd.php:157
 msgid "Raum wurde erfolgreich erstellt."
 msgstr "Room was created successfully."
 
@@ -827,7 +897,7 @@ msgstr "The select folder type is invalid!"
 msgid "Fehler beim Laden des Hauptordners!"
 msgstr "Error loading main folder!"
 
-#: lib/Routes/Config/ConfigListCourse.php:160
+#: lib/Routes/Config/ConfigListCourse.php:165
 msgid ""
 "Opencast wird als Aufzeichnungsserver verwendet. Diese Funktion ist im "
 "Testbetrieb und es kann noch zu Fehlern kommen."
