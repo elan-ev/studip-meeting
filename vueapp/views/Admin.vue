@@ -54,7 +54,7 @@
                     </label>
                 </div>
 
-                <div v-if="config[driver_name].servers && Object.keys(config[driver_name].servers).length">
+                <div v-if="config[driver_name].servers && Object.keys(config[driver_name].servers).length && server_object[driver_name]">
                     <h3 v-translate>
                         Folgende Server werden verwendet
                     </h3>
@@ -101,17 +101,10 @@
                 </div>
 
                 <StudipButton
-                    v-if="server_object[driver_name]"
                     icon="add"
                     @click="addServerDialog(driver_name)">
                     <translate>Server hinzufügen</translate>
                 </StudipButton>
-
-                <MessageBox v-else type="error">
-                    <translate>
-                        Dieser Treiber ist fehlerhaft und kann nicht verwendet werden!
-                    </translate>
-                </MessageBox>
 
                 <ServerDialog
                     v-if="server_object[driver_name]"
@@ -191,6 +184,7 @@ export default {
                        this.$store.dispatch(CONFIG_LIST_READ)
                             .then(() => {
                                 this.changes_made = false;
+                                this.createServerObject();
                             });
                     }
                     this.changes_made = false;
@@ -297,11 +291,8 @@ export default {
         store.dispatch(CONFIG_LIST_READ)
             .then(() => {
                 this.changes_made = false;
+                this.createServerObject();
             });
-    },
-
-    beforeMount() {
-        this.createServerObject();
     }
 };
 </script>

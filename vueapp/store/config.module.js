@@ -16,28 +16,8 @@ import {
 } from "./mutations.type";
 
 const initialState = {
-    config: {
-        "BigBlueButton": {
-            "enable": "1",
-            "display_name": "",
-            "servers": []
-        },
-        "DfnVc": {
-            "enable": "1",
-            "display_name": "",
-            "servers": []
-        }
-    },
-    drivers: {
-        "BigBlueButton": {
-            "title":"BigBlueButton",
-            "config": []
-        },
-        "DfnVc": {
-            "title":"DfnVc",
-            "config": []
-        },
-    },
+    config: null,
+    drivers: null,
     course_config: {
         "title": "",
         "introduction": "",
