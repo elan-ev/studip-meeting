@@ -10,7 +10,11 @@ export default new Router({
             path: "/admin",
             component: () => import("@/views/Admin")
         },
-
+        {
+            name: "lobby",
+            path: "/lobby",
+            component: () => import("@/views/Lobby")
+        },
         {
             name: "course",
             path: "/",

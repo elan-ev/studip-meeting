@@ -1,4 +1,4 @@
-<form method="post" action="<?= $controller->url_for('link/join_meeting/' . $invitations_link->hex)?>" class="default">
+<form method="post" action="<?= $controller->url_for('room/join_meeting/' . $invitations_link->hex)?>" class="default">
   <h1><?= $_('Sie wurden zur Teilnahme eingeladen')?></h1>
     <label>
         <?= $_('Geben Sie einen Namen ein')?>

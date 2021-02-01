@@ -4,8 +4,9 @@ use ElanEv\Driver\DriverFactory;
 use ElanEv\Driver\JoinParameters;
 use ElanEv\Model\Driver;
 use ElanEv\Model\InvitationsLink;
+use ElanEv\Model\MeetingCourse;
 
-class LinkController extends PluginController
+class RoomController extends PluginController
 {
     /**
      * Constructs the controller and provide translations methods.
@@ -32,7 +33,7 @@ class LinkController extends PluginController
                 func_get_args()
             );
         };
-
+        $this->driver_factory = new DriverFactory(Driver::getConfig());
     }
 
     /**
@@ -53,12 +54,23 @@ class LinkController extends PluginController
         throw new RuntimeException("Method {$method} does not exist");
     }
 
-    public function index_action($link_hex)
+    public function index_action($link_hex, $cid)
     {
         PageLayout::setTitle($this->_('Stud.IP Meeting'));
         $this->invitations_link = InvitationsLink::findOneBySQL('hex = ?', [$link_hex]);
+        $meeting = $this->invitations_link->meeting;
+        $features = json_decode($meeting->features, true);
+        $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
+        if (isset($features['room_anyone_can_start']) && $features['room_anyone_can_start'] === 'false') {
+            $meetingCourse = new MeetingCourse([$meeting->id, $cid]);
+            $status = $driver->isMeetingRunning($meetingCourse->meeting->getMeetingParameters()) === 'true' ? true : false;
 
-        if(!$this->invitations_link) {
+            if (!$status) {
+                $this->redirect('room/lobby/' . $meeting->id . '/' . $cid . '/#lobby');
+                return;
+            }
+        }
+        if (!$this->invitations_link) {
             throw new Exception($this->_('Das gesuchte Meeting existiert nicht mehr!'));
         }
         $widget = new SidebarWidget();
@@ -69,10 +81,31 @@ class LinkController extends PluginController
         Sidebar::Get()->addWidget($widget);
     }
 
+    public function lobby_action($room_id, $cid)
+    {
+        $invitations_link = InvitationsLink::findOneBySQL('meeting_id = ?', [$room_id]);
+        if (!$invitations_link) {
+            throw new Exception($this->_('Das gesuchte Meeting existiert nicht mehr!'));
+        }
+        $meeting = $invitations_link->meeting;
+        $features = json_decode($meeting->features, true);
+        $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
+        if (isset($features['room_anyone_can_start']) && $features['room_anyone_can_start'] === 'false') {
+            $meetingCourse = new MeetingCourse([$meeting->id, $cid]);
+            $status = $driver->isMeetingRunning($meetingCourse->meeting->getMeetingParameters()) === 'true' ? true : false;
+
+            if ($status) {
+                $this->redirect('room/index/' . $invitations_link->hex . '/' . $cid);
+                return;
+            }
+        }
+
+    }
+
     public function join_meeting_action($link_hex)
     {
         $invitations_link = InvitationsLink::findOneBySQL('hex = ?', [$link_hex]);
-        if(!$invitations_link) {
+        if (!$invitations_link) {
             throw new Exception($this->_('Das gesuchte Meeting existiert nicht mehr!'));
         }
         $name = trim(Request::get('name'));
@@ -80,8 +113,8 @@ class LinkController extends PluginController
             $name = $invitations_link->default_name;
         }
         $meeting = $invitations_link->meeting;
-        $driver_factory = new DriverFactory(Driver::getConfig());
-        $driver = $driver_factory->getDriver($meeting->driver, $meeting->server_index);
+
+        $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
         $joinParameters = new JoinParameters();
         $joinParameters->setMeetingId($meeting->id);
         $joinParameters->setIdentifier($meeting->identifier);

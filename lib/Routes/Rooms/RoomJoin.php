@@ -46,6 +46,7 @@ class RoomJoin extends MeetingsController
         }
 
         $meeting = Meeting::find($room_id);
+
         if (!($meeting && $meeting->courses->find($cid))) {
             throw new Error(I18N::_('Dieser Raum in diesem Kurs kann nicht gefunden werden!'), 404);
         }
@@ -77,6 +78,24 @@ class RoomJoin extends MeetingsController
         }
 
         $driver = $driver_factory->getDriver($meeting->driver, $meeting->server_index);
+
+        if(isset($features['room_anyone_can_start'])
+            && $features['room_anyone_can_start'] === 'false'
+            && !$perm->have_studip_perm('tutor', $cid)
+        ) {
+            $meetingCourse = new MeetingCourse([$room_id, $cid ]);
+            $status = $driver->isMeetingRunning($meetingCourse->meeting->getMeetingParameters()) === 'true' ? true : false;
+            if(!$status) {
+                header('Location:' .
+                    \URLHelper::getURL(
+                        'plugins.php/meetingplugin/room/lobby/' . $room_id . '/' . $cid . '/#lobby',
+                        ['cancel_login' => 1]
+                    )
+                );
+                exit;
+            }
+        }
+
 
         $joinParameters = new JoinParameters();
         $joinParameters->setMeetingId($room_id);

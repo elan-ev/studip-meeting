@@ -64,7 +64,7 @@ class RoomJoinGuest extends MeetingsController
         $old_url_helper_url = \URLHelper::setBaseURL($GLOBALS['ABSOLUTE_URI_STUDIP']);
         $join_url =
             \URLHelper::getURL(
-                'plugins.php/meetingplugin/link/index/' . $invitations_link->hex,
+                'plugins.php/meetingplugin/room/index/' . $invitations_link->hex . '/' . $cid,
                 ['cancel_login' => 1]
             );
         \URLHelper::setBaseURL($old_url_helper_url);

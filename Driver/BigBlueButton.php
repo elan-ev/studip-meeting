@@ -364,7 +364,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         $res['lockSettingsDisableCam'] = new ConfigOption('lockSettingsDisableCam', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Nur Moderatoren können Webcams teilen'), false, self::getFeatureInfo('lockSettingsDisableCam'));
 
         $res['webcamsOnlyForModerator'] = new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Nur Moderatoren können Webcams sehen'), false, self::getFeatureInfo('webcamsOnlyForModerator'));
-
+        $res['room_anyone_can_start'] = new ConfigOption('room_anyone_can_start', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Jeder Teilnehmer kann die Konferenz starten'), true, self::getFeatureInfo('room_anyone_can_start'));
         $res['muteOnStart'] = new ConfigOption('muteOnStart', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Alle Teilnehmenden initial stumm schalten'), false, self::getFeatureInfo('muteOnStart'));
 
         return array_reverse($res);
@@ -422,6 +422,9 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             case 'muteOnStart':
                 // return _('Alle Benutzer starten die Besprechung stummgeschaltet, können ihre Stummschaltung aber jederzeit aufheben.');
                 // break;
+            case 'room_anyone_can_start':
+                // return _('Jeder Teilnehmer kann die Konferenz starten.');
+                // break;
             default:
                 return '';
                 break;
@@ -462,7 +465,6 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
         $documents = [];
         $folder = \Folder::find($meeting->folder_id);
-
         //generate or get the token
         $token = ($meeting->meeting_token) ? $meeting->meeting_token->get_token() : null;
         if (!$token) {
