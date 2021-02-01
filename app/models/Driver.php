@@ -64,6 +64,26 @@ class Driver
             self::$config = json_decode(\Config::get()->getValue('VC_CONFIG'), true);
         }
 
+        $drivers = Driver::discover(true);
+
+        // remove non existent drivers from config
+        foreach (self::$config as $driver_name => $data) {
+            if (!$drivers[$driver_name]) {
+                unset (self::$config[$driver_name]);
+            }
+        }
+
+        // add newly found drivers
+        foreach ($drivers as $driver_name => $data) {
+            if (!self::$config[$driver_name]) {
+                self::$config[$driver_name] = [];
+            }
+        }
+
+        if (empty(self::$config)) {
+            return;
+        }
+
         foreach (self::$config as $driver_name => $config) {
             $class = 'ElanEv\\Driver\\' . $driver_name;
             if (in_array('ElanEv\Driver\DriverInterface', class_implements($class)) !== false) {

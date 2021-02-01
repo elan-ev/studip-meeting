@@ -101,10 +101,17 @@
                 </div>
 
                 <StudipButton
+                    v-if="server_object[driver_name]"
                     icon="add"
                     @click="addServerDialog(driver_name)">
                     <translate>Server hinzufügen</translate>
                 </StudipButton>
+
+                <MessageBox v-else type="error">
+                    <translate>
+                        Dieser Treiber ist fehlerhaft und kann nicht verwendet werden!
+                    </translate>
+                </MessageBox>
 
                 <ServerDialog
                     v-if="server_object[driver_name]"
