@@ -81,6 +81,7 @@ export default {
         },
         edit() {
             if (this.validateForm()) {
+                this.dialogClose();
                 this.$emit('edit', {
                     driver_name: this.driver_name,
                     server     : this.server
