@@ -58,7 +58,7 @@ class RoomJoin extends MeetingsController
                     .($request->getUri()->getPort() ? ':' . $request->getUri()->getPort() : '');
                 $features['logoutURL'] =  $hostUrl . \PluginEngine::getLink('meetingplugin', array('cid' => $cid), 'index');
             }
-            
+
             //update/removing opencast series id if the OpenCast is not activated in the course or it has been changed unnoticed!
             if (isset($features['meta_opencast-dc-isPartOf']) && !empty($features['meta_opencast-dc-isPartOf'])) {
                 if (isset($features['record']) && $features['record'] == true
@@ -79,13 +79,14 @@ class RoomJoin extends MeetingsController
 
         $driver = $driver_factory->getDriver($meeting->driver, $meeting->server_index);
 
-        if(isset($features['room_anyone_can_start'])
+        if (isset($features['room_anyone_can_start'])
             && $features['room_anyone_can_start'] === 'false'
             && !$perm->have_studip_perm('tutor', $cid)
         ) {
             $meetingCourse = new MeetingCourse([$room_id, $cid ]);
             $status = $driver->isMeetingRunning($meetingCourse->meeting->getMeetingParameters()) === 'true' ? true : false;
-            if(!$status) {
+
+            if (!$status) {
                 header('Location:' .
                     \URLHelper::getURL(
                         'plugins.php/meetingplugin/room/lobby/' . $room_id . '/' . $cid . '/#lobby',
