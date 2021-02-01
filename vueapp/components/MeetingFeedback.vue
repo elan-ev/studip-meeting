@@ -14,6 +14,7 @@
                             Beschreibung
                         </legend>
                             <label class="col-6">
+                            <span v-translate>Bitte beschreiben Sie das aufgetretene Problem</span>
                             <textarea ref="feedbackDescription" v-model="feedback['description']" cols="30" rows="5"></textarea>
                         </label>
                     </fieldset>
