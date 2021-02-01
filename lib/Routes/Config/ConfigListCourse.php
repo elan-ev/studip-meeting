@@ -107,37 +107,40 @@ class ConfigListCourse extends MeetingsController
         foreach ($config as $driver_name => $settings) {
             $server_defaults = [];
             $server_presets = [];
-            foreach ($settings['servers'] as $server_index => $server_values) {
 
-                //Take care of max participants and maxAllowedParticipants
-                $server_defaults[$server_index]['totalMembers'] = max(20, $members_count + 5);
-                if (isset($server_values['maxParticipants']) && $server_values['maxParticipants'] > 0) {
-                    $server_defaults[$server_index]['maxAllowedParticipants'] = $server_values['maxParticipants'];
-                    if ($members_count >= $server_values['maxParticipants']) {
-                        $server_defaults[$server_index]['totalMembers'] = $server_values['maxParticipants'];
+            if (!empty($settings['servers'])) {
+                foreach ($settings['servers'] as $server_index => $server_values) {
+
+                    //Take care of max participants and maxAllowedParticipants
+                    $server_defaults[$server_index]['totalMembers'] = max(20, $members_count + 5);
+                    if (isset($server_values['maxParticipants']) && $server_values['maxParticipants'] > 0) {
+                        $server_defaults[$server_index]['maxAllowedParticipants'] = $server_values['maxParticipants'];
+                        if ($members_count >= $server_values['maxParticipants']) {
+                            $server_defaults[$server_index]['totalMembers'] = $server_values['maxParticipants'];
+                        }
                     }
-                }
 
-                //Take care of create features
-                // add presets into config as well
-                if (isset($server_values['roomsize-presets']) && count($server_values['roomsize-presets']) > 0) {
-                    foreach ($server_values['roomsize-presets'] as $size => $values) {
-                        $server_presets[$server_index][$size] = $values;
-                        if ($members_count >= $values['minParticipants']) {
-                            unset($values['minParticipants']);
-                            foreach ($values as $feature_name => $feature_value) {
-                                $value = $feature_value;
-                                if (filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
-                                    $value = filter_var($feature_value, FILTER_VALIDATE_BOOLEAN);
+                    //Take care of create features
+                    // add presets into config as well
+                    if (isset($server_values['roomsize-presets']) && count($server_values['roomsize-presets']) > 0) {
+                        foreach ($server_values['roomsize-presets'] as $size => $values) {
+                            $server_presets[$server_index][$size] = $values;
+                            if ($members_count >= $values['minParticipants']) {
+                                unset($values['minParticipants']);
+                                foreach ($values as $feature_name => $feature_value) {
+                                    $value = $feature_value;
+                                    if (filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+                                        $value = filter_var($feature_value, FILTER_VALIDATE_BOOLEAN);
+                                    }
+                                    $server_defaults[$server_index][$feature_name] = $value;
                                 }
-                                $server_defaults[$server_index][$feature_name] = $value;
                             }
                         }
                     }
                 }
+                $config[$driver_name]['server_defaults'] = $server_defaults;
+                $config[$driver_name]['server_presets'] = $server_presets;
             }
-            $config[$driver_name]['server_defaults'] = $server_defaults;
-            $config[$driver_name]['server_presets'] = $server_presets;
         }
         return $config;
     }
