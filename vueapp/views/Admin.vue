@@ -2,14 +2,7 @@
     <div>
         <h1 v-translate>Meetings konfigurieren</h1>
 
-        <MessageBox v-if="message" :type="message.type" @hide="message = ''">
-            <span v-if="typeof message.text == 'string'">{{ message.text }}</span>
-            <ul v-else>
-                <li v-for="(text, i) in message.text" :key="i">
-                    {{ text }}
-                </li>
-            </ul>
-        </MessageBox>
+        <MessageList :messages="message ? [message] : []" />
 
         <MessageBox v-if="changes_made" type="warning">
             <translate>
@@ -117,6 +110,9 @@
                 />
 
             </fieldset>
+
+            <MessageList :messages="message ? [message] : []" />
+
             <footer>
                 <StudipButton icon="accept"
                     :class="{
@@ -139,6 +135,7 @@ import StudipButton from "@/components/StudipButton";
 import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import StudipIcon from "@/components/StudipIcon";
 import MessageBox from "@/components/MessageBox";
+import MessageList from "@/components/MessageList";
 import ServerDialog from "@/components/ServerDialog";
 
 import {
@@ -157,6 +154,7 @@ export default {
         StudipButton,
         StudipTooltipIcon,
         MessageBox,
+        MessageList,
         StudipIcon,
         ServerDialog
     },
@@ -180,6 +178,7 @@ export default {
                 .then(({ data }) => {
                     this.message = data.message;
                     this.$store.commit(CONFIG_SET, data.config);
+
                     if (data.message.type == 'error') {
                        this.$store.dispatch(CONFIG_LIST_READ)
                             .then(() => {
