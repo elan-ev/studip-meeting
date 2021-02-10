@@ -74,12 +74,16 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 $params['name'] = $params['name'] . ' (' . date('Y-m-d H:i:s') . ')';
             }
 
+            if (!isset($features['welcome'])) {
+                $features['welcome']=Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'welcome');
+            }
+
             $params = array_merge($params, $features);
         }
 
         //additional information using meta_
         if ($manifest = MeetingPlugin::getMeetingManifestInfo()) {
-            !isset($manifest["pluginname"]) ?: $params['meta_bbb-origin'] = 'Stud.IP - ' . $manifest["pluginname"] . 
+            !isset($manifest["pluginname"]) ?: $params['meta_bbb-origin'] = 'Stud.IP - ' . $manifest["pluginname"] .
                                                 (strpos(strtolower($manifest["pluginname"]), 'plugin') !== FALSE ?: ' Plugin');
             !isset($manifest['version']) ?: $params['meta_bbb-origin-version'] = $manifest['version'];
         }
@@ -352,6 +356,9 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
         $res['maxParticipants'] = new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 50, self::getFeatureInfo('maxParticipants'));
 
+        $res['welcome'] = new ConfigOption('welcome', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Willkommensnachricht'),
+                    Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'welcome'),
+                    self::getFeatureInfo('welcome'));
 
         $res['privateChat'] = new ConfigOption('lockSettingsDisablePrivateChat', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Private Chats deaktivieren'),
                     false, null);
