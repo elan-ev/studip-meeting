@@ -196,6 +196,22 @@ class Driver
         return self::$config;
     }
 
+    static function getGeneralConfig() {
+        return json_decode(\Config::get()->getValue('VC_GENERAL_CONFIG'), true);
+    }
+
+    static function setGeneralConfig($general_configs) {
+        \Config::get()->store('VC_GENERAL_CONFIG', json_encode($general_configs));
+    }
+
+    static function getGeneralConfigValue($key) {
+        $general_config = json_decode(\Config::get()->getValue('VC_GENERAL_CONFIG'), true);
+        if (isset($general_config[$key])) {
+            return $general_config[$key];
+        }
+        return false;
+    }
+
     static function getConfigValueByDriver($driver_name, $key)
     {
         $config = json_decode(\Config::get()->getValue('VC_CONFIG'), true);

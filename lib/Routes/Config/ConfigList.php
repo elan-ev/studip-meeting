@@ -19,10 +19,12 @@ class ConfigList extends MeetingsController
     {
         $drivers = Driver::discover(true);
         $config  = Driver::getConfig();
+        $general_config = Driver::getGeneralConfig();
 
         $response_result = [];
         !$drivers ?: $response_result['drivers'] = $drivers;
         !$config  ?: $response_result['config']  = $config;
+        !$general_config  ?: $response_result['general_config']  = $general_config;
 
         if (!empty($response_result)) {
             return $this->createResponse($response_result, $response);
