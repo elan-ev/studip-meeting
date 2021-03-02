@@ -17,7 +17,14 @@ class AddInvitationsLinks extends Migration
         );
         SimpleORMap::expireTableScheme();
         $plugin = PluginEngine::getPlugin('MeetingPlugin');
-        RolePersistence::assignPluginRoles($plugin->getPluginId(), [7]);
+        if ($plugin) {
+            RolePersistence::assignPluginRoles($plugin->getPluginId(), [7]);
+        } else {
+            $meta = $db->fetchOne("SHOW TABLE STATUS LIKE 'plugins'");
+            if ($meta['Auto_increment']) {
+                RolePersistence::assignPluginRoles($meta['Auto_increment'], [7]);
+            }
+        }
     }
 
     public function down()
