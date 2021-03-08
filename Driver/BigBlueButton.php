@@ -262,7 +262,9 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         }
 
         try {
-            $request = $this->client->request('GET', $this->url .'/'. $uri, $options);
+            $request_method ='GET';
+            if(is_array($options)&&count($options))$request_method='POST';
+            $request = $this->client->request($request_method, $this->url .'/'. $uri, $options);
             return $request->getBody(true);
         } catch (BadResponseException $e) {
             $response = $e->getResponse()->getBody(true);
