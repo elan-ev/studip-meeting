@@ -5,7 +5,7 @@ const HtmlWebpackPlugin         = require('html-webpack-plugin');
 const { CleanWebpackPlugin }    = require('clean-webpack-plugin');
 
 module.exports = {
-    entry: ['./vueapp/app.js', './assets/css/meetings.scss'], // the entry point
+    entry: ['./vueapp/app.js'], // the entry point
     output: {
         filename: '[name].[contenthash].js', // the output filename
         path: path.resolve(__dirname, 'static'), // fully qualified path
@@ -15,27 +15,7 @@ module.exports = {
         rules: [{
             test: /\.vue$/,
             use: 'vue-loader'
-        }, {
-			test: /.scss$/,
-			use: [
-				{
-					loader: 'file-loader',
-					options: {
-						name: 'styles.css',
-						outputPath: ''
-					}
-				},
-                {
-					loader: 'extract-loader',
-				},
-				{
-					loader: 'css-loader?-url'
-				},
-				{
-					loader: 'sass-loader'
-				}
-			]
-		}]
+        }]
     },
     plugins: [
         new CleanWebpackPlugin(),

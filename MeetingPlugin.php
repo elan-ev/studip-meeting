@@ -303,7 +303,7 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
             $app->group('/meetingplugin/api', new RouteMap($app));
             $app->run();
         } else {
-            PageLayout::addStylesheet($this->getPluginUrl() . '/static/styles.css');
+            $this->addStylesheet('assets/css/meetings.scss');
 
             $trails_root = $this->getPluginPath() . '/app';
             $dispatcher  = new Trails_Dispatcher($trails_root,

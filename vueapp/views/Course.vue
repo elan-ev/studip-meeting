@@ -8,7 +8,7 @@
             {{ message.text }}
         </MessageBox>
 
-        <MessageBox v-if="Object.keys(config).length === 0" type="error">
+        <MessageBox v-if="no_configs" type="error">
             <translate>
                 Es ist bisher kein Meetingsserver konfiguriert. Bitte wenden
                 Sie sich an eine/n Systemadministrator/in!
@@ -144,7 +144,8 @@ export default {
             createEditRoom: false,
             showRecordings: false,
             showFeedback: false,
-            showGuest: false
+            showGuest: false,
+            no_configs: false
         }
     },
 
@@ -155,7 +156,7 @@ export default {
         },
 
         showEditRoom(room) {
-            // check, if there are any features for this driver at all!
+// check, if there are any features for this driver at all!
             if (this.config[room.driver]['features'] !== undefined) {
                 if (Object.keys(this.config[room.driver]['features']).includes('record')
                     && !Object.keys(room.features).includes('giveAccessToRecordings')
@@ -214,6 +215,7 @@ export default {
 
     mounted() {
         store.dispatch(CONFIG_COURSE_READ, CID);
+        this.no_configs = this.config && Object.keys(this.config).length;
         this.getRoomList();
 
         this.interval = setInterval(() => {

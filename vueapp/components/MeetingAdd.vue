@@ -193,7 +193,6 @@
                             </label>
                         </div>
                     </fieldset>
-
                     <fieldset v-if="(Object.keys(course_groups).length > 1)">
                         <legend v-translate>
                             Gruppenraum
@@ -205,10 +204,8 @@
                                 <option value="" v-translate>
                                     Keine Gruppe
                                 </option>
-
-                                <option v-for="(gname, gid) in course_groups" :key="gid"
-                                        :value="gid">
-                                        {{ gname }}
+                                <option v-for="gname in course_groups" :key="gid" :value="gid">
+                                    {{ gname }}
                                 </option>
                             </select>
                         </label>
