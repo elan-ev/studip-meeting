@@ -56,6 +56,11 @@
                     </label>
                 </div>
 
+                <label v-if="Object.keys(config[driver_name]).includes('welcome')">
+                    <translate>Willkommensnachricht</translate>
+                    <textarea v-model="config[driver_name]['welcome']" cols="30" rows="5"></textarea>
+                </label>
+
                 <div v-if="config[driver_name].servers && Object.keys(config[driver_name].servers).length && server_object[driver_name]">
                     <h3 v-translate>
                         Folgende Server werden verwendet

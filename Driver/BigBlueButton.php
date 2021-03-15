@@ -74,12 +74,16 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 $params['name'] = $params['name'] . ' (' . date('Y-m-d H:i:s') . ')';
             }
 
+            if (!isset($features['welcome'])) {
+                $features['welcome'] = Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'welcome');
+            }
+
             $params = array_merge($params, $features);
         }
 
         //additional information using meta_
         if ($manifest = MeetingPlugin::getMeetingManifestInfo()) {
-            !isset($manifest["pluginname"]) ?: $params['meta_bbb-origin'] = 'Stud.IP - ' . $manifest["pluginname"] . 
+            !isset($manifest["pluginname"]) ?: $params['meta_bbb-origin'] = 'Stud.IP - ' . $manifest["pluginname"] .
                                                 (strpos(strtolower($manifest["pluginname"]), 'plugin') !== FALSE ?: ' Plugin');
             !isset($manifest['version']) ?: $params['meta_bbb-origin-version'] = $manifest['version'];
         }
@@ -341,6 +345,10 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
      */
     public static function getCreateFeatures()
     {
+        $res['welcome'] = new ConfigOption('welcome', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Willkommensnachricht'),
+                    Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'welcome'),
+                    self::getFeatureInfo('welcome'));
+        
         $res['guestPolicy'] =
             new ConfigOption('guestPolicy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugang via Link'),
                  ['ALWAYS_DENY' => _('Nicht gestattet'), 'ASK_MODERATOR' => _('Moderator vor dem Zutritt fragen'), 'ALWAYS_ACCEPT' => _('Gestattet'), ],
@@ -425,6 +433,10 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             case 'room_anyone_can_start':
                 // return _('Jeder Teilnehmer kann die Konferenz starten.');
                 // break;
+            case 'welcome':
+                return _('Wenn leer, wird die Standardnachricht angezeigt. Sie können folgende Schlüsselwörter einfügen, die automatisch ersetzt werden:
+                %% CONFNAME %% (Sitzungsname), %% DIALNUM %% (Sitzungswahlnummer)');
+                break;
             default:
                 return '';
                 break;
