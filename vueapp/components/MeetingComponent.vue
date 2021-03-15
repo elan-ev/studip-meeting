@@ -80,7 +80,7 @@
                     </span>
                 </div>
 
-                <div v-if="course_config.display.editRoom && room.group_id != undefined">
+                <div v-if="course_config.display.editRoom && room.group_id">
                     <StudipIcon class="info-icon" icon="group2"
                             role="status-yellow" size="24"></StudipIcon>
                     <span v-translate>
