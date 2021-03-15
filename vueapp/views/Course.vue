@@ -8,7 +8,7 @@
             {{ message.text }}
         </MessageBox>
 
-        <MessageBox v-if="Object.keys(config).length === 0" type="error">
+        <MessageBox v-if="config && Object.keys(config).length === 0" type="error">
             <translate>
                 Es ist bisher kein Meetingsserver konfiguriert. Bitte wenden
                 Sie sich an eine/n Systemadministrator/in!
@@ -167,6 +167,10 @@ export default {
                         ? default_feature_obj.value
                         : true)
                     );
+                }
+
+                if (Object.keys(room).includes('group_id') && room.group_id == null) {
+                    room.group_id = '';
                 }
             }
 

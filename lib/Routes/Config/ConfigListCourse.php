@@ -42,9 +42,9 @@ class ConfigListCourse extends MeetingsController
         }
 
         $course_config['display'] = [
-            'addRoom' => $displayAddRoom,
-            'editRoom' => $displayEditRoom,
-            'deleteRoom' => $displayDeleteRoom,
+            'addRoom'         => $displayAddRoom,
+            'editRoom'        => $displayEditRoom,
+            'deleteRoom'      => $displayDeleteRoom,
             'deleteRecording' => $displayDeleteRecording,
         ];
 
@@ -58,12 +58,12 @@ class ConfigListCourse extends MeetingsController
         }
 
         if ($config && is_array($config)) {
-            foreach($config as $service => $service_val){
+            foreach ($config as $service => $service_val) {
                 if (isset($config[$service]['servers'])
                     && is_array($config[$service]['servers'])
                     && $config[$service]['servers']
                 ) {
-                    foreach($config[$service]['servers'] as $servers => $servers_val){
+                    foreach ($config[$service]['servers'] as $servers => $servers_val) {
                         $config[$service]['servers'][$servers] = true;
                     }
                 }
@@ -74,14 +74,14 @@ class ConfigListCourse extends MeetingsController
         if ($cid) {
             $groups = \Statusgruppen::findBySeminar_id($cid);
             foreach ($groups as $one_group) {
-                $course_groups[$one_group->id] = $one_group->name;
+                $course_groups[$one_group->id] = (string)$one_group->name;
             }
         }
 
         $response_result = [];
-        !$config            ?: $response_result['config'] = $config;
-        !$course_config     ?: $response_result['course_config'] = $course_config;
-        !$course_groups            ?: $response_result['course_groups'] = $course_groups;
+        !$config ?: $response_result['config'] = $config;
+        !$course_config ?: $response_result['course_config'] = $course_config;
+        !$course_groups ?: $response_result['course_groups'] = $course_groups;
 
         if (!empty($response_result)) {
             return $this->createResponse($response_result, $response);
@@ -100,7 +100,7 @@ class ConfigListCourse extends MeetingsController
      *
      * @return $config  plugin general config
      */
-    private function setDefaultServerProfiles ($config, $cid)
+    private function setDefaultServerProfiles($config, $cid)
     {
         $course = new \Course($cid);
         $members_count = count($course->members) + 5;
@@ -157,9 +157,9 @@ class ConfigListCourse extends MeetingsController
     {
         foreach ($config as $driver_name => $settings) {
             if ((isset($settings['record']) && $settings['record'] == "1")
-                    && (isset($settings['opencast']) && $settings['opencast'] == "1")
-                    && !empty(MeetingPlugin::checkOpenCast($cid))
-                    && (isset($settings['features']['record']))) {
+                && (isset($settings['opencast']) && $settings['opencast'] == "1")
+                && !empty(MeetingPlugin::checkOpenCast($cid))
+                && (isset($settings['features']['record']))) {
                 $record_index = array_search('record', array_column($settings['features']['record'], 'name'));
                 if ($record_index !== FALSE) {
                     $tooltip_text = I18N::_('Opencast wird als Aufzeichnungsserver verwendet. Diese Funktion ist im Testbetrieb und es kann noch zu Fehlern kommen.');
