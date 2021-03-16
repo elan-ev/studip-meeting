@@ -69,6 +69,25 @@ class RoomEdit extends MeetingsController
             // apply default features
 
             if (isset($json['features'])) {
+                // Apply validation on features inputs
+                try {
+                    $validated_features = $this->validateFeatureInputs($json['features'], $meeting->driver);
+                    if (!$validated_features) {
+                        $message = [
+                            'text' => I18N::_('Raumeinstellung kann nicht bearbeitet werden!'),
+                            'type' => 'error'
+                        ];
+                        return $this->createResponse([
+                            'message'=> $message,
+                        ], $response);
+                        die();
+                    } else {
+                        $json['features'] = $validated_features;
+                    }
+                } catch (Exception $e) {
+                    throw new Error($e->getMessage(), 404);
+                }
+                
                 if (!is_numeric($json['features']['duration'])) {
                     $json['features']['duration'] = "240";
                 }

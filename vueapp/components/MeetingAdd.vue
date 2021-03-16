@@ -140,7 +140,7 @@
                                                 : ''
                                             : ''
                                         )"
-                                        :min="(feature['name'] == 'maxParticipants') ? 20 : ''"
+                                        :min="(feature['name'] == 'maxParticipants') ? minParticipants : ((feature['name'] == 'duration') ? 1 : '')"
                                         @change="(feature['name'] == 'maxParticipants') ? checkPresets() : ''"
                                         v-model.trim="room['features'][feature['name']]"
                                         :placeholder="feature['value'] ? feature['value'] : ''"
@@ -416,7 +416,8 @@ export default {
             modal_message: {},
             message: '',
             showAddNewFolder: false,
-            showFilesInFolder: false
+            showFilesInFolder: false,
+            minParticipants: 20
         }
     },
 
@@ -532,19 +533,100 @@ export default {
             }
         },
 
-        validateMaxParticipants() {
+        validateMinMaxParticipants() {
             var isValid = true;
-            if (this.room['driver'] && this.room['server_index'] && this.room['features'] && this.room['features']['maxParticipants']
-             && Object.keys(this.config[this.room['driver']]).includes('server_defaults')
-             && Object.keys(this.config[this.room['driver']]['server_defaults'][this.room['server_index']]).includes('maxAllowedParticipants')
-             && parseInt(this.room['features']['maxParticipants']) > parseInt(this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'])) {
+            this.$set(this.modal_message, "text" , "");
+            var err_message = '';
+            if (this.room['driver'] && this.room['server_index'] && this.room['features'] && this.room['features']['maxParticipants']) {
+                if ( Object.keys(this.config[this.room['driver']]).includes('server_defaults')
+                && Object.keys(this.config[this.room['driver']]['server_defaults'][this.room['server_index']]).includes('maxAllowedParticipants')
+                && parseInt(this.room['features']['maxParticipants']) > parseInt(this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'])) {
+                    this.$set(this.room['features'], 'maxParticipants', this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants']);
+                    var maxAllowedParticipants = this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'];
+                    err_message = `Teilnehmerzahl darf ${maxAllowedParticipants} nicht überschreiten`.toLocaleString();
+                    isValid = false;
+                }
 
-                this.$set(this.room['features'], 'maxParticipants', this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants']);
-                var maxAllowedParticipants = this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'];
+                if (parseInt(this.room['features']['maxParticipants']) < parseInt(this.minParticipants)) {
+                    this.$set(this.room['features'], 'maxParticipants', parseInt(this.minParticipants));
+                    err_message = `Teilnehmerzahl soll ${this.minParticipants} nicht unterschreiten`.toLocaleString();
+                    isValid = false;
+                }
+            }
+
+            if (!isValid) {
                 this.modal_message.type = 'error';
-                this.modal_message.text = `Teilnehmerzahl darf ${maxAllowedParticipants} nicht überschreiten`.toLocaleString();
-                isValid = false;
+                setTimeout(() => {
+                    this.modal_message.text = err_message;
+                }, 150);
+            }
+            
+            return isValid;
+        },
 
+        validateFeatureInputs() {
+            var isValid = true;
+            var invalidInputs = [];
+             this.$set(this.modal_message, "text" , "");
+            if (Object.keys(this.config[this.room['driver']]).includes('features') && Object.keys(this.room).includes('features')) {
+                //loop through the config features...
+                for (const [config_feature_cat, config_feature_contents] of Object.entries(this.config[this.room['driver']]['features'])) {
+                    if (Array.isArray(config_feature_contents)) {
+                        //loop through room features
+                        config_feature_contents.forEach(config_feature => {
+                            if (Object.keys(this.room['features']).includes(config_feature.name)) {
+                                //Apply validation based on type of input
+                                switch (typeof config_feature.value) {
+                                    case 'boolean':
+                                        if ((typeof this.room['features'][config_feature.name] == 'string' && 
+                                            this.room['features'][config_feature.name] != 'true' && this.room['features'][config_feature.name] != 'false') 
+                                            || (typeof this.room['features'][config_feature.name] != 'string' 
+                                                && typeof this.room['features'][config_feature.name] != 'boolean')) {
+                                            invalidInputs.push(config_feature.display_name)
+                                            isValid = false;
+                                            this.$set(this.room['features'], config_feature.name, config_feature.value);
+                                        }
+                                    break;
+                                    case 'number':
+                                        var value = parseInt(this.room['features'][config_feature.name]);
+                                        if (Number.isInteger(value) && value > 0) {
+                                            this.$set(this.room['features'], config_feature.name, value);
+                                        } else {
+                                            invalidInputs.push(config_feature.display_name)
+                                            isValid = false;
+                                            this.$set(this.room['features'], config_feature.name, config_feature.value);
+                                        }
+                                    break;
+                                    case 'object':
+                                        if (!Object.keys(config_feature.value).includes(this.room['features'][config_feature.name])) {
+                                            invalidInputs.push(config_feature.display_name)
+                                            isValid = false;
+                                        }
+                                    break;
+                                    default: // Should be String
+                                        //sanitize - html tags
+                                        var value = config_feature.value;
+                                        var text = '';
+                                        if (config_feature.name == 'welcome') {
+                                            text = value.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+                                        } else {
+                                            text = value.replace(/(<([^>]+)>)/gi, "");
+                                        }
+                                        this.$set(this.room['features'], config_feature.name, text);
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+            
+            if (invalidInputs.length > 0) {
+                var invalid_inputs_str = invalidInputs.join('), (');
+                this.$set(this.modal_message, "text" , "");
+                this.$set(this.modal_message, "type" , "error");
+                setTimeout(() => {
+                    this.$set(this.modal_message, "text" , `Bitte beachten Sie die folgenden Felder (Eingaben auf Standard zurückgesetzt): (${invalid_inputs_str})`.toLocaleString());
+                }, 150);
             }
             return isValid;
         },
@@ -554,7 +636,11 @@ export default {
                 event.preventDefault();
             }
 
-            if (!this.validateMaxParticipants()) {
+            if (!this.validateFeatureInputs()) {
+                return;
+            }
+
+            if (!this.validateMinMaxParticipants()) {
                 return;
             }
 
@@ -610,7 +696,11 @@ export default {
                 event.preventDefault();
             }
 
-            if (!this.validateMaxParticipants()) {
+            if (!this.validateFeatureInputs()) {
+                return;
+            }
+
+            if (!this.validateMinMaxParticipants()) {
                 return;
             }
 

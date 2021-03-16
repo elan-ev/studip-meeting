@@ -77,6 +77,25 @@ class RoomAdd extends MeetingsController
                 $error_text = I18N::_('Server ist nicht definiert');
             }
 
+            // Apply validation on features inputs
+            try {
+                $validated_features = $this->validateFeatureInputs($json['features'], $json['driver']);
+                if (!$validated_features) {
+                    $message = [
+                        'text' => I18N::_('Raumeinstellung kann nicht bearbeitet werden!'),
+                        'type' => 'error'
+                    ];
+                    return $this->createResponse([
+                        'message'=> $message,
+                    ], $response);
+                    die();
+                } else {
+                    $json['features'] = $validated_features;
+                }
+            } catch (Exception $e) {
+                throw new Error($e->getMessage(), 404);
+            }
+
             $servers = Driver::getConfigValueByDriver($json['driver'], 'servers');
             $server_maxParticipants = $servers[$json['server_index']]['maxParticipants'];
             if (is_numeric($server_maxParticipants) && $server_maxParticipants > 0 && $json['features']['maxParticipants'] > $server_maxParticipants) {
