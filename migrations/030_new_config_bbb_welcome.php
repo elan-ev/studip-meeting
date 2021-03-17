@@ -18,12 +18,19 @@ class NewConfigBBBWelcome extends Migration
      */
     public function up()
     {
-        $config = \Config::get()->getValue('VC_CONFIG');
-        $config = json_decode($config, true);
+        if (Config::get()->VC_CONFIG) {
+            $current_config = Config::get()->getValue('VC_CONFIG');
+            $current_config = json_decode($current_config, true);
+            if ($current_config && isset($current_config['BigBlueButton'])) {
+                $welcome_array = ["welcome" => "Welcome to <b>%%CONFNAME%%</b>!<br><br>For help on using BigBlueButton see these (short) <a href='event:http://www.bigbluebutton.org/html5'><u>tutorial videos</u></a>.<br><br>To join the audio bridge click the phone button.  Use a headset to avoid causing background noise for others."];
+                $current_config['BigBlueButton'] = array_merge($current_config['BigBlueButton'], $welcome_array);
+                $encoded_json = json_encode($current_config);
+                if ($encoded_json) {
+                    Config::get()->store('VC_CONFIG', json_encode($current_config));
+                }
+            }
 
-        $config['BigBlueButton']['welcome']='Welcome to <b>%%CONFNAME%%</b>!<br><br>For help on using BigBlueButton see these (short) <a href="event:http://www.bigbluebutton.org/html5"><u>tutorial videos</u></a>.<br><br>To join the audio bridge click the phone button.  Use a headset to avoid causing background noise for others.';
-
-        \Config::get()->store('VC_CONFIG', json_encode($config));
+        }
     }
 
     /**
@@ -31,11 +38,17 @@ class NewConfigBBBWelcome extends Migration
      */
     public function down()
     {
-        $config = \Config::get()->getValue('VC_CONFIG');
-        $config = json_decode($config, true);
-
-        unset($config['BigBlueButton']['welcome']);
-
-        \Config::get()->store('VC_CONFIG', json_encode($config));
+        if (Config::get()->VC_CONFIG) {
+            $current_config = \Config::get()->getValue('VC_CONFIG');
+            $current_config = json_decode($current_config, true);
+            if ($current_config && isset($current_config['BigBlueButton']) && isset($current_config['BigBlueButton']['welcome'])) {
+                unset($current_config['BigBlueButton']['welcome']);
+                $encoded_json = json_encode($current_config);
+                if ($encoded_json) {
+                    Config::get()->store('VC_CONFIG', json_encode($current_config));
+                }
+            }
+            
+        }
     }
 }
