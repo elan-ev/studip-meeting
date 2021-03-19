@@ -31,6 +31,7 @@ class Driver
             $title = '';
             $config_options = [];
             $recording_options = [];
+            $preupload_option = [];
             if (in_array('ElanEv\Driver\DriverInterface', class_implements($class)) !== false) {
                 $title          = substr(basename($filename), 0, -4);
                 $config_options = $class::getConfigOptions();
@@ -45,6 +46,10 @@ class Driver
                 }
             }
 
+            if (in_array('ElanEv\Driver\FolderManagementInterface', class_implements($class)) !== false) {
+                $preupload_option['preupload'] = new \ElanEv\Driver\ConfigOption('preupload', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Automatisches Hochladen von Folien zulassen'), true); // Translation: Allow automatic upload of slides;
+            }
+
             if ($title && $config_options) {
                 $drivers[$title] = array(
                     'title'        => $title,
@@ -53,6 +58,7 @@ class Driver
                 );
 
                 !$recording_options ?:  $drivers[$title]['recording'] = $toArray ? self::convertDriverConfigToArray($recording_options) : $recording_options;
+                !$preupload_option ?:  $drivers[$title]['preupload'] = $toArray ? self::convertDriverConfigToArray($preupload_option) : $preupload_option;
             }
         }
 
@@ -108,9 +114,9 @@ class Driver
             if (in_array('ElanEv\Driver\RecordingInterface', class_implements($class)) !== false) {
                 self::$config[$driver_name]['features']['record'] = self::convertDriverConfigToArray($class::getRecordFeature());
             }
-            if (in_array('ElanEv\Driver\FolderManagementInterface', class_implements($class)) !== false) {
+            /* if (in_array('ElanEv\Driver\FolderManagementInterface', class_implements($class)) !== false) {
                 self::$config[$driver_name]['features']['folders'] = true;
-            }
+            } */
         }
     }
 
