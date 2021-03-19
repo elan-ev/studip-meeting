@@ -36,6 +36,18 @@ class ConfigAdd extends MeetingsController
                         }
                     }
                 }
+
+                // Remove folder_id from meetings when the preupload is off
+                if (isset($config_options['preupload']) && !filter_var($config_options['preupload'], FILTER_VALIDATE_BOOLEAN)) {
+                    $courseMeetings = MeetingCourse::findAll();
+                    foreach ($courseMeetings as $courseMeeting) {
+                        if ($courseMeeting->meeting->driver == $driver_name && $courseMeeting->meeting->folder_id) {
+                            $courseMeeting->meeting->folder_id = null;
+                            $courseMeeting->meeting->store();
+                        }
+                    }
+                }
+
                 $valid_servers = Driver::setConfigByDriver($driver_name, $config_options);
 
                 if (!$valid_servers) {

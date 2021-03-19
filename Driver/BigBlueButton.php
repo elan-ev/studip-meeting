@@ -469,7 +469,11 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     public function prepareSlides($meetingId)
     {
         $options = [];
-
+        
+        if (Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'preupload') == false) {
+            return $options;
+        }
+        
         $meeting = new Meeting($meetingId);
 
         if ($meeting->isNew() || empty($meeting->folder_id)) {

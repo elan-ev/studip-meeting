@@ -56,6 +56,21 @@
                     </label>
                 </div>
 
+                <div v-if="Object.keys(driver).includes('preupload')">
+                    <label v-for="(rval, rkey) in driver['preupload']" :key="rkey">
+                        <input v-if="typeof rval['value'] == 'boolean'" type="checkbox"
+                        true-value="1"
+                        false-value="0"
+                        v-model="config[driver_name][rval['name']]">
+                        <span :class="{'disabled': rval['name'] != 'preupload' && config[driver_name]['preupload'] != '1'}">
+                            {{ rval['display_name'] }}
+                        </span>
+
+                        <StudipTooltipIcon v-if="Object.keys(rval).includes('info')" :text="rval['info']">
+                        </StudipTooltipIcon>
+                    </label>
+                </div>
+
                 <label v-if="Object.keys(config[driver_name]).includes('welcome')">
                     <translate>Willkommensnachricht</translate>
                     <textarea v-model="config[driver_name]['welcome']" cols="30" rows="5"></textarea>

@@ -57,14 +57,31 @@ class SlidesShow extends MeetingsController
                 return;
             }
 
-            $path_file = $file_ref->file->storage == 'disk' ? $file_ref->file->path : $file_ref->file->url;
-            $filesize = @filesize($path_file);
-            $file_name = $file_ref->name;
+            $path_file = '';
+            $filesize = 0;
+            $is_url_file = false;
+            $redirect_url_file = '';
+            if (method_exists($file_ref, 'getFileType')) { // StudIP >= 4.6
+                $path_file = is_a($file_ref->file->filetype, "URLFile")
+                       ? $file_ref->file->metadata['url']
+                       : $file_ref->file->path;
+                $is_url_file =  !is_a($file_ref->file->filetype, "URLFile") ? false : true;
+                $redirect_url_file = $file_ref->file->metadata['access_type'];
+                $filesize = $file_ref->getFileType()->getSize();
+            } else { // StudIP < 4.6
+                $path_file = $file_ref->file->storage == 'disk'
+                        ? $file_ref->file->path
+                        : $file_ref->file->url;
+                $is_url_file = $file_ref->file->storage == 'disk' ? false : true;
+                $redirect_url_file = $file_ref->file->url_access_type;
+                $filesize = @filesize($path_file);
+            }
+
             if (!$filesize) {
                 return;
             }
-            if ($file_ref->file->url_access_type == 'redirect') {
-                header('Location: ' . $file_ref->file->url);
+            if ($is_url_file && $redirect_url_file == 'redirect') {
+                header('Location: ' . $path_file);
                 die();
             }
             $content_type = $file_ref->mime_type ?: get_mime_type($file_name);
@@ -76,7 +93,7 @@ class SlidesShow extends MeetingsController
                 ob_end_clean();
             }
 
-            if ($filesize && $file_ref->file->storage == 'disk') {
+            if ($filesize && !$is_url_file) {
                 header("Accept-Ranges: bytes");
                 $start = 0;
                 $end = $filesize - 1;

@@ -214,9 +214,8 @@
                         </label>
                     </fieldset>
 
-                    <fieldset v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
-                                && Object.keys(config[room['driver']]['features']).includes('folders')
-                                && config[room['driver']]['features']['folders'] == true">
+                    <fieldset v-if="room['driver'] && Object.keys(config[room['driver']]).includes('preupload')
+                                && config[room['driver']]['preupload'] == true">
                         <legend>
                             <translate>
                                 Automatisches hochladen von Materialien
@@ -277,7 +276,7 @@
                                                 </td>
                                             </tr>
                                         </tbody>
-                                        <tbody class="files" v-if="Object.keys(folder['files']).length <= 5 || showFilesInFolder">
+                                        <tbody class="files" v-if="Object.keys(folder['files']).length <= numFileInFolderLimit || showFilesInFolder">
                                             <tr v-for="(finfo, fid) in folder.files" :key="fid">
                                                 <td>
                                                     <div>
@@ -291,19 +290,21 @@
 
                                         <tbody v-else>
                                             <tr class="empty">
-                                                <span v-if="Object.keys(folder).includes('files')
-                                                    && Object.keys(folder['files']).length > 5"
-                                                    v-translate="{
-                                                        count: Object.keys(folder['files']).length
-                                                    }"
-                                                >
-                                                    In diesem Ordner befinden sich %{ count } Dateien <br>
-                                                    die aus Gründen der Übersichtlichkeit ausgeblendet wurden. <br>
-                                                    Wählen sie "Alle Dateien anzeigen" um diese Dateien aufzulisten
-                                                </span>
-                                                <span v-else v-translate>
-                                                    Dieser Ordner ist leer
-                                                </span>
+                                                <td>
+                                                    <span v-if="Object.keys(folder).includes('files')
+                                                        && Object.keys(folder['files']).length > numFileInFolderLimit"
+                                                        v-translate="{
+                                                            count: Object.keys(folder['files']).length
+                                                        }"
+                                                    >
+                                                        In diesem Ordner befinden sich %{ count } Dateien <br>
+                                                        die aus Gründen der Übersichtlichkeit ausgeblendet wurden. <br>
+                                                        Wählen sie "Alle Dateien anzeigen" um diese Dateien aufzulisten
+                                                    </span>
+                                                    <span v-else v-translate>
+                                                        Dieser Ordner ist leer
+                                                    </span>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </template>
@@ -325,7 +326,7 @@
                                                     <a class="button" @click.prevent="showAddNewFolder = true" v-translate>
                                                         Neuer Ordner
                                                     </a>
-                                                    <a @click.prevent="showFilesInFolder = !showFilesInFolder" class="right">
+                                                    <a v-if="Object.keys(folder).includes('files') && Object.keys(folder['files']).length > numFileInFolderLimit" @click.prevent="showFilesInFolder = !showFilesInFolder" class="right">
                                                         <StudipIcon :icon="(showFilesInFolder) ? 'checkbox-checked' : 'checkbox-unchecked'"
                                                             role="clickable" size="14"></StudipIcon>
                                                         <span v-translate>Alle Dateien anzeigen</span>
@@ -417,6 +418,7 @@ export default {
             message: '',
             showAddNewFolder: false,
             showFilesInFolder: false,
+            numFileInFolderLimit: 5,
             minParticipants: 20
         }
     },
