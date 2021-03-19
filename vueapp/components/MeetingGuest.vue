@@ -24,10 +24,10 @@
                 </form>
             </template>
             <template v-slot:buttons>
-                <StudipButton type="button" v-on:click="copyGuestLinkClipboard($event)" v-if="guest_link">
+                <StudipButton id="copy_link_btn" type="button" v-on:click="copyGuestLinkClipboard($event)" style="display: none;">
                     <translate>In Zwischenablage kopieren</translate>
                 </StudipButton>
-                <StudipButton id="generate_link_btn" icon="accept" type="button" v-on:click="generateGuestJoin($event)" v-else>
+                <StudipButton id="generate_link_btn" icon="accept" type="button" v-on:click="generateGuestJoin($event)">
                     <translate>Einladungslink erstellen</translate>
                 </StudipButton>
 
@@ -40,8 +40,6 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import store from "@/store";
 
 import StudipButton from "@/components/StudipButton";
 import StudipIcon from "@/components/StudipIcon";
@@ -59,7 +57,7 @@ import {
 } from "@/store/mutations.type";
 
 export default {
-    name: "MeetingFeedback",
+    name: "MeetingGuest",
 
     props: ['room'],
 
@@ -81,12 +79,6 @@ export default {
         }
     },
 
-    computed: {
-        ...mapGetters([
-            'feedback'
-        ])
-    },
-
     mounted() {
         this.$store.commit(ROOM_CLEAR);
         this.$store.dispatch(ROOM_INVITATION_LINK, this.room)
@@ -103,14 +95,12 @@ export default {
                 event.preventDefault();
             }
 
-            let view = this;
-
             if (this.room && this.guest_name) {
                 this.room.guest_name = this.guest_name;
                 this.$store.dispatch(ROOM_JOIN_GUEST, this.room)
                 .then(({ data }) => {
                     if (data.join_url != '') {
-                        view.guest_link = data.join_url;
+                        this.guest_link = data.join_url;
                     }
                     if (data.message) {
                         this.modal_message = data.message;
@@ -151,6 +141,20 @@ export default {
                 }
             }
         }
-    }
+    },
+    watch: {
+        guest_link(newValue, oldValue) {
+            if (newValue != '') {
+                $('#copy_link_btn').show();
+                $('#generate_link_btn').hide();
+            } else {
+                $('#copy_link_btn').hide();
+                $('#generate_link_btn').show();
+            }
+        },
+        guest_name() {
+            this.guest_link = '';
+        }
+    },
 }
 </script>
