@@ -60,7 +60,7 @@
                         <StudipIcon class="info-icon" :icon="room.join_as_moderator == 1 ? 'lock-unlocked' : 'lock-locked'" role="clickable" size="24"></StudipIcon>
                     </a>
                     <span :id="'rights-info-text-' + room.id" class="">{{ room.join_as_moderator == 1 ?
-                                $gettext('Teilnehmende haben Administrations-Rechte')
+                                $gettext('Teilnehmende haben Moderationsrechte')
                                 : $gettext('Teilnehmende haben eingeschränkte Rechte') }}
                     </span>
                 </div>
