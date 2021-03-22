@@ -74,10 +74,12 @@ class DriverFactory
         }
 
         //resolve selected server
-        foreach ($driver_conf['servers'][$server_index] as $key => $val) {
-            $driver_conf[$key] = $val;
+        if (isset($driver_conf['servers']) && isset($driver_conf['servers'][$server_index])) {
+            foreach ($driver_conf['servers'][$server_index] as $key => $val) {
+                $driver_conf[$key] = $val;
+            }
+            unset($driver_conf['servers']);
         }
-        unset($driver_conf['servers']);
 
         if (!$driver_conf['url']) {
             throw new DriverError(sprintf('The driver "%s" has not configured the url config option!', $driver), 404);
