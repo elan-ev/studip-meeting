@@ -96,7 +96,7 @@ export default {
             }
 
             if (this.room && this.guest_name) {
-                this.room.guest_name = this.guest_name;
+                this.room.guest_name = this.sonderzeichen(this.guest_name);
                 this.$store.dispatch(ROOM_JOIN_GUEST, this.room)
                 .then(({ data }) => {
                     if (data.join_url != '') {
@@ -140,6 +140,25 @@ export default {
                     console.log(e);
                 }
             }
+        },
+
+        sonderzeichen(string) {
+            const umlautMap = {
+                '\u00dc': 'UE',
+                '\u00c4': 'AE',
+                '\u00d6': 'OE',
+                '\u00fc': 'ue',
+                '\u00e4': 'ae',
+                '\u00f6': 'oe',
+                '\u00df': 'ss',
+            }
+            return string.replace(/[\u00dc|\u00c4|\u00d6][a-z]/g, (a) => {
+                    const big = umlautMap[a.slice(0, 1)];
+                    return big.charAt(0) + big.charAt(1).toLowerCase() + a.slice(1);
+                })
+                .replace(new RegExp('['+Object.keys(umlautMap).join('|')+']',"g"),
+                    (a) => umlautMap[a]
+                );
         }
     },
     watch: {
