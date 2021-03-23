@@ -124,6 +124,7 @@ class RoomController extends PluginController
         if (!$name) {
             $name = $invitations_link->default_name;
         }
+        $name = $this->sonderzeichen($name);
         $meeting = $invitations_link->meeting;
 
         $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
@@ -139,5 +140,23 @@ class RoomController extends PluginController
         header('Status: 301 Moved Permanently', false, 301);
         header('Location:' . $join_url);
         die;
+    }
+
+    /**
+    * Replaces the names with Umlauts
+    *
+    * @param string $string the string to replace the umlauts
+    * @return string 
+    */
+    private function sonderzeichen($string) {
+        $string = str_replace("ä", "ae", $string);
+        $string = str_replace("ü", "ue", $string);
+        $string = str_replace("ö", "oe", $string);
+        $string = str_replace("Ä", "Ae", $string);
+        $string = str_replace("Ü", "Ue", $string);
+        $string = str_replace("Ö", "Oe", $string);
+        $string = str_replace("ß", "ss", $string);
+        $string = str_replace("´", "", $string);
+        return $string;
     }
 }
