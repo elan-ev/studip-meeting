@@ -78,6 +78,10 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 $features['welcome'] = Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'welcome');
             }
 
+            if (isset($features['meta_opencast-dc-isPartOf'])) {
+                $features['meta_opencast-dc-title'] = htmlspecialchars($params['name']);
+            }
+
             $params = array_merge($params, $features);
         }
 
