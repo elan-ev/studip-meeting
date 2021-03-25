@@ -19,6 +19,7 @@ require_once __DIR__.'/bootstrap.php';
 
 use ElanEv\Model\CourseConfig;
 use ElanEv\Model\MeetingCourse;
+use ElanEv\Model\Meeting;
 
 use Meetings\AppFactory;
 use Meetings\RouteMap;
@@ -52,6 +53,8 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
             }
         }
 
+        NotificationCenter::addObserver($this, 'DeleteMeetingOnUserDelete', 'UserDidDelete');
+        NotificationCenter::addObserver($this, 'UpdateMeetingOnUserMigrate', 'UserDidMigrate');
 
         // do nothing if plugin is deactivated in this seminar/institute
         if (!$this->isActivated()) {
@@ -323,5 +326,34 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
         $plugin_path = \get_config('PLUGINS_PATH') . '/' .$this_plugin['path'];
         $manifest = $plugin_manager->getPluginManifest($plugin_path);
         return $manifest;
+    }
+
+    /**
+    * DeleteMeetingOnUserDelete: handler for UserDidDelete event
+    *
+    * @param object event
+    * @param user $user
+    * 
+    */
+    public function DeleteMeetingOnUserDelete($event, $user) {
+        foreach (MeetingCourse::findByUser($user) as $meetingCourse) {
+            $meetingCourse->meeting->delete();
+            $meetingCourse->delete();
+        }
+    }
+
+    /**
+    * UpdateMeetingOnUserMigrate: handler for UserDidMigrate event
+    *
+    * @param string $old_id old user id
+    * @param string $new_id new user id
+    * 
+    */
+    public function UpdateMeetingOnUserMigrate($event, $old_id, $new_id) {
+        $user_meetings = Meeting::findBySQL('user_id = ?', [$old_id]);
+        foreach ($user_meetings as $meeting) {
+            $meeting->user_id = $new_id;
+            $meeting->store();
+        }
     }
 }
