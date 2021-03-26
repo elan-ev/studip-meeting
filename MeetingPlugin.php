@@ -63,6 +63,17 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
     }
 
     /**
+     * Checks if the context in which the plugin is activated is of Course type.
+     *
+     * @param Range $context
+     * @return bool
+     */
+    public function isActivatableForContext(Range $context)              
+    {
+        return get_class($context) === \Course::class;
+    }
+
+    /**
      * Plugin localization for a single string.
      * This method supports sprintf()-like execution if you pass additional
      * parameters.
