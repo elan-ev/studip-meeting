@@ -24,51 +24,41 @@ class NewConfig extends Migration {
     public function up()
     {
         try {
-            if (StudipVersion::olderThan('4.2')) {
-                $query = "REPLACE INTO `config`
-                   (`field`, `value`, `type`, `range`, `section`,
-                    `mkdate`, `chdate`, `description`)
-                 VALUES (:field, :value, :type, 'global', 'meetings',
-                         UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), :description)";
-            } else {
-                $query = "REPLACE INTO `config`
-                   (`field`, `value`, `type`, `range`, `section`,
-                    `mkdate`, `chdate`, `description`)
-                 VALUES (:field, :value, :type, 'global', 'meetings',
-                         UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), :description)";
-             }
+            Config::get()->create('VC_CONFIG', array(
+                'value' => '', 
+                'type' => 'string',
+                'range' => 'global',
+                'section' => 'meetings',
+                'description' => _('Konfiguration des Meetings-Plugins im JSON Format')
+            ));
 
-             $statement = DBManager::get()->prepare($query);
-
-             $statement->execute(array(
-                 ':field' => 'VC_CONFIG',
-                 ':value' => '',
-                 ':type'  => 'string',
-                 ':description' => 'Konfiguration des Meetings-Plugins im JSON Format',
-             ));
-
-
+            $config = array(
+                'BigBlueButton' => array(
+                    'enable'       => 0,
+                    'display_name' => 'BigBlueButton',
+                    'url'          => '',
+                    'api-key'      => ''
+                ),
+                'DfnVc' => array(
+                    'enable'       => 0,
+                    'display_name' => 'Adobe Connect VC',
+                    'url'          => '',
+                    'login'        => '',
+                    'password'     => ''
+                )
+            );
             //migrate current settings
             if (Config::get()->VC_DRIVER) {
                 $current_driver = Config::get()->getValue('VC_DRIVER');
+                
+                $config['BigBlueButton']['enable'] = (trim(strtolower($current_driver)) == 'bigbluebutton') ? 1 : 0;
+                $config['BigBlueButton']['url'] = (Config::get()->BBB_URL) ? Config::get()->getValue('BBB_URL') : '';
+                $config['BigBlueButton']['api-key'] = (Config::get()->BBB_SALT) ? Config::get()->getValue('BBB_SALT') : '';
 
-                $config = array(
-                    'BigBlueButton' => array(
-                        'enable'       => ($current_driver == 'bigbluebutton') ? 1 : 0,
-                        'display_name' => 'BigBlueButton',
-                        'url'          => Config::get()->getValue('BBB_URL'),
-                        'api-key'      => Config::get()->getValue('BBB_SALT')
-                    ),
-                    'DfnVc' => array(
-                        'enable' => ($current_driver == 'dfnvc') ? 1 : 0,
-                        'display_name' => 'Adobe Connect VC',
-                        'url'          => Config::get()->getValue('DFN_VC_URL'),
-                        'login'        => Config::get()->getValue('DFN_VC_LOGIN'),
-                        'password'     => Config::get()->getValue('DFN_VC_PASSWORD')
-                    )
-                );
-
-                \Config::get()->store('VC_CONFIG', json_encode($config));
+                $config['DfnVc']['enable'] = (trim(strtolower($current_driver)) == 'dfnvc') ? 1 : 0;
+                $config['DfnVc']['url'] = (Config::get()->DFN_VC_URL) ? Config::get()->getValue('DFN_VC_URL') : '';
+                $config['DfnVc']['login'] = (Config::get()->DFN_VC_LOGIN) ? Config::get()->getValue('DFN_VC_LOGIN') : '';
+                $config['DfnVc']['password'] = (Config::get()->DFN_VC_PASSWORD) ? Config::get()->getValue('DFN_VC_PASSWORD') : '';
 
                 Config::get()->delete('BBB_URL');
                 Config::get()->delete('BBB_SALT');
@@ -78,6 +68,9 @@ class NewConfig extends Migration {
                 Config::get()->delete('VC_DRIVER');
                 Config::get()->delete(\ElanEv\Driver\DriverFactory::DEFAULT_DRIVER_CONFIG_ID);
             }
+
+            \Config::get()->store('VC_CONFIG', json_encode($config));
+
         } catch (InvalidArgumentException $ex) {
 
         }
