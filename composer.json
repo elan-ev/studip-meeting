@@ -2,9 +2,9 @@
     "name": "elanev/meeting-plugin",
     "description": "integrate video conference services into the Stud.IP LMS",
     "require": {
-        "guzzlehttp/guzzle": "~6.3",
+        "guzzlehttp/guzzle": "^6.3",
         "guzzlehttp/psr7": "~1.6.1",
-        "slim/slim": "~3.12"
+        "slim/slim": "^3.12"
     },
     "autoload": {
         "psr-4": {
