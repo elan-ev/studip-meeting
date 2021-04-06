@@ -47,9 +47,14 @@ class RoomEdit extends MeetingsController
         $name = trim($json['name']);
         $allow_change_driver = (isset($json['driver']) && !empty($json['driver'])) || !isset($json['driver']);
         $allow_change_server_index = (isset($json['server_index']) && is_numeric($json['server_index'])) || !isset($json['server_index']);
+        // Checking Course Type
+        $servers = Driver::getConfigValueByDriver($json['driver'], 'servers');
+        $allow_course_type = MeetingPlugin::checkCourseType($meetingCourse->course, $servers[$json['server_index']]['course_types']);
+        //Checking Server Active
+        $active_server = $servers[$json['server_index']]['active'];
 
         $message = [];
-        if (!$meetingCourse->isNew() && $name && $allow_change_driver && $allow_change_server_index) {
+        if (!$meetingCourse->isNew() && $name && $allow_change_driver && $allow_change_server_index && $allow_course_type && $active_server) {
             $change_date = new \DateTime();
             if (isset($json['active'])) {
                 $meetingCourse->active = $json['active'];
@@ -142,8 +147,9 @@ class RoomEdit extends MeetingsController
                 'type' => 'success'
             ];
         } else {
+            $message = ($allow_course_type ? 'Raumeinstellung kann nicht bearbeitet werden!' : 'Der ausgewählte Server ist in diesem Veranstaltungstyp nicht verfügbar');
             $message = [
-                'text' => I18N::_('Raumeinstellung kann nicht bearbeitet werden!'),
+                'text' => I18N::_($message),
                 'type' => 'error'
             ];
         }

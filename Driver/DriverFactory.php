@@ -53,6 +53,9 @@ class DriverFactory
      *
      * @param string $driver The name of the driver to use (one of the
      *                       DRIVER_ constants)
+     * @param string $server_index The index of the server to look for
+     * @param boolean $checking To indicate the use of the method, whether it is for
+     *                      background check for connectivity or it is for real connection
      *
      * @return DriverInterface The driver instance
      *
@@ -60,7 +63,7 @@ class DriverFactory
      * @throws \LogicException           if a required configuration option
      *                                   is missing
      */
-    public function getDriver($driver, $server_index)
+    public function getDriver($driver, $server_index, $checking = false)
     {
         $driver = strtolower($driver);
 
@@ -74,11 +77,19 @@ class DriverFactory
         }
 
         //resolve selected server
+        $server_num = 0;
         if (isset($driver_conf['servers']) && isset($driver_conf['servers'][$server_index])) {
+            $server_num = count($driver_conf['servers']);
             foreach ($driver_conf['servers'][$server_index] as $key => $val) {
                 $driver_conf[$key] = $val;
             }
             unset($driver_conf['servers']);
+        }
+
+        if (!$driver_conf['active'] && !$checking) {
+            $message = ($server_num > 1) ? sprintf('The server %s of "%s" is deactivated.', ($server_index + 1), $driver)
+                    : sprintf('The driver "%s" is deactivated.', $driver);
+            throw new DriverError($message, 404);
         }
 
         if (!$driver_conf['url']) {

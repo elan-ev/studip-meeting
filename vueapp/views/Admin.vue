@@ -84,11 +84,13 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th v-for="(value, key) in driver.config" :key="key">
-                                    <template v-if="value.name != 'roomsize-presets'">
-                                        {{ value.display_name }}
-                                    </template>
-                                </th>
+                                <template v-for="(value, key) in driver.config">
+                                    <th v-if="value.name != 'roomsize-presets'" :key="key"
+                                    :class="{td_center:value.name == 'active'}"
+                                    :title="value.display_name">
+                                         {{ value.display_name }}
+                                    </th>
+                                </template>
                                 <th v-translate>Aktionen</th>
                             </tr>
                         </thead>
@@ -96,19 +98,29 @@
                             <tr v-for="(server, index) in config[driver_name].servers" :key="index"
                                 :class="{'active nohover': (server_object[driver_name]['index'] == index)}">
                                 <td>{{ index + 1 }}</td>
-                                <td v-for="(value, key) in driver.config" :key="key">
-                                    <template v-if="value.name != 'roomsize-presets'">
+                                <template v-for="(value, key) in driver.config">
+                                    <td :key="key" v-if="value.name && value.name != 'roomsize-presets'"
+                                    :class="{td_center:value.name == 'active'}"
+                                    :title="(value.name != 'active' && value.name != 'course_types' ? server[value.name] : '')"
+                                    >
                                         <template v-if="value.name == 'maxParticipants'
                                                 && (!(server[value.name]) || parseInt(server[value.name]) == 0)"
                                             v-translate
                                         >
                                             Ohne Grenze
                                         </template>
+                                        <template v-else-if="value.name == 'course_types'" v-translate>
+                                            {{ getCourseTypeName(server[value.name], driver_name) }}
+                                        </template>
+                                        <template v-else-if="value.name == 'active'" v-translate>
+                                            <StudipIcon :icon="(server[value.name]) ? 'checkbox-checked' : 'checkbox-unchecked'"
+                                                role="clickable" size="14"></StudipIcon>
+                                        </template>
                                         <template v-else>
                                             {{ server[value.name] }}
                                         </template>
-                                    </template>
-                                </td>
+                                    </td>
+                                </template>
                                 <td>
                                     <a style="cursor: pointer;" @click.prevent="prepareEditServer(driver_name, index)">
                                         <StudipIcon icon="edit" role="clickable" ></StudipIcon>
@@ -141,6 +153,12 @@
             </fieldset>
 
             <MessageList :messages="message ? [message] : []" />
+
+            <MessageBox v-if="changes_made" type="warning">
+                <translate>
+                    Ihre Änderungen sind noch nicht gespeichert!
+                </translate>
+            </MessageBox>
 
             <footer>
                 <StudipButton icon="accept"
@@ -231,6 +249,8 @@ export default {
                 } else {
                     this.server_object[driver_name][key] = -1;
                 }
+                // Pre-define active param.
+                this.$set(this.server_object[driver_name], 'active', true);
             }
         },
 
@@ -302,6 +322,20 @@ export default {
                     }
                 }
             }, 100);
+        },
+
+        getCourseTypeName(type_id, driver_name) {
+            if (!type_id) {
+                return 'Alle';
+            }
+            type_id = type_id + '';
+            var class_id = type_id.split('_')[0];
+            var config_course_types = this.drivers[driver_name]['config'].find( cf => { return cf.name == 'course_types'});
+            if (config_course_types.value && config_course_types.value[class_id]['subs'] && config_course_types.value[class_id]['subs'][type_id]) {
+                return config_course_types.value[class_id]['subs'][type_id];
+            } else {
+                return 'Unbekannt';
+            }
         }
     },
 

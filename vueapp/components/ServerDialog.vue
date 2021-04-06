@@ -8,9 +8,26 @@
 
                 <form class="default" style="position: relative" @submit="edit">
                     <div v-for="(value, key) in driver.config" :key="key">
-                        <label v-if="value.name != 'enable' && value.name != 'roomsize-presets'" class="large">
+                        <label v-if="value.name != 'roomsize-presets'" class="large">
                             {{ value.display_name }}
-                            <input class="size-l" :type="(value.name == 'maxParticipants') ? 'number' : 'text'" min="0" @change="(value.name == 'maxParticipants') ? reduceMins() : ''"
+                            <StudipTooltipIcon v-if="Object.keys(value).includes('info')" :text="value['info']"></StudipTooltipIcon>
+                            <select v-if="value.value && typeof value.value == 'object' && value.name == 'course_types'" :id="value.name" v-model.trim="server[driver_name][value.name]">
+                                <option value="" v-translate>
+                                    Alle
+                                </option>
+                                <template v-for="(cvalue, cindex) in value.value">
+                                    <optgroup style="font-weight:bold;" :label="cvalue.name" :key="cindex">
+                                        <option v-for="(svalue, sindex) in cvalue.subs" :key="sindex" :value="sindex">
+                                            {{svalue}}
+                                        </option>
+                                    </optgroup>
+                                </template>
+                            </select>
+                             <input v-else-if="typeof value.value == 'boolean'" type="checkbox" style="cursor: pointer;"
+                                :true-value="true"
+                                :false-value="false"
+                                v-model="server[driver_name][value.name]">
+                            <input v-else class="size-l" :type="(value.name == 'maxParticipants') ? 'number' : 'text'" min="0" @change="(value.name == 'maxParticipants') ? reduceMins() : ''"
                                 v-model="server[driver_name][value.name]"
                                 :placeholder="value.value">
                         </label>
@@ -39,10 +56,10 @@
     </div>
 </template>
 <script>
-import axios from 'axios';
 import StudipButton from "@/components/StudipButton";
 import ServerRoomSize from "@/components/ServerRoomSize";
 import MessageBox from "@/components/MessageBox";
+import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 
 import { dialog } from '@/common/dialog.mixins'
 
@@ -61,7 +78,8 @@ export default {
     components: {
         StudipButton,
         ServerRoomSize,
-        MessageBox
+        MessageBox,
+        StudipTooltipIcon,
     },
 
     data() {
@@ -72,7 +90,9 @@ export default {
         };
     },
 
-    mounted() {},
+    mounted() {
+        this.initDefaultValues();
+    },
 
     methods: {
         close() {
@@ -134,6 +154,12 @@ export default {
                         this.server[this.driver_name]['roomsize-presets'][size_key]['minParticipants'] = this.server[this.driver_name]['maxParticipants'];
                     }
                 }
+            }
+        },
+
+        initDefaultValues() {
+            if (this.server[this.driver_name] && !Object.keys(this.server[this.driver_name]).includes('course_types')) {
+                this.$set(this.server[this.driver_name], 'course_types', '');
             }
         }
     },

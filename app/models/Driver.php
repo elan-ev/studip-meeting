@@ -167,7 +167,7 @@ class Driver
                         $valid_servers = false;
                         continue;
                     }
-                    $driver = $driver_factory->getDriver($driver_name, $index);
+                    $driver = $driver_factory->getDriver($driver_name, $index, true);
                     if (!$driver->checkServer()) {
                         $valid_servers = false;
                     }

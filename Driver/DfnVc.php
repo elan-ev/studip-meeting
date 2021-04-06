@@ -33,6 +33,16 @@ class DfnVc implements DriverInterface
     private $password;
 
     /**
+     * @var string Course Type in which the server of this driver should be used "{$semClassId}_{$semClassTypeId}"
+     */
+    public $course_type;
+
+    /**
+     * @var boolean Indication of server activation
+     */
+    public $active;
+
+    /**
      * @param ClientInterface $client
      * @param string          $login
      * @param string          $password
@@ -43,6 +53,8 @@ class DfnVc implements DriverInterface
         $this->login    = $config['login'];
         $this->password = $config['password'];
         $this->url      = $config['url'];
+        $this->course_type = (isset($config['course_types'])) ? $config['course_types'] : '';
+        $this->active = (isset($config['active'])) ? $config['active'] : true;
     }
 
     /**
@@ -376,9 +388,11 @@ class DfnVc implements DriverInterface
     public static function getConfigOptions()
     {
         return array(
+            new ConfigOption('active', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aktiv?'), true),
             new ConfigOption('url', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'API-Endpoint'), 'https://connect.vc.dfn.de'),
             new ConfigOption('login', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Funktionskennung')),
-            new ConfigOption('password', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Passwort'))
+            new ConfigOption('password', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Passwort')),
+            new ConfigOption('course_types', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Veranstaltungstyp'), MeetingPlugin::getSemClasses(), _('Nur in folgenden Veranstaltungskategorien nutzbar'))
         );
     }
 
