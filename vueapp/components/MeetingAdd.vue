@@ -507,6 +507,18 @@ export default {
                 this.$set(this.room, "server_index" , "0");
             }
 
+            // auto-selecting server if there is only one avaialble for this course!
+            if (this.room['driver'] && Object.keys(this.config[this.room['driver']]).includes('server_course_type')
+                && Object.keys(this.config[this.room['driver']]['server_course_type']).length > 1) {
+                const server_course_types_validataion = this.config[this.room['driver']]['server_course_type'].map((sct) => sct.valid == true);
+                if (server_course_types_validataion.filter(Boolean).length == 1) {
+                    var server_index = server_course_types_valitaion.findIndex((sct) => sct == true);
+                    if (server_index != -1) {
+                        this.$set(this.room, "server_index" , server_index.toString());
+                    }
+                }
+            }
+
             //set default features
             this.$set(this.room, "features" , {});
 
