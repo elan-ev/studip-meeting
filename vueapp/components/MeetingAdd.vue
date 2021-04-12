@@ -512,7 +512,7 @@ export default {
                 && Object.keys(this.config[this.room['driver']]['server_course_type']).length > 1) {
                 const server_course_types_validataion = this.config[this.room['driver']]['server_course_type'].map((sct) => sct.valid == true);
                 if (server_course_types_validataion.filter(Boolean).length == 1) {
-                    var server_index = server_course_types_valitaion.findIndex((sct) => sct == true);
+                    var server_index = server_course_types_validataion.findIndex((sct) => sct == true);
                     if (server_index != -1) {
                         this.$set(this.room, "server_index" , server_index.toString());
                     }
