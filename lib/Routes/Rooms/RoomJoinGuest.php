@@ -19,6 +19,7 @@ use ElanEv\Model\Join;
 use ElanEv\Model\Helper;
 use ElanEv\Driver\DriverFactory;
 use ElanEv\Model\Driver;
+use MeetingPlugin;
 
 class RoomJoinGuest extends MeetingsController
 {
@@ -48,8 +49,16 @@ class RoomJoinGuest extends MeetingsController
         if (!($meeting && $meeting->courses->find($cid))) {
             throw new Error(I18N::_('Dieser Raum in diesem Kurs kann nicht gefunden werden!'), 404);
         }
+
+        // Checking Course Type
+        $servers = Driver::getConfigValueByDriver($meeting->driver, 'servers');
+        $allow_course_type = MeetingPlugin::checkCourseType($meeting->courses->find($cid), $servers[$meeting->server_index]['course_types']);
+        //Checking Server Active
+        $active_server = $servers[$meeting->server_index]['active'];
+
         $meetingFeatures = json_decode($meeting->features, true);
-        if (!$meetingFeatures || !array_key_exists('guestPolicy', $meetingFeatures) || $meetingFeatures['guestPolicy'] == 'ALWAYS_DENY') {
+        if (!$meetingFeatures || !array_key_exists('guestPolicy', $meetingFeatures) || $meetingFeatures['guestPolicy'] == 'ALWAYS_DENY'
+            || !$active_server || !$allow_course_type) {
             throw new Error(I18N::_('Gäste können nicht eingeladen werden!'), 404);
         }
 

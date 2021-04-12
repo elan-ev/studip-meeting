@@ -346,7 +346,8 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
     * @param user $user
     * 
     */
-    public function DeleteMeetingOnUserDelete($event, $user) {
+    public function DeleteMeetingOnUserDelete($event, $user)
+    {
         foreach (MeetingCourse::findByUser($user) as $meetingCourse) {
             $meetingCourse->meeting->delete();
             $meetingCourse->delete();
@@ -360,11 +361,108 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
     * @param string $new_id new user id
     * 
     */
-    public function UpdateMeetingOnUserMigrate($event, $old_id, $new_id) {
+    public function UpdateMeetingOnUserMigrate($event, $old_id, $new_id)
+    {
         $user_meetings = Meeting::findBySQL('user_id = ?', [$old_id]);
         foreach ($user_meetings as $meeting) {
             $meeting->user_id = $new_id;
             $meeting->store();
         }
+    }
+
+    /**
+     * Get seminar types for the course_types (dropdown).
+     * The course_types dropdown applies to each server of a given server
+     *
+     * @return array with key => value pairs like: array('class_id' => array('name' => 'class_name', 'subs' => [array of sub cats]))
+     */
+    public static function getSemClasses()
+    {
+        $sem_classes = [];
+        foreach ($GLOBALS['SEM_CLASS'] as $class_id => $class) {
+            $class_obj = [];
+            $class_obj['name'] = _($class['name']);
+            $class_obj['subs'][$class_id] = "{$class_obj['name']} (" . _('Alle') . ")";
+            if (!$class['studygroup_mode']) {
+                foreach ($class->getSemTypes() as $type_id => $type) {
+                    $class_obj['subs']["{$class_id}_{$type_id}"] = _($type['name']);
+                }
+            }
+            $sem_classes[$class_id] = $class_obj;
+        }
+        ksort($sem_classes);
+        return $sem_classes;
+    }
+
+    /**
+     * Checks whether the server course type against the current course
+     *
+     * @param  Course $course The current course which the server is going to be used
+     * @param  String $server_course_type The server course type
+     * @return boolean 
+     */
+    public static function checkCourseType(Course $course, $server_course_type)
+    {
+        if ($server_course_type == '') { // When empty, it supports all course types 
+            return true;
+        }
+
+        if (!$course) {
+            return false;
+        }
+
+        $course_class_id = $course->getSemClass()->offsetGet('id');
+        $course_type_id = $course->getSemType()->offsetGet('id');
+
+        $server_course_type_arr = explode("_", $server_course_type);
+        $server_course_class_id = '';
+        $server_course_type_id = '';
+
+        if (count($server_course_type_arr) == 1) {
+            $server_course_class_id = $server_course_type_arr[0];
+            if ($server_course_class_id == $course_class_id) {
+                return true;
+            } else {
+                return false;
+            }
+        } elseif (count($server_course_type_arr) == 2) {
+            $server_course_class_id = $server_course_type_arr[0];
+            $server_course_type_id = $server_course_type_arr[1];
+            if ($server_course_class_id == $course_class_id && $server_course_type_id == $course_type_id) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+    * Finds corresponding course type name
+    *
+    * @param String $server_course_type The server course type
+    * @return String $course_type_name The name of the semClass
+    */
+    public static function getCourseTypeName($server_course_type)
+    {
+        if (!$server_course_type ) {
+            return _('Alle Veranstaltungstypen');
+        }
+
+        $server_course_type_arr = explode("_", $server_course_type);
+        $server_course_class_id = '';
+        $server_course_type_id = '';
+
+        if (count($server_course_type_arr) == 1) {
+            $server_course_class_id = $server_course_type_arr[0];
+            return _($GLOBALS['SEM_CLASS'][$server_course_class_id]['name']);
+        } elseif (count($server_course_type_arr) == 2) {
+            $server_course_class_id = $server_course_type_arr[0];
+            $server_course_type_id = $server_course_type_arr[1];
+            return _($GLOBALS['SEM_CLASS'][$server_course_class_id]->getSemTypes()[$server_course_type_id]['name']);
+        }
+
+        return '';
     }
 }

@@ -51,6 +51,23 @@ class RoomJoin extends MeetingsController
             throw new Error(I18N::_('Dieser Raum in diesem Kurs kann nicht gefunden werden!'), 404);
         }
 
+        // Checking Course Type
+        $servers = Driver::getConfigValueByDriver($meeting->driver, 'servers');
+        $allow_course_type = MeetingPlugin::checkCourseType($meeting->courses->find($cid), $servers[$meeting->server_index]['course_types']);
+        //Checking Server Active
+        $active_server = $servers[$meeting->server_index]['active'];
+
+        if (!$allow_course_type || !$active_server) {
+            $err = ($allow_course_type == false) ? 'course-type' : 'server-inactive';
+            header('Location:' .
+                \URLHelper::getURL(
+                    'plugins.php/meetingplugin/index',
+                    ['cid' => $cid, 'err' => $err]
+                )
+            );
+            exit;
+        }
+
         //putting mandatory logoutURL into features
         if ($features = json_decode($meeting->features, true)) {
             if (!isset($features['logoutURL'])) {

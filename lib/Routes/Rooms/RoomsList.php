@@ -68,6 +68,15 @@ class RoomsList extends MeetingsController
                     $meetingEnabled = false;
                 }
 
+                // Checking Course Type
+                if (!MeetingPlugin::checkCourseType($meetingCourse->course, $driver->course_type)) {
+                    if (!$perm->have_studip_perm('tutor', $cid)) {
+                        continue;
+                    } else {
+                        $meetingEnabled = false;
+                    }
+                }
+
                 $meeting = $meetingCourse->meeting->toArray();
                 $meeting = array_merge($meetingCourse->toArray(), $meeting);
                 $meeting['has_recordings'] = false;

@@ -37,8 +37,28 @@
                                     Bitte wählen Sie ein Konferenzsystem aus
                                 </option>
                                 <option v-for="(driver_config, driver) in availableServers" :key="driver"
-                                        :value="driver">
+                                        :value="driver"
+                                        :disabled="Object.keys(config[driver]['servers']).length == 1 
+                                                    && ((config[driver]['server_course_type']
+                                                    && config[driver]['server_course_type'][0] &&
+                                                    !config[driver]['server_course_type'][0]['valid']) || !config[driver]['servers'][0])">
                                         {{ driver_config['display_name'] }}
+                                        <template v-if="Object.keys(config[driver]['servers']).length == 1">
+                                            <span v-if="config[driver]['server_course_type'] && config[driver]['server_course_type'][0] &&
+                                                    config[driver]['server_course_type'][0]['name']"
+                                                v-translate="{
+                                                    name: config[driver]['server_course_type'][0]['name']
+                                                }"
+                                            >
+                                                (für %{ name })
+                                            </span>
+                                            <span v-translate
+                                                v-if="!config[driver]['servers'][0] || (config[driver]['server_course_type'] && config[driver]['server_course_type'][0] &&
+                                                        !config[driver]['server_course_type'][0]['valid'])"
+                                            >
+                                            - nicht verfügbar
+                                            </span>
+                                        </template>
                                 </option>
                             </select>
                         </label>
@@ -56,7 +76,10 @@
                                     Bitte wählen Sie einen Server aus
                                 </option>
                                 <option v-for="(server_config, server_index) in config[room['driver']]['servers']" :key="server_index"
-                                        :value="'' + server_index">
+                                        :value="'' + server_index" 
+                                        :disabled="!server_config || (config[room['driver']]['server_course_type'] && config[room['driver']]['server_course_type'][server_index] &&
+                                                    !config[room['driver']]['server_course_type'][server_index]['valid'])"
+                                        >
                                         <translate>Server {{ (server_index + 1) }}</translate>
                                         <span v-if="config[room['driver']]['server_defaults'] && config[room['driver']]['server_defaults'][server_index]
                                                     &&  config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants']"
@@ -65,6 +88,20 @@
                                             }"
                                         >
                                             (max. %{ count } Teilnehmer)
+                                        </span>
+                                        <span v-if="config[room['driver']]['server_course_type'] && config[room['driver']]['server_course_type'][server_index] &&
+                                                    config[room['driver']]['server_course_type'][server_index]['name']"
+                                            v-translate="{
+                                                name: config[room['driver']]['server_course_type'][server_index]['name']
+                                            }"
+                                        >
+                                            (für %{ name })
+                                        </span>
+                                        <span v-translate
+                                            v-if="!server_config || (config[room['driver']]['server_course_type'] && config[room['driver']]['server_course_type'][server_index] &&
+                                                    !config[room['driver']]['server_course_type'][server_index]['valid'])"
+                                        >
+                                           - nicht verfügbar
                                         </span>
                                 </option>
                             </select>

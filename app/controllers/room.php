@@ -6,6 +6,7 @@ use ElanEv\Model\Driver;
 use ElanEv\Model\InvitationsLink;
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
+use MeetingPlugin;
 
 class RoomController extends PluginController
 {
@@ -66,6 +67,17 @@ class RoomController extends PluginController
 
         $meeting = $this->invitations_link->meeting;
 
+        // Checking Course Type
+        $servers = Driver::getConfigValueByDriver($meeting->driver, 'servers');
+        $allow_course_type = MeetingPlugin::checkCourseType($meeting->courses->find($cid), $servers[$meeting->server_index]['course_types']);
+        // Checking Server Active
+        $active_server = $servers[$meeting->server_index]['active'];
+        if (!$allow_course_type || !$active_server) {
+            throw new Exception($this->_('Das gesuchte Meeting ist nicht verfügbar!'));
+        }
+
+        $this->cid = $cid;
+
         $features = json_decode($meeting->features, true);
         $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
         if (isset($features['room_anyone_can_start']) && $features['room_anyone_can_start'] === 'false') {
@@ -114,7 +126,7 @@ class RoomController extends PluginController
 
     }
 
-    public function join_meeting_action($link_hex)
+    public function join_meeting_action($link_hex, $cid)
     {
         $invitations_link = InvitationsLink::findOneBySQL('hex = ?', [$link_hex]);
         if (!$invitations_link) {
@@ -126,6 +138,15 @@ class RoomController extends PluginController
         }
         $name = $this->sonderzeichen($name);
         $meeting = $invitations_link->meeting;
+
+        // Checking Course Type
+        $servers = Driver::getConfigValueByDriver($meeting->driver, 'servers');
+        $allow_course_type = MeetingPlugin::checkCourseType($meeting->courses->find($cid), $servers[$meeting->server_index]['course_types']);
+        // Checking Server Active
+        $active_server = $servers[$meeting->server_index]['active'];
+        if (!$allow_course_type || !$active_server) {
+            throw new Exception($this->_('Das gesuchte Meeting ist nicht verfügbar!'));
+        }
 
         $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
         $joinParameters = new JoinParameters();

@@ -141,6 +141,14 @@ class IndexController extends MeetingsController
         PageLayout::setTitle(self::getHeaderLine(Context::getId()));
         $this->getHelpbarContent('main');
         $this->cid = Context::getId();
+        if ($err = Request::get('err')) {
+            if ($err == 'server-inactive') {
+                PageLayout::postError(_('Der ausgewählte Server ist deaktiviert.'));
+            }
+            if ($err == 'course-type') {
+                PageLayout::postError(_('Der ausgewählte Server ist in diesem Veranstaltungstyp nicht verfügbar.'));
+            }
+        }
     }
 
     public function config_action()

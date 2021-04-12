@@ -103,6 +103,18 @@ class RoomAdd extends MeetingsController
                 $error_text = sprintf(I18N::_('Teilnehmerzahl darf %d nicht überschreiten'), $server_maxParticipants);
             }
 
+            // Checking Course Type
+            if (!MeetingPlugin::checkCourseType(\Course::find($json['cid']), $servers[$json['server_index']]['course_types'])) {
+                $has_error = true;
+                $error_text = I18N::_('Der ausgewählte Server ist in diesem Veranstaltungstyp nicht verfügbar.');
+            }
+
+            //Checking Server Active
+            if (!$servers[$json['server_index']]['active']) {
+                $has_error = true;
+                $error_text = I18N::_('Der ausgewählte Server ist deaktiviert.');
+            }
+
             if (!$has_error) {
                 //putting mandatory logoutURL into features
                 $hostUrl = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost()
