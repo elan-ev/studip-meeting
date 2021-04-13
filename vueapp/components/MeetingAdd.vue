@@ -231,7 +231,7 @@
                         </div>
                     </fieldset>
 
-                    <fieldset v-if="(Object.keys(course_groups).length > 1)">
+                    <fieldset v-if="(Object.keys(course_groups).length)">
                         <legend v-translate>
                             Gruppenraum
                         </legend>
