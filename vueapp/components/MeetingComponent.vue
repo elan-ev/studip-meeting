@@ -216,11 +216,13 @@ export default {
 
     methods: {
         writeFeedback() {
-            this.$emit('getFeedback', this.room);
+            var room = JSON.parse(JSON.stringify(this.room));
+            this.$emit('getFeedback', room);
         },
 
         editFeatures() {
-            this.$emit('getFeatures', this.room);
+            var room = JSON.parse(JSON.stringify(this.room));
+            this.$emit('getFeatures', room);
         },
 
         editRights() {
@@ -256,7 +258,8 @@ export default {
         },
 
         getRecording() {
-            this.$emit('getRecording', this.room);
+            var room = JSON.parse(JSON.stringify(this.room));
+            this.$emit('getRecording', room);
         },
 
         deleteRoom(event) {
@@ -276,7 +279,8 @@ export default {
         },
 
         getGuestInfo() {
-            this.$emit('getGuestInfo', this.room);
+            var room = JSON.parse(JSON.stringify(this.room));
+            this.$emit('getGuestInfo', room);
         },
     }
 }
