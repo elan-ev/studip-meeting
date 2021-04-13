@@ -215,14 +215,16 @@ export default {
     },
 
     methods: {
+        getNonReactiveRoom() {
+            return JSON.parse(JSON.stringify(this.room));
+        },
+
         writeFeedback() {
-            var room = JSON.parse(JSON.stringify(this.room));
-            this.$emit('getFeedback', room);
+            this.$emit('getFeedback', this.getNonReactiveRoom());
         },
 
         editFeatures() {
-            var room = JSON.parse(JSON.stringify(this.room));
-            this.$emit('getFeatures', room);
+            this.$emit('getFeatures', this.getNonReactiveRoom());
         },
 
         editRights() {
@@ -258,8 +260,7 @@ export default {
         },
 
         getRecording() {
-            var room = JSON.parse(JSON.stringify(this.room));
-            this.$emit('getRecording', room);
+            this.$emit('getRecording', this.getNonReactiveRoom());
         },
 
         deleteRoom(event) {
@@ -279,8 +280,7 @@ export default {
         },
 
         getGuestInfo() {
-            var room = JSON.parse(JSON.stringify(this.room));
-            this.$emit('getGuestInfo', room);
+            this.$emit('getGuestInfo', this.getNonReactiveRoom());
         },
     }
 }
