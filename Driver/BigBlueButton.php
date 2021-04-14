@@ -438,6 +438,10 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             case 'webcamsOnlyForModerator':
                 return _('Bei Aktivierung dieser Option können ausschließlich Moderatoren die von Teilnehmenden freigegebenen Webcams sehen.');
             break;
+            case 'welcome':
+                return _('Wenn leer, wird die Standardnachricht angezeigt. Sie können folgende Schlüsselwörter einfügen, die automatisch ersetzt werden:
+                %% CONFNAME %% (Sitzungsname), %% DIALNUM %% (Sitzungswahlnummer)');
+            break;
             case 'maxParticipants':
                 // return _('Die maximale Anzahl von Benutzern, die gleichzeitig an der Konferenz teilnehmen dürfen.');
                 // break;
@@ -456,10 +460,6 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             case 'room_anyone_can_start':
                 // return _('Jeder Teilnehmer kann die Konferenz starten.');
                 // break;
-            case 'welcome':
-                return _('Wenn leer, wird die Standardnachricht angezeigt. Sie können folgende Schlüsselwörter einfügen, die automatisch ersetzt werden:
-                %% CONFNAME %% (Sitzungsname), %% DIALNUM %% (Sitzungswahlnummer)');
-                break;
             default:
                 return '';
                 break;
