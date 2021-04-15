@@ -470,7 +470,7 @@ export default {
             let availableServers = {};
 
             for (let server in this.config) {
-                if (this.config[server].enable !== 0) {
+                if (this.config[server].enable) {
                     availableServers[server] = this.config[server];
                 }
             }

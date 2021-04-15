@@ -48,11 +48,19 @@ class ConfigAdd extends MeetingsController
                     }
                 }
 
-                $valid_servers = Driver::setConfigByDriver($driver_name, $config_options);
+                $result = Driver::setConfigByDriver($driver_name, $config_options);
 
-                if (!$valid_servers) {
-                    $res_message_text[] = sprintf(I18N::_('Die Überprüfung der Servereinstellungen '
-                        . 'für %s war nicht erfolgreich, wurden aber trotzdem gespeichert.'), $driver_name);
+                if ($result['valid_servers'] === false) {
+                    $info = $driver_name;
+                    $message = '';
+                    if (count($result['invalid_indices'])) {
+                        $info .= ' (' . implode(', ', $result['invalid_indices']) . ') ';
+                        $message = sprintf(I18N::_('Die Überprüfung der Servereinstellungen '
+                        . 'für %s war nicht erfolgreich, wurden aber trotzdem gespeichert.'), $info);
+                    } else {
+                        $message = sprintf(I18N::_('Der Treiber %s kann nicht verwendet werden, da er keinen Server hat.'), $info);
+                    }
+                    $res_message_text[] = $message;
                 }
             }
 

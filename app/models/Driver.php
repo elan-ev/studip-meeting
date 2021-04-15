@@ -156,6 +156,8 @@ class Driver
             $valid_servers = false;
         }
         $approved_servers = [];
+        $unapproved_server_indices = [];
+        $all_servers = [];
         foreach ($config_options as $key => $value) {
             if ($key == 'servers') {
                 $config_tmp[$driver_name] = $config_options;
@@ -178,9 +180,17 @@ class Driver
 
                     self::adjustCurrentMeetingsDefaultSettings($driver_name, $index, $server_info);
 
-                    $approved_servers[] = $server_info;
+                    if ($valid_servers) {
+                        $approved_servers[] = $server_info;
+                    } else {
+                        // Deactivate the server if it is not valid, to prevent consumption.
+                        $server_info['active'] = false;
+                        $unapproved_server_indices[] = '#' . ($index + 1);
+                    }
+                    // Keep them into $all_servers array, so the sorting remains the same.
+                    $all_servers[] = $server_info;
                 }
-                self::$config[$driver_name][$key] = $approved_servers;
+                self::$config[$driver_name][$key] = $all_servers;
             } else {
                 self::$config[$driver_name][$key] = $value;
             }
@@ -192,7 +202,12 @@ class Driver
 
         \Config::get()->store('VC_CONFIG', json_encode(self::$config));
 
-        return $valid_servers;
+        $result = [
+            "valid_servers" => $valid_servers,
+            "invalid_indices" => $unapproved_server_indices
+        ];
+
+        return $result;
     }
 
     static function getConfig()
