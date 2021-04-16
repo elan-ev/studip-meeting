@@ -77,6 +77,9 @@ class RoomsList extends MeetingsController
                     }
                 }
 
+                // Checking folder existence
+                $this->checkAssignedFolder($meetingCourse->meeting);
+
                 $meeting = $meetingCourse->meeting->toArray();
                 $meeting = array_merge($meetingCourse->toArray(), $meeting);
                 $meeting['has_recordings'] = false;

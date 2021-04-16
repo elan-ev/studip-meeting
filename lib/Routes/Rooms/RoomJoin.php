@@ -47,6 +47,9 @@ class RoomJoin extends MeetingsController
 
         $meeting = Meeting::find($room_id);
 
+        // Checking folder existence
+        $this->checkAssignedFolder($meeting);
+
         if (!($meeting && $meeting->courses->find($cid))) {
             throw new Error(I18N::_('Dieser Raum in diesem Kurs kann nicht gefunden werden!'), 404);
         }

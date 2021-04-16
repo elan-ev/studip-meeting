@@ -4,6 +4,7 @@ namespace Meetings;
 
 use Psr\Container\ContainerInterface;
 use Meetings\Errors\Error;
+use ElanEv\Model\Meeting;
 use Throwable;
 
 class MeetingsController
@@ -75,6 +76,27 @@ class MeetingsController
             return $is_valid ? $features : false;
         } catch (Throwable $e) {
             throw new Error(_('Validation failed!'), 404);
+        }
+    }
+
+
+    /**
+     * Checks if a folder assigned to a meeting still exists, otherwise remove the folder_id
+     * from the Meeting model
+     * 
+     * @param Meeting $meeting the meeting object
+     */
+    public function checkAssignedFolder(Meeting $meeting) {
+        if ($meeting->folder_id) {
+            try {
+                $folder = \Folder::find($meeting->folder_id);
+                if (!$folder) {
+                    $meeting->folder_id = null;
+                    $meeting->store();
+                }
+            } catch (Throwable $e) {
+                throw new Error(_('Unable to check Assigned Folder'), 404);
+            }
         }
     }
 }
