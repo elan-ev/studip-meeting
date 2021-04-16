@@ -48,11 +48,32 @@ class AppFactory
     {
         $container = $app->getContainer();
         $container['plugin'] = $plugin;
-        $container['settings']['displayErrorDetails'] = defined('\\Studip\\ENV') && \Studip\ENV === 'development';
+        $container['settings']['displayErrorDetails'] = defined('\\Studip\\ENV') && \Studip\ENV === 'development' || $GLOBALS['perm']->have_perm('root');
 
         // error handler
         $container['errorHandler'] = function ($container) {
             return new Errors\ExceptionHandler($container);
+        };
+
+        if (isset($container['notFoundHandler'])) {
+            unset($container['notFoundHandler']);
+        }
+        $container['notFoundHandler'] = function ($container) {
+            return new Errors\NotFoundHandler($container);
+        };
+
+        if (isset($container['notAllowedHandler'])) {
+            unset($container['notAllowedHandler']);
+        }
+        $container['notAllowedHandler'] = function ($container) {
+            return new Errors\NotAllowedHandler($container);
+        };
+
+        if (isset($container['phpErrorHandler'])) {
+            unset($container['phpErrorHandler']);
+        }
+        $container['phpErrorHandler'] = function ($container) {
+            return new Errors\PHPErrorHandler($container);
         };
 
         $container->register(new Providers\StudipConfig());
