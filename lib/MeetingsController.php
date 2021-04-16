@@ -47,7 +47,7 @@ class MeetingsController
                                     break;
                                 case "integer":
                                     $value = filter_var((int)$features[$create_feature_name], FILTER_VALIDATE_INT);
-                                    if (!$value || $value < 1) {
+                                    if (!$value || $value < 1 || ($create_feature_name == 'duration' && $value > 1440)) {
                                         $is_valid = false;
                                     } else {
                                         $features[$create_feature_name] = $value;
