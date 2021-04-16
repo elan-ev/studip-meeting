@@ -162,6 +162,13 @@
                                     >
                                         &nbsp; (Max. Limit: %{ count })
                                     </span>
+                                    <span v-if="feature['name'] == 'duration' && maxDuration" 
+                                        v-translate="{
+                                            maxDuration
+                                        }"
+                                    >
+                                         &nbsp; (Max. Limit: %{ maxDuration } Minuten)
+                                    </span>
                                     <StudipTooltipIcon v-if="Object.keys(feature).includes('info')"
                                         :text="feature['info']">
                                     </StudipTooltipIcon>
@@ -175,7 +182,7 @@
                                                 && Object.keys(config[room['driver']]['server_defaults'][room['server_index']]).includes('maxAllowedParticipants')) ?
                                                     config[room['driver']]['server_defaults'][room['server_index']]['maxAllowedParticipants']
                                                 : ''
-                                            : ''
+                                            :  (feature['name'] == 'duration') ? maxDuration : ''
                                         )"
                                         :min="(feature['name'] == 'maxParticipants') ? minParticipants : ((feature['name'] == 'duration') ? 1 : '')"
                                         @change="(feature['name'] == 'maxParticipants') ? checkPresets() : ''"
@@ -456,7 +463,8 @@ export default {
             showAddNewFolder: false,
             showFilesInFolder: false,
             numFileInFolderLimit: 5,
-            minParticipants: 20
+            minParticipants: 20,
+            maxDuration: 1440
         }
     },
 
@@ -682,6 +690,29 @@ export default {
             return isValid;
         },
 
+        validateMinMaxDuration() {
+            var isValid = true;
+            this.$set(this.modal_message, "text" , "");
+            var err_message = '';
+
+            if (this.maxDuration && this.room['driver'] && this.room['server_index'] && this.room['features'] && this.room['features']['duration']) {
+                if (this.room['features']['duration'] > this.maxDuration) {
+                    err_message = `Konferenzdauer darf ${this.maxDuration} Minuten nicht überschreiten`.toLocaleString();
+                    isValid = false;
+                    this.$set(this.room['features'], 'duration', this.maxDuration);
+                }
+            }
+
+            if (!isValid) {
+                this.modal_message.type = 'error';
+                setTimeout(() => {
+                    this.modal_message.text = err_message;
+                }, 150);
+            }
+            
+            return isValid;
+        },
+
         addRoom(event) {
             if (event) {
                 event.preventDefault();
@@ -692,6 +723,10 @@ export default {
             }
 
             if (!this.validateMinMaxParticipants()) {
+                return;
+            }
+
+            if (!this.validateMinMaxDuration()) {
                 return;
             }
 
@@ -752,6 +787,10 @@ export default {
             }
 
             if (!this.validateMinMaxParticipants()) {
+                return;
+            }
+
+            if (!this.validateMinMaxDuration()) {
                 return;
             }
 
