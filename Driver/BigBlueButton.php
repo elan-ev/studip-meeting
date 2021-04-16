@@ -515,18 +515,20 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             $meeting_token->store();
         }
 
-        foreach ($folder->getTypedFolder()->getFiles() as $file_ref) {
-            if ($file_ref->id && $file_ref->name) {
-                $document_url = \PluginEngine::getURL('meetingplugin', [], "api/slides/$meetingId/{$file_ref->id}/$token");
-                if (isset($_SERVER['SERVER_NAME']) && strpos($document_url, $_SERVER['SERVER_NAME']) === FALSE) {
-                    $base_url = sprintf(
-                        "%s://%s",
-                        isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
-                        $_SERVER['SERVER_NAME']
-                    );
-                    $document_url = $base_url . $document_url;
+        if ($folder) {
+            foreach ($folder->getTypedFolder()->getFiles() as $file_ref) {
+                if ($file_ref->id && $file_ref->name) {
+                    $document_url = \PluginEngine::getURL('meetingplugin', [], "api/slides/$meetingId/{$file_ref->id}/$token");
+                    if (isset($_SERVER['SERVER_NAME']) && strpos($document_url, $_SERVER['SERVER_NAME']) === FALSE) {
+                        $base_url = sprintf(
+                            "%s://%s",
+                            isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
+                            $_SERVER['SERVER_NAME']
+                        );
+                        $document_url = $base_url . $document_url;
+                    }
+                    $documents[] = "<document url='$document_url' filename='{$file_ref->name}' />";
                 }
-                $documents[] = "<document url='$document_url' filename='{$file_ref->name}' />";
             }
         }
         if (count($documents)) {
