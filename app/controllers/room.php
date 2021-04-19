@@ -79,6 +79,9 @@ class RoomController extends PluginController
         $this->cid = $cid;
 
         $features = json_decode($meeting->features, true);
+        if (isset($features['guestPolicy-ALWAYS_ACCEPT']) && $features['guestPolicy-ALWAYS_ACCEPT'] === 'false') {
+            throw new Exception($this->_('Das gesuchte Meeting ist nicht verfügbar!'));
+        }
         $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
         if (isset($features['room_anyone_can_start']) && $features['room_anyone_can_start'] === 'false') {
             $meetingCourse = new MeetingCourse([$meeting->id, $cid]);

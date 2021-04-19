@@ -57,7 +57,7 @@ class RoomJoinGuest extends MeetingsController
         $active_server = $servers[$meeting->server_index]['active'];
 
         $meetingFeatures = json_decode($meeting->features, true);
-        if (!$meetingFeatures || !array_key_exists('guestPolicy', $meetingFeatures) || $meetingFeatures['guestPolicy'] == 'ALWAYS_DENY'
+        if (!$meetingFeatures || !array_key_exists('guestPolicy-ALWAYS_ACCEPT', $meetingFeatures) || $meetingFeatures['guestPolicy-ALWAYS_ACCEPT'] == 'false'
             || !$active_server || !$allow_course_type) {
             throw new Error(I18N::_('Gäste können nicht eingeladen werden!'), 404);
         }
