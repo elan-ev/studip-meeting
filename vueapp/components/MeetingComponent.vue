@@ -125,7 +125,7 @@
                 </div>
             </label>
             <div class="meeting-item-btns">
-                <StudipButton v-if="course_config.display.editRoom && room.features && room.features.guestPolicy && room.features.guestPolicy != 'ALWAYS_DENY'"
+                <StudipButton v-if="course_config.display.editRoom && room.features && room.features['guestPolicy-ALWAYS_ACCEPT'] && room.features['guestPolicy-ALWAYS_ACCEPT'] == 'true'"
                     type="button" v-on:click="getGuestInfo()"
                     icon="add" v-translate
                 >

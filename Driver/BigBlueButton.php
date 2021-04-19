@@ -78,6 +78,24 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 unset($features['giveAccessToRecordings']);
             }
 
+            if (isset($features['guestPolicy-ALWAYS_ACCEPT'])) {
+                if ($features['guestPolicy-ALWAYS_ACCEPT'] == "true") {
+                    $features['guestPolicy'] = 'ALWAYS_ACCEPT';
+                } else {
+                    $features['guestPolicy'] = 'ALWAYS_DENY';
+                }
+                unset($features['guestPolicy-ALWAYS_ACCEPT']);
+            }
+
+            if (isset($features['guestPolicy-ASK_MODERATOR'])) {
+                if ($features['guestPolicy-ASK_MODERATOR'] == "true") {
+                    $features['guestPolicy'] = 'ASK_MODERATOR';
+                }
+                unset($features['guestPolicy-ASK_MODERATOR']);
+            }
+
+            // The logic from BBB seems not to work with ALWAYS_DENY only for guests, in fact, 
+            // it denies both guests and participants.
             if ($features['guestPolicy'] == 'ALWAYS_DENY') {
                 unset($features['guestPolicy']);
             }
@@ -371,11 +389,6 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         $res['welcome'] = new ConfigOption('welcome', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Willkommensnachricht'),
                     Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'welcome'),
                     self::getFeatureInfo('welcome'));
-        
-        $res['guestPolicy'] =
-            new ConfigOption('guestPolicy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugang via Link'),
-                 ['ALWAYS_DENY' => _('Nicht gestattet'), 'ASK_MODERATOR' => _('Moderator vor dem Zutritt fragen'), 'ALWAYS_ACCEPT' => _('Gestattet'), ],
-                 _('Legen Sie fest, ob Benutzer mit Einladungslink als Gäste an der Besprechung teilnehmen dürfen und ob Gäste dem Meeting direkt beitreten können oder ihre Teilnahme von einem Moderator bestätigt werden muss.'));
 
         $res['duration'] = new ConfigOption('duration', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Minuten Konferenzdauer'),
                     240,
@@ -383,6 +396,11 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
         $res['maxParticipants'] = new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 50, self::getFeatureInfo('maxParticipants'));
 
+        $res['guestPolicy-ALWAYS_ACCEPT'] = new ConfigOption('guestPolicy-ALWAYS_ACCEPT', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugang via Link'), false,
+                 _('Legen Sie fest, ob Benutzer mit Einladungslink als Gäste an der Besprechung teilnehmen dürfen.'));
+
+        $res['guestPolicy-ASK_MODERATOR'] = new ConfigOption('guestPolicy-ASK_MODERATOR', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Moderatoren vor Teilnehmendenzutritt fragen'), false,
+                 _('Legen Sie fest, ob Gäste und Teilnehmer dem Meeting direkt beitreten können oder ihre Teilnahme von einem Moderator bestätigt werden muss.'));
 
         $res['privateChat'] = new ConfigOption('lockSettingsDisablePrivateChat', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Private Chats deaktivieren'),
                     false, null);
