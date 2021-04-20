@@ -23,10 +23,11 @@
                                     </optgroup>
                                 </template>
                             </select>
-                             <input v-else-if="typeof value.value == 'boolean'" type="checkbox" style="cursor: pointer;"
+                            <input v-else-if="typeof value.value == 'boolean'" type="checkbox" style="cursor: pointer;"
                                 :true-value="true"
                                 :false-value="false"
                                 v-model="server[driver_name][value.name]">
+                            <textarea v-else-if="value.name == 'description'" v-model="server[driver_name][value.name]"></textarea>
                             <input v-else class="size-l" :type="(value.name == 'maxParticipants') ? 'number' : 'text'" min="0" @change="(value.name == 'maxParticipants') ? reduceMins() : ''"
                                 v-model="server[driver_name][value.name]"
                                 :placeholder="value.value">

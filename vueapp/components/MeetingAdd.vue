@@ -44,6 +44,14 @@
                                                     !config[driver]['server_course_type'][0]['valid']) || !config[driver]['servers'][0])">
                                         {{ driver_config['display_name'] }}
                                         <template v-if="Object.keys(config[driver]['servers']).length == 1">
+                                            <span v-if="config[driver]['server_details'] && config[driver]['server_details'][0]
+                                                && config[driver]['server_details'][0]['label'] && config[driver]['server_details'][0]['label'] != ''"
+                                                v-translate="{
+                                                    label: config[driver]['server_details'][0]['label']
+                                                }"    
+                                            >
+                                                (%{ label })
+                                            </span>
                                             <span v-if="config[driver]['server_course_type'] && config[driver]['server_course_type'][0] &&
                                                     config[driver]['server_course_type'][0]['name']"
                                                 v-translate="{
@@ -80,7 +88,16 @@
                                         :disabled="!server_config || (config[room['driver']]['server_course_type'] && config[room['driver']]['server_course_type'][server_index] &&
                                                     !config[room['driver']]['server_course_type'][server_index]['valid'])"
                                         >
-                                        <translate>Server {{ (server_index + 1) }}</translate>
+                                        <span v-if="config[room['driver']]['server_details'] && config[room['driver']]['server_details'][server_index]
+                                            && config[room['driver']]['server_details'][server_index]['label']
+                                            && config[room['driver']]['server_details'][server_index]['label'] != ''"
+                                            v-translate="{
+                                                label: config[room['driver']]['server_details'][server_index]['label']
+                                            }"
+                                        >
+                                            %{ label }
+                                        </span>
+                                        <translate v-else>Server {{ (server_index + 1) }}</translate>
                                         <span v-if="config[room['driver']]['server_defaults'] && config[room['driver']]['server_defaults'][server_index]
                                                     &&  config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants']"
                                             v-translate="{
@@ -105,6 +122,18 @@
                                         </span>
                                 </option>
                             </select>
+                        </label>
+                        <label v-if="room['driver'] && room['server_index'] && config[room['driver']]['server_details']
+                                && config[room['driver']]['server_details'][room['server_index']]
+                                && config[room['driver']]['server_details'][room['server_index']]['description']
+                                && config[room['driver']]['server_details'][room['server_index']]['description'] != ''"
+                        >
+                            <strong v-translate>
+                                Serverbeschreibung
+                            </strong>
+                            <div v-translate style="word-break: break-word !important;"
+                                v-text="config[room['driver']]['server_details'][room['server_index']]['description']"
+                            ></div>
                         </label>
                     </fieldset>
 
