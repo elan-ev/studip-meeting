@@ -85,7 +85,7 @@
                             <tr>
                                 <th>#</th>
                                 <template v-for="(value, key) in driver.config">
-                                    <th v-if="value.name != 'roomsize-presets'" :key="key"
+                                    <th v-if="value.name != 'roomsize-presets' && value.name != 'description'" :key="key"
                                     :class="{td_center:value.name == 'active'}"
                                     :title="value.display_name">
                                          {{ value.display_name }}
@@ -99,7 +99,7 @@
                                 :class="{'active nohover': (server_object[driver_name]['index'] == index)}">
                                 <td>{{ index + 1 }}</td>
                                 <template v-for="(value, key) in driver.config">
-                                    <td :key="key" v-if="value.name && value.name != 'roomsize-presets'"
+                                    <td :key="key" v-if="value.name && value.name != 'roomsize-presets' && value.name != 'description'"
                                     :class="{td_center:value.name == 'active'}"
                                     :title="(value.name != 'active' && value.name != 'course_types' ? server[value.name] : '')"
                                     >
