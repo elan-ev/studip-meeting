@@ -267,7 +267,7 @@
                         </div>
                     </fieldset>
 
-                    <fieldset v-if="(Object.keys(course_groups).length)">
+                    <fieldset v-if="room['driver'] && Object.keys(course_groups).length">
                         <legend v-translate>
                             Gruppenraum
                         </legend>
