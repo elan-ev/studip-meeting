@@ -4,6 +4,11 @@ Stud.IP Video Conference Plugin
 Ein Stud.IP-Plugin um Konferenzen aus einer Veranstaltung heraus starten zu können.
 Teilnehmer/innen des Kurses können der Konferenz beitreten.
 
+Wichtige Information für Meetings Plugin ab 2.60
+------------------------------------------------
+
+Ab der Version 2.60 wird PHP 7.0 oder höher für die Verwendung des Plugins **vorausgesetzt**. Stud.IP Installationen, die PHP 5.6 verwenden, können leider nicht mehr unterstützt werden.
+
 Einrichtung
 -----------
 
