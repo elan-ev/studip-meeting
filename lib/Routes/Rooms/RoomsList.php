@@ -92,7 +92,8 @@ class RoomsList extends MeetingsController
                                 'giveAccessToRecordings'
                             ), FILTER_VALIDATE_BOOLEAN))
                     ) {
-                        if ((count($driver->getRecordings($meetingCourse->meeting->getMeetingParameters())) > 0)
+                        $recordings = $driver->getRecordings($meetingCourse->meeting->getMeetingParameters());
+                        if (!empty($recordings)
                             || ($this->getFeatures($meeting['features'], 'meta_opencast-dc-isPartOf') && !empty(MeetingPlugin::checkOpenCast($meetingCourse->course_id)) &&
                             $this->getFeatures($meeting['features'], 'meta_opencast-dc-isPartOf') == MeetingPlugin::checkOpenCast($meetingCourse->course_id)))
                         {
