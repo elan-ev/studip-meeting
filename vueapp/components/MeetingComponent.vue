@@ -89,7 +89,7 @@
                     </span>
                 </div>
 
-                <div v-if="room.folder_id !== null && room.details && room.details.folder">
+                <div v-if="course_config.display.editRoom && room.folder_id !== null && room.details && room.details.folder">
                     <StudipIcon class="info-icon" icon="folder-empty"
                             role="inactive" size="24">
                     </StudipIcon>
