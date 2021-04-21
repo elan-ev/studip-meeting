@@ -105,7 +105,7 @@ class RoomsList extends MeetingsController
                 $meeting['name']= ltrim($meetingCourse->meeting->name);
 
                 $meeting['details'] = [
-                    'creator' => $create ? $creator->getFullname() : 'unbekannt',
+                    'creator' => $creator ? $creator->getFullname() : 'unbekannt',
                     'date'    => date('d.m.Y H:i', $meetingCourse->meeting->mkdate)
                 ];
 
