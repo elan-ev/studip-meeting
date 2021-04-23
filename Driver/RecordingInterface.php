@@ -41,4 +41,13 @@ interface RecordingInterface
      * @return ConfigOption a single configOption record feature
      */
     public static function getRecordFeature();
+
+    /**
+     * Check Recording Capability with config
+     *
+     * @param array $features applied features
+     * 
+     * @return boolean
+     */
+    public static function checkRecordingCapability($features);
 }

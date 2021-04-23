@@ -101,7 +101,11 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             }
 
             if ($features['record'] == 'true') {
-                $params['name'] = $params['name'] . ' (' . date('Y-m-d H:i:s') . ')';
+                if (self::checkRecordingCapability($features)) {
+                    $params['name'] = $params['name'] . ' (' . date('Y-m-d H:i:s') . ')';
+                } else {
+                    $features['record'] = 'false';
+                }
             }
 
             if (!isset($features['welcome'])) {
@@ -427,9 +431,17 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     public static function getRecordFeature()
     {
         $res = [];
-        if (Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'record')) { // dependet on config record
+        $record_config = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'record'), FILTER_VALIDATE_BOOLEAN);
+        $opencast_config = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'opencast'), FILTER_VALIDATE_BOOLEAN);
+        $info = '';
+        if ($opencast_config) {
+            $info = _('Opencast wird als Aufzeichnungsserver verwendet. Diese Funktion ist im Testbetrieb und es kann noch zu Fehlern kommen.');
+        } else if ($record_config) {
+            $info = _('Erlaubt es Moderatoren, die Medien und Ereignisse in der Sitzung für die spätere Wiedergabe aufzuzeichnen. Die Aufzeichnung muss innerhalb der Sitzung von einem Moderator gestartet werden.');
+        }
+        if ($info) {
             $res[] = new ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Sitzungen können aufgezeichnet werden.'),
-                false, _('Erlaubt es Moderatoren, die Medien und Ereignisse in der Sitzung für die spätere Wiedergabe aufzuzeichnen. Die Aufzeichnung muss innerhalb der Sitzung von einem Moderator gestartet werden.'));
+            false, $info);
         }
 
         //independent from config record
@@ -444,7 +456,8 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     public static function useOpenCastForRecording()
     {
         $res = false;
-        !MeetingPlugin::checkOpenCast() ?: $res = new ConfigOption('opencast', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Opencast für Aufzeichnungen verwenden'), false);
+        !MeetingPlugin::checkOpenCast() ?: $res = new ConfigOption('opencast', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Opencast für Aufzeichnungen verwenden')
+                                                , false, _('Wenn diese Option aktiviert ist, ist die Aufzeichnung nur mit einer gültigen Serien-ID für den Kurs zulässig.'));
         return $res;
     }
 
@@ -561,5 +574,20 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         }
 
         return $options;
+    }
+
+    /**
+     * {@inheritDoc}
+    */
+    public static function checkRecordingCapability($features)
+    {
+        $record_config = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'record'), FILTER_VALIDATE_BOOLEAN);
+        $opencast_config = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'opencast'), FILTER_VALIDATE_BOOLEAN);
+        if ($opencast_config && !empty($features['meta_opencast-dc-isPartOf'])) {
+           return true;
+        } else if ($record_config) {
+            return true;
+        }
+        return false;
     }
 }

@@ -115,6 +115,22 @@ class RoomAdd extends MeetingsController
                 $error_text = I18N::_('Der ausgewählte Server ist deaktiviert.');
             }
 
+            //Handle recording stuff
+            if (isset($json['features']) && isset($json['features']['record'])
+                && filter_var($json['features']['record'], FILTER_VALIDATE_BOOLEAN)) { // Recording is asked...
+                $recording_capability = $this->checkRecordingCapability($json['driver'], $json['cid']);
+                if ($recording_capability['allow_recording'] == false
+                    || ($recording_capability['allow_recording'] == true && $recording_capability['type'] == 'opencast'
+                        && empty($recording_capability['seriesid']))) {
+                    $has_error = true;
+                    $error_text = I18N::_($recording_capability['message'] ? $recording_capability['message'] : 'Sitzungsaufzeichnung ist nicht möglich!');
+                } else {
+                    if ($recording_capability['type'] == 'opencast') {
+                        $json['features']['meta_opencast-dc-isPartOf'] = $recording_capability['seriesid'];
+                    }
+                }
+            }
+            
             if (!$has_error) {
                 //putting mandatory logoutURL into features
                 $hostUrl = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost()
@@ -125,27 +141,6 @@ class RoomAdd extends MeetingsController
                 if (!isset($json['features']['duration']) || !is_numeric($json['features']['duration'])) {
                     $json['features']['duration'] = "240";
                 }
-
-                //Handle recording stuff
-                $record = 'false';
-                $opencast_series_id = '';
-                if (Driver::getConfigValueByDriver($json['driver'], 'record')) { //config double check
-                    if (isset($json['features']['record']) && $json['features']['record'] == 'true') { //user record request
-                        $record = 'true';
-                        if (Driver::getConfigValueByDriver($json['driver'], 'opencast')) { // config check for opencast
-                            $series_id = MeetingPlugin::checkOpenCast($json['cid']);
-                            if ($series_id) {
-                                $opencast_series_id = $series_id;
-                            } else if ($series_id === false) {
-                                throw new Error(I18N::_('Opencast Series id kann nicht gefunden werden!'), 404);
-                            } else if ($series_id === '') {
-                                //TODO: handel if the opencast is not activated!
-                            }
-                        }
-                    }
-                }
-                $json['features']['record'] = $record;
-                !$opencast_series_id ?: $json['features']['meta_opencast-dc-isPartOf'] = $opencast_series_id;
 
                 $meeting = new Meeting();
                 $meeting->courses[] = new \Course($json['cid']);

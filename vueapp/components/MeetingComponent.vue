@@ -22,7 +22,7 @@
                         </span>
                     </div>
                     <div class="right">
-                        <StudipTooltipIcon v-if="room.features && room.features.record && room.features.record == 'true'"
+                        <StudipTooltipIcon v-if="room.features && room.features.record && room.features.record == 'true' && !room.record_not_allowed"
                                     :text="$gettext('Bitte beachten Sie, dass dieser Raum aufgezeichnet wird!')"
                                     :badge="true"
                                     >
@@ -90,17 +90,27 @@
                 </div>
 
                 <div v-if="course_config.display.editRoom && room.folder_id !== null && room.details && room.details.folder">
-                    <StudipIcon class="info-icon" icon="folder-empty"
+                    <template v-if="room.preupload_not_allowed">
+                        <div>
+                            <a>
+                                <StudipIcon class="info-icon" icon="exclaim-circle-full"
+                                    role="status-red" size="24"></StudipIcon>
+                            </a>
+                            <span v-translate v-text="room.preupload_not_allowed"></span>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <StudipIcon class="info-icon" icon="folder-empty"
                             role="inactive" size="24">
-                    </StudipIcon>
-
-                    <translate>
-                        Ordner für automatische Uploads:
-                    </translate>
-
-                    <a :href="room.details.folder.link" target="_blank">
-                        {{ room.details.folder.name }}
-                    </a>
+                        </StudipIcon>
+                        <translate>
+                            Ordner für automatische Uploads:
+                        </translate>
+                         <a :href="room.details.folder.link" target="_blank">
+                            {{ room.details.folder.name }}
+                        </a>
+                    </template>
+                   
                 </div>
 
 
@@ -111,6 +121,14 @@
                     {{ this.config[room.driver].display_name
                         ? this.config[room.driver].display_name
                         : room.driver }}
+                </div>
+
+                <div v-if="course_config.display.editRoom && room.features && room.features.record && room.features.record == 'true' && room.record_not_allowed">
+                    <a>
+                        <StudipIcon class="info-icon" icon="exclaim-circle-full"
+                            role="status-red" size="24"></StudipIcon>
+                    </a>
+                    <span v-translate v-text="room.record_not_allowed"></span>
                 </div>
 
                 <div v-if="!room.enabled">
