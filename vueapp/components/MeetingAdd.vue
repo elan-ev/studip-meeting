@@ -693,7 +693,7 @@ export default {
                                     break;
                                     default: // Should be String
                                         //sanitize - html tags
-                                        var value = config_feature.value;
+                                        var value = this.room['features'][config_feature.name];
                                         var text = '';
                                         if (config_feature.name == 'welcome') {
                                             text = value.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
