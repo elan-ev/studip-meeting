@@ -139,7 +139,6 @@ class RoomController extends PluginController
         if (!$name) {
             $name = $invitations_link->default_name;
         }
-        $name = $this->sonderzeichen($name);
         $meeting = $invitations_link->meeting;
 
         // Checking Course Type
