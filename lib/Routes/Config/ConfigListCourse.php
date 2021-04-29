@@ -54,7 +54,6 @@ class ConfigListCourse extends MeetingsController
 
         if (!empty($config)) {
             $config = $this->setDefaultServerProfiles($config, $cid);
-            $config = $this->setOpencastTooltipText($config, $cid);
             $config = $this->setServerCourseType($config, $cid);
             $config = $this->setServerDetails($config);
         }
@@ -142,31 +141,6 @@ class ConfigListCourse extends MeetingsController
                 }
                 $config[$driver_name]['server_defaults'] = $server_defaults;
                 $config[$driver_name]['server_presets'] = $server_presets;
-            }
-        }
-        return $config;
-    }
-
-    /**
-     * Check against record feature, if exists looks for opencast recording capability and changes the
-     *
-     * @param $config   plugin general config
-     * @param $cid      course id
-     *
-     * @return $config  plugin general config
-    */
-    private function setOpencastTooltipText($config, $cid)
-    {
-        foreach ($config as $driver_name => $settings) {
-            if ((isset($settings['record']) && $settings['record'] == "1")
-                && (isset($settings['opencast']) && $settings['opencast'] == "1")
-                && !empty(MeetingPlugin::checkOpenCast($cid))
-                && (isset($settings['features']['record']))) {
-                $record_index = array_search('record', array_column($settings['features']['record'], 'name'));
-                if ($record_index !== FALSE) {
-                    $tooltip_text = I18N::_('Opencast wird als Aufzeichnungsserver verwendet. Diese Funktion ist im Testbetrieb und es kann noch zu Fehlern kommen.');
-                    $config[$driver_name]['features']['record'][$record_index]['info'] = $tooltip_text;
-                }
             }
         }
         return $config;

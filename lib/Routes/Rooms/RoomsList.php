@@ -77,14 +77,17 @@ class RoomsList extends MeetingsController
                     }
                 }
 
-                // Checking folder existence
-                $this->checkAssignedFolder($meetingCourse->meeting);
-
                 $meeting = $meetingCourse->meeting->toArray();
                 $meeting = array_merge($meetingCourse->toArray(), $meeting);
+                // Checking folder existence
+                $this->checkAssignedFolder($meetingCourse->meeting);
+                if (!filter_var(Driver::getConfigValueByDriver($meetingCourse->meeting->driver, 'preupload'), FILTER_VALIDATE_BOOLEAN)) {
+                    $meeting['preupload_not_allowed'] = _('Das automatische Hochladen von Folien ist derzeit nicht möglich');
+                }
+                
                 $meeting['has_recordings'] = false;
 
-                // Recording Capability
+                // Check Recordings
                 if (is_subclass_of($driver, 'ElanEv\Driver\RecordingInterface')) {
                     if ($perm->have_studip_perm('tutor', $cid)
                         || (!$perm->have_studip_perm('tutor', $cid)
@@ -102,6 +105,31 @@ class RoomsList extends MeetingsController
                     }
                 }
 
+                $meeting['features'] = $this->getFeatures($meeting['features']);
+
+                // Check Recording Capability
+                if (isset($meeting['features']['record']) && filter_var($meeting['features']['record'], FILTER_VALIDATE_BOOLEAN)) {
+                    $recording_capability = $this->checkRecordingCapability($meetingCourse->meeting->driver, $cid);
+                    $record_not_allowed = '';
+                    if ($recording_capability['allow_recording'] == false
+                        || ($recording_capability['allow_recording'] == true && $recording_capability['type'] == 'opencast'
+                            && empty($recording_capability['seriesid']))) {
+                        if (isset($meeting['features']['meta_opencast-dc-isPartOf'])) {
+                            unset($meeting['features']['meta_opencast-dc-isPartOf']);
+                        }
+                        $record_not_allowed = _($recording_capability['message'] ? $recording_capability['message'] : 'Sitzungsaufzeichnung ist nicht erlaubt.');
+                    } else {
+                        if ($recording_capability['type'] == 'opencast') {
+                            $meeting['features']['meta_opencast-dc-isPartOf'] = $recording_capability['seriesid'];
+                        }
+                    }
+                    $meetingCourse->meeting->features = json_encode($meeting['features']);
+                    $meetingCourse->meeting->store();
+                    if ($record_not_allowed) {
+                        $meeting['record_not_allowed'] = $record_not_allowed;
+                    }
+                }
+
                 $creator = \User::find($meetingCourse->meeting->user_id);
                 $meeting['name']= ltrim($meetingCourse->meeting->name);
 
@@ -110,7 +138,6 @@ class RoomsList extends MeetingsController
                     'date'    => date('d.m.Y H:i', $meetingCourse->meeting->mkdate)
                 ];
 
-                $meeting['features'] = $this->getFeatures($meeting['features']);
                 $meeting['enabled'] = $meetingEnabled;
 
                 if ($meeting['folder_id']) {

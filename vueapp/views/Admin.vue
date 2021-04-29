@@ -41,13 +41,11 @@
                 <div v-if="Object.keys(driver).includes('recording')">
                     <label v-for="(rval, rkey) in driver['recording']" :key="rkey">
                         <input v-if="typeof rval['value'] == 'boolean'" type="checkbox"
-                        :disabled="rval['name'] != 'record' && config[driver_name]['record'] != '1'"
-                        :class="{'disabled': rval['name'] != 'record' && config[driver_name]['record'] != '1'}"
                         true-value="1"
                         false-value="0"
-                        @click="handleRecordings(driver_name)"
+                        @click="handleRecordings(driver_name, rval['name'])"
                         v-model="config[driver_name][rval['name']]">
-                        <span :class="{'disabled': rval['name'] != 'record' && config[driver_name]['record'] != '1'}">
+                        <span>
                             {{ rval['display_name'] }}
                         </span>
 
@@ -310,14 +308,18 @@ export default {
                 this.$set(this.server_object, driver_name, server_config);
             }
         },
-
-        handleRecordings(driver_name) {
-            // it is used to disable every other parameters when the recording is off
+        
+        handleRecordings(driver_name, recording_option) {
+            // It is used to allow only one recording option at a time
             setTimeout(() => {
-                if (this.config[driver_name]['record'] == '0') {
-                    for (var rindex in this.drivers[driver_name]['recording']) {
-                        if (this.drivers[driver_name]['recording'][rindex]['name'] != 'record') {
-                            this.$set(this.config[driver_name], this.drivers[driver_name]['recording'][rindex]['name'], '0');
+                if (this.config[driver_name][recording_option] && this.config[driver_name][recording_option] == '1') {
+                    if (this.drivers[driver_name] && this.drivers[driver_name]['recording']
+                    && Array.isArray(this.drivers[driver_name]['recording'])) {
+                        var driver_recording_option_names = this.drivers[driver_name]['recording'].map(r => {return r.name});
+                        for (var recording_option_name of driver_recording_option_names) {
+                            if (recording_option_name != recording_option && this.config[driver_name][recording_option_name]) {
+                                this.$set(this.config[driver_name], recording_option_name, '0');
+                            }
                         }
                     }
                 }
