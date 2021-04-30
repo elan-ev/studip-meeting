@@ -82,8 +82,8 @@ class RoomJoin extends MeetingsController
             exit;
         }
 
-        //putting mandatory logoutURL into features
         if ($features = json_decode($meeting->features, true)) {
+            //putting mandatory logoutURL into features
             if (!isset($features['logoutURL'])) {
                 $hostUrl = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost()
                     .($request->getUri()->getPort() ? ':' . $request->getUri()->getPort() : '');
@@ -100,9 +100,9 @@ class RoomJoin extends MeetingsController
                 } else if (isset($features['meta_opencast-dc-isPartOf'])) {
                     unset($features['meta_opencast-dc-isPartOf']);
                 }
-                $meeting->features = json_encode($features);
-                $meeting->store();
             }
+            $meeting->features = json_encode($features);
+            $meeting->store();
         }
 
         $driver = $driver_factory->getDriver($meeting->driver, $meeting->server_index);
