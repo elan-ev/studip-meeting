@@ -1,6 +1,6 @@
 {
     "name": "Meetings",
-    "version": "2.60.0",
+    "version": "2.61.0",
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -25,9 +25,9 @@
         "file-loader": "^2.0.0",
         "html-webpack-plugin": "^4.3.0",
         "jquery": "^3.5.0",
-        "node-sass": "^4.14.1",
         "popper.js": "^1.15.0",
-        "sass-loader": "^7.3.1",
+        "sass": "^1.32.12",
+        "sass-loader": "^10",
         "vue": "^2.6.10",
         "vue-axios": "^2.1.4",
         "vue-gettext": "^2.1.10",
