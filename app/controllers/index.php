@@ -148,6 +148,9 @@ class IndexController extends MeetingsController
             if ($err == 'course-type') {
                 PageLayout::postError(_('Der ausgewählte Server ist in diesem Veranstaltungstyp nicht verfügbar.'));
             }
+            if ($err == 'accessdenied') {
+                throw new AccessDeniedException();
+            }
         }
     }
 

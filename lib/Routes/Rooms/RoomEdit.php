@@ -53,8 +53,17 @@ class RoomEdit extends MeetingsController
         //Checking Server Active
         $active_server = $servers[$json['server_index']]['active'];
 
+        // Check group
+        $allow_group = true;
+        if (isset($json['group_id']) && !empty($json['group_id'])) {
+            $group = \Statusgruppen::find($json['group_id']);
+            if (!$group) {
+                $allow_group = false;
+            }
+        }
+
         $message = [];
-        if (!$meetingCourse->isNew() && $name && $allow_change_driver && $allow_change_server_index && $allow_course_type && $active_server) {
+        if (!$meetingCourse->isNew() && $name && $allow_change_driver && $allow_change_server_index && $allow_course_type && $active_server && $allow_group) {
             $change_date = new \DateTime();
             if (isset($json['active'])) {
                 $meetingCourse->active = $json['active'];
@@ -147,7 +156,12 @@ class RoomEdit extends MeetingsController
                 'type' => 'success'
             ];
         } else {
-            $message = ($allow_course_type ? 'Raumeinstellung kann nicht bearbeitet werden!' : 'Der ausgewählte Server ist in diesem Veranstaltungstyp nicht verfügbar');
+            $message = 'Raumeinstellung kann nicht bearbeitet werden!';
+            if (!$allow_group) {
+                $message = 'Die ausgewählte Gruppe ist nicht mehr verfügbar.';
+            } else if (!$allow_course_type) {
+                $message = 'Der ausgewählte Server ist in diesem Veranstaltungstyp nicht verfügbar.';
+            }
             $message = [
                 'text' => I18N::_($message),
                 'type' => 'error'

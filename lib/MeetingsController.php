@@ -141,4 +141,43 @@ class MeetingsController
             "seriesid" => $seriesid
         ];
     }
+
+    /**
+     * Checks if a group assigned to a meeting still exists, otherwise remove the group_id
+     * from the MeetingCourse model
+     * 
+     * @param MeetingCourse $meetingCourse the meeting course object
+     */
+    public function checkAssignedGroup(MeetingCourse $meetingCourse) {
+        if ($meetingCourse->group_id) {
+            try {
+                $group = \Statusgruppen::find($meetingCourse->group_id);
+                if (!$group) {
+                    $meetingCourse->group_id = null;
+                    $meetingCourse->store();
+                }
+            } catch (Throwable $e) {
+                throw new Error(_('Unable to check Assigned Group'), 404);
+            }
+        }
+        return $meetingCourse;
+    }
+
+    /**
+     * This method check the permission (global and if he is in the group) for a given user
+     *
+     * @param $group_id The Group-ID
+     * @param $cid The Course-ID
+     * @return bool True if user have permission, False otherwise
+     */
+    public function checkGroupPermission($group_id, $cid)
+    {
+        global $perm, $user;
+        $group = new \Statusgruppen($group_id);
+
+        return $group->isMember($user->id)
+            || ($user && is_object($perm)
+                && $perm->have_studip_perm('tutor', $cid, $user->id)
+            );
+    }
 }

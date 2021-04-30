@@ -333,7 +333,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     {
         $segments = array();
         foreach ($params as $key => $value) {
-            if (filter_var($value, FILTER_VALIDATE_BOOLEAN)) {
+            if (filter_var($value, FILTER_VALIDATE_BOOLEAN) && $key != 'duration') {
                 $encoded_value = $value == true ? 'true' : 'false';
             } else {
                 $encoded_value = rawurlencode($value);

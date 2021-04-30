@@ -96,7 +96,7 @@ export default {
             }
 
             if (this.room && this.guest_name) {
-                this.room.guest_name = this.sonderzeichen(this.guest_name);
+                this.room.guest_name = this.guest_name;
                 this.$store.dispatch(ROOM_JOIN_GUEST, this.room)
                 .then(({ data }) => {
                     if (data.join_url != '') {
