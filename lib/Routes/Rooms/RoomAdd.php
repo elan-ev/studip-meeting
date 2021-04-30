@@ -130,6 +130,15 @@ class RoomAdd extends MeetingsController
                     }
                 }
             }
+
+            // Check Group
+            if (isset($json['group_id']) && !empty($json['group_id'])) {
+                $group = \Statusgruppen::find($json['group_id']);
+                if (!$group) {
+                    $has_error = true;
+                    $error_text = I18N::_('Die ausgewählte Gruppe ist nicht mehr verfügbar');
+                }
+            }
             
             if (!$has_error) {
                 //putting mandatory logoutURL into features

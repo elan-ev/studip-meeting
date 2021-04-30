@@ -52,7 +52,11 @@ class RoomsList extends MeetingsController
         foreach ($meeting_course_list_raw as $meetingCourse) {
             try {
 
-                if ($meetingCourse->group_id && !$this->checkPermission($meetingCourse->group_id, $cid)) {
+                // Check Assigned Group
+                $meetingCourse = $this->checkAssignedGroup($meetingCourse);
+
+                // Check group access permission
+                if ($meetingCourse->group_id && !$this->checkGroupPermission($meetingCourse->group_id, $cid)) {
                     continue;
                 }
 
@@ -179,23 +183,5 @@ class RoomsList extends MeetingsController
         } else {
             return $features;
         }
-    }
-
-    /**
-     * This method check the permission (global and if he is in the group) for a given user
-     *
-     * @param $group_id The Group-ID
-     * @param $cid The Course-ID
-     * @return bool True if user have permission, False otherwise
-     */
-    public function checkPermission($group_id, $cid)
-    {
-        global $perm, $user;
-        $group = new \Statusgruppen($group_id);
-
-        return $group->isMember($user->id)
-            || ($user && is_object($perm)
-                && $perm->have_studip_perm('tutor', $cid, $user->id)
-            );
     }
 }

@@ -41,11 +41,22 @@ class RoomJoin extends MeetingsController
         $room_id = $args['room_id'];
         $cid = $args['cid'];
 
-        if (!$perm->have_studip_perm('user', $cid)) {
-            throw new \AccessDeniedException();
+        $meetingCourse = new MeetingCourse([$room_id, $cid ]);
+        // Check Assigned Group
+        $meetingCourse = $this->checkAssignedGroup($meetingCourse);
+
+        // Check group access permission
+        if (!$perm->have_studip_perm('user', $cid) || ($meetingCourse->group_id && !$this->checkGroupPermission($meetingCourse->group_id, $cid))) {
+            header('Location:' .
+                \URLHelper::getURL(
+                    'plugins.php/meetingplugin/index',
+                    ['cid' => $cid, 'err' => 'accessdenied']
+                )
+            );
+            exit;
         }
 
-        $meeting = Meeting::find($room_id);
+        $meeting = $meetingCourse->meeting;
 
         // Checking folder existence
         $this->checkAssignedFolder($meeting);
@@ -100,7 +111,6 @@ class RoomJoin extends MeetingsController
             && $features['room_anyone_can_start'] === 'false'
             && !$perm->have_studip_perm('tutor', $cid)
         ) {
-            $meetingCourse = new MeetingCourse([$room_id, $cid ]);
             $status = $driver->isMeetingRunning($meetingCourse->meeting->getMeetingParameters()) === 'true' ? true : false;
 
             if (!$status) {

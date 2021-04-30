@@ -85,8 +85,8 @@
                             role="status-yellow" size="24"></StudipIcon>
                     <span v-translate>
                         Das Meeting gehört der Gruppe
-                        {{ group_name }}
                     </span>
+                    <span v-if="group_name" v-text="group_name"></span>
                 </div>
 
                 <div v-if="course_config.display.editRoom && room.folder_id !== null && room.details && room.details.folder">
