@@ -348,9 +348,18 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
     */
     public function DeleteMeetingOnUserDelete($event, $user)
     {
-        foreach (MeetingCourse::findByUser($user) as $meetingCourse) {
-            $meetingCourse->meeting->delete();
-            $meetingCourse->delete();
+        require_once __DIR__ . '/vendor/autoload.php';
+
+        if (!$user instanceof \Seminar_User) {
+            $seminar_user = new \Seminar_User($user);
+        }
+        $meetingCourses = MeetingCourse::findByUser($seminar_user);
+        
+        if ($meetingCourses) {
+            foreach ($meetingCourses as $meetingCourse) {
+                $meetingCourse->meeting->delete();
+                $meetingCourse->delete();
+            }
         }
     }
 
@@ -363,10 +372,16 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
     */
     public function UpdateMeetingOnUserMigrate($event, $old_id, $new_id)
     {
-        $user_meetings = Meeting::findBySQL('user_id = ?', [$old_id]);
-        foreach ($user_meetings as $meeting) {
-            $meeting->user_id = $new_id;
-            $meeting->store();
+        require_once __DIR__ . '/vendor/autoload.php';
+
+        if ($old_id && $new_id) {
+            $user_meetings = Meeting::findBySQL('user_id = ?', [$old_id]);
+            if ($user_meetings) {
+                foreach ($user_meetings as $meeting) {
+                    $meeting->user_id = $new_id;
+                    $meeting->store();
+                }
+            }
         }
     }
 
