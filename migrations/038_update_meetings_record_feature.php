@@ -39,7 +39,7 @@ class UpdateMeetingsRecordFeature extends Migration
                 $opencast_config = filter_var(Driver::getConfigValueByDriver($meetingCourse->meeting->driver, 'opencast'), FILTER_VALIDATE_BOOLEAN);
 
                 if ($opencast_config) {
-                    $series_id = MeetingPlugin::checkOpenCast($meetingCourse->course_id);
+                    $series_id = self::checkOpenCast($meetingCourse->course_id);
                     if (!empty($series_id)) {
                         $features['meta_opencast-dc-isPartOf'] = $series_id;
                     } else if (isset($features['meta_opencast-dc-isPartOf'])) {
@@ -58,5 +58,19 @@ class UpdateMeetingsRecordFeature extends Migration
     public function down()
     {
         //No downgrade is available, since it is an update!
+    }
+
+    private static function checkOpenCast($cid) {
+        $opencast_plugin = PluginEngine::getPlugin("OpenCast");
+        if ($opencast_plugin && $opencast_plugin->isActivated($cid)) {
+            $db = DBManager::get();
+            $stmt = $db->prepare('SELECT series_id FROM oc_seminar_series WHERE seminar_id = ?');
+            $stmt->execute(array($cid));
+            $OCSeries = $stmt->fetchColumn();
+            if (!empty($OCSeries)) {
+                return $OCSeries;
+            }
+        }
+        return false;
     }
 }
