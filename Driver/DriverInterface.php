@@ -18,7 +18,7 @@ interface DriverInterface
      * @return bool True if the meeting has been created successfully, false
      *              otherwise
      */
-    public function createMeeting(MeetingParameters $parameters);
+    public function createMeeting(MeetingParameters &$parameters);
 
     /**
      * Deletes a meeting.

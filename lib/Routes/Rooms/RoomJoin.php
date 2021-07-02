@@ -133,7 +133,7 @@ class RoomJoin extends MeetingsController
         $joinParameters->setEmail($user->Email);
         $joinParameters->setFirstName($user->Vorname);
         $joinParameters->setLastName($user->Nachname);
-
+        $joinParameters->setMeeting($meeting);
 
 
         if ($perm->have_studip_perm('tutor', $cid) || $meeting->join_as_moderator) {

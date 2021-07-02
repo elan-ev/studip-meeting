@@ -58,7 +58,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     /**
      * {@inheritdoc}
      */
-    public function createMeeting(MeetingParameters $parameters)
+    public function createMeeting(MeetingParameters &$parameters)
     {
         $params = array(
             'name' => $parameters->getMeetingName(),
@@ -94,7 +94,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 unset($features['guestPolicy-ASK_MODERATOR']);
             }
 
-            // The logic from BBB seems not to work with ALWAYS_DENY only for guests, in fact, 
+            // The logic from BBB seems not to work with ALWAYS_DENY only for guests, in fact,
             // it denies both guests and participants.
             if ($features['guestPolicy'] == 'ALWAYS_DENY') {
                 unset($features['guestPolicy']);
@@ -524,11 +524,11 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     public function prepareSlides($meetingId)
     {
         $options = [];
-        
+
         if (Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'preupload') == false) {
             return $options;
         }
-        
+
         $meeting = new Meeting($meetingId);
 
         if ($meeting->isNew() || empty($meeting->folder_id)) {

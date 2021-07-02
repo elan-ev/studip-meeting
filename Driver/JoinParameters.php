@@ -27,6 +27,8 @@ class JoinParameters extends Parameters
 
     private $hasModerationPermissions;
 
+    private $meeting;
+
     public function setUsername($username)
     {
         $this->username = $username;
@@ -85,5 +87,15 @@ class JoinParameters extends Parameters
     public function hasModerationPermissions()
     {
         return $this->hasModerationPermissions;
+    }
+
+    public function getMeeting()
+    {
+        return $this->meeting;
+    }
+
+    public function setMeeting($meeting)
+    {
+        $this->meeting = $meeting;
     }
 }
