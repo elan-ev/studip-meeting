@@ -78,22 +78,24 @@ class RoomAdd extends MeetingsController
             }
 
             // Apply validation on features inputs
-            try {
-                $validated_features = $this->validateFeatureInputs($json['features'], $json['driver']);
-                if (!$validated_features) {
-                    $message = [
-                        'text' => I18N::_('Raumeinstellung kann nicht bearbeitet werden!'),
-                        'type' => 'error'
-                    ];
-                    return $this->createResponse([
-                        'message'=> $message,
-                    ], $response);
-                    die();
-                } else {
-                    $json['features'] = $validated_features;
+            if ($json['features']) {
+                try {
+                    $validated_features = $this->validateFeatureInputs($json['features'], $json['driver']);
+                    if (!$validated_features) {
+                        $message = [
+                            'text' => I18N::_('Raumeinstellung kann nicht bearbeitet werden!'),
+                            'type' => 'error'
+                        ];
+                        return $this->createResponse([
+                            'message' => $message,
+                        ], $response);
+                        die();
+                    } else {
+                        $json['features'] = $validated_features;
+                    }
+                } catch (Exception $e) {
+                    throw new Error($e->getMessage(), 404);
                 }
-            } catch (Exception $e) {
-                throw new Error($e->getMessage(), 404);
             }
 
             $servers = Driver::getConfigValueByDriver($json['driver'], 'servers');
@@ -139,7 +141,6 @@ class RoomAdd extends MeetingsController
                     $error_text = I18N::_('Die ausgewählte Gruppe ist nicht mehr verfügbar');
                 }
             }
-            
             if (!$has_error) {
                 //putting mandatory logoutURL into features
                 $hostUrl = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost()
