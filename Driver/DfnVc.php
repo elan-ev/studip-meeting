@@ -223,7 +223,7 @@ class DfnVc implements DriverInterface
             return $request->getBody(true);
         } catch (BadResponseException $e) {
             $response = $e->getResponse()->getBody(true);
-            $xml = new \SimpleXMLElement($response);
+            $xml = @new \SimpleXMLElement($response);
             $status_code = 500;
             $error = _('Internal Error');
             $message = _('Please contact a system administrator!');
