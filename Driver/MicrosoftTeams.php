@@ -28,6 +28,11 @@ class MicrosoftTeams implements DriverInterface
         $this->config = $config;
     }
 
+    private function sanitazeForMS($text)
+    {
+        return preg_replace('/[^a-zA-Z0-9-]/', '', $text);
+    }
+
     /**
      * Login and return the access token for the MS Graph API
      *
@@ -112,6 +117,126 @@ class MicrosoftTeams implements DriverInterface
         return $teamData->webUrl;
     }
 
+    private function createUser($username, $mail, $password)
+    {
+        $user = \User::findByUsername($username);
+
+        $data = [
+            'accountEnabled'    => true,
+            'displayName'       => $user->getFullname(),
+            'userPrincipalName' => $this->sanitazeForMS($username) . '@studipmeetings.onmicrosoft.com',
+            'mailNickname'      => $this->sanitazeForMS($user->getFullname()),
+            'passwordProfile'   => [
+                'forceChangePasswordNextSignIn' => false,
+                'password'                      => $password
+            ],
+            'passwordPolicies'  => 'DisablePasswordExpiration'
+        ];
+
+        $result = $this->client->request('POST',
+            'https://graph.microsoft.com/v1.0/users/',
+            [
+                'json' => $data,
+                'headers'     => [
+                    'Authorization' => 'Bearer ' . $this->accessToken
+                ]
+            ]
+        )->getBody()->getContents();
+
+        return json_deocde($result);
+    }
+
+    private function getUser(JoinParameters $parameters)
+    {
+
+        $upn = $this->sanitazeForMS($parameters->getUsername()) . '@studipmeetings.onmicrosoft.com';
+
+        $result = $this->client->request('GET',
+            'https://graph.microsoft.com/v1.0/users?$filter=startswith(userPrincipalName, \'' . $upn . '\')',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->accessToken
+                ]
+            ]
+        )->getBody()->getContents();
+
+        $users = json_decode($result);
+        $user = reset($users->value);
+
+        /*
+        if (empty($user)) {
+            $user = $this->createUser(
+                $parameters->getUsername(),
+                $parameters->getEmail(),
+                $parameters->getPassword()
+            );
+        }
+        */
+
+       if (empty($user)) {
+           throw new Exception('could not find user in Microsoft Graph with userPrincipalName: '. $upn);
+       }
+
+        return $user->id;
+    }
+
+    private function groupAddStudent($group_id, JoinParameters $parameters)
+    {
+        $user_id = $this->getUser($parameters);
+
+        $data = [
+            '@odata.id' => 'https://graph.microsoft.com/v1.0/directoryObjects/' . $user_id
+        ];
+
+        $result = $this->client->request('PATCH',
+            'https://graph.microsoft.com/v1.0/groups/' . $group_id,
+            [
+                'json' => $data,
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->accessToken
+                ]
+            ]
+        );
+
+        //
+    }
+
+    private function groupAddModerator($group_id, JoinParameters $parameters)
+    {
+        $user_id = $this->getUser($parameters);
+
+        // check if user is alread added as owner
+        $result = $this->client->request('GET',
+            'https://graph.microsoft.com/v1.0/groups/' . $group_id . '/owners/' . $user_id,
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->accessToken
+                ]
+            ]
+        )->getBody()->getContents();
+
+        $user = json_decode($result);
+
+        if (!empty($user) && $user->id == $user_id) {
+            return;
+        }
+
+        // add user as group owner
+        $data = [
+            '@odata.id' => 'https://graph.microsoft.com/v1.0/users/' . $user_id
+        ];
+
+        $result = $this->client->request('POST',
+            'https://graph.microsoft.com/v1.0/groups/' . $group_id . '/owners/$ref',
+            [
+                'json' => $data,
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->accessToken
+                ]
+            ]
+        );
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -121,7 +246,7 @@ class MicrosoftTeams implements DriverInterface
         $meetingId =  $parameters->getMeetingId();
 
         // these are the only allowed characters for the mailNickname (which has to be unique)
-        $meetingName = preg_replace('/[^a-zA-Z0-9-]/', '', $meetingName);
+        $meetingName = $this->sanitazeForMS($meetingName);
         $meetingName = substr($meetingName, 0, 30)
             . '_' . date('Y-m-d_H.i.s');
 
@@ -140,8 +265,6 @@ class MicrosoftTeams implements DriverInterface
         ];
 
         $parameters->setMeetingFeatures(json_encode($features));
-
-        // exec("cd /git/studip-teams-node/ && node createMeeting.js " . $meetingId . " \"" . $meetingName . "\" > /dev/null &", $output);
 
         return true;
 
@@ -173,6 +296,14 @@ class MicrosoftTeams implements DriverInterface
         $meeting = $parameters->getMeeting();
         $features = json_decode($meeting->features, true);
 
+
+        // add (missing) users to group, this has to happen before creating a teams-session from a group
+        if ($parameters->hasModerationPermissions()) {
+            $this->groupAddModerator($features['teams']['groupId'], $parameters);
+        } else {
+            $this->groupAddStudent($features['teams']['groupId'], $parameters);
+        }
+
         if (!$features['teams']['webUrl']) {
             $features['teams']['webUrl'] = $this->createTeamsOfGroup(
                 $features['teams']['groupId']
@@ -182,31 +313,7 @@ class MicrosoftTeams implements DriverInterface
             $meeting->store();
         }
 
-        var_dump($features);die;
-
-        // if a room has already been created it returns true otherwise it creates the room
-        /*$meeting = new Meeting($parameters->getMeetingId());
-        $meetingParameters = $meeting->getMeetingParameters();*/
-
-
-        /*
-        if ($parameters->hasModerationPermissions()) {
-            exec("cd /git/studip-teams-node/ && node callAddUser.js " . $meetingId . " " . $userMail . " true" , $output);
-            print_r($output);
-
-        } else {
-            exec("cd /git/studip-teams-node/ && node callAddUser.js " . $meetingId . " " . $userMail . " false" , $output);
-            print_r($output);
-
-        }
-
-        exec("cd /git/studip-teams-node/ && node getMeetingUrl.js " . $meetingId, $meetingUrlOutput);
-
-
-        return $meetingUrlOutput[0];
-        */
-
-        //return 'https://www.microsoft.com/de-de/microsoft-365/microsoft-teams/group-chat-software';
+        return $features['teams']['webUrl'];
     }
 
     /**
@@ -256,9 +363,9 @@ class MicrosoftTeams implements DriverInterface
 
         return array(
             new ConfigOption('url', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Microsoft Graph URL'), 'https://graph.microsoft.com'),
+            new ConfigOption('client_id', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Anwendungs-ID (Client)')),
             new ConfigOption('tenant_id', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Verzeichnis-ID (Mandant)')),
-            new ConfigOption('client_id', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Geheimer Client Schlüssel (ID)')),
-            new ConfigOption('client_secret', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Geheimer Client Schlüssel (Wert)'))
+            new ConfigOption('client_secret', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Geheimer Clientschlüssel (Wert)'))
         );
     }
 
