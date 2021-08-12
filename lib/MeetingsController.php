@@ -23,12 +23,12 @@ class MeetingsController
     }
 
     /**
-     * validateFeatureInputs which check inputs againt the original configOptions 
+     * validateFeatureInputs which check inputs againt the original configOptions
      *  gets the type of configOption value and validate the feature input
-     * 
+     *
      *  @param array $features input features
      *  @param string $driver_name the name of driver to get the class
-     * 
+     *
      *  @return array $features (validated -- neccessary for Integers)
      *  @return bool  $is_valid (false) in case something is not right!
      *  @throws 404 Error "Validation failed" reason: Class not found (mostly)
@@ -39,7 +39,7 @@ class MeetingsController
             $class = 'ElanEv\\Driver\\' . $driver_name;
             if (in_array('ElanEv\Driver\DriverInterface', class_implements($class)) !== false) {
                 if ($create_features = $class::getCreateFeatures()) {
-                    //loop through create_features 
+                    //loop through create_features
                     foreach ($create_features as $create_feature_name => $create_feature_contents ) {
                         if (isset($features[$create_feature_name])) {
                             switch (gettype($create_feature_contents->getValue())) {
@@ -86,7 +86,7 @@ class MeetingsController
     /**
      * Checks if a folder assigned to a meeting still exists, otherwise remove the folder_id
      * from the Meeting model
-     * 
+     *
      * @param Meeting $meeting the meeting object
      */
     public function checkAssignedFolder(Meeting $meeting) {
@@ -105,10 +105,10 @@ class MeetingsController
 
     /**
      * Check recording capabilities based on config and course features
-     * 
+     *
      * @param string $driver the driver name
      * @param string $cid the course id
-     * 
+     *
      * @return array
      */
     public function checkRecordingCapability($driver, $cid) {
@@ -120,7 +120,10 @@ class MeetingsController
         $opencast_config = filter_var(Driver::getConfigValueByDriver($driver, 'opencast'), FILTER_VALIDATE_BOOLEAN);
         if ($opencast_config) {
             $type = 'opencast';
-            $message = 'Opencast Series id kann nicht gefunden werden, Aufzeichnung ist nicht möglich!';
+            $message = 'Opencast Serie kann nicht gefunden werden. Bis der
+                        Reiter »Opencast« unter »Mehr« aktiviert wurde und eine
+                        Serie angelegt wurde, ist eine Aufzeichnung nicht
+                        möglich!';
             if (!empty($cid)) {
                 $series_id = MeetingPlugin::checkOpenCast($cid);
                 if (!empty($series_id)) {
@@ -145,7 +148,7 @@ class MeetingsController
     /**
      * Checks if a group assigned to a meeting still exists, otherwise remove the group_id
      * from the MeetingCourse model
-     * 
+     *
      * @param MeetingCourse $meetingCourse the meeting course object
      */
     public function checkAssignedGroup(MeetingCourse $meetingCourse) {
