@@ -68,7 +68,7 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
      * @param Range $context
      * @return bool
      */
-    public function isActivatableForContext(Range $context)              
+    public function isActivatableForContext(Range $context)
     {
         return get_class($context) === \Course::class;
     }
@@ -325,12 +325,12 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
 
     /**
      * getMeetingManifestInfo
-     * 
+     *
      * get the plugin manifest from PluginManager getPluginManifest method
-     * 
+     *
      * @return Array $metadata the manifest metadata of this plugin
      */
-    public static function getMeetingManifestInfo() 
+    public static function getMeetingManifestInfo()
     {
         $plugin_manager = \PluginManager::getInstance();
         $this_plugin = $plugin_manager->getPluginInfo(__CLASS__);
@@ -344,7 +344,7 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
     *
     * @param object event
     * @param user $user
-    * 
+    *
     */
     public function DeleteMeetingOnUserDelete($event, $user)
     {
@@ -354,7 +354,7 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
             $seminar_user = new \Seminar_User($user);
         }
         $meetingCourses = MeetingCourse::findByUser($seminar_user);
-        
+
         if ($meetingCourses) {
             foreach ($meetingCourses as $meetingCourse) {
                 $meetingCourse->meeting->delete();
@@ -368,7 +368,7 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
     *
     * @param string $old_id old user id
     * @param string $new_id new user id
-    * 
+    *
     */
     public function UpdateMeetingOnUserMigrate($event, $old_id, $new_id)
     {
@@ -414,11 +414,11 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
      *
      * @param  Course $course The current course which the server is going to be used
      * @param  String $server_course_type The server course type
-     * @return boolean 
+     * @return boolean
      */
     public static function checkCourseType(Course $course, $server_course_type)
     {
-        if ($server_course_type == '') { // When empty, it supports all course types 
+        if ($server_course_type == '') { // When empty, it supports all course types
             return true;
         }
 
@@ -479,5 +479,10 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
         }
 
         return '';
+    }
+
+    public function getPortalTemplate()
+    {
+        return false;
     }
 }
