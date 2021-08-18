@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Exception\MethodNotAllowedException;
 use Slim\Container;
 
-class NotAllowedHandler extends Error
+class NotAllowedHandler extends ErrorHandler
 {
     private $container;
 
@@ -35,10 +35,27 @@ class NotAllowedHandler extends Error
      */
     public function __invoke(Request $request, Response $response, $methods = ['GET', 'POST', 'PUT', 'DELETE'])
     {
-        if ($this->container['settings']['displayErrorDetails']) {
-            throw new MethodNotAllowedException($request, $response, $methods);
-        } else {
-            throw new Error('(Meeting Plugin) Slim Application Error: Method Not Allowed!', 405);
+        $errors = new ErrorCollection();
+        $httpCode = 405;
+        $details = null;
+
+        $plugin_name = 'Meeting Plugin';
+        if ($this->container['plugin']) {
+            $plugin_name = $this->container['plugin']->getPluginName();
         }
+
+        $message = _($plugin_name . ' - Slim Application Error: Method Not Allowed!');
+
+        if ($this->container['settings']['displayErrorDetails']) {
+            $details = 'Allowed methods: ' . implode(', ', $methods);
+        }
+        
+        $errors->add(new Error($message, $httpCode, $details));
+
+        if (!empty($errors)) {
+            $response = $this->prepareResponseMessage($request, $response, $errors);
+        }
+
+        return $response->withStatus($httpCode);
     }
 }
