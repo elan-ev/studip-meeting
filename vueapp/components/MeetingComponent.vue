@@ -52,6 +52,13 @@
                 </div>
             </legend>
             <label id="details">
+
+                <div v-if="course_config.display.editRoom && room.is_default == 1">
+                    <StudipIcon class="info-icon" icon="crown"
+                            role="status-yellow" size="24"></StudipIcon>
+                    <span v-text="$gettext('Dieser Raum is Default')"></span>
+                </div>
+
                 <div v-if="course_config.display.editRoom">
                     <a style="cursor: pointer;" :title=" room.join_as_moderator == 1 ?
                         $gettext('Teilnehmenden nur eingeschränkte Rechte geben')

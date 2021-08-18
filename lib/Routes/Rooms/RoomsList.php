@@ -170,6 +170,10 @@ class RoomsList extends MeetingsController
                 throw new Error(implode ("\n", $error_messages), $error_code);
             }
         } else {
+            // Sort the list based on default. We want to push the default room to the top.
+            $defaults = array_column($course_rooms_list, 'is_default');
+            array_multisort($defaults, SORT_DESC, $course_rooms_list);
+            
             return $this->createResponse($course_rooms_list, $response);
         }
     }

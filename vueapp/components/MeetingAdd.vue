@@ -13,10 +13,27 @@
                 <form class="default" @keyup="roomFormSubmit($event)" style="position: relative">
                     <fieldset>
                         <legend v-translate>
-                            Raumname
+                            Raumeinstellung
                         </legend>
                         <label>
+                            <span class="required" v-translate>
+                                Raumname
+                            </span>
                             <input type="text" v-model.trim="room['name']" id="name">
+                        </label>
+                        <label>
+                            <input type="checkbox"
+                            id="default"
+                            :true-value="1"
+                            :false-value="0"
+                            v-model="room['is_default']">
+                            <translate>
+                                Als Default Raum markieren
+                            </translate>
+                            <StudipTooltipIcon
+                                :text="$gettext('Ein Default Raum wird zuerst sortiert und für die gebuchten Termine und Widgets verwendet.' + 
+                                ' Wenn Sie diesen Raum als Default markieren, wird der andere Default Raum automatisch abgewählt.')">
+                            </StudipTooltipIcon>
                         </label>
                     </fieldset>
 

@@ -23,10 +23,11 @@ use ElanEv\Model\Meeting;
 
 use Meetings\AppFactory;
 use Meetings\RouteMap;
+use Meetings\WidgetHandler;
 
 require_once 'compat/StudipVersion.php';
 
-class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
+class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin, SystemPlugin
 {
     const GETTEXT_DOMAIN = 'meetings';
     const NAVIGATION_ITEM_NAME = 'video-conferences';
@@ -479,5 +480,38 @@ class MeetingPlugin extends StudIPPlugin implements StandardPlugin, SystemPlugin
         }
 
         return '';
+    }
+
+    /**
+     * Return the template for the widget.
+     *
+     * @return Flexi_PhpTemplate The template containing the widget contents
+     */
+    public function getPortalTemplate()
+    {
+        require_once __DIR__ . '/vendor/autoload.php';
+
+        // We need to use "nobody" rights for Upload Slides,
+        // but in here we have to prevent that right,
+        // in order to not to show the template in login page and so on.
+        if ('nobody' === $GLOBALS['user']->id) {
+            return;
+        }
+
+        $template_factory = new Flexi_TemplateFactory(__DIR__ . "/templates");
+        $template = $template_factory->open("index.php");
+        
+        $template->set_attribute('items', WidgetHandler::getMeetingsForWidget());
+
+        $texts = [
+            'empty' => $this->_('Es sind keine Meeting-Räume vorhanden.'),
+            'current' => $this->_('Aktuelle Live-Meetings'),
+            'upcoming' => $this->_('Kommende Meetings'),
+            'to_course' => $this->_('Zur Meeting-Liste'),
+            'to_meeting' => $this->_('Direkt zum Meeting')
+        ];
+        $template->set_attribute('texts', $texts);
+
+        return $template;
     }
 }

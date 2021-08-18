@@ -73,6 +73,11 @@ class RoomEdit extends MeetingsController
                 $meetingCourse->group_id = ((empty($json['group_id']) ? null : $json['group_id']));
                 $meetingCourse->store();
             }
+
+            // Handel course default room.
+            $is_default = isset($json['is_default']) ? intval($json['is_default']) : 0;
+            $this->manageCourseDefaultRoom($room_id, $json['cid'], $is_default);
+
             $meeting = $meetingCourse->meeting;
             $meeting->name = $name;
             !isset($json['recordingUrl']) ?: $meeting->recording_url = utf8_decode($json['recording_url']);

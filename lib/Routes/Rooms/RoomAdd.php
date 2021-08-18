@@ -188,6 +188,10 @@ class RoomAdd extends MeetingsController
                 $meeting->remote_id = $meetingParameters->getRemoteId();
                 $meeting->store();
 
+                // Handel course default room.
+                $is_default = isset($json['is_default']) ? $json['is_default'] : 0;
+                $this->manageCourseDefaultRoom($meeting->id, $json['cid'], $is_default);
+
                 $message = [
                     'text' => I18N::_('Raum wurde erfolgreich erstellt.'),
                     'type' => 'success'
