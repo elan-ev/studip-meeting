@@ -183,4 +183,40 @@ class MeetingsController
                 && $perm->have_studip_perm('tutor', $cid, $user->id)
             );
     }
+
+    /**
+     * Selects/Deselect a room as default for a course.
+     * When a room is selected as default, other default room will be deselected automatically.
+     *
+     * @param string $meeting_id room id
+     * @param string $cid course id
+     * @param int $is_default the default flag
+     */
+    public function manageCourseDefaultRoom($meeting_id, $cid, $is_default) {
+
+        $meetingCourse = new MeetingCourse([$meeting_id, $cid]);
+        $meetingCourse->is_default = $is_default;
+        $meetingCourse->store();
+
+        // Check for other records.
+        $otherCourseMeetings = MeetingCourse::findBySQL('course_id = ? AND meeting_id != ?', [$cid, $meeting_id]);
+        // Make sure there is no other default room if there are other records and we select this room as default.
+        if (!empty($otherCourseMeetings) && $is_default == 1) {
+            // Loop through all other courseMeeting records.
+            foreach ($otherCourseMeetings as $meetingCourse) {
+                $meetingCourse->is_default = 0;
+                $meetingCourse->store();
+            }
+        }
+    }
+
+    /**
+     * When There is only one room in course, this method helps to auto select it as default.
+     *
+     * @param MeetingCourse $meetingCourse the meeting course object
+     */
+    public function autoSelectCourseDefaultRoom(MeetingCourse $meetingCourse) {
+        $meetingCourse->is_default = 1;
+        $meetingCourse->store();
+    }
 }
