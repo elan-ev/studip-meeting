@@ -209,4 +209,14 @@ class MeetingsController
             }
         }
     }
+
+    /**
+     * When There is only one room in course, this method helps to auto select it as default.
+     *
+     * @param MeetingCourse $meetingCourse the meeting course object
+     */
+    public function autoSelectCourseDefaultRoom(MeetingCourse $meetingCourse) {
+        $meetingCourse->is_default = 1;
+        $meetingCourse->store();
+    }
 }

@@ -12,12 +12,12 @@
                 <? foreach ($items['current'] as $item): ?>
                     <article class="studip toggle">
                         <header>
-                            <h1>
+                            <h1 onclick="window.open('<?= $item['meeting_join_url'] ?>', '_self');return false;">
                                 <?= Icon::create('chat', 'inactive')->asImg(['class' => 'text-bottom']) ?>
                                 <?= htmlReady($item['item_title']) ?>
                             </h1>
                             <nav>
-                                <a href="<?= $item['meeting_join_url'] ?>" title="<?= htmlReady($texts['to_meeting']) ?>">
+                                <a href="<?= $item['meeting_join_url'] ?>" title="<?= htmlReady($texts['to_meeting']) ?>" target="_blank">
                                     <?= Icon::create('door-enter', 'clickable')->asImg(['class' => 'text-bottom']) ?>
                                 </a>
                                 <a href="<?= $item['meeting_course_url'] ?>" title="<?= htmlReady($texts['to_course']) ?>">
@@ -41,12 +41,12 @@
                 <? foreach ($items['upcoming'] as $item): ?>
                     <article class="studip toggle">
                         <header>
-                            <h1>
+                            <h1 onclick="window.open('<?= $item['meeting_join_url'] ?>', '_self');return false;">
                                 <?= Icon::create('chat', 'inactive')->asImg(['class' => 'text-bottom']) ?>
                                 <?= htmlReady($item['item_title']) ?>
                             </h1>
                             <nav>
-                                <a href="<?= $item['meeting_join_url'] ?>">
+                                <a href="<?= $item['meeting_join_url'] ?>" target="_blank">
                                     <?= Icon::create('door-enter', 'clickable')->asImg(['class' => 'text-bottom']) ?>
                                 </a>
                                 <a href="<?= $item['meeting_course_url'] ?>">

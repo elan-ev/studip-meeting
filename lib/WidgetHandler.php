@@ -29,13 +29,13 @@ class WidgetHandler
         if ($perm->have_perm('admin') || $perm->have_perm('root')) {
             $courses = Course::findBySQL(
                 'INNER JOIN vc_meeting_course AS mc ON seminar_id = mc.course_id
-                 WHERE mc.is_default = 1'
+                 WHERE mc.is_default = 1 AND mc.active = 1'
             );
         } else {
             $courses = Course::findBySQL(
                 'INNER JOIN seminar_user AS su USING(Seminar_id)
                  INNER JOIN vc_meeting_course AS mc ON seminar_id = mc.course_id
-                 WHERE su.user_id = ? AND mc.is_default = 1 ORDER BY mkdate ASC',
+                 WHERE su.user_id = ? AND mc.is_default = 1 AND mc.active = 1 ORDER BY mkdate ASC',
                  [$user->id]
             );
         }

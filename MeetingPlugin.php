@@ -504,8 +504,8 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
         $template->set_attribute('items', WidgetHandler::getMeetingsForWidget());
 
         $texts = [
-            'empty' => $this->_('Es sind keine Meeting-Räume vorhanden.'),
-            'current' => $this->_('Aktuelle Live-Meetings'),
+            'empty' => $this->_('Derzeit finden keine Meetings in den gebuchten Kursen statt.'),
+            'current' => $this->_('Derzeitige Meetings'),
             'upcoming' => $this->_('Kommende Meetings'),
             'to_course' => $this->_('Zur Meeting-Liste'),
             'to_meeting' => $this->_('Direkt zum Meeting')
