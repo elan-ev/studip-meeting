@@ -16,7 +16,8 @@ import {
 import {
     ROOMS_LIST_SET,
     ROOMS_INFO_SET,
-    ROOM_CLEAR
+    ROOM_CLEAR,
+    DEFAULT_ROOM_SET
 } from "./mutations.type";
 
 const initialState = {
@@ -30,7 +31,8 @@ const initialState = {
         "join_as_moderator": "0",
         "features": {},
         "group_id": ""
-    }
+    },
+    default_room: {}
 };
 
 const getters = {
@@ -45,6 +47,9 @@ const getters = {
     },
     rooms_checked(state) {
         return state.rooms_checked;
+    },
+    default_room(state) {
+        return state.default_room;
     }
 };
 
@@ -56,6 +61,13 @@ export const actions = {
             .then(({ data }) => {
                 if (data != []) {
                     context.commit(ROOMS_LIST_SET, data);
+
+                    // Extract default room from the room list.
+                    var default_room = data.find(room => room.is_default == 1);
+                    if (!default_room) {
+                        default_room = {};
+                    }
+                    context.commit(DEFAULT_ROOM_SET, default_room);
                 }
             });
     },
@@ -120,6 +132,10 @@ export const mutations = {
 
     [ROOMS_INFO_SET](state, data) {
         state.rooms_info = data;
+    },
+
+    [DEFAULT_ROOM_SET](state, data) {
+        state.default_room = data;
     }
 };
 

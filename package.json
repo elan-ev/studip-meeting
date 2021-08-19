@@ -8,7 +8,7 @@
         "translate": "gettext-extract --attribute v-i18n --attribute v-translate --output locale/en/LC_MESSAGES/meetings_js.pot $(find vueapp -type f -name '*.vue') && sh translate.sh && gettext-compile --output vueapp/i18n/translations.json locale/en/LC_MESSAGES/meetings.po",
         "prod": "webpack --mode=\"production\"",
         "prezip": "npm install && npm run prod && composer install --no-dev",
-        "zip": "zip -r Meetings-V$npm_package_version.zip app assets compat Driver images lib locale migrations static vendor LICENSE README.md bootstrap.php MeetingPlugin.php plugin.manifest"
+        "zip": "zip -r Meetings-V$npm_package_version.zip app assets compat Driver images lib templates locale migrations static vendor LICENSE README.md bootstrap.php MeetingPlugin.php plugin.manifest"
     },
     "author": "ELAN e.V. (tgloeggl@uos.de)",
     "dependencies": {

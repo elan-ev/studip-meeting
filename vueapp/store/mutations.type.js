@@ -6,6 +6,7 @@ export const CONFIG_COURSE_SET  = "configCourseSet";
 export const ROOMS_LIST_SET     = "roomsListSet";
 export const ROOMS_INFO_SET     = "roomsInfoSet";
 export const ROOM_CLEAR         = "roomClear";
+export const DEFAULT_ROOM_SET   = 'defaultRoomSet'
 
 export const RECORDING_LIST_SET = "recordingListSet";
 export const RECORDING_SET      = "recordingSet";

@@ -28,7 +28,11 @@
             </MessageBox>
 
             <MessageBox v-if="!rooms_checked" type="warning">
-                <translate>Raumliste wird geladen...</translate>
+                <span v-text="$gettext('Raumliste wird geladen...')"></span>
+            </MessageBox>
+
+            <MessageBox v-if="rooms_checked && rooms_list.length && config && course_config.display.addRoom && Object.keys(default_room).length === 0" type="info">
+                <span v-text="$gettext('Wir empfehlen Ihnen einen Default-Raum auszuwählen.')"></span>
             </MessageBox>
 
             <p>
@@ -121,7 +125,8 @@ export default {
     computed: {
         ...mapGetters([
             'config', 'course_config', 'room',
-            'rooms_list', 'rooms_info', 'rooms_checked'
+            'rooms_list', 'rooms_info', 'rooms_checked',
+            'default_room'
         ]),
 
         rooms_list_filtered: function() {
