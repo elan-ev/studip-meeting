@@ -6,3 +6,5 @@ static
 app/views/index/index.php
 app/views/admin/index.php
 app/views/room/lobby.php
+.DS_Store
+*.zip
