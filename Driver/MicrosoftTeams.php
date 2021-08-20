@@ -3,6 +3,7 @@
 namespace ElanEv\Driver;
 
 use MeetingPlugin;
+use Meetings\Errors\DriverError;
 use GuzzleHttp\ClientInterface;
 use ElanEv\Model\Meeting;
 use ElanEv\Model\Driver;
@@ -124,7 +125,7 @@ class MicrosoftTeams implements DriverInterface
         $data = [
             'accountEnabled'    => true,
             'displayName'       => $user->getFullname(),
-            'userPrincipalName' => $this->sanitazeForMS($username) . '@studipmeetings.onmicrosoft.com',
+            'userPrincipalName' => $this->sanitazeForMS($username) . '@' . $this->config['domain'],
             'mailNickname'      => $this->sanitazeForMS($user->getFullname()),
             'passwordProfile'   => [
                 'forceChangePasswordNextSignIn' => false,
@@ -149,7 +150,7 @@ class MicrosoftTeams implements DriverInterface
     private function getUser(JoinParameters $parameters)
     {
 
-        $upn = $this->sanitazeForMS($parameters->getUsername()) . '@studipmeetings.onmicrosoft.com';
+        $upn = $this->sanitazeForMS($parameters->getUsername()) . '@' . $this->config['domain'];
 
         $result = $this->client->request('GET',
             'https://graph.microsoft.com/v1.0/users?$filter=startswith(userPrincipalName, \'' . $upn . '\')',
@@ -163,7 +164,6 @@ class MicrosoftTeams implements DriverInterface
         $users = json_decode($result);
         $user = reset($users->value);
 
-        /*
         if (empty($user)) {
             $user = $this->createUser(
                 $parameters->getUsername(),
@@ -171,10 +171,9 @@ class MicrosoftTeams implements DriverInterface
                 $parameters->getPassword()
             );
         }
-        */
 
        if (empty($user)) {
-           throw new Exception('could not find user in Microsoft Graph with userPrincipalName: '. $upn);
+           throw new DriverError('could not find user in Microsoft Graph with userPrincipalName: '. $upn, 500);
        }
 
         return $user->id;
@@ -362,10 +361,24 @@ class MicrosoftTeams implements DriverInterface
     {
 
         return array(
-            new ConfigOption('url', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Microsoft Graph URL'), 'https://graph.microsoft.com'),
-            new ConfigOption('client_id', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Anwendungs-ID (Client)')),
-            new ConfigOption('tenant_id', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Verzeichnis-ID (Mandant)')),
-            new ConfigOption('client_secret', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Geheimer Clientschlüssel (Wert)'))
+            new ConfigOption('url',
+                dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Microsoft Graph URL'),
+                'https://graph.microsoft.com'
+            ),
+            new ConfigOption('client_id',
+                dgettext(MeetingPlugin::GETTEXT_DOMAIN,
+                'Anwendungs-ID (Client)')
+            ),
+            new ConfigOption('tenant_id',
+                dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Verzeichnis-ID (Mandant)')
+            ),
+            new ConfigOption('client_secret',
+                dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Geheimer Clientschlüssel (Wert)')
+            ),
+            new ConfigOption('domain',
+                dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Domänenteil des userPrincipalName (ohne @ Zeichen!)'),
+                'z.B.: studipmeetings.onmicrosoft.com'
+            )
         );
     }
 
