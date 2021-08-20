@@ -1,6 +1,6 @@
 <template>
     <div v-if="messages.length">
-        <MessageBox v-for="(message, index) in messages" :type="message.type" @hide="messages[index] = ''">
+        <MessageBox v-for="(message, index) in messages" :key="index" :type="message.type" @hide="messages[index] = ''">
             <span v-if="typeof message.text == 'string'">{{ message.text }}</span>
             <ul v-else>
                 <li v-for="(text, i) in message.text" :key="i">
