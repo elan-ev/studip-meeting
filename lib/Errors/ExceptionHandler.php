@@ -11,10 +11,8 @@ use Slim\Container;
  * für alle JSON-API-Routen installiert und sorgt dafür, dass auch
  * evtl. Fehler JSON-API-kompatibel geliefert werden.
  */
-class ExceptionHandler
+class ExceptionHandler extends ErrorHandler
 {
-    private $container;
-
     /**
      * Der Konstruktor...
      *
@@ -25,7 +23,7 @@ class ExceptionHandler
      */
     public function __construct(Container $container)
     {
-        $this->container = $container;
+        parent::__construct($container);
     }
 
     /**
@@ -42,36 +40,23 @@ class ExceptionHandler
     {
         if ($exception instanceof Error) {
             $httpCode = $exception->getCode();
-            $errors = new ErrorCollection();
-
-            if (!$this->container['settings']['displayErrorDetails']) {
-                $exception->clearDetails();
-            }
-
-            $errors->add($exception);
+            $meetingError = $exception;
         } else {
             $httpCode = 500;
-            $details = null;
 
-            $message = $exception->getMessage();
-
-            if ($this->container['settings']['displayErrorDetails']) {
-                $details = (string) $exception;
-            }
-
-            $errors = new ErrorCollection();
-            $errors->add(new Error($message, $httpCode, $details));
+            $plugin_name = $this->getPluginName();
+    
+            $message = _($plugin_name . ' - Slim Application Internal Error') . ': ' . $exception->getMessage();
+            $details = (string) $exception;
+            
+            $meetingError = new Error($message, $httpCode, $details);
         }
 
-        if (!empty($errors)) {
-            $response = $response
-                      ->withHeader(
-                          'Content-Type',
-                          'application/vnd.api+json'
-                      )
-                      ->write($errors->json());
+        if (!$this->displayErrorDetails()) {
+            $meetingError->clearDetails();
         }
 
+        $response = $this->prepareResponseMessage($request, $response, $meetingError);
         return $response->withStatus($httpCode);
     }
 }

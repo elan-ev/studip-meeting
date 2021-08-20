@@ -7,10 +7,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Container;
 use Throwable;
 
-class PHPErrorHandler extends Error
+class PHPErrorHandler extends ErrorHandler
 {
-    private $container;
-
     /**
      * Der Konstruktor...
      *
@@ -21,7 +19,7 @@ class PHPErrorHandler extends Error
      */
     public function __construct(Container $container)
     {
-        $this->container = $container;
+        parent::__construct($container);
     }
 
     /**
@@ -36,10 +34,21 @@ class PHPErrorHandler extends Error
      */
     public function __invoke(Request $request, Response $response, Throwable $error)
     {
-        $message = "(Meeting Plugin) Slim Application Internal Error";
-        if ($this->container['settings']['displayErrorDetails']) {
-            $message .= ': ' . $error->getMessage() . ' in:' . $error->getFile() . ' line:' . $error->getLine();
+        $httpCode = 500;
+        $details = null;
+
+        $plugin_name = $this->getPluginName();
+
+        $message = $plugin_name . ' - Slim Application Internal Error' . ': ' . $error->getMessage();
+        $details = 'in:' . $error->getFile() . ' line:' . $error->getLine();
+        
+        $meetingError = new Error($message, $httpCode, $details);
+        
+        if (!$this->displayErrorDetails()) {
+            $meetingError->clearDetails();
         }
-        throw new Error($message, 500);
+
+        $response = $this->prepareResponseMessage($request, $response, $meetingError);
+        return $response->withStatus($httpCode);
     }
 }

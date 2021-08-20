@@ -4,13 +4,10 @@ namespace Meetings\Errors;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Exception\NotFoundException;
 use Slim\Container;
 
-class NotFoundHandler extends Error
+class NotFoundHandler extends ErrorHandler
 {
-    private $container;
-
     /**
      * Der Konstruktor...
      *
@@ -21,7 +18,7 @@ class NotFoundHandler extends Error
      */
     public function __construct(Container $container)
     {
-        $this->container = $container;
+        parent::__construct($container);
     }
 
     /**
@@ -35,10 +32,20 @@ class NotFoundHandler extends Error
      */
     public function __invoke(Request $request, Response $response)
     {
-        if ($this->container['settings']['displayErrorDetails']) {
-            throw new NotFoundException($request, $response);
-        } else {
-            throw new Error('(Meeting Plugin) Slim Application Error: Request not found!', 404);
+        $httpCode = 404;
+        $details = null;
+
+        $plugin_name = $this->getPluginName();
+
+        $message = $plugin_name . ' - Slim Application Error: Request not found!';
+        $details = 'The Action or Page you are looking for could not be found!';
+
+        $meetingError = new Error($message, $httpCode, $details);
+        if (!$this->displayErrorDetails()) {
+            $meetingError->clearDetails();
         }
+        
+        $response = $this->prepareResponseMessage($request, $response, $meetingError);
+        return $response->withStatus($httpCode);
     }
 }
