@@ -9,8 +9,6 @@ use Throwable;
 
 class PHPErrorHandler extends ErrorHandler
 {
-    private $container;
-
     /**
      * Der Konstruktor...
      *
@@ -21,7 +19,7 @@ class PHPErrorHandler extends ErrorHandler
      */
     public function __construct(Container $container)
     {
-        $this->container = $container;
+        parent::__construct($container);
     }
 
     /**
@@ -36,27 +34,21 @@ class PHPErrorHandler extends ErrorHandler
      */
     public function __invoke(Request $request, Response $response, Throwable $error)
     {
-        $errors = new ErrorCollection();
         $httpCode = 500;
         $details = null;
 
-        $plugin_name = 'Meeting Plugin';
-        if ($this->container['plugin']) {
-            $plugin_name = $this->container['plugin']->getPluginName();
+        $plugin_name = $this->getPluginName();
+
+        $message = $plugin_name . ' - Slim Application Internal Error' . ': ' . $error->getMessage();
+        $details = 'in:' . $error->getFile() . ' line:' . $error->getLine();
+        
+        $meetingError = new Error($message, $httpCode, $details);
+        
+        if (!$this->displayErrorDetails()) {
+            $meetingError->clearDetails();
         }
 
-        $message = _($plugin_name . ' - Slim Application Internal Error');
-
-        if ($this->container['settings']['displayErrorDetails']) {
-            $details = $error->getMessage() . ' in:' . $error->getFile() . ' line:' . $error->getLine();
-        }
-
-        $errors->add(new Error($message, $httpCode, $details));
-
-        if (!empty($errors)) {
-            $response = $this->prepareResponseMessage($request, $response, $errors);
-        }
-
+        $response = $this->prepareResponseMessage($request, $response, $meetingError);
         return $response->withStatus($httpCode);
     }
 }

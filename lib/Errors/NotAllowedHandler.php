@@ -9,8 +9,6 @@ use Slim\Container;
 
 class NotAllowedHandler extends ErrorHandler
 {
-    private $container;
-
     /**
      * Der Konstruktor...
      *
@@ -21,7 +19,7 @@ class NotAllowedHandler extends ErrorHandler
      */
     public function __construct(Container $container)
     {
-        $this->container = $container;
+        parent::__construct($container);
     }
 
     /**
@@ -35,27 +33,20 @@ class NotAllowedHandler extends ErrorHandler
      */
     public function __invoke(Request $request, Response $response, $methods = ['GET', 'POST', 'PUT', 'DELETE'])
     {
-        $errors = new ErrorCollection();
         $httpCode = 405;
         $details = null;
 
-        $plugin_name = 'Meeting Plugin';
-        if ($this->container['plugin']) {
-            $plugin_name = $this->container['plugin']->getPluginName();
-        }
+        $plugin_name = $this->getPluginName();
 
-        $message = _($plugin_name . ' - Slim Application Error: Method Not Allowed!');
+        $message = $plugin_name . ' - Slim Application Error: Method Not Allowed!';
+        $details = 'Allowed methods: ' . implode(', ', $methods);
 
-        if ($this->container['settings']['displayErrorDetails']) {
-            $details = 'Allowed methods: ' . implode(', ', $methods);
+        $meetingError = new Error($message, $httpCode, $details);
+        if (!$this->displayErrorDetails()) {
+            $meetingError->clearDetails();
         }
         
-        $errors->add(new Error($message, $httpCode, $details));
-
-        if (!empty($errors)) {
-            $response = $this->prepareResponseMessage($request, $response, $errors);
-        }
-
+        $response = $this->prepareResponseMessage($request, $response, $meetingError);
         return $response->withStatus($httpCode);
     }
 }

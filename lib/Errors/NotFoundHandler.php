@@ -8,8 +8,6 @@ use Slim\Container;
 
 class NotFoundHandler extends ErrorHandler
 {
-    private $container;
-
     /**
      * Der Konstruktor...
      *
@@ -20,7 +18,7 @@ class NotFoundHandler extends ErrorHandler
      */
     public function __construct(Container $container)
     {
-        $this->container = $container;
+        parent::__construct($container);
     }
 
     /**
@@ -34,27 +32,20 @@ class NotFoundHandler extends ErrorHandler
      */
     public function __invoke(Request $request, Response $response)
     {
-        $errors = new ErrorCollection();
         $httpCode = 404;
         $details = null;
 
-        $plugin_name = 'Meeting Plugin';
-        if ($this->container['plugin']) {
-            $plugin_name = $this->container['plugin']->getPluginName();
+        $plugin_name = $this->getPluginName();
+
+        $message = $plugin_name . ' - Slim Application Error: Request not found!';
+        $details = 'The Action or Page you are looking for could not be found!';
+
+        $meetingError = new Error($message, $httpCode, $details);
+        if (!$this->displayErrorDetails()) {
+            $meetingError->clearDetails();
         }
-
-        $message = _($plugin_name . ' - Slim Application Error: Request not found!');
-
-        if ($this->container['settings']['displayErrorDetails']) {
-            $details = 'The Action or Page you are looking for could not be found!';
-        }
-
-        $errors->add(new Error($message, $httpCode, $details));
-
-        if (!empty($errors)) {
-            $response = $this->prepareResponseMessage($request, $response, $errors);
-        }
-
+        
+        $response = $this->prepareResponseMessage($request, $response, $meetingError);
         return $response->withStatus($httpCode);
     }
 }
