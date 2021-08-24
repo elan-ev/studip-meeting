@@ -10,7 +10,7 @@ class AddModeratorInvitationsLinks extends Migration
              `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
              `meeting_id` int(10) unsigned NOT NULL,
              `default_name` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-             `password` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+             `password` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
              `hex` varchar(32) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
              PRIMARY KEY (`id`),
              KEY `hex` (`hex`)

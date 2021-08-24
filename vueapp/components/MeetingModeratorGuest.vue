@@ -9,11 +9,19 @@
                     <fieldset>
                         <label>
                             <span class="required" v-translate>Standard-Moderatorsname</span>
-                            <input type="text" v-model.trim="moderator_name" id="moderatorname" @change="generateModeratorGuestJoin($event)">
+                            <input type="text" v-model.trim="moderator_name" id="moderatorname" @change.once="generateModeratorGuestJoin($event)">
                         </label>
                         <label>
                             <span class="required" v-translate>Zugangscode</span>
-                            <input type="text" v-model.trim="moderator_password" id="moderatorpassword" @change="generateModeratorGuestJoin($event)">
+                            <span
+                                v-translate="{
+                                    length: password_length
+                                }"
+                            >(%{ length } Zeichen)</span>
+                            <input type="text" :maxlength="password_length" :minlength="password_length" v-model.trim="moderator_password" id="moderatorpassword" @change.once="generateModeratorGuestJoin($event)">
+                            <StudipButton id="generate_code_btn" type="button" v-on:click="generateRandomCode($event)">
+                                <translate>Zugangscode generieren</translate>
+                            </StudipButton>
                         </label>
                         <label id="guest_link_label" v-if="moderator_access_link">
                             <span v-translate>Link</span>
@@ -77,7 +85,8 @@ export default {
             message: '',
             moderator_access_link: '',
             moderator_name: '',
-            moderator_password: ''
+            moderator_password: '',
+            password_length: 5
         }
     },
 
@@ -100,7 +109,9 @@ export default {
                 event.preventDefault();
             }
 
-            if (this.room && this.moderator_name && this.moderator_password) {
+            this.modal_message = {};
+
+            if (this.room && this.moderator_name && this.moderator_password && this.moderator_password.length == this.password_length) {
                 this.room.moderator_name = this.moderator_name;
                 this.room.moderator_password = this.moderator_password;
 
@@ -115,7 +126,23 @@ export default {
                 }).catch (({error}) => {
                     this.$emit('cancel');
                 });
+            } else {
+                var err_message = `Bitte füllen Sie alle geforderten Felder aus`.toLocaleString();
+                if (this.moderator_password && this.moderator_password.length != 5) {
+                    err_message = `Der Zugangscode darf nur aus ${this.password_length} Zeichen bestehen`.toLocaleString();
+                }
+                this.modal_message.type = 'error';
+                this.modal_message.text = err_message;
             }
+        },
+
+        generateRandomCode(event) {
+            if (event) {
+                event.preventDefault();
+            }
+
+            var random_code = Math.floor(10000 + Math.random() * 90000);
+            this.moderator_password = random_code.toString();
         },
 
         cancelModeratorGuest(event) {

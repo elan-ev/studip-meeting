@@ -102,14 +102,9 @@ class RoomController extends PluginController
         Sidebar::Get()->addWidget($widget);
     }
 
-    public function moderator_action($step, $link_hex, $cid)
+    public function moderator_action($link_hex, $cid)
     {
         PageLayout::setTitle($this->_('Stud.IP Meeting'));
-
-        if (!is_numeric($step) || $step < 1 || $step > 3) {
-            throw new Exception($this->_('Ungültige Anfrage!'));
-        }
-        $this->step = $step;
 
         $this->moderator_invitations_link = ModeratorInvitationsLink::findOneBySQL('hex = ?', [$link_hex]);
         if (!$this->moderator_invitations_link) {
@@ -134,35 +129,32 @@ class RoomController extends PluginController
             throw new Exception($this->_('Das gesuchte Meeting ist nicht verfügbar!'));
         }
 
-        // Handle first to second step.
-        $password = trim(Request::get('password'));
-        if ($step == 2 && (empty($password) || $this->moderator_invitations_link->password != $password)) {
-            $this->last_password = $password;
-            $this->step = 1;
-            PageLayout::postError($this->_('Passwort ist ungültig!'));
-        }
-
-        // Handle second step to third.
-        if ($step == 3) {
-            $moderator_name = trim(Request::get('name'));
+        if (Request::isPost() && Request::submitted('accept')) {
+            $password = filter_var(trim(Request::get('password')), FILTER_SANITIZE_STRING);
+            $moderator_name = filter_var(trim(Request::get('name')), FILTER_SANITIZE_STRING);
             if (!$moderator_name) {
                 $moderator_name = $this->moderator_invitations_link->default_name;
             }
-            $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
-            $joinParameters = new JoinParameters();
-            $joinParameters->setMeetingId($meeting->id);
-            $joinParameters->setIdentifier($meeting->identifier);
-            $joinParameters->setRemoteId($meeting->remote_id);
-            $joinParameters->setPassword($meeting->moderator_password);
-            $joinParameters->setHasModerationPermissions(true);
-            $joinParameters->setUsername('guest_moderator');
-            $joinParameters->setFirstName($moderator_name);
-            $join_url = $driver->getJoinMeetingUrl($joinParameters);
-            header('Status: 301 Moved Permanently', false, 301);
-            header('Location:' . $join_url);
-            die;
-        }
 
+            if (empty($password) || $this->moderator_invitations_link->password != $password) {
+                $this->last_password = $password;
+                PageLayout::postError($this->_('Zugangscode ist ungültig!'));
+            } else {
+                $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
+                $joinParameters = new JoinParameters();
+                $joinParameters->setMeetingId($meeting->id);
+                $joinParameters->setIdentifier($meeting->identifier);
+                $joinParameters->setRemoteId($meeting->remote_id);
+                $joinParameters->setPassword($meeting->moderator_password);
+                $joinParameters->setHasModerationPermissions(true);
+                $joinParameters->setUsername('guest_moderator');
+                $joinParameters->setFirstName($moderator_name);
+                $join_url = $driver->getJoinMeetingUrl($joinParameters);
+                header('Status: 301 Moved Permanently', false, 301);
+                header('Location:' . $join_url);
+                die;
+            }
+        }
 
         $widget = new SidebarWidget();
         $widget->setTitle($this->_('Meeting-Name'));
