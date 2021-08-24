@@ -150,6 +150,12 @@
                 </div>
             </label>
             <div class="meeting-item-btns">
+                <StudipButton v-if="course_config.display.editRoom && room.features && room.features['invite_moderator'] && room.features['invite_moderator'] == 'true'"
+                    type="button" v-on:click="getModeratorGuestInfo()"
+                    icon="add" v-translate
+                >
+                    Moderator einladen
+                </StudipButton>
                 <StudipButton v-if="course_config.display.editRoom && room.features && room.features['guestPolicy-ALWAYS_ACCEPT'] && room.features['guestPolicy-ALWAYS_ACCEPT'] == 'true'"
                     type="button" v-on:click="getGuestInfo()"
                     icon="add" v-translate
@@ -306,6 +312,10 @@ export default {
 
         getGuestInfo() {
             this.$emit('getGuestInfo', this.getNonReactiveRoom());
+        },
+
+        getModeratorGuestInfo() {
+            this.$emit('getModeratorGuestInfo', this.getNonReactiveRoom());
         },
     }
 }

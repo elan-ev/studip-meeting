@@ -100,6 +100,11 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 unset($features['guestPolicy']);
             }
 
+            // Remove extra feature param (invite_moderator) which is not accaptable by BBB.
+            if (isset($features['invite_moderator'])) {
+                unset($features['invite_moderator']);
+            }
+
             if ($features['record'] == 'true') {
                 if (self::checkRecordingCapability($features)) {
                     $params['name'] = $params['name'] . ' (' . date('Y-m-d H:i:s') . ')';
@@ -194,9 +199,14 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 'guest' => 'true'
             );
         } else {
+            // To apply correct name for guest moderators.
+            $fullname = sprintf('%s, %s', $parameters->getLastName(), $parameters->getFirstName());
+            if ($parameters->getUsername() == 'guest_moderator') {
+                $fullname = $parameters->getFirstName();
+            }
             $params = array(
                 'meetingID' => $parameters->getRemoteId() ?: $parameters->getMeetingId(),
-                'fullName' => sprintf('%s, %s', $parameters->getLastName(), $parameters->getFirstName()),
+                'fullName' => $fullname,
                 'password' => $parameters->getPassword(),
                 'userID' => '',
                 'webVoiceConf' => '',
@@ -401,6 +411,9 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                     _('Die maximale Länge (in Minuten) für das Meeting. Nach Ablauf der eingestellen Dauer wird das Meeting automatisch beendet, d.h. der Raum wird geschlossen. Falls bereits vor Ablauf der Zeit alle Teilnehmenden das Meeting verlassen haben, oder ein Moderator das Meeting aktiv beendet wird der Raum ebenfalls geschlossen.'));
 
         $res['maxParticipants'] = new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 50, self::getFeatureInfo('maxParticipants'));
+
+        $res['invite_moderator'] = new ConfigOption('invite_moderator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Moderatorenzugang via Link'), false,
+                 _('Legen Sie fest, ob externe Gäste mit Einladungslink als Moderator an der Besprechung teilnehmen dürfen.'));
 
         $res['guestPolicy-ALWAYS_ACCEPT'] = new ConfigOption('guestPolicy-ALWAYS_ACCEPT', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugang via Link'), false,
                  _('Legen Sie fest, ob Benutzer mit Einladungslink als Gäste an der Besprechung teilnehmen dürfen.'));

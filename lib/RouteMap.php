@@ -59,6 +59,11 @@ class RouteMap
         //generate guest invitation link
         $this->app->get('/rooms/join/{cid}/{room_id}/{guest_name}/guest', Routes\Rooms\RoomJoinGuest::class);
         $this->app->get('/rooms/invitationLink/{cid}/{room_id}',  Routes\Rooms\RoomInvitationLink::class);
+
+        //generate moderator invitaion link
+        $this->app->get('/rooms/join/{cid}/{room_id}/{moderator_name}/{moderator_password}/moderator', Routes\Rooms\RoomJoinModerator::class);
+        $this->app->get('/rooms/inviteModerator/{cid}/{room_id}',  Routes\Rooms\RoomModeratorInvitationLink::class);
+
         //recordings with perm
         $this->app->get('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingShow::class);
         $this->app->delete('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingDelete::class);

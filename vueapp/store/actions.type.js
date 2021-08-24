@@ -20,6 +20,8 @@ export const ROOM_JOIN_GUEST    = "roomJoinGuest";
 export const ROOM_STATUS        = "roomStatus";
 export const ROOM_INFO          = "roomInfo";
 export const ROOM_INVITATION_LINK = "roomInvitationLink";
+export const ROOM_JOIN_MODERATOR    = "roomJoinModerator";
+export const ROOM_MODERATOR_INVITATION_LINK = "roomModeratorInvitationLink";
 
 
 export const RECORDING_LIST     = "recordingList";

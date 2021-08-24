@@ -4,6 +4,7 @@ use ElanEv\Driver\DriverFactory;
 use ElanEv\Driver\JoinParameters;
 use ElanEv\Model\Driver;
 use ElanEv\Model\InvitationsLink;
+use ElanEv\Model\ModeratorInvitationsLink;
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
 use MeetingPlugin;
@@ -97,6 +98,76 @@ class RoomController extends PluginController
         $widget->setTitle($this->_('Meeting-Name'));
         $widget->addElement(
             new WidgetElement(htmlReady($this->invitations_link->meeting->name))
+        );
+        Sidebar::Get()->addWidget($widget);
+    }
+
+    public function moderator_action($step, $link_hex, $cid)
+    {
+        PageLayout::setTitle($this->_('Stud.IP Meeting'));
+
+        if (!is_numeric($step) || $step < 1 || $step > 3) {
+            throw new Exception($this->_('Ungültige Anfrage!'));
+        }
+        $this->step = $step;
+
+        $this->moderator_invitations_link = ModeratorInvitationsLink::findOneBySQL('hex = ?', [$link_hex]);
+        if (!$this->moderator_invitations_link) {
+            throw new Exception($this->_('Das gesuchte Meeting existiert nicht mehr!'));
+        }
+
+        $meeting = $this->moderator_invitations_link->meeting;
+
+        // Checking Course Type
+        $servers = Driver::getConfigValueByDriver($meeting->driver, 'servers');
+        $allow_course_type = MeetingPlugin::checkCourseType($meeting->courses->find($cid), $servers[$meeting->server_index]['course_types']);
+        // Checking Server Active
+        $active_server = $servers[$meeting->server_index]['active'];
+        if (!$allow_course_type || !$active_server) {
+            throw new Exception($this->_('Das gesuchte Meeting ist nicht verfügbar!'));
+        }
+
+        $this->cid = $cid;
+
+        $features = json_decode($meeting->features, true);
+        if (isset($features['invite_moderator']) && $features['invite_moderator'] == "false") {
+            throw new Exception($this->_('Das gesuchte Meeting ist nicht verfügbar!'));
+        }
+
+        // Handle first to second step.
+        $password = trim(Request::get('password'));
+        if ($step == 2 && (empty($password) || $this->moderator_invitations_link->password != $password)) {
+            $this->last_password = $password;
+            $this->step = 1;
+            PageLayout::postError($this->_('Passwort ist ungültig!'));
+        }
+
+        // Handle second step to third.
+        if ($step == 3) {
+            $moderator_name = trim(Request::get('name'));
+            if (!$moderator_name) {
+                $moderator_name = $this->moderator_invitations_link->default_name;
+            }
+            $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
+            $joinParameters = new JoinParameters();
+            $joinParameters->setMeetingId($meeting->id);
+            $joinParameters->setIdentifier($meeting->identifier);
+            $joinParameters->setRemoteId($meeting->remote_id);
+            $joinParameters->setPassword($meeting->moderator_password);
+            $joinParameters->setHasModerationPermissions(true);
+            $joinParameters->setUsername('guest_moderator');
+            $joinParameters->setFirstName($moderator_name);
+            $join_url = $driver->getJoinMeetingUrl($joinParameters);
+            header('Status: 301 Moved Permanently', false, 301);
+            header('Location:' . $join_url);
+            die;
+        }
+
+
+        $widget = new SidebarWidget();
+        $widget->setTitle($this->_('Meeting-Name'));
+        $widget->addElement(
+            new WidgetElement(htmlReady($this->moderator_invitations_link->meeting->name))
         );
         Sidebar::Get()->addWidget($widget);
     }
