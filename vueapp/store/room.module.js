@@ -10,7 +10,9 @@ import {
     ROOM_STATUS,
     ROOM_INFO,
     ROOM_JOIN_GUEST,
-    ROOM_INVITATION_LINK
+    ROOM_INVITATION_LINK,
+    ROOM_JOIN_MODERATOR,
+    ROOM_MODERATOR_INVITATION_LINK
 } from "./actions.type";
 
 import {
@@ -99,6 +101,14 @@ export const actions = {
 
     async [ROOM_INVITATION_LINK](context, room) {
         return ApiService.get('rooms/invitationLink/' + CID + '/' + room.id);
+    },
+
+    async [ROOM_JOIN_MODERATOR](context, room) {
+        return ApiService.get('rooms/join/' + CID + '/' + room.id + '/' + room.moderator_name + '/' + room.moderator_password + '/moderator');
+    },
+
+    async [ROOM_MODERATOR_INVITATION_LINK](context, room) {
+        return ApiService.get('rooms/inviteModerator/' + CID + '/' + room.id);
     },
 
     async [ROOM_STATUS](context, id) {

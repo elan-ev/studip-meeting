@@ -54,6 +54,7 @@
                     v-on:getRecording="showRecording"
                     v-on:renewRoomList="getRoomList"
                     v-on:getGuestInfo="showGuestDialog"
+                    v-on:getModeratorGuestInfo="showModeratorGuestDialog"
                     v-on:getFeatures="showEditRoom"
                     v-on:setMessage="showMessage"
                     v-on:getFeedback="showFeedbackDialog">
@@ -84,6 +85,12 @@
             @done="showGuest = false"
             @cancel="showGuest = false"
         />
+
+        <MeetingModeratorGuest v-if="showModeratorGuest"
+            :room="showModeratorGuest"
+            @done="showModeratorGuest = false"
+            @cancel="showModeratorGuest = false"
+        />
     </div>
 </template>
 
@@ -99,6 +106,7 @@ import MeetingAdd from "@/components/MeetingAdd";
 import MeetingRecordings from "@/components/MeetingRecordings";
 import MeetingFeedback from "@/components/MeetingFeedback";
 import MeetingGuest from "@/components/MeetingGuest";
+import MeetingModeratorGuest from "@/components/MeetingModeratorGuest";
 
 import {
     CONFIG_COURSE_READ, ROOM_LIST, ROOM_INFO,
@@ -119,7 +127,8 @@ export default {
         MeetingAdd,
         MeetingRecordings,
         MeetingFeedback,
-        MeetingGuest
+        MeetingGuest,
+        MeetingModeratorGuest
     },
 
     computed: {
@@ -149,7 +158,8 @@ export default {
             createEditRoom: false,
             showRecordings: false,
             showFeedback: false,
-            showGuest: false
+            showGuest: false,
+            showModeratorGuest: false
         }
     },
 
@@ -196,6 +206,10 @@ export default {
 
         showGuestDialog(room) {
             this.showGuest = room;
+        },
+
+        showModeratorGuestDialog(room) {
+            this.showModeratorGuest = room;
         },
 
         createNewRoom() {

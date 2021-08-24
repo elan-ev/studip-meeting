@@ -4,6 +4,7 @@ use ElanEv\Driver\DriverFactory;
 use ElanEv\Driver\JoinParameters;
 use ElanEv\Model\Driver;
 use ElanEv\Model\InvitationsLink;
+use ElanEv\Model\ModeratorInvitationsLink;
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
 use MeetingPlugin;
@@ -97,6 +98,68 @@ class RoomController extends PluginController
         $widget->setTitle($this->_('Meeting-Name'));
         $widget->addElement(
             new WidgetElement(htmlReady($this->invitations_link->meeting->name))
+        );
+        Sidebar::Get()->addWidget($widget);
+    }
+
+    public function moderator_action($link_hex, $cid)
+    {
+        PageLayout::setTitle($this->_('Stud.IP Meeting'));
+
+        $this->moderator_invitations_link = ModeratorInvitationsLink::findOneBySQL('hex = ?', [$link_hex]);
+        if (!$this->moderator_invitations_link) {
+            throw new Exception($this->_('Das gesuchte Meeting existiert nicht mehr!'));
+        }
+
+        $meeting = $this->moderator_invitations_link->meeting;
+
+        // Checking Course Type
+        $servers = Driver::getConfigValueByDriver($meeting->driver, 'servers');
+        $allow_course_type = MeetingPlugin::checkCourseType($meeting->courses->find($cid), $servers[$meeting->server_index]['course_types']);
+        // Checking Server Active
+        $active_server = $servers[$meeting->server_index]['active'];
+        if (!$allow_course_type || !$active_server) {
+            throw new Exception($this->_('Das gesuchte Meeting ist nicht verfügbar!'));
+        }
+
+        $this->cid = $cid;
+
+        $features = json_decode($meeting->features, true);
+        if (isset($features['invite_moderator']) && $features['invite_moderator'] == "false") {
+            throw new Exception($this->_('Das gesuchte Meeting ist nicht verfügbar!'));
+        }
+
+        if (Request::isPost() && Request::submitted('accept')) {
+            $password = filter_var(trim(Request::get('password')), FILTER_SANITIZE_STRING);
+            $moderator_name = filter_var(trim(Request::get('name')), FILTER_SANITIZE_STRING);
+            if (!$moderator_name) {
+                $moderator_name = $this->moderator_invitations_link->default_name;
+            }
+
+            if (empty($password) || $this->moderator_invitations_link->password != $password) {
+                $this->last_password = $password;
+                PageLayout::postError($this->_('Zugangscode ist ungültig!'));
+            } else {
+                $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
+                $joinParameters = new JoinParameters();
+                $joinParameters->setMeetingId($meeting->id);
+                $joinParameters->setIdentifier($meeting->identifier);
+                $joinParameters->setRemoteId($meeting->remote_id);
+                $joinParameters->setPassword($meeting->moderator_password);
+                $joinParameters->setHasModerationPermissions(true);
+                $joinParameters->setUsername('guest_moderator');
+                $joinParameters->setFirstName($moderator_name);
+                $join_url = $driver->getJoinMeetingUrl($joinParameters);
+                header('Status: 301 Moved Permanently', false, 301);
+                header('Location:' . $join_url);
+                die;
+            }
+        }
+
+        $widget = new SidebarWidget();
+        $widget->setTitle($this->_('Meeting-Name'));
+        $widget->addElement(
+            new WidgetElement(htmlReady($this->moderator_invitations_link->meeting->name))
         );
         Sidebar::Get()->addWidget($widget);
     }
