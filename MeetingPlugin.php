@@ -175,7 +175,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
         $recentMeetings = 0;
 
         foreach ($courses as $meetingCourse) {
-            if ($meetingCourse->course->mkdate >= $lastVisit) {
+            if ($meetingCourse->meeting->mkdate >= $lastVisit) {
                 $recentMeetings++;
             }
         }
