@@ -173,15 +173,41 @@
                                 && Object.keys(config[room['driver']]['features']).includes('create') &&
                                 Object.keys(config[room['driver']]['features']['create']).length">
                             <div v-for="(feature, index) in config[room['driver']]['features']['create']" :key="index">
-                                <label v-if="(feature['value'] === true || feature['value'] === false)">
-                                    <input  type="checkbox"
-                                        true-value="true"
-                                        false-value="false"
-                                        v-model="room['features'][feature['name']]">
+                                <template v-if="(feature['value'] === true || feature['value'] === false)">
+                                    <label v-if="feature['name'] != 'room_anyone_can_start'">
+                                        <input  type="checkbox"
+                                            true-value="true"
+                                            false-value="false"
+                                            v-model="room['features'][feature['name']]">
 
-                                        {{ feature['display_name'] }}
-                                        <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
-                                </label>
+                                            {{ feature['display_name'] }}
+                                            <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
+                                    </label>
+                                    <template v-else>
+                                        <label :ref="feature['name']">
+                                            <input  type="checkbox"
+                                                true-value="true"
+                                                false-value="false"
+                                                v-model="room['features'][feature['name']]">
+
+                                            {{ feature['display_name'] }}
+                                            <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
+                                            <span class="inline-feature-warning-icon" v-if="printRoomStartWarning()">
+                                                <a href="#" @click.prevent="toggleInlineFeatureWarning('room_start_warning')">
+                                                    <StudipIcon icon="exclaim-circle-full"
+                                                        role="status-yellow" size="16"></StudipIcon>
+                                                </a>
+                                            </span>
+                                        </label>
+                                        <template v-if="printRoomStartWarning()">
+                                            <MessageBox id="room_start_warning" class="inline-feature-warning" type="warning" @hide="toggleInlineFeatureWarning('room_start_warning')">
+                                                 <span v-text="$gettext('Die Sitzungsaufzeichnung wird gestartet, wenn der Raum vor der geplanten Zeit von ' +
+                                                        'denjenigen gestartet wird, die es vorziehen, früher zu erscheinen. Um dies zu verhindern, wird empfohlen, ' +
+                                                        'dass nur Moderatoren das Meeting starten.')"></span>
+                                            </MessageBox>
+                                        </template>
+                                    </template>
+                                </template>
 
                                 <label v-else-if="feature['value'] && typeof feature['value'] === 'object'">
                                     {{ feature['display_name'] }}
@@ -250,7 +276,7 @@
                         </legend>
 
                         <div v-for="(feature, index) in config[room['driver']]['features']['record']" :key="index">
-                            <label v-if="(feature['value'] === true || feature['value'] === false)">
+                            <label v-if="(feature['value'] === true || feature['value'] === false)" @click="scrollToRoomStartWarning">
                                 <input  type="checkbox"
                                     true-value="true"
                                     false-value="false"
@@ -863,6 +889,42 @@ export default {
         FolderHandler(to) {
             this.$set(this.room, "folder_id" , (to == 'topFolder' ? null : to));
             this.getFolders(to);
+        },
+
+        printRoomStartWarning() {
+            if (JSON.parse(this.room['features']['room_anyone_can_start']) == true && JSON.parse(this.room['features']['record']) == true) {
+                return true;
+            }
+            return false;
+        },
+
+        scrollToRoomStartWarning() {
+            setTimeout(() => {
+                if (this.printRoomStartWarning() && this.$refs["room_anyone_can_start"] && this.$refs["room_anyone_can_start"][0]) {
+                    var dialogComponent = this.$children.filter( (children) => {
+                        return children.$options.name == 'Dialog'
+                    });
+                    if (dialogComponent.length) {
+                        $(`#${dialogComponent[0].$data.id}`).animate(
+                            {scrollTop: $(this.$refs["room_anyone_can_start"][0]).position().top},
+                            'slow',
+                            () => {
+                                if (!$('#room_start_warning').is(':visible')) {
+                                    $('#room_start_warning').show();
+                                }
+                            }
+                        );
+                    } else {
+                        this.$refs["room_anyone_can_start"][0].focus();
+                    }
+                }
+            }, 100);
+        },
+
+        toggleInlineFeatureWarning(id) {
+            if ($(`#${id}`) != undefined) {
+                $(`#${id}`).toggle(); 
+            }
         },
     }
 }
