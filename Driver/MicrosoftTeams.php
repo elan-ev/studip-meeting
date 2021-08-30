@@ -5,6 +5,7 @@ namespace ElanEv\Driver;
 use MeetingPlugin;
 use Meetings\Errors\DriverError;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ClientException;
 use ElanEv\Model\Meeting;
 use ElanEv\Model\Driver;
 use Throwable;
@@ -205,16 +206,20 @@ class MicrosoftTeams implements DriverInterface
         $user_id = $this->getUser($parameters);
 
         // check if user is alread added as owner
-        $result = $this->client->request('GET',
-            'https://graph.microsoft.com/v1.0/groups/' . $group_id . '/owners/' . $user_id,
-            [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $this->accessToken
+        try {
+            $result = $this->client->request('GET',
+                'https://graph.microsoft.com/v1.0/groups/' . $group_id . '/owners/' . $user_id,
+                [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $this->accessToken
+                    ]
                 ]
-            ]
-        )->getBody()->getContents();
+            )->getBody()->getContents();
 
-        $user = json_decode($result);
+            $user = json_decode($result);
+        } catch (ClientException $e) {
+
+        }
 
         if (!empty($user) && $user->id == $user_id) {
             return;
