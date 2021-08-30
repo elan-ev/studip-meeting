@@ -144,7 +144,7 @@ class MicrosoftTeams implements DriverInterface
             ]
         )->getBody()->getContents();
 
-        return json_deocde($result);
+        return json_decode($result);
     }
 
     private function getUser(JoinParameters $parameters)
