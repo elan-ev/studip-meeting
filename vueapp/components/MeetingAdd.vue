@@ -11,7 +11,7 @@
                 </MessageBox>
 
                 <form class="default" @keyup="roomFormSubmit($event)" style="position: relative">
-                    <fieldset>
+                    <fieldset id="room_settings_section">
                         <legend v-translate>
                             Raumeinstellung
                         </legend>
@@ -37,7 +37,7 @@
                         </label>
                     </fieldset>
 
-                    <fieldset v-if="(Object.keys(config).length > 1) || (room['driver']
+                    <fieldset id="server_settings_section" class="collapsable" :class="{collapsed: !isAddRoom}" v-if="(Object.keys(config).length > 1) || (room['driver']
                                 && Object.keys(config[room['driver']]['servers']).length > 1)">
 
                         <legend v-translate>
@@ -154,166 +154,71 @@
                         </label>
                     </fieldset>
 
-                    <fieldset>
-                        <legend v-translate>
-                            Zusätzliche Funktionen
-                        </legend>
+                    <fieldset id="roomsize_settings_section" class="collapsable"
+                            v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
+                                && Object.keys(config[room['driver']]['features']).includes('create')
+                                && Object.keys(config[room['driver']]['features']['create']).includes('roomsize')
+                                && Object.keys(config[room['driver']]['features']['create']['roomsize']).length">
+                        <legend v-text="$gettext('Raumgröße')"></legend>
+                        <template v-for="(feature, index) in config[room['driver']]['features']['create']['roomsize']">
+                            <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" 
+                                :maxAllowedParticipants="maxAllowedParticipants"
+                                :minParticipants="minParticipants"
+                                @checkPresets="checkPresets"
+                                :key="index"/>
+                        </template>
+                    </fieldset>
+
+                    <fieldset id="recording_settings_section" class="collapsable collapsed" v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
+                                && Object.keys(config[room['driver']]['features']).includes('record')
+                                && Object.keys(config[room['driver']]['features']['record']).includes('record_setting')
+                                && Object.keys(config[room['driver']]['features']['record']['record_setting']).length">
+                        <legend v-text="$gettext('Aufzeichnung')"></legend>
+                        <template v-for="(feature, index) in config[room['driver']]['features']['record']['record_setting']">
+                            <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :maxDuration="maxDuration"
+                                @labelClicked="labelClickHandler"
+                                :badge="(Object.keys(config[room['driver']]).includes('opencast') && config[room['driver']]['opencast'] == '1'
+                                            && feature['info'].toLowerCase().includes('opencast')) ? {show: true, text: $gettext('beta')} : {}"
+                                :key="index"/>
+                        </template>
+                    </fieldset>
+
+                    <fieldset id="privacy_settings_section" class="collapsable collapsed"
+                            v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
+                                && Object.keys(config[room['driver']]['features']).includes('create')
+                                && Object.keys(config[room['driver']]['features']['create']).includes('privacy')
+                                && Object.keys(config[room['driver']]['features']['create']['privacy']).length">
+                        <legend v-text="$gettext('Datenschutzeinstellungen')"></legend>
                         <label>
                             <input type="checkbox"
-                            id="join_as_moderator"
-                            true-value="1"
-                            false-value="0"
-                            v-model="room['join_as_moderator']">
-                            <translate>
-                                Alle Teilnehmenden haben Moderationsrechte
-                            </translate>
+                                id="join_as_moderator"
+                                true-value="1"
+                                false-value="0"
+                                v-model="room['join_as_moderator']">
+                                <translate>
+                                    Alle Teilnehmenden haben Moderationsrechte
+                                </translate>
                         </label>
-
-                        <div v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
-                                && Object.keys(config[room['driver']]['features']).includes('create') &&
-                                Object.keys(config[room['driver']]['features']['create']).length">
-                            <div v-for="(feature, index) in config[room['driver']]['features']['create']" :key="index">
-                                <template v-if="(feature['value'] === true || feature['value'] === false)">
-                                    <label v-if="feature['name'] != 'room_anyone_can_start'">
-                                        <input  type="checkbox"
-                                            true-value="true"
-                                            false-value="false"
-                                            v-model="room['features'][feature['name']]">
-
-                                            {{ feature['display_name'] }}
-                                            <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
-                                    </label>
-                                    <template v-else>
-                                        <label :ref="feature['name']">
-                                            <input  type="checkbox"
-                                                true-value="true"
-                                                false-value="false"
-                                                v-model="room['features'][feature['name']]">
-
-                                            {{ feature['display_name'] }}
-                                            <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
-                                            <span class="inline-feature-warning-icon" v-if="printRoomStartWarning()">
-                                                <a href="#" @click.prevent="toggleInlineFeatureWarning('room_start_warning')">
-                                                    <StudipIcon icon="exclaim-circle-full"
-                                                        role="status-yellow" size="16"></StudipIcon>
-                                                </a>
-                                            </span>
-                                        </label>
-                                        <template v-if="printRoomStartWarning()">
-                                            <MessageBox id="room_start_warning" class="inline-feature-warning" type="warning" @hide="toggleInlineFeatureWarning('room_start_warning')">
-                                                 <span v-text="$gettext('Die Sitzungsaufzeichnung wird gestartet, wenn der Raum vor der geplanten Zeit von ' +
-                                                        'denjenigen gestartet wird, die es vorziehen, früher zu erscheinen. Um dies zu verhindern, wird empfohlen, ' +
-                                                        'dass nur Moderatoren das Meeting starten.')"></span>
-                                            </MessageBox>
-                                        </template>
-                                    </template>
-                                </template>
-
-                                <label v-else-if="feature['value'] && typeof feature['value'] === 'object'">
-                                    {{ feature['display_name'] }}
-                                    <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
-
-                                    <select :id="feature['name']" v-model.trim="room['features'][feature['name']]">
-                                        <option v-for="(fvalue, findex) in feature['value']" :key="findex"
-                                                :value="findex" v-translate>
-                                                {{ fvalue }}
-                                        </option>
-                                    </select>
-                                </label>
-                                <label v-else>
-
-                                    {{ feature['display_name'] }}
-                                    <span v-if="feature['name'] == 'maxParticipants'
-                                            && Object.keys(config[room['driver']]).includes('server_defaults')
-                                            && room['server_index']
-                                            && config[room['driver']]['server_defaults'][room['server_index']] != undefined
-                                            && Object.keys(config[room['driver']]['server_defaults'][room['server_index']]).includes('maxAllowedParticipants')"
-                                        v-translate="{
-                                            count: config[room['driver']]['server_defaults'][room['server_index']]['maxAllowedParticipants']
-                                        }"
-                                    >
-                                        &nbsp; (Max. Limit: %{ count })
-                                    </span>
-                                    <span v-if="feature['name'] == 'duration' && maxDuration" 
-                                        v-translate="{
-                                            maxDuration
-                                        }"
-                                    >
-                                         &nbsp; (Max. Limit: %{ maxDuration } Minuten)
-                                    </span>
-                                    <StudipTooltipIcon v-if="Object.keys(feature).includes('info')"
-                                        :text="feature['info']">
-                                    </StudipTooltipIcon>
-
-                                    <input :type="(feature['name'] == 'duration' || feature['name'] == 'maxParticipants') ? 'number' : 'text'"
-                                        :max="(
-                                            (feature['name'] == 'maxParticipants') ?
-                                            (Object.keys(config[room['driver']]).includes('server_defaults')
-                                                && room['server_index']
-                                                && config[room['driver']]['server_defaults'][room['server_index']] != undefined
-                                                && Object.keys(config[room['driver']]['server_defaults'][room['server_index']]).includes('maxAllowedParticipants')) ?
-                                                    config[room['driver']]['server_defaults'][room['server_index']]['maxAllowedParticipants']
-                                                : ''
-                                            :  (feature['name'] == 'duration') ? maxDuration : ''
-                                        )"
-                                        :min="(feature['name'] == 'maxParticipants') ? minParticipants : ((feature['name'] == 'duration') ? 1 : '')"
-                                        @change="(feature['name'] == 'maxParticipants') ? checkPresets() : ''"
-                                        v-model.trim="room['features'][feature['name']]"
-                                        :placeholder="feature['value'] ? feature['value'] : ''"
-                                        :id="feature['name']">
-
-                                </label>
-                            </div>
-                        </div>
+                        <template v-for="(feature, index) in config[room['driver']]['features']['create']['privacy']">
+                            <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :key="index"
+                                :inlineFeatureWarningIcon="(feature['name'] == 'room_anyone_can_start' && printRoomStartWarning()) ? {messagebox_id: 'room_start_warning'} : {}" 
+                                @toggleInlineFeatureWarning="toggleInlineFeatureWarning"
+                            />
+                            <MessageBox
+                                v-if="feature['name'] == 'room_anyone_can_start' && printRoomStartWarning()"
+                                :key="'msgbx' + index" id="room_start_warning"
+                                class="inline-feature-warning"
+                                type="warning"
+                                @hide="toggleInlineFeatureWarning('room_start_warning')"
+                            >
+                                <span v-text="$gettext('Es ist bei Aufzeichnungen dringend empfohlen die Veranstaltung und somit die Aufzeichnungen erst zu beginnen, ' +
+                                    'wenn Lehrende die Videokonferenz betreten.')"></span>
+                            </MessageBox>
+                        </template>
                     </fieldset>
 
-                    <fieldset v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
-                                && Object.keys(config[room['driver']]['features']).includes('record')
-                                && Object.keys(config[room['driver']]['features']['record']).length
-                                && Object.keys(config[room['driver']]).includes('record')">
-                        <legend v-translate>
-                            Aufzeichnung
-                        </legend>
-
-                        <div v-for="(feature, index) in config[room['driver']]['features']['record']" :key="index">
-                            <label v-if="(feature['value'] === true || feature['value'] === false)" @click="scrollToRoomStartWarning">
-                                <input  type="checkbox"
-                                    true-value="true"
-                                    false-value="false"
-                                    v-model="room['features'][feature['name']]">
-
-                                    {{ feature['display_name'] }}
-                                    <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"
-                                        :badge="(Object.keys(config[room['driver']]).includes('opencast') && config[room['driver']]['opencast'] == '1'
-                                            && feature['info'].toLowerCase().includes('opencast')) ? true : false" v-translate>
-                                            beta
-                                    </StudipTooltipIcon>
-                            </label>
-
-                            <label v-else-if="feature['value'] && typeof feature['value'] === 'object'">
-                                {{ feature['display_name'] }}
-                                <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
-
-                                <select :id="feature['name']" v-model.trim="room['features'][feature['name']]">
-                                    <option v-for="(fvalue, findex) in feature['value']" :key="findex"
-                                            :value="findex">
-                                            {{ fvalue }}
-                                    </option>
-                                </select>
-                            </label>
-                            <label v-else>
-                                {{ feature['display_name'] }}
-                                <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
-
-                                <input type="text" v-model.trim="room['features'][feature['name']]" :placeholder="feature['value'] ? feature['value'] : ''" :id="feature['name']">
-                            </label>
-                        </div>
-                    </fieldset>
-
-                    <fieldset v-if="room['driver'] && Object.keys(course_groups).length">
-                        <legend v-translate>
-                            Gruppenraum
-                        </legend>
+                    <fieldset id="group_settings_section" class="collapsable collapsed" v-if="room['driver'] && Object.keys(course_groups).length">
+                        <legend v-text="$gettext('Gruppenraum')"></legend>
 
                         <label>
                             <translate>Wählen sie eine zugehörige Gruppe aus</translate>
@@ -330,19 +235,28 @@
                         </label>
                     </fieldset>
 
-                    <fieldset v-if="room['driver'] && Object.keys(config[room['driver']]).includes('preupload')
-                                && config[room['driver']]['preupload'] == true">
-                        <legend>
-                            <translate>
-                                Automatisches hochladen von Materialien
-                            </translate>
+                    <fieldset id="extended_settings_section" class="collapsable collapsed"
+                            v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
+                                && Object.keys(config[room['driver']]['features']).includes('create')
+                                && Object.keys(config[room['driver']]['features']['create']).includes('extended_setting')
+                                && Object.keys(config[room['driver']]['features']['create']['extended_setting']).length">
+                        <legend v-text="$gettext('Erweiterte Einstellungen')"></legend>
+                        <template v-for="(feature, index) in config[room['driver']]['features']['create']['extended_setting']">
+                            <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :key="index" />
+                        </template>
 
-                            <StudipTooltipIcon :text="$gettext('Verknüpfen Sie einen Ordner mit diesem Raum. '
-                                + 'Es werden alle Dateien in diesem Ordner automatisch zu Beginn des Meetings hochgeladen. '
-                                + 'Sie können im Meeting zwischen den Dateien wechseln.')">
-                            </StudipTooltipIcon>
-                        </legend>
-                        <label>
+                        <label v-if="room['driver'] && Object.keys(config[room['driver']]).includes('preupload')
+                                && config[room['driver']]['preupload'] == true">
+                            <h3 v-translate>
+                                <translate>
+                                    Automatisches hochladen von Materialien
+                                </translate>
+                                <StudipTooltipIcon :text="$gettext('Verknüpfen Sie einen Ordner mit diesem Raum. '
+                                    + 'Es werden alle Dateien in diesem Ordner automatisch zu Beginn des Meetings hochgeladen. '
+                                    + 'Sie können im Meeting zwischen den Dateien wechseln.')">
+                                </StudipTooltipIcon>
+                            </h3>
+
                             <div>
                                 <translate>Aktuell ausgewählter Ordner: </translate>
 
@@ -502,6 +416,7 @@ import StudipIcon from "@/components/StudipIcon";
 import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import MessageBox from "@/components/MessageBox";
 import MeetingAddNewFolder from "@/components/MeetingAddNewFolder";
+import MeetingAddLabelItem from "@/components/MeetingAddLabelItem";
 
 import { dialog } from '@/common/dialog.mixins'
 
@@ -525,7 +440,8 @@ export default {
         StudipIcon,
         StudipTooltipIcon,
         MessageBox,
-        MeetingAddNewFolder
+        MeetingAddNewFolder,
+        MeetingAddLabelItem
     },
 
     data() {
@@ -536,7 +452,8 @@ export default {
             showFilesInFolder: false,
             numFileInFolderLimit: 5,
             minParticipants: 20,
-            maxDuration: 1440
+            maxDuration: 1440,
+            isAddRoom: true,
         }
     },
 
@@ -556,6 +473,17 @@ export default {
             }
 
             return availableServers;
+        },
+
+        maxAllowedParticipants() {
+            var max = 0;
+            if (Object.keys(this.config[this.room['driver']]).includes('server_defaults')
+                    && this.room['server_index']
+                    && this.config[this.room['driver']]['server_defaults'][this.room['server_index']] != undefined
+                    && Object.keys(this.config[this.room['driver']]['server_defaults'][this.room['server_index']]).includes('maxAllowedParticipants')) {
+                max = parseInt(this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants']);
+            }
+            return max;
         }
     },
 
@@ -563,9 +491,14 @@ export default {
         this.modal_message = {};
         this.setDriver();
         this.getFolders();
+        this.getCalledArea();
     },
 
     methods: {
+        getCalledArea() {
+            this.isAddRoom = (this.room.driver == '') ? true : false;
+        },
+
         setDriver() {
             if (Object.keys(this.config).length == 1) {
                 this.$set(this.room, "driver" , Object.keys(this.config)[0]);
@@ -606,18 +539,19 @@ export default {
                 //set default value of features
                 if (Object.keys(this.config[this.room['driver']]['features']).includes('create') &&
                     Object.keys(this.config[this.room['driver']]['features']['create']).length) {
-                    //applying first level of defaults for create features - important
-                    this.config[this.room['driver']]['features']['create'].forEach(feature => { //apply all values for room feature!
-                        this.$set(this.room['features'], feature.name , feature.value);
-                    });
-                    // set all selects to first entry
-                    for (let index in this.config[this.room['driver']]['features']['create']) {
-                        let feature = this.config[this.room['driver']]['features']['create'][index];
 
-                        if (typeof feature.value === 'object' && !Array.isArray(feature.value)) {
-                            this.room['features'][feature['name']] = Object.keys(feature['value'])[0];
-                        }
-                    }
+                    //applying first level of defaults for create features - important
+                    Object.keys(this.config[this.room['driver']]['features']['create']).forEach(section_name => { //apply all values for room feature!
+                        let section = this.config[this.room['driver']]['features']['create'][section_name];
+                        section.forEach(feature => {
+                            // set all selects to first entry
+                            if (typeof feature.value === 'object' && !Array.isArray(feature.value)) {                                
+                                this.room['features'][feature['name']] = Object.keys(feature['value'])[0];
+                            } else {
+                                this.$set(this.room['features'], feature.name , feature.value);
+                            }
+                        });
+                    });
 
                     //Applying Second level of defaults from server defaults - if there is any but highly important!
                     if (this.room['server_index'] && Object.keys(this.config[this.room['driver']]).includes('server_defaults') &&
@@ -632,19 +566,19 @@ export default {
                 }
                 if (Object.keys(this.config[this.room['driver']]['features']).includes('record') &&
                     Object.keys(this.config[this.room['driver']]['features']['record']).length) {
-                    this.config[this.room['driver']]['features']['record'].forEach(feature => { //apply all values for room feature!
-                        this.$set(this.room['features'], feature.name , feature.value);
+
+                    Object.keys(this.config[this.room['driver']]['features']['record']).forEach(section_name => { //apply all values for room feature!
+                        let section = this.config[this.room['driver']]['features']['record'][section_name];
+                        section.forEach(feature => {
+                            // set all selects to first entry
+                            if (typeof feature.value === 'object' && !Array.isArray(feature.value)) {                                
+                                this.room['features'][feature['name']] = Object.keys(feature['value'])[0];
+                            } else {
+                                this.$set(this.room['features'], feature.name , feature.value);
+                            }
+                        });
                     });
-                    // set all selects to first entry
-                    for (let index in this.config[this.room['driver']]['features']['record']) {
-                        let feature = this.config[this.room['driver']]['features']['record'][index];
-
-                        if (typeof feature.value === 'object' && !Array.isArray(feature.value)) {
-                            this.room['features'][feature['name']] = Object.keys(feature['value'])[0];
-                        }
-                    }
                 }
-
             }
         },
 
@@ -702,51 +636,53 @@ export default {
             if (Object.keys(this.config[this.room['driver']]).includes('features') && Object.keys(this.room).includes('features')) {
                 //loop through the config features...
                 for (const [config_feature_cat, config_feature_contents] of Object.entries(this.config[this.room['driver']]['features'])) {
-                    if (Array.isArray(config_feature_contents)) {
-                        //loop through room features
-                        config_feature_contents.forEach(config_feature => {
-                            if (Object.keys(this.room['features']).includes(config_feature.name)) {
-                                //Apply validation based on type of input
-                                switch (typeof config_feature.value) {
-                                    case 'boolean':
-                                        if ((typeof this.room['features'][config_feature.name] == 'string' && 
-                                            this.room['features'][config_feature.name] != 'true' && this.room['features'][config_feature.name] != 'false') 
-                                            || (typeof this.room['features'][config_feature.name] != 'string' 
-                                                && typeof this.room['features'][config_feature.name] != 'boolean')) {
-                                            invalidInputs.push(config_feature.display_name)
-                                            isValid = false;
-                                            this.$set(this.room['features'], config_feature.name, config_feature.value);
-                                        }
-                                    break;
-                                    case 'number':
-                                        var value = parseInt(this.room['features'][config_feature.name]);
-                                        if (Number.isInteger(value) && value > 0) {
-                                            this.$set(this.room['features'], config_feature.name, value);
-                                        } else {
-                                            invalidInputs.push(config_feature.display_name)
-                                            isValid = false;
-                                            this.$set(this.room['features'], config_feature.name, config_feature.value);
-                                        }
-                                    break;
-                                    case 'object':
-                                        if (!Object.keys(config_feature.value).includes(this.room['features'][config_feature.name])) {
-                                            invalidInputs.push(config_feature.display_name)
-                                            isValid = false;
-                                        }
-                                    break;
-                                    default: // Should be String
-                                        //sanitize - html tags
-                                        var value = this.room['features'][config_feature.name];
-                                        var text = '';
-                                        if (config_feature.name == 'welcome') {
-                                            text = value.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-                                        } else {
-                                            text = value.replace(/(<([^>]+)>)/gi, "");
-                                        }
-                                        this.$set(this.room['features'], config_feature.name, text);
+                    for (const [section, section_contents] of Object.entries(config_feature_contents)) {
+                        if (Array.isArray(section_contents)) {
+                            //loop through room features
+                            section_contents.forEach(config_feature => {
+                                if (Object.keys(this.room['features']).includes(config_feature.name)) {
+                                    //Apply validation based on type of input
+                                    switch (typeof config_feature.value) {
+                                        case 'boolean':
+                                            if ((typeof this.room['features'][config_feature.name] == 'string' && 
+                                                this.room['features'][config_feature.name] != 'true' && this.room['features'][config_feature.name] != 'false') 
+                                                || (typeof this.room['features'][config_feature.name] != 'string' 
+                                                    && typeof this.room['features'][config_feature.name] != 'boolean')) {
+                                                invalidInputs.push(config_feature.display_name)
+                                                isValid = false;
+                                                this.$set(this.room['features'], config_feature.name, config_feature.value);
+                                            }
+                                        break;
+                                        case 'number':
+                                            var value = parseInt(this.room['features'][config_feature.name]);
+                                            if (Number.isInteger(value) && value > 0) {
+                                                this.$set(this.room['features'], config_feature.name, value);
+                                            } else {
+                                                invalidInputs.push(config_feature.display_name)
+                                                isValid = false;
+                                                this.$set(this.room['features'], config_feature.name, config_feature.value);
+                                            }
+                                        break;
+                                        case 'object':
+                                            if (!Object.keys(config_feature.value).includes(this.room['features'][config_feature.name])) {
+                                                invalidInputs.push(config_feature.display_name)
+                                                isValid = false;
+                                            }
+                                        break;
+                                        default: // Should be String
+                                            //sanitize - html tags
+                                            var value = this.room['features'][config_feature.name];
+                                            var text = '';
+                                            if (config_feature.name == 'welcome') {
+                                                text = value.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+                                            } else {
+                                                text = value.replace(/(<([^>]+)>)/gi, "");
+                                            }
+                                            this.$set(this.room['features'], config_feature.name, text);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
                 }
             }
@@ -892,21 +828,43 @@ export default {
         },
 
         printRoomStartWarning() {
-            if (JSON.parse(this.room['features']['room_anyone_can_start']) == true && JSON.parse(this.room['features']['record']) == true) {
+            if (Object.keys(this.room).includes('driver') &&
+                ((Object.keys(this.config[this.room['driver']]).includes('record') && JSON.parse(this.config[this.room['driver']]['record']) == true) ||
+                (Object.keys(this.config[this.room['driver']]).includes('opencast') && JSON.parse(this.config[this.room['driver']]['opencast']) == true)) &&
+                Object.keys(this.room).includes('features') &&
+                Object.keys(this.room['features']).includes('room_anyone_can_start') &&
+                Object.keys(this.room['features']).includes('record') &&
+                JSON.parse(this.room['features']['room_anyone_can_start']) == true &&
+                JSON.parse(this.room['features']['record']) == true)
+            {
+                if ($('#privacy_settings_section').hasClass('collapsed')) {
+                    $('#privacy_settings_section').removeClass('collapsed');
+                }
                 return true;
             }
             return false;
         },
 
+        labelClickHandler(feature_name) {
+            if (feature_name == 'record') {
+                this.scrollToRoomStartWarning();
+            }
+        },
+
         scrollToRoomStartWarning() {
             setTimeout(() => {
-                if (this.printRoomStartWarning() && this.$refs["room_anyone_can_start"] && this.$refs["room_anyone_can_start"][0]) {
+                if (this.printRoomStartWarning()) {
+                    // Make sure the Privacy fieldset is expanded.
+                    if ($('#privacy_settings_section').hasClass('collapsed')) {
+                        $('#privacy_settings_section').removeClass('collapsed');
+                    }
+                    
                     var dialogComponent = this.$children.filter( (children) => {
                         return children.$options.name == 'Dialog'
                     });
                     if (dialogComponent.length) {
                         $(`#${dialogComponent[0].$data.id}`).animate(
-                            {scrollTop: $(this.$refs["room_anyone_can_start"][0]).position().top},
+                            {scrollTop: $(this.$refs["record"][0].$el).position().top},
                             'slow',
                             () => {
                                 if (!$('#room_start_warning').is(':visible')) {
@@ -914,8 +872,6 @@ export default {
                                 }
                             }
                         );
-                    } else {
-                        this.$refs["room_anyone_can_start"][0].focus();
                     }
                 }
             }, 100);

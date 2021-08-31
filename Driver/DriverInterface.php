@@ -79,4 +79,11 @@ interface DriverInterface
      * @return boolean true if connection is made and server is accessible
      */
     public function checkServer();
+
+    /**
+     * Arrange the features based on defined structure to show in MeetingAdd.vue
+     *
+     * @return array an array of features in several sections
+     */
+    public static function getFeatureDisplayArrangement();
 }

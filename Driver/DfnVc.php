@@ -409,6 +409,14 @@ class DfnVc implements DriverInterface
     /**
      * {@inheritDoc}
      */
+    public static function getFeatureDisplayArrangement()
+    {
+        return [];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function checkServer() {
 
         try {

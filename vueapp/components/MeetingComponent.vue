@@ -130,17 +130,19 @@
                         : room.driver }}
                 </div>
 
-                <div v-if="course_config.display.editRoom && room.features && room.features.record
-                    && room.features.room_anyone_can_start && JSON.parse(room.features.record) == true &&
-                    JSON.parse(room.features.room_anyone_can_start) == true">
+                <div v-if="course_config.display.editRoom && room.driver &&
+                    ((Object.keys(config[room.driver]).includes('record') && JSON.parse(config[room.driver].record) == true) ||
+                    (Object.keys(config[room.driver]).includes('opencast') && JSON.parse(config[room.driver].opencast) == true)) &&
+                    room.features && room.features.record && room.features.room_anyone_can_start &&
+                    JSON.parse(room.features.record) == true && JSON.parse(room.features.room_anyone_can_start) == true">
                     <a>
                         <StudipIcon class="info-icon" icon="exclaim-circle"
                             role="status-yellow" size="24"></StudipIcon>
                     </a>
                     <span v-translate v-text="$gettext('Aufzeichnung kann früher beginnen')"></span>
-                    <StudipTooltipIcon :text="$gettext('Die Sitzungsaufzeichnung wird gestartet, wenn der Raum vor der geplanten Zeit von denjenigen ' +
-                        'gestartet wird, die es vorziehen, früher zu erscheinen. Um dies zu verhindern, wird empfohlen, ' +
-                        'dass nur Moderatoren das Meeting starten.')"></StudipTooltipIcon>
+                    <StudipTooltipIcon :text="$gettext('Es ist bei Aufzeichnungen dringend empfohlen die Veranstaltung und somit die Aufzeichnungen erst zu beginnen,' +
+                        ' wenn Lehrende die Videokonferenz betreten.')">
+                    </StudipTooltipIcon>
                 </div>
 
                 <div v-if="course_config.display.editRoom && room.features && room.features.record && room.features.record == 'true' && room.record_not_allowed">
