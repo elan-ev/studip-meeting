@@ -205,12 +205,10 @@ class Driver
     {
         self::loadConfig();
 
-        // $valid_servers = true;
         $has_invalid_servers = false;
         $has_no_server = false;
         if ($config_options['enable'] == 1 && (isset($config_options['servers']) && !count($config_options['servers']) || !isset($config_options['servers']))) {
             $config_options['enable'] = 0;
-            // $valid_servers = false;
             $has_no_server = true;
         }
         $approved_servers = [];
@@ -263,7 +261,6 @@ class Driver
         \Config::get()->store('VC_CONFIG', json_encode(self::$config));
 
         $result = [
-            // "valid_servers" => $valid_servers ,
             "valid_servers" => ($has_invalid_servers || $has_no_server) ? false : true,
             "invalid_indices" => $unapproved_server_indices
         ];
