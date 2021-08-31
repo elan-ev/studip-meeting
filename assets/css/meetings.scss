@@ -224,8 +224,22 @@ fieldset {
             &.disabled {
                 color: #3c454e;
             }
+
+            &.inline-feature-warning-icon {
+                img {
+                    vertical-align: middle;
+                }
+            }
         }
     }
+}
+
+div.inline-feature-warning {
+    background-size: 24px 24px !important;
+    font-size: 1em !important;
+    font-weight: normal !important;
+    padding-left: 45px !important;
+    margin-bottom: 1.5ex !important;
 }
 
 

@@ -107,13 +107,46 @@ class Driver
                 self::$config[$driver_name]['display_name'] = $driver_name;
             }
 
+            $feature_arrangement = [];
+            $create_features = [];
+            $record_features = [];
+
             if (in_array('ElanEv\Driver\DriverInterface', class_implements($class)) !== false) {
-                if ($create_features = $class::getCreateFeatures()) {
-                    self::$config[$driver_name]['features']['create'] = self::convertDriverConfigToArray($create_features);
-                }
+                $feature_arrangement = $class::getFeatureDisplayArrangement();
+                $create_features = $class::getCreateFeatures();
             }
+
             if (in_array('ElanEv\Driver\RecordingInterface', class_implements($class)) !== false) {
-                self::$config[$driver_name]['features']['record'] = self::convertDriverConfigToArray($class::getRecordFeature());
+                $record_features = $class::getRecordFeature();
+            }
+
+            if (!empty($feature_arrangement)) { // With feature arrangement.
+                // Merge all features together helps to pick features from different cat in a section.
+                $all_features = array_merge($create_features, $record_features); 
+
+                // Check if there is any create feature.
+                if (!empty($create_features)) {
+                    self::$config[$driver_name]['features']['create'] = (isset($feature_arrangement['create'])) ?
+                            self::extractFeatures($feature_arrangement['create'], $all_features) :
+                                self::convertDriverConfigToArray($create_features);
+                }
+
+                // Check if there is record feature.
+                if (!empty($record_features)) {
+                    self::$config[$driver_name]['features']['record'] = (isset($feature_arrangement['record'])) ?
+                            self::extractFeatures($feature_arrangement['record'], $all_features) :
+                                self::convertDriverConfigToArray($record_features);
+                }
+
+            } else { // Without feature arrangement.
+
+                if (!empty($create_features)) {
+                    self::$config[$driver_name]['features']['create']['extended_setting'] = self::convertDriverConfigToArray($create_features);
+                }
+
+                if (!empty($record_features)) {
+                    self::$config[$driver_name]['features']['record']['record_setting'] =  self::convertDriverConfigToArray($record_features);
+                }
             }
 
             // Make sure Opencast Plugin is activated
@@ -127,6 +160,19 @@ class Driver
         if ($is_config_corrected) {
             \Config::get()->store('VC_CONFIG', json_encode(self::$config));
         }
+
+    }
+
+    static function extractFeatures($feature_arrangement, $features) {
+        $extracted = [];
+        foreach ($feature_arrangement as $section_name => $value_array) {
+            foreach ($value_array as $name) {
+                if (array_key_exists($name, $features) && is_object($features[$name])) {
+                    $extracted[$section_name][] = $features[$name]->toArray();
+                }
+            }
+        }
+        return $extracted;
     }
 
     static function convertDriverConfigToArray($config_options)

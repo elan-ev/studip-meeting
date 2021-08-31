@@ -432,7 +432,9 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         $res['lockSettingsDisableCam'] = new ConfigOption('lockSettingsDisableCam', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Nur Moderatoren können Webcams teilen'), false, self::getFeatureInfo('lockSettingsDisableCam'));
 
         $res['webcamsOnlyForModerator'] = new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Nur Moderatoren können Webcams sehen'), false, self::getFeatureInfo('webcamsOnlyForModerator'));
+
         $res['room_anyone_can_start'] = new ConfigOption('room_anyone_can_start', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Jeder Teilnehmer kann die Konferenz starten'), true, self::getFeatureInfo('room_anyone_can_start'));
+
         $res['muteOnStart'] = new ConfigOption('muteOnStart', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Alle Teilnehmenden initial stumm schalten'), false, self::getFeatureInfo('muteOnStart'));
 
         return array_reverse($res);
@@ -453,14 +455,50 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             $info = _('Erlaubt es Moderatoren, die Medien und Ereignisse in der Sitzung für die spätere Wiedergabe aufzuzeichnen. Die Aufzeichnung muss innerhalb der Sitzung von einem Moderator gestartet werden.');
         }
         if ($info) {
-            $res[] = new ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Sitzungen können aufgezeichnet werden.'),
+            $res['record'] = new ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Sitzungen können aufgezeichnet werden.'),
             false, $info);
         }
 
-        //independent from config record
-        $res[] = new ConfigOption('giveAccessToRecordings', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnungen für Teilnehmende sichtbar schalten'),
+        $res['giveAccessToRecordings'] = new ConfigOption('giveAccessToRecordings', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnungen für Teilnehmende sichtbar schalten'),
                 true, _('Legen Sie fest, ob neben Lehrenden auch Teilnehmende Zugriff auf die Aufzeichnungen haben sollen.'));
         return $res;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getFeatureDisplayArrangement()
+    {
+
+        return [
+            'create' => [
+                'roomsize' => [
+                    'maxParticipants',
+                    'muteOnStart',
+                    'webcamsOnlyForModerator',
+                    'lockSettingsDisableCam',
+                    'lockSettingsDisableMic',
+                    'lockSettingsDisableNote',
+                ],
+                'privacy' => [
+                    'room_anyone_can_start',
+                    'invite_moderator',
+                    'guestPolicy-ALWAYS_ACCEPT',
+                    'guestPolicy-ASK_MODERATOR',
+                    'privateChat'
+                ],
+                'extended_setting' => [
+                    'welcome',
+                ],
+            ],
+            'record' => [
+                'record_setting' => [
+                    'duration',
+                    'record',
+                    'giveAccessToRecordings'
+                ]
+            ]
+        ];
     }
 
     /**
