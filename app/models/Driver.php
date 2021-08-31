@@ -205,42 +205,47 @@ class Driver
     {
         self::loadConfig();
 
-        $valid_servers = true;
+        // $valid_servers = true;
+        $has_invalid_servers = false;
+        $has_no_server = false;
         if ($config_options['enable'] == 1 && (isset($config_options['servers']) && !count($config_options['servers']) || !isset($config_options['servers']))) {
             $config_options['enable'] = 0;
-            $valid_servers = false;
+            // $valid_servers = false;
+            $has_no_server = true;
         }
         $approved_servers = [];
         $unapproved_server_indices = [];
         $all_servers = [];
         foreach ($config_options as $key => $value) {
-            if ($key == 'servers') {
+            if ($key == 'servers' && !$has_no_server) {
                 $config_tmp[$driver_name] = $config_options;
                 $config_tmp[$driver_name]['enable'] = 1;
                 $driver_factory = new DriverFactory($config_tmp);
                 foreach ($value as $index => $server_info) {
+                    $is_valid_server = true;
                     $server_info['url'] = trim(rtrim($server_info['url'], '/'));
                     if (!$server_info['url']) {
-                        $valid_servers = false;
+                        $is_valid_server = false;
                         continue;
                     }
                     $driver = $driver_factory->getDriver($driver_name, $index, true);
                     if (!$driver->checkServer()) {
-                        $valid_servers = false;
+                        $is_valid_server = false;
                     }
 
                     if (!self::validateRoomSizes($server_info)) {
-                        $valid_servers = false;
+                        $is_valid_server = false;
                     }
 
                     self::adjustCurrentMeetingsDefaultSettings($driver_name, $index, $server_info);
 
-                    if ($valid_servers) {
+                    if ($is_valid_server) {
                         $approved_servers[] = $server_info;
                     } else {
                         // Deactivate the server if it is not valid, to prevent consumption.
                         $server_info['active'] = false;
                         $unapproved_server_indices[] = '#' . ($index + 1);
+                        $has_invalid_servers = true;
                     }
                     // Keep them into $all_servers array, so the sorting remains the same.
                     $all_servers[] = $server_info;
@@ -258,7 +263,8 @@ class Driver
         \Config::get()->store('VC_CONFIG', json_encode(self::$config));
 
         $result = [
-            "valid_servers" => $valid_servers,
+            // "valid_servers" => $valid_servers ,
+            "valid_servers" => ($has_invalid_servers || $has_no_server) ? false : true,
             "invalid_indices" => $unapproved_server_indices
         ];
 
