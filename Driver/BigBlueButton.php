@@ -105,6 +105,11 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 unset($features['invite_moderator']);
             }
 
+            // Remove extra feature param (upload_default_slide) which is not accaptable by BBB.
+            if (isset($features['upload_default_slide'])) {
+                unset($features['upload_default_slide']);
+            }
+
             if ($features['record'] == 'true') {
                 if (self::checkRecordingCapability($features)) {
                     $params['name'] = $params['name'] . ' (' . date('Y-m-d H:i:s') . ')';
@@ -489,6 +494,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 ],
                 'extended_setting' => [
                     'welcome',
+                    'upload_default_slide'
                 ],
             ],
             'record' => [
@@ -582,12 +588,13 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         
         $meeting = new Meeting($meetingId);
 
-        if ($meeting->isNew() || empty($meeting->folder_id)) {
-            return [];
+        $features = json_decode($meeting->features, true);
+        $upload_default_slide = isset($features['upload_default_slide']) ? filter_var($features['upload_default_slide'], FILTER_VALIDATE_BOOLEAN) : false;
+
+        if ($meeting->isNew() || (empty($meeting->folder_id) && $upload_default_slide == false)) {
+            return $options;
         }
 
-        $documents = [];
-        $folder = \Folder::find($meeting->folder_id);
         //generate or get the token
         $token = ($meeting->meeting_token) ? $meeting->meeting_token->get_token() : null;
         if (!$token) {
@@ -599,22 +606,38 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             $meeting_token->store();
         }
 
+        // Optimizing base url.
+        $base_url = sprintf(
+            "%s://%s",
+            isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
+            $_SERVER['SERVER_NAME']
+        );
+
+        $documents = [];
+        $folder = \Folder::find($meeting->folder_id);
+
         if ($folder) {
             foreach ($folder->getTypedFolder()->getFiles() as $file_ref) {
                 if ($file_ref->id && $file_ref->name) {
                     $document_url = \PluginEngine::getURL('meetingplugin', [], "api/slides/$meetingId/{$file_ref->id}/$token");
                     if (isset($_SERVER['SERVER_NAME']) && strpos($document_url, $_SERVER['SERVER_NAME']) === FALSE) {
-                        $base_url = sprintf(
-                            "%s://%s",
-                            isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
-                            $_SERVER['SERVER_NAME']
-                        );
                         $document_url = $base_url . $document_url;
                     }
                     $documents[] = "<document url='$document_url' filename='{$file_ref->name}' />";
                 }
             }
         }
+
+        // Show default slide when the condition is met.
+        // Condition would be: relative setting is enabled and there is no document to show - (despite a folder is seleced)
+        if ($upload_default_slide == true && empty($documents)) {
+            $default_slide_url = \PluginEngine::getURL('meetingplugin', [], "api/defaultSlide/$meetingId/$token");
+            if (isset($_SERVER['SERVER_NAME']) && strpos($default_slide_url, $_SERVER['SERVER_NAME']) === FALSE) {
+                $default_slide_url = $base_url . $default_slide_url;
+            }
+            $documents[] = "<document url='$default_slide_url' filename='default.pdf' />";
+        }
+
         if (count($documents)) {
             $modules = " <modules>	<module name='presentation'> ";
             foreach ($documents as $document) {
@@ -640,5 +663,20 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             return true;
         }
         return false;
+    }
+
+    /**
+     * {@inheritDoc}
+    */
+    public static function getPreUploadFeature()
+    {
+        $res = [];
+        $preupload_config = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'preupload'), FILTER_VALIDATE_BOOLEAN);
+        if ($preupload_config) {
+            $res['upload_default_slide'] = new ConfigOption('upload_default_slide', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Kursnachrichten und Titel als Standardfolie anzeigen'),
+                false, '');
+        }
+
+        return $res;
     }
 }

@@ -91,5 +91,6 @@ class RouteMap
     public function unauthenticatedRoutes() 
     {
         $this->app->get('/slides/{meeting_id}/{slide_id}/{token}', Routes\Slides\SlidesShow::class);
+        $this->app->get('/defaultSlide/{meeting_id}/{token}', Routes\Slides\DefaultSlideShow::class);
     }
 }
