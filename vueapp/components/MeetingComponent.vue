@@ -22,12 +22,20 @@
                         </span>
                     </div>
                     <div class="right">
-                        <StudipTooltipIcon v-if="room.features && room.features.record && room.features.record == 'true' && !room.record_not_allowed"
+                        <template v-if="room.features && room.features.record && room.features.record == 'true' && !room.record_not_allowed">
+                            <StudipTooltipIcon v-show="opencast_webcam_record_enabled"
+                                    :text="$gettext('Bitte beachten Sie, dass dieser Raum aufgezeichnet wird! Die Webcams der Teilnehmer könnten auch aufgezeichnet werden!')"
+                                    :badge="true"
+                                    >
+                                <StudipIcon icon="span-full" role="attention" size="11"></StudipIcon> <span v-text="'Rec + Webcam'"></span>
+                            </StudipTooltipIcon>
+                            <StudipTooltipIcon v-if="!opencast_webcam_record_enabled"
                                     :text="$gettext('Bitte beachten Sie, dass dieser Raum aufgezeichnet wird!')"
                                     :badge="true"
                                     >
-                            <StudipIcon icon="span-full" role="attention" size="11"></StudipIcon> {{'Rec'}}
-                        </StudipTooltipIcon>
+                                <StudipIcon icon="span-full" role="attention" size="11"></StudipIcon> <span v-text="'Rec'"></span>
+                            </StudipTooltipIcon>
+                        </template>
                         <a v-if="room.has_recordings" style="cursor: pointer;"
                                 :title="$gettext('Die vorhandenen Aufzeichnungen')"
                                 @click.prevent="getRecording()">
@@ -241,6 +249,11 @@ export default {
                 group_name = this.course_groups[this.room.group_id];
             }
             return group_name;
+        },
+
+        opencast_webcam_record_enabled() {
+            return (this.room && this.room.driver && this.room.features && this.room.features.opencast_webcam_record && 
+                JSON.parse(this.room.features.opencast_webcam_record) == true && this.config && Object.keys(this.config[this.room.driver]).includes('opencast') && this.config[this.room.driver].opencast == '1');
         }
     },
 
