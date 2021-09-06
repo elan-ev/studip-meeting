@@ -674,7 +674,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         $preupload_config = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'preupload'), FILTER_VALIDATE_BOOLEAN);
         if ($preupload_config) {
             $res['upload_default_slide'] = new ConfigOption('upload_default_slide', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Kursnachrichten und Titel als Standardfolie anzeigen'),
-                false, 'Sofern Sie kein anderes PDF ausgewählt haben, wird dieses automatisch generierte PDF verwendet.');
+                false, _('Sofern Sie kein anderes PDF ausgewählt haben, wird dieses automatisch generierte PDF verwendet.'));
         }
 
         return $res;
