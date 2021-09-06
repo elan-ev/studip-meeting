@@ -19,6 +19,18 @@
                     <translate>Feedback Support-Adresse</translate>
                     <input type="text" v-model.trim="general_config['feedback_contact_address']">
                 </label>
+                <label>
+                    <translate>Feedback Absenderadresse</translate>
+                    <br>
+                    <input type="radio"
+                        value="standard_mail"
+                        v-model="general_config['feedback_sender_address']">
+                    <translate>Standard-Mail</translate>
+                    <input type="radio"
+                        value="user_mail"
+                        v-model="general_config['feedback_sender_address']">
+                    <translate>User-Mail</translate>
+                </label>
             </fieldset>
             <fieldset v-for="(driver, driver_name) in drivers" :key="driver_name">
                 <legend>
