@@ -35,8 +35,12 @@ class FeedbackSubmit extends MeetingsController
         global $UNI_CONTACT, $user;
         $current_user = $user;
         try {
+            $feedback_sender_address = Driver::getGeneralConfigValue('feedback_sender_address');
+            $feedback_sender_address = ($feedback_sender_address ?: 'standard_mail');
+
             $feedback_contact_address = Driver::getGeneralConfigValue('feedback_contact_address');
             $feedback_contact_address = ($feedback_contact_address ?: $UNI_CONTACT);
+
             $to = filter_var($feedback_contact_address, FILTER_VALIDATE_EMAIL);
             $room_id = filter_var($json['room_id'], FILTER_SANITIZE_NUMBER_INT);
             $cid = filter_var($json['cid'], FILTER_SANITIZE_STRING);
@@ -51,11 +55,28 @@ class FeedbackSubmit extends MeetingsController
             } else if ($json && $meetingCourse && $current_user) {
                 $subject = I18N::_("Feedback zum Meetings-Plugin");
                 $mailbody = $this->generateMessageBody($json, $meetingCourse, $current_user);
-                StudipMail::sendMessage($to, $subject, $mailbody);
+                $feedback = new StudipMail();
+
+                $feedback->setSubject($subject)
+                    ->addRecipient($to)
+                    ->setBodyText($mailbody);
+                if ($feedback_sender_address == 'user_mail') {
+                    $feedback->setSenderEmail($current_user->email)
+                        ->setSenderName($current_user->getFullName())
+                        ->setReplyToEmail($current_user->email);
+                }
+
+                $done_sending = $feedback->send();
+
                 $message = [
                     'text' => I18N::_("Ihr Feedback wird gesendet."),
                     'type' => 'success'
                 ];
+
+                if (!$done_sending) {
+                    $message['type'] = 'error';
+                    $message['text'] = I18N::_("Feedback kann nicht gesendet werden.");
+                }
             } else {
                 $message = [
                     'text' => I18N::_('Einige Informationen fehlen!'),
@@ -72,12 +93,14 @@ class FeedbackSubmit extends MeetingsController
     }
 
     /**
-    * Gathers infor and generates Message body text
+    * Gathers info and generates Message body text.
     *
-    * @param (type) (name) (desc)
-    * @return (type) (name) (desc)
+    * @param array $data browser data
+    * @param object $meetingCourse meeting course object
+    * @param object $current_user user object
+    * @return string
     */
-    private function generateMessageBody ($data, $meetingCourse, $current_user)
+    private function generateMessageBody($data, $meetingCourse, $current_user)
     {
         $course = new \Course($meetingCourse->course_id);
 
