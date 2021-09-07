@@ -62,7 +62,7 @@ class RoomController extends PluginController
         PageLayout::setTitle($this->_('Stud.IP Meeting'));
 
         $this->invitations_link = InvitationsLink::findOneBySQL('hex = ?', [$link_hex]);
-        if (!$this->invitations_link) {
+        if (!$this->invitations_link || !$this->invitations_link->meeting) {
             throw new Exception($this->_('Das gesuchte Meeting existiert nicht mehr!'));
         }
 
@@ -107,7 +107,7 @@ class RoomController extends PluginController
         PageLayout::setTitle($this->_('Stud.IP Meeting'));
 
         $this->moderator_invitations_link = ModeratorInvitationsLink::findOneBySQL('hex = ?', [$link_hex]);
-        if (!$this->moderator_invitations_link) {
+        if (!$this->moderator_invitations_link || !$this->moderator_invitations_link->meeting) {
             throw new Exception($this->_('Das gesuchte Meeting existiert nicht mehr!'));
         }
 
@@ -176,6 +176,10 @@ class RoomController extends PluginController
             }
             $meeting = $invitations_link->meeting;
             $link = 'room/index/' . $invitations_link->hex . '/' . $cid;
+        }
+
+        if (!$meeting) {
+            throw new Exception($this->_('Das gesuchte Meeting existiert nicht mehr!'));
         }
 
         $features = json_decode($meeting->features, true);
