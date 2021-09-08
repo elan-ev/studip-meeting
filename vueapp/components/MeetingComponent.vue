@@ -8,18 +8,28 @@
                     }"
                 >
                     <div class="left">
-                      {{room.name}}
-                      <StudipTooltipIcon v-if="room.details"
-                                         :text="`${room.details['creator']}, ${room.details['date']}`">
-                      </StudipTooltipIcon>
+                        {{room.name}}
+                        <StudipTooltipIcon v-if="room.details"
+                                            :text="`${room.details['creator']}, ${room.details['date']}`">
+                        </StudipTooltipIcon>
 
-                        <span v-if="info && info.participantCount > 0" class="participants"
-                            v-translate="{
-                                count: info.participantCount
-                            }"
-                        >
-                            %{ count } Teilnehmende aktiv
-                        </span>
+                        <template v-if="room.features && room.features.maxParticipants">
+                            <span v-if="info && info.participantCount > 0" class="participants"
+                                v-translate="{
+                                    count: info.participantCount,
+                                    max: room.features.maxParticipants
+                                }"
+                            >
+                                %{ count }/%{ max } Teilnehmende aktiv
+                            </span>
+                            <span v-else class="participants"
+                                v-translate="{
+                                    max: room.features.maxParticipants
+                                }"
+                            >
+                                Maximale Teilnehmerzahl: %{ max }
+                            </span>
+                        </template>
                     </div>
                     <div class="right">
                         <StudipTooltipIcon v-if="room.features && room.features.record && room.features.record == 'true' && !room.record_not_allowed"
@@ -177,8 +187,14 @@
                 >
                     Einladungslink erstellen
                 </StudipButton>
-                <a v-if="room.enabled" class="button join"
+                <!-- <a v-if="room.enabled" class="button join"
                     :href="join_url" target="_blank"
+                    v-translate
+                >
+                    Teilnehmen
+                </a> -->
+                <a v-if="room.enabled" class="button join"
+                    @click="checkPreJoin"
                     v-translate
                 >
                     Teilnehmen
@@ -191,6 +207,11 @@
                 </button>
             </div>
         </fieldset>
+        <MeetingMessageDialog v-if="showConfirmDialog"
+            :dialog="showConfirmDialog"
+            @accept="performConfirm"
+            @cancel="showConfirmDialog = false"
+        />
     </div>
 </template>
 
@@ -199,6 +220,7 @@ import StudipButton from "@/components/StudipButton";
 import StudipIcon from "@/components/StudipIcon";
 import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import MessageBox from "@/components/MessageBox";
+import MeetingMessageDialog from "@/components/MeetingMessageDialog";
 import { mapGetters } from "vuex";
 import store from "@/store";
 
@@ -214,6 +236,7 @@ export default {
         StudipIcon,
         StudipTooltipIcon,
         MessageBox,
+        MeetingMessageDialog
     },
 
     computed: {
@@ -256,7 +279,8 @@ export default {
 
     data() {
         return {
-            interval: null
+            interval: null,
+            showConfirmDialog: false
         }
     },
 
@@ -332,6 +356,32 @@ export default {
         getModeratorGuestInfo() {
             this.$emit('getModeratorGuestInfo', this.getNonReactiveRoom());
         },
+
+        checkPreJoin() {
+            if (this.room.features && this.room.features.maxParticipants && this.info && this.info.participantCount &&
+                this.room.features.maxParticipants <= this.info.participantCount) {
+                    alert('AHOOOOIII!');
+            } else {
+                // window.open(this.join_url, '_blank');
+                this.showConfirmDialog = {
+                    title: 'Information',
+                    text: 'The number of participants are exceed please be aware!',
+                    type: 'info',
+                    isConfirm: true,
+                    callback: 'performJoin'
+                }
+            }
+        },
+
+        performConfirm(callback) {
+            if (callback && this[callback] != undefined) {
+                this[callback]();
+            }
+        },
+
+        performJoin() {
+            window.open(this.join_url, '_blank');
+        }
     }
 }
 </script>
