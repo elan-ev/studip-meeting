@@ -105,9 +105,13 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 unset($features['invite_moderator']);
             }
 
-            // Remove extra feature param (upload_default_slide) which is not accaptable by BBB.
-            if (isset($features['upload_default_slide'])) {
-                unset($features['upload_default_slide']);
+            // Remove extra feature param (default_slide_course_news) which is not accaptable by BBB.
+            if (isset($features['default_slide_course_news'])) {
+                unset($features['default_slide_course_news']);
+            }
+            // Remove extra feature param (default_slide_studip_news) which is not accaptable by BBB.
+            if (isset($features['default_slide_studip_news'])) {
+                unset($features['default_slide_studip_news']);
             }
 
             if ($features['record'] == 'true') {
@@ -493,9 +497,12 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                     'privateChat'
                 ],
                 'extended_setting' => [
-                    'welcome',
-                    'upload_default_slide'
+                    'welcome'
                 ],
+                'presentation_sildes' => [
+                    'default_slide_course_news',
+                    'default_slide_studip_news'
+                ]
             ],
             'record' => [
                 'record_setting' => [
@@ -588,10 +595,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         
         $meeting = new Meeting($meetingId);
 
-        $features = json_decode($meeting->features, true);
-        $upload_default_slide = isset($features['upload_default_slide']) ? filter_var($features['upload_default_slide'], FILTER_VALIDATE_BOOLEAN) : false;
-
-        if ($meeting->isNew() || (empty($meeting->folder_id) && $upload_default_slide == false)) {
+        if ($meeting->isNew()) {
             return $options;
         }
 
@@ -628,9 +632,8 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             }
         }
 
-        // Show default slide when the condition is met.
-        // Condition would be: relative setting is enabled and there is no document to show - (despite a folder is seleced)
-        if ($upload_default_slide == true && empty($documents)) {
+        // The default slide is now by default in place when there is no Folder is seleced, or there is no File in a selected folder.
+        if (empty($documents)) {
             $default_slide_url = \PluginEngine::getURL('meetingplugin', [], "api/defaultSlide/$meetingId/$token");
             if (isset($_SERVER['SERVER_NAME']) && strpos($default_slide_url, $_SERVER['SERVER_NAME']) === FALSE) {
                 $default_slide_url = $base_url . $default_slide_url;
@@ -672,9 +675,12 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     {
         $res = [];
         $preupload_config = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'preupload'), FILTER_VALIDATE_BOOLEAN);
+        // Settings that depend on admin config to upload slides.
         if ($preupload_config) {
-            $res['upload_default_slide'] = new ConfigOption('upload_default_slide', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Kursnachrichten und Titel als Standardfolie anzeigen'),
-                false, _('Sofern Sie kein anderes PDF ausgewählt haben, wird dieses automatisch generierte PDF verwendet.'));
+            $res['default_slide_course_news'] = new ConfigOption('default_slide_course_news', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Ankündigungen aus dem Kurs auf leerer Begrüßungsfolie'),
+                false, '');
+            $res['default_slide_studip_news'] = new ConfigOption('default_slide_studip_news', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Ankündigungen aus Stud.IP auf leerer Begrüßungsfolie'),
+                false, '');
         }
 
         return $res;

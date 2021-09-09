@@ -16,28 +16,18 @@ class DefaultSlideHandler
     /**
      * Get all news from course and studip
      * 
-     * @param Meeting the meeting object
+     * @param string $courseid the meeting object
+     * @param int $limit the number of news to show, default is 3.
      * @return array
      */
-    public static function getNewsList(Meeting $meeting)
+    public static function getNewsList($range = 'studip', $limit = 3)
     {
         $news = [];
-        $course = $meeting->courses[0];
 
-        $course_news = StudipNews::getNewsByRange($course->seminar_id, true, false);
-        if (!empty($course_news)) {
-            $news['course']['news'] = $course_news;
-            $news['course']['texts'] = [
-                'title' => I18N::_('Veranstaltungsankündigungen'),
-            ];
-        }
+        $news = StudipNews::getNewsByRange($range, true, false);
 
-        $studip_news = StudipNews::getNewsByRange('studip', true, false);
-        if (!empty($studip_news)) {
-            $news['studip']['news'] = $studip_news;
-            $news['studip']['texts'] = [
-                'title' => I18N::_('Allgemeine Ankündigungen'),
-            ];
+        if (count($news) > $limit) {
+            $news = array_slice($news, 0, $limit);
         }
 
         return $news;
@@ -56,6 +46,8 @@ class DefaultSlideHandler
             'welcome' => I18N::_('Willkommen zur Videokonferenz'),
             'meeting_name' => $meeting->name,
             'course_name' => $course->name,
+            'course_news_title' => I18N::_('Veranstaltungsankündigungen'),
+            'studip_news_title' => I18N::_('Allgemeine Ankündigungen'),
         ];
         return $texts;
     }

@@ -244,9 +244,18 @@
                         <template v-for="(feature, index) in config[room['driver']]['features']['create']['extended_setting']">
                             <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :key="index" />
                         </template>
+                    </fieldset>
 
-                        <label v-if="room['driver'] && Object.keys(config[room['driver']]).includes('preupload')
-                                && config[room['driver']]['preupload'] == true">
+                    <fieldset id="presentation_sildes_section" class="collapsable collapsed" v-if="hasPresentationSetting != false">
+                        <legend v-text="$gettext('Präsentationsfolien')"></legend>
+                        <template v-if="hasPresentationSetting == 'all' || hasPresentationSetting == 'setting'">
+                            <template v-for="(feature, index) in config[room['driver']]['features']['create']['presentation_sildes']">
+                                <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :key="index" />
+                            </template>
+                        </template>
+                        
+
+                        <label v-if="hasPresentationSetting == 'all' || hasPresentationSetting == 'preupload'">
                             <h3 v-translate>
                                 <translate>
                                     Automatisches hochladen von Materialien
@@ -484,6 +493,30 @@ export default {
                 max = parseInt(this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants']);
             }
             return max;
+        },
+
+        hasPresentationSetting() {
+            if (!this.room || !this.room.driver) {
+                return false;
+            }
+
+            let has_setting = Object.keys(this.config[this.room['driver']]).includes('features')
+                                && Object.keys(this.config[this.room['driver']]['features']).includes('create')
+                                && Object.keys(this.config[this.room['driver']]['features']['create']).includes('presentation_sildes')
+                                && Object.keys(this.config[this.room['driver']]['features']['create']['presentation_sildes']).length;
+
+            let has_preupload = Object.keys(this.config[this.room['driver']]).includes('preupload')
+                                && this.config[this.room['driver']]['preupload'] == true;
+            
+            if (has_setting && has_preupload) {
+                return 'all';
+            } else if (has_setting && !has_preupload) {
+                return 'setting';
+            } else if (!has_setting && has_preupload) {
+                return 'preupload';
+            } else {
+                return false;
+            }
         }
     },
 

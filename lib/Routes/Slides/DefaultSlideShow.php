@@ -53,51 +53,50 @@ class DefaultSlideShow extends MeetingsController
                 return;
             }
 
-            $features = json_decode($meeting->features, true);
-            $upload_default_slide = isset($features['upload_default_slide']) ? filter_var($features['upload_default_slide'], FILTER_VALIDATE_BOOLEAN) : false;
-
-            if ($meeting->isNew() || $upload_default_slide == false) {
+            $courseid = $meeting->courses[0]->seminar_id;
+            if ($meeting->isNew() || !$courseid) {
                 return;
             }
 
-            $pdf = new ExportPDF();
             $template_factory = new Flexi_TemplateFactory(__DIR__ . "/../../../templates");
 
-            // Intro page.
-            $template_intro = $template_factory->open("default_slide_intro.php");
-
-            if (!$template_intro) {
+            $template = $template_factory->open("default_slide.php");
+            if (!$template) {
                 return;
             }
 
-            $template_intro->set_attribute('texts', DefaultSlideHandler::getIntroTexts($meeting));
+            $template->set_attribute('texts', DefaultSlideHandler::getIntroTexts($meeting));
 
-            $pdf->addPage('L', '', false, false);
-            $pdf->SetFont('helvetica', 'B', 24);
-            $pdf->writeHTML($template_intro->render(), true, true, true, true, 'C');
+            $features = json_decode($meeting->features, true);
+            $show_course_news = $features && isset($features['default_slide_course_news']) ? filter_var($features['default_slide_course_news'], FILTER_VALIDATE_BOOLEAN) : false;
+            $show_studip_news = $features && isset($features['default_slide_studip_news']) ? filter_var($features['default_slide_studip_news'], FILTER_VALIDATE_BOOLEAN) : false;
+            $decrease_font_size = false;
 
-            // News pages
-            $template_news = $template_factory->open("default_slide_news.php");
-            $news = DefaultSlideHandler::getNewsList($meeting);
-
-            if ($template_news && !empty($news)) {
-                $pdf->SetFont('helvetica', '', 16);
-                // Course news.
-                if (isset($news['course'])) {
-                    $template_news->set_attribute('news_list', $news['course']);
-                    $pdf->setHeaderSubtitle($news['course']['texts']['title']);
-                    $pdf->addPage('L', '', true, false);
-                    $pdf->writeHTML($template_news->render(), true, true, true, true, 'L');
-                }
-
-                // Studip News.
-                if (isset($news['studip'])) {
-                    $template_news->set_attribute('news_list', $news['studip']);
-                    $pdf->setHeaderSubtitle($news['studip']['texts']['title']);
-                    $pdf->addPage('L', '', true, false);
-                    $pdf->writeHTML($template_news->render(), true, true, true, true, 'L');
-                }
+            $course_news = DefaultSlideHandler::getNewsList($courseid);
+            if ($show_course_news && !empty($course_news)) {
+                $template->set_attribute('course_news', $course_news);
+                $decrease_font_size = true;
             }
+
+            $studip_news = DefaultSlideHandler::getNewsList();
+            if ($show_studip_news && !empty($studip_news)) {
+                $template->set_attribute('studip_news', $studip_news);
+                $decrease_font_size = true;
+            }
+
+
+            $pdf = new ExportPDF();
+
+            $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+            $pdf->addPage('L', '', true, false);
+            $pdf->SetFont('helvetica', '', ($decrease_font_size) ? 12 : 18);
+            $pdf->writeHTML($template->render(), true, false, true, false, '');
+
+            $pdf->lastPage();
+
+            // Adding a blank page as a white board!
+            $pdf->addPage('L', '', false, false);
 
             // Output the pdf file.
             $temp_file = $GLOBALS['TMP_PATH'] . '/' . md5(uniqid('pdf-file', true));
