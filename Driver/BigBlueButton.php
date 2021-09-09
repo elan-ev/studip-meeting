@@ -468,7 +468,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             $info = _('Opencast wird als Aufzeichnungsserver verwendet. Diese Funktion ist im Testbetrieb und es kann noch zu Fehlern kommen.');
             
             $res['opencast_webcam_record'] = new ConfigOption('opencast_webcam_record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnen von Webcams zulassen.'),
-                false, _('Sofern erlaubt, werden auch die Webcams aufgezeichnet. Das System muss diese Funktion unterstützen, um diese Einstellung anzuwenden.'));
+                false, _('Sofern erlaubt, werden auch die Webcams aufgezeichnet. Das Opencast-System muss diese Funktion unterstützen, um diese Einstellung anzuwenden.'));
 
         } else if ($record_config) {
             $info = _('Erlaubt es Moderatoren, die Medien und Ereignisse in der Sitzung für die spätere Wiedergabe aufzuzeichnen. Die Aufzeichnung muss innerhalb der Sitzung von einem Moderator gestartet werden.');
