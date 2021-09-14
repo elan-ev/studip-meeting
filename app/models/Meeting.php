@@ -22,6 +22,7 @@ use ElanEv\Driver\MeetingParameters;
  * @property bool      $join_as_moderator
  * @property int       $mkdate
  * @property int       $chdate
+ * @property int       $folder_id
  * @property Join[]    $joins
  */
 class Meeting extends \SimpleORMap
@@ -64,7 +65,13 @@ class Meeting extends \SimpleORMap
 
         $config['has_one']['folder'] = array(
             'class_name' => '\Folder',
-            'foreign_key'  => 'folder_id'
+            'foreign_key' => 'folder_id'
+        );
+
+        $config['has_one']['invitation_link'] = array(
+            'class_name' => 'ElanEv\Model\InvitationsLink',
+            'assoc_foreign_key' => 'meeting_id',
+            'on_delete' => 'delete',
         );
 
         parent::configure($config);
