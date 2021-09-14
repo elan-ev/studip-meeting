@@ -67,6 +67,12 @@ class Meeting extends \SimpleORMap
             'foreign_key'  => 'folder_id'
         );
 
+        $config['has_one']['invitation_link'] = array(
+            'class_name' => 'ElanEv\Model\InvitationsLink',
+            'assoc_foreign_key' => 'meeting_id',
+            'on_delete' => 'delete',
+        );
+
         parent::configure($config);
     }
 
