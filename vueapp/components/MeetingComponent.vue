@@ -207,8 +207,10 @@
                 </button>
             </div>
         </fieldset>
+
+        <!-- dialogs -->
         <MeetingMessageDialog v-if="showConfirmDialog"
-            :dialog="showConfirmDialog"
+            :message="showConfirmDialog"
             @accept="performConfirm"
             @cancel="showConfirmDialog = false"
         />
@@ -337,16 +339,24 @@ export default {
             if (event) {
                 event.preventDefault();
             }
-
-            if (confirm('Sind sie sicher, dass sie diesen Raum löschen möchten?')) {
-                this.$store.dispatch(ROOM_DELETE, this.room.id)
-                .then(({data}) => {
-                    this.$emit('setMessage', data.message);
-                    if (data.message.type == 'success') {
-                        this.$emit('renewRoomList');
-                    }
-                });
+            
+            this.showConfirmDialog = {
+                title: 'Raum löschen'.toLocaleString(),
+                text: 'Sind sie sicher, dass sie diesen Raum löschen möchten?'.toLocaleString(),
+                type: 'question', //info, warning, question
+                isConfirm: true,
+                callback: 'performDeleteRoom',
             }
+        },
+
+        performDeleteRoom() {
+            this.$store.dispatch(ROOM_DELETE, this.room.id)
+            .then(({data}) => {
+                this.$emit('setMessage', data.message);
+                if (data.message.type == 'success') {
+                    this.$emit('renewRoomList');
+                }
+            });
         },
 
         getGuestInfo() {
@@ -360,20 +370,20 @@ export default {
         checkPreJoin() {
             if (this.room.features && this.room.features.maxParticipants && this.info && this.info.participantCount &&
                 this.room.features.maxParticipants <= this.info.participantCount) {
-                    alert('AHOOOOIII!');
+                    this.showConfirmDialog = {
+                        title: 'Information',
+                        text: 'The number of participants are exceed please be aware!',
+                        type: 'info', //info, warning, question
+                        isConfirm: true,
+                        callback: 'performJoin',
+                    }
             } else {
-                // window.open(this.join_url, '_blank');
-                this.showConfirmDialog = {
-                    title: 'Information',
-                    text: 'The number of participants are exceed please be aware!',
-                    type: 'info',
-                    isConfirm: true,
-                    callback: 'performJoin'
-                }
+                window.open(this.join_url, '_blank');
             }
         },
 
         performConfirm(callback) {
+            this.showConfirmDialog = false;
             if (callback && this[callback] != undefined) {
                 this[callback]();
             }
