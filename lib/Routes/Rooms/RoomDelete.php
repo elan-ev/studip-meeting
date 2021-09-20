@@ -76,8 +76,9 @@ class RoomDelete extends MeetingsController
                     } catch (Exception $e) {
                         throw new Error($e->getMessage(), ($e->getCode() ? $e->getCode() : 404));
                     }
-
-
+                } else {
+                    // if there are more references to this room, delete only this reference
+                    $meetingCourse->delete();
                 }
             }
 
