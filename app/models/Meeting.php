@@ -74,6 +74,12 @@ class Meeting extends \SimpleORMap
             'on_delete' => 'delete',
         );
 
+        $config['has_one']['moderator_invitation_link'] = array(
+            'class_name' => 'ElanEv\Model\ModeratorInvitationsLink',
+            'assoc_foreign_key' => 'meeting_id',
+            'on_delete' => 'delete',
+        );
+
         parent::configure($config);
     }
 
