@@ -41,6 +41,8 @@ class RoomJoin extends MeetingsController
         $room_id = $args['room_id'];
         $cid = $args['cid'];
 
+        \Context::set($cid);
+
         $meetingCourse = new MeetingCourse([$room_id, $cid ]);
         // Check Assigned Group
         $meetingCourse = $this->checkAssignedGroup($meetingCourse);
@@ -133,7 +135,7 @@ class RoomJoin extends MeetingsController
         $joinParameters->setEmail($user->Email);
         $joinParameters->setFirstName($user->Vorname);
         $joinParameters->setLastName($user->Nachname);
-
+        $joinParameters->setMeeting($meeting);
 
 
         if ($perm->have_studip_perm('tutor', $cid) || $meeting->join_as_moderator) {

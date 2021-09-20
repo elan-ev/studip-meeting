@@ -36,8 +36,7 @@
                 <legend>
                     {{ driver.title }}
                 </legend>
-
-                <label v-if="Object.keys(config[driver_name]).includes('enable')">
+                <label>
                         <input type="checkbox"
                         true-value="1"
                         false-value="0"
@@ -320,7 +319,7 @@ export default {
                 this.$set(this.server_object, driver_name, server_config);
             }
         },
-        
+
         handleRecordings(driver_name, recording_option) {
             // It is used to allow only one recording option at a time
             setTimeout(() => {
