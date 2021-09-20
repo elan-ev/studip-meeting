@@ -558,8 +558,8 @@ export default {
                         Object.keys(this.config[this.room['driver']]['server_defaults']).length &&
                         Object.keys(this.config[this.room['driver']]['server_defaults']).includes(this.room['server_index'])) {
                         for (const [feature_name, feature_value] of Object.entries(this.config[this.room['driver']]['server_defaults'][this.room['server_index']])) {
-                            if (feature_name != 'maxAllowedParticipants') {
-                                this.$set(this.room['features'], ((feature_name == 'totalMembers') ? 'maxParticipants' : feature_name ), feature_value);
+                            if (feature_name != 'maxAllowedParticipants' && feature_name != 'totalMembers') {
+                                this.$set(this.room['features'], feature_name , feature_value);
                             }
                         }
                     }
@@ -655,7 +655,8 @@ export default {
                                         break;
                                         case 'number':
                                             var value = parseInt(this.room['features'][config_feature.name]);
-                                            if (Number.isInteger(value) && value > 0) {
+                                            var range_value = (config_feature.name == 'maxParticipants') ? -1 : 0;
+                                            if (Number.isInteger(value) && value > range_value) {
                                                 this.$set(this.room['features'], config_feature.name, value);
                                             } else {
                                                 invalidInputs.push(config_feature.display_name)

@@ -35,16 +35,7 @@ module.exports = {
 					loader: 'sass-loader'
 				}
 			]
-		},
-        {
-            test: /\.css$/,
-            use: [
-              'vue-style-loader',
-              {
-                loader: 'css-loader'
-              }
-            ],
-          }]
+		}]
     },
     plugins: [
         new CleanWebpackPlugin(),

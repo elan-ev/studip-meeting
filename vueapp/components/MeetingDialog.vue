@@ -178,8 +178,3 @@ export default {
     }
 }
 </script>
-<style>
-    .ui-dialog-titlebar-close:focus-visible {
-        outline: none;
-    }
-</style>

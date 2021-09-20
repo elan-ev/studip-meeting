@@ -9,7 +9,6 @@
                     <template v-if="message.type">
                         <StudipIcon v-if="message.type == 'info'" icon="info-circle-full" role="clickable" size="32"></StudipIcon>
                         <StudipIcon v-else-if="message.type == 'warning'" icon="exclaim-circle-full" role="status-red" size="32"></StudipIcon>
-                        <!-- <StudipIcon v-else-if="message.type == 'question'" icon="question-circle-full" role="status-yellow" size="32"></StudipIcon> -->
                     </template>
                     <span v-text="$gettext(message.text ? message.text : 'Sind Sie sicher, dass Sie das tun möchten?')"></span>
                 </div>
@@ -88,12 +87,3 @@ export default {
     }
 }
 </script>
-<style scoped>
-    .meeting-confirmation {
-        /* padding: 5px; */
-    }
-    .meeting-confirmation img {
-        /* vertical-align:middle;
-        margin-right: 9px; */
-    }
-</style>

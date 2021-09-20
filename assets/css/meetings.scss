@@ -231,6 +231,10 @@ fieldset {
                 }
             }
         }
+
+        input.inline-block, span.inline-block {
+            display: inline-block !important;
+        }
     }
 }
 
@@ -328,5 +332,16 @@ span.meeting-badge {
 
     &.tooltip {
         cursor: default;
+    }
+}
+
+.ui-dialog-titlebar-close:focus-visible {
+    outline: none;
+}
+
+.meeting-confirmation {
+    img {
+        vertical-align:middle;
+        margin-right: 9px;
     }
 }

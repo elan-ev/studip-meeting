@@ -48,18 +48,22 @@
                 :text="feature['info']">
             </StudipTooltipIcon>
 
-            <input :type="(feature['name'] == 'duration' || feature['name'] == 'maxParticipants') ? 'number' : 'text'"
-                :max="(
-                    (feature['name'] == 'maxParticipants') ?
-                    (maxAllowedParticipants != 0) ? maxAllowedParticipants : ''
-                    :  (feature['name'] == 'duration') ? maxDuration : ''
-                )"
-                :min="(feature['name'] == 'maxParticipants') ? minParticipants : ((feature['name'] == 'duration') ? 1 : '')"
-                @change="(feature['name'] == 'maxParticipants') ? checkPresets() : ''"
-                v-model.trim="room['features'][feature['name']]"
-                :placeholder="feature['value'] ? feature['value'] : ''"
-                :id="feature['name']">
-
+            <div>
+                <input :class="{'inline-block' : feature['name'] == 'maxParticipants'}" :type="(feature['name'] == 'duration' || feature['name'] == 'maxParticipants') ? 'number' : 'text'"
+                    :max="(
+                        (feature['name'] == 'maxParticipants') ?
+                        (maxAllowedParticipants != 0) ? maxAllowedParticipants : ''
+                        :  (feature['name'] == 'duration') ? maxDuration : ''
+                    )"
+                    :min="(feature['name'] == 'maxParticipants') ? minParticipants : ((feature['name'] == 'duration') ? 1 : '')"
+                    @change="(feature['name'] == 'maxParticipants') ? checkPresets() : ''"
+                    v-model.trim="room['features'][feature['name']]"
+                    :placeholder="feature['value'] ? feature['value'] : ''"
+                    :id="feature['name']">
+                <span v-if="feature['name'] == 'maxParticipants'" v-translate>
+                    &nbsp;(0 = unbegrenzt)
+                </span>
+            </div>
         </template>
     </label>
 </template>

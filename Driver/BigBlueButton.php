@@ -121,6 +121,15 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 $features['meta_opencast-dc-title'] = htmlspecialchars($params['name']);
             }
 
+            if (intval($features['maxParticipants']) == 0) {
+                $servers = Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'servers');
+                if ($servers && isset($servers[$parameters->getMeetingServerIndex()]) && $servers[$parameters->getMeetingServerIndex()]['maxParticipants']) {
+                    $features['maxParticipants'] = intval($servers[$parameters->getMeetingServerIndex()]['maxParticipants']);
+                } else {
+                    unset($features['maxParticipants']);
+                }
+            }
+
             $params = array_merge($params, $features);
         }
 
@@ -410,7 +419,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                     240,
                     _('Die maximale Länge (in Minuten) für das Meeting. Nach Ablauf der eingestellen Dauer wird das Meeting automatisch beendet, d.h. der Raum wird geschlossen. Falls bereits vor Ablauf der Zeit alle Teilnehmenden das Meeting verlassen haben, oder ein Moderator das Meeting aktiv beendet wird der Raum ebenfalls geschlossen.'));
 
-        $res['maxParticipants'] = new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 50, self::getFeatureInfo('maxParticipants'));
+        $res['maxParticipants'] = new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 0, self::getFeatureInfo('maxParticipants'));
 
         $res['invite_moderator'] = new ConfigOption('invite_moderator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Moderatorenzugang via Link'), false,
                  _('Legen Sie fest, ob externe Gäste mit Einladungslink als Moderator an der Besprechung teilnehmen dürfen.'));

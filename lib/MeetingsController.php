@@ -51,7 +51,8 @@ class MeetingsController
                                     break;
                                 case "integer":
                                     $value = filter_var((int)$features[$create_feature_name], FILTER_VALIDATE_INT);
-                                    if (!$value || $value < 1 || ($create_feature_name == 'duration' && $value > 1440)) {
+                                    $value_range = ($create_feature_name == 'maxParticipants') ? -1 : 1;
+                                    if ($value === false || $value < $value_range || ($create_feature_name == 'duration' && $value > 1440)) {
                                         $is_valid = false;
                                     } else {
                                         $features[$create_feature_name] = $value;
@@ -218,5 +219,62 @@ class MeetingsController
     public function autoSelectCourseDefaultRoom(MeetingCourse $meetingCourse) {
         $meetingCourse->is_default = 1;
         $meetingCourse->store();
+    }
+
+    /**
+    * Adjust the room size settings based on current number of course participants for created room.
+    *
+    * @param array $meeting_course_list a list of meeting courses
+    */
+    public function adjustMaxParticipants($meeting_course_list) {
+        // Loop through the meeting course list.
+        foreach ($meeting_course_list as $meetingCourse) {
+            $members_count = ($meetingCourse->course->members) + 5;
+            $features = json_decode($meetingCourse->meeting->features, true);
+            // In case the maxParticipants could not be read, or is set to zero (0), we reject the adjustment process.
+            if (!$features || !isset($features['maxParticipants']) || $features['maxParticipants'] == 0) {
+                continue;
+            }
+
+            // In case the count of course members is greater than the features setting (maxParicipants), we adjust the feature settings.
+            if ($members_count > $features['maxParticipants']) {
+                // Try to get driver server config.
+                $servers = Driver::getConfigValueByDriver($meetingCourse->meeting->driver, 'servers');
+                $server_config = [];
+                if ($servers && isset($servers[$meetingCourse->meeting->server_index])) {
+                    $server_config = $servers[$meetingCourse->meeting->server_index];
+                }
+
+                $max_allowed_participants = $members_count;
+                // Check if the server has maxParticipant and if member count is greater than it.
+                if (isset($server_config['maxParticipants']) && $members_count > intval($server_config['maxParticipants'])) {
+                    $max_allowed_participants = intval($server_config['maxParticipants']);
+                }
+
+                $features['maxParticipants'] = $max_allowed_participants;
+
+                // Take care of server presets.
+                if (isset($server_config['roomsize-presets']) && count($server_config['roomsize-presets']) > 0) {
+                    foreach ($server_config['roomsize-presets'] as $size => $values) {
+                        if ($features['maxParticipants'] >= intval($values['minParticipants'])) {
+                            unset($values['minParticipants']);
+                            foreach ($values as $feature_name => $feature_value) {
+                                $value = $feature_value;
+                                if (filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+                                    $value = filter_var($feature_value, FILTER_VALIDATE_BOOLEAN);
+                                }
+                                if (isset($features[$feature_name])) {
+                                    $features[$feature_name] = $value;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Finally, we store the features back!
+                $meetingCourse->meeting->features = json_encode($features);
+                $meetingCourse->meeting->store();
+            }
+        }
     }
 }

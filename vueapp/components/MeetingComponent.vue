@@ -12,24 +12,7 @@
                         <StudipTooltipIcon v-if="room.details"
                                             :text="`${room.details['creator']}, ${room.details['date']}`">
                         </StudipTooltipIcon>
-
-                        <template v-if="room.features && room.features.maxParticipants">
-                            <span v-if="info && info.participantCount > 0" class="participants"
-                                v-translate="{
-                                    count: info.participantCount,
-                                    max: room.features.maxParticipants
-                                }"
-                            >
-                                %{ count }/%{ max } Teilnehmende aktiv
-                            </span>
-                            <span v-else class="participants"
-                                v-translate="{
-                                    max: room.features.maxParticipants
-                                }"
-                            >
-                                Maximale Teilnehmerzahl: %{ max }
-                            </span>
-                        </template>
+                        <span v-if="showParticipantCount" class="participants" v-text="showParticipantCount"></span>
                     </div>
                     <div class="right">
                         <StudipTooltipIcon v-if="room.features && room.features.record && room.features.record == 'true' && !room.record_not_allowed"
@@ -266,6 +249,28 @@ export default {
                 group_name = this.course_groups[this.room.group_id];
             }
             return group_name;
+        },
+
+        showParticipantCount() {
+            var maxParticipants = 0;
+            if (this.room.features && this.room.features.maxParticipants > 0) {
+                maxParticipants = this.room.features.maxParticipants;
+            }
+
+            var participantCount = 0;
+            if (this.info && this.info.participantCount > 0) {
+                participantCount = this.info.participantCount;
+            }
+
+            if (maxParticipants && participantCount) {
+                return `${ participantCount }/${ maxParticipants } ` + 'Teilnehmende aktiv'.toLocaleString();
+            } else if (!maxParticipants && participantCount) {
+                return `${ participantCount } ` + 'Teilnehmende aktiv'.toLocaleString();
+            } else if (maxParticipants && !participantCount) {
+                return `Maximale Teilnehmerzahl: ${ maxParticipants }`.toLocaleString();
+            } else {
+                return false;
+            }
         }
     },
 
@@ -370,13 +375,13 @@ export default {
         checkPreJoin() {
             if (this.room.features && this.room.features.maxParticipants && this.info && this.info.participantCount &&
                 this.room.features.maxParticipants <= this.info.participantCount) {
-                    this.showConfirmDialog = {
-                        title: 'Information',
-                        text: 'The number of participants are exceed please be aware!',
-                        type: 'info', //info, warning, question
-                        isConfirm: true,
-                        callback: 'performJoin',
-                    }
+                this.showConfirmDialog = {
+                    title: 'Information',
+                    text: "Ihr Zugang kann eingeschränkt sein, da die Teilnehmerzahl für diese Sitzung überschritten wird. Möchten Sie es versuchen?".toLocaleString(),
+                    type: 'question', //info, warning, question
+                    isConfirm: true,
+                    callback: 'performJoin',
+                }
             } else {
                 window.open(this.join_url, '_blank');
             }
