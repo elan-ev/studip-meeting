@@ -57,7 +57,7 @@
                 <div v-if="course_config.display.editRoom && room.is_default == 1">
                     <StudipIcon class="info-icon" icon="star"
                             role="clickable" size="24"></StudipIcon>
-                    <span v-text="$gettext('Dieser Raum is Default')"></span>
+                    <span v-text="$gettext('Dies ist der Standardraum')"></span>
                 </div>
 
                 <div v-if="course_config.display.editRoom">
@@ -118,7 +118,7 @@
                             {{ room.details.folder.name }}
                         </a>
                     </template>
-                   
+
                 </div>
 
 
@@ -260,7 +260,7 @@ export default {
         },
 
         opencast_webcam_record_enabled() {
-            return (this.room && this.room.driver && this.room.features && this.room.features.opencast_webcam_record && 
+            return (this.room && this.room.driver && this.room.features && this.room.features.opencast_webcam_record &&
                 JSON.parse(this.room.features.opencast_webcam_record) == true && this.config && Object.keys(this.config[this.room.driver]).includes('opencast') && this.config[this.room.driver].opencast == '1');
         },
 
@@ -357,7 +357,7 @@ export default {
             if (event) {
                 event.preventDefault();
             }
-            
+
             this.showConfirmDialog = {
                 title: 'Raum löschen'.toLocaleString(),
                 text: 'Sind sie sicher, dass sie diesen Raum löschen möchten?'.toLocaleString(),

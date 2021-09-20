@@ -28,11 +28,12 @@
                             :false-value="0"
                             v-model="room['is_default']">
                             <translate>
-                                Als Default Raum markieren
+                                Als Standardraum markieren
                             </translate>
                             <StudipTooltipIcon
-                                :text="$gettext('Ein Default Raum wird zuerst sortiert und für die gebuchten Termine und Widgets verwendet.' +
-                                ' Wenn Sie diesen Raum als Default markieren, wird der andere Default Raum automatisch abgewählt.')">
+                                :text="$gettext('Ein Standardraum wird immer als erster Raum in der Raumliste angezeigt.' +
+                                ' Auf dem Startseitenwidget werden die gebuchten Termine dieser Veranstaltung gelistet und ein Direktlink zum Standardraum angeboten.' +
+                                ' Wenn Sie diesen Raum als Standard markieren, wird ein bereits vorhandener Standardraum automatisch abgewählt.')">
                             </StudipTooltipIcon>
                         </label>
                     </fieldset>
