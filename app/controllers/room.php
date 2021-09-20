@@ -7,7 +7,6 @@ use ElanEv\Model\InvitationsLink;
 use ElanEv\Model\ModeratorInvitationsLink;
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
-use MeetingPlugin;
 
 class RoomController extends PluginController
 {
