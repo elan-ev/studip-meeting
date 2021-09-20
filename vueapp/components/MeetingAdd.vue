@@ -177,7 +177,7 @@
                         <template v-for="(feature, index) in config[room['driver']]['features']['record']['record_setting']">
                             <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :maxDuration="maxDuration"
                                 @labelClicked="labelClickHandler"
-                                :badge="(Object.keys(config[room['driver']]).includes('opencast') && config[room['driver']]['opencast'] == '1'
+                                :badge="(feature['name'] == 'record' && Object.keys(config[room['driver']]).includes('opencast') && config[room['driver']]['opencast'] == '1'
                                             && feature['info'].toLowerCase().includes('opencast')) ? {show: true, text: $gettext('beta')} : {}"
                                 :key="index"/>
                         </template>

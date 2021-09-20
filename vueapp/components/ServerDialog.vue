@@ -159,6 +159,16 @@ export default {
         },
 
         initDefaultValues() {
+            if (this.server[this.driver_name] && this.driver.config) {
+                for (var i = 0; i < this.driver.config.length; i++) {
+                    let option = this.driver.config[i];
+
+                    if (!this.server[this.driver_name][option.name] && option.value) {
+                        this.server[this.driver_name][option.name] = option.value
+                    }
+                }
+            }
+
             if (this.server[this.driver_name] && !Object.keys(this.server[this.driver_name]).includes('course_types')) {
                 this.$set(this.server[this.driver_name], 'course_types', '');
             }
@@ -169,6 +179,7 @@ export default {
         DialogVisible: function() {
             this.visible = this.DialogVisible;
             if (this.visible) {
+                this.initDefaultValues();
                 this.reduceMins();
             } else {
                 this.dialog_message = {};

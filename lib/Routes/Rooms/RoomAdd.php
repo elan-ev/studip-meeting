@@ -186,6 +186,7 @@ class RoomAdd extends MeetingsController
                     throw new Error($e->getMessage(), ($e->getCode() ? $e->getCode() : 404));
                 }
 
+                $meeting->features  = $meetingParameters->getMeetingFeatures();
                 $meeting->remote_id = $meetingParameters->getRemoteId();
                 $meeting->store();
 

@@ -2,6 +2,8 @@
 
 namespace ElanEv\Driver;
 
+use ElanEv\Model\Meeting;
+
 /**
  * Common interface for different conference server API driver implementations.
  *
@@ -23,13 +25,12 @@ interface DriverInterface
     /**
      * Deletes a meeting.
      *
-     * @param MeetingParameters $parameters Parameters describing the meeting
-     *                                      to be removed
+     * @param Meeting $meeting The meeting to be removed
      *
      * @return bool True if the meeting was removed successfully, false
      *              otherwise
      */
-    public function deleteMeeting(MeetingParameters $parameters);
+    public function deleteMeeting(Meeting $meeting);
 
     /**
      * Returns the URL which can be browsed to join a meeting.
