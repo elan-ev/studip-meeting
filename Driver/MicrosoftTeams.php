@@ -430,4 +430,12 @@ class MicrosoftTeams implements DriverInterface
 
         return true;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function getFeatureDisplayArrangement()
+    {
+        return [];
+    }
 }
