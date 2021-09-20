@@ -379,10 +379,6 @@ class MicrosoftTeams implements DriverInterface
             ),
             new ConfigOption('client_secret',
                 dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Geheimer Clientschlüssel (Wert)')
-            ),
-            new ConfigOption('domain',
-                dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Domänenteil des userPrincipalName (ohne @ Zeichen!)'),
-                'z.B.: studipmeetings.onmicrosoft.com'
             )
         );
     }
