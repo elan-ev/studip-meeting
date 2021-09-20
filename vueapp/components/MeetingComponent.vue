@@ -8,18 +8,11 @@
                     }"
                 >
                     <div class="left">
-                      {{room.name}}
-                      <StudipTooltipIcon v-if="room.details"
-                                         :text="`${room.details['creator']}, ${room.details['date']}`">
-                      </StudipTooltipIcon>
-
-                        <span v-if="info && info.participantCount > 0" class="participants"
-                            v-translate="{
-                                count: info.participantCount
-                            }"
-                        >
-                            %{ count } Teilnehmende aktiv
-                        </span>
+                        {{room.name}}
+                        <StudipTooltipIcon v-if="room.details"
+                                            :text="`${room.details['creator']}, ${room.details['date']}`">
+                        </StudipTooltipIcon>
+                        <span v-if="showParticipantCount" class="participants" v-text="showParticipantCount"></span>
                     </div>
                     <div class="right">
                         <template v-if="room.features && room.features.record && room.features.record == 'true' && !room.record_not_allowed">
@@ -185,8 +178,14 @@
                 >
                     Einladungslink erstellen
                 </StudipButton>
-                <a v-if="room.enabled" class="button join"
+                <!-- <a v-if="room.enabled" class="button join"
                     :href="join_url" target="_blank"
+                    v-translate
+                >
+                    Teilnehmen
+                </a> -->
+                <a v-if="room.enabled" class="button join"
+                    @click="checkPreJoin"
                     v-translate
                 >
                     Teilnehmen
@@ -199,6 +198,13 @@
                 </button>
             </div>
         </fieldset>
+
+        <!-- dialogs -->
+        <MeetingMessageDialog v-if="showConfirmDialog"
+            :message="showConfirmDialog"
+            @accept="performConfirm"
+            @cancel="showConfirmDialog = false"
+        />
     </div>
 </template>
 
@@ -207,6 +213,7 @@ import StudipButton from "@/components/StudipButton";
 import StudipIcon from "@/components/StudipIcon";
 import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import MessageBox from "@/components/MessageBox";
+import MeetingMessageDialog from "@/components/MeetingMessageDialog";
 import { mapGetters } from "vuex";
 import store from "@/store";
 
@@ -222,6 +229,7 @@ export default {
         StudipIcon,
         StudipTooltipIcon,
         MessageBox,
+        MeetingMessageDialog
     },
 
     computed: {
@@ -254,6 +262,28 @@ export default {
         opencast_webcam_record_enabled() {
             return (this.room && this.room.driver && this.room.features && this.room.features.opencast_webcam_record && 
                 JSON.parse(this.room.features.opencast_webcam_record) == true && this.config && Object.keys(this.config[this.room.driver]).includes('opencast') && this.config[this.room.driver].opencast == '1');
+        },
+
+        showParticipantCount() {
+            var maxParticipants = 0;
+            if (this.room.features && this.room.features.maxParticipants > 0) {
+                maxParticipants = this.room.features.maxParticipants;
+            }
+
+            var participantCount = 0;
+            if (this.info && this.info.participantCount > 0) {
+                participantCount = this.info.participantCount;
+            }
+
+            if (maxParticipants && participantCount) {
+                return `${ participantCount }/${ maxParticipants } ` + 'Teilnehmende aktiv'.toLocaleString();
+            } else if (!maxParticipants && participantCount) {
+                return `${ participantCount } ` + 'Teilnehmende aktiv'.toLocaleString();
+            } else if (maxParticipants && !participantCount) {
+                return `Maximale Teilnehmerzahl: ${ maxParticipants }`.toLocaleString();
+            } else {
+                return false;
+            }
         }
     },
 
@@ -269,7 +299,8 @@ export default {
 
     data() {
         return {
-            interval: null
+            interval: null,
+            showConfirmDialog: false
         }
     },
 
@@ -326,16 +357,24 @@ export default {
             if (event) {
                 event.preventDefault();
             }
-
-            if (confirm('Sind sie sicher, dass sie diesen Raum löschen möchten?')) {
-                this.$store.dispatch(ROOM_DELETE, this.room.id)
-                .then(({data}) => {
-                    this.$emit('setMessage', data.message);
-                    if (data.message.type == 'success') {
-                        this.$emit('renewRoomList');
-                    }
-                });
+            
+            this.showConfirmDialog = {
+                title: 'Raum löschen'.toLocaleString(),
+                text: 'Sind sie sicher, dass sie diesen Raum löschen möchten?'.toLocaleString(),
+                type: 'question', //info, warning, question
+                isConfirm: true,
+                callback: 'performDeleteRoom',
             }
+        },
+
+        performDeleteRoom() {
+            this.$store.dispatch(ROOM_DELETE, this.room.id)
+            .then(({data}) => {
+                this.$emit('setMessage', data.message);
+                if (data.message.type == 'success') {
+                    this.$emit('renewRoomList');
+                }
+            });
         },
 
         getGuestInfo() {
@@ -345,6 +384,32 @@ export default {
         getModeratorGuestInfo() {
             this.$emit('getModeratorGuestInfo', this.getNonReactiveRoom());
         },
+
+        checkPreJoin() {
+            if (this.room.features && this.room.features.maxParticipants && this.info && this.info.participantCount &&
+                this.room.features.maxParticipants <= this.info.participantCount) {
+                this.showConfirmDialog = {
+                    title: 'Information',
+                    text: "Ihr Zugang kann eingeschränkt sein, da die Teilnehmerzahl für diese Sitzung überschritten wird. Möchten Sie es versuchen?".toLocaleString(),
+                    type: 'question', //info, warning, question
+                    isConfirm: true,
+                    callback: 'performJoin',
+                }
+            } else {
+                window.open(this.join_url, '_blank');
+            }
+        },
+
+        performConfirm(callback) {
+            this.showConfirmDialog = false;
+            if (callback && this[callback] != undefined) {
+                this[callback]();
+            }
+        },
+
+        performJoin() {
+            window.open(this.join_url, '_blank');
+        }
     }
 }
 </script>

@@ -24,11 +24,15 @@ class MeetingParameters extends Parameters
      */
     private $attendeePassword;
 
-
     /**
      * @var Array features that can be added to create the room (always optional)
      */
     private $meetingFeatures;
+
+    /**
+     * @var int the server index of the meeting
+     */
+    private $meetingServerIndex;
 
     public function setMeetingName($meetingName)
     {
@@ -68,6 +72,16 @@ class MeetingParameters extends Parameters
     public function getMeetingFeatures()
     {
         return $this->meetingFeatures;
+    }
+
+    public function setMeetingServerIndex($index)
+    {
+        $this->meetingServerIndex = $index;
+    }
+
+    public function getMeetingServerIndex()
+    {
+        return $this->meetingServerIndex;
     }
 
     public function toArray() {
