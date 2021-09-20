@@ -35,14 +35,14 @@
                     count: maxAllowedParticipants
                 }"
             >
-                &nbsp; (Max. Limit: %{ count })
+                (Max. Limit: %{ count })
             </span>
-            <span v-if="feature['name'] == 'duration' && maxDuration" 
+            <span v-if="feature['name'] == 'duration' && maxDuration"
                 v-translate="{
                     maxDuration
                 }"
             >
-                    &nbsp; (Max. Limit: %{ maxDuration } Minuten)
+                    (Max. Limit: %{ maxDuration } Minuten)
             </span>
             <StudipTooltipIcon v-if="Object.keys(feature).includes('info')"
                 :text="feature['info']">
@@ -61,7 +61,7 @@
                     :placeholder="feature['value'] ? feature['value'] : ''"
                     :id="feature['name']">
                 <span v-if="feature['name'] == 'maxParticipants'" v-translate>
-                    &nbsp;(0 = unbegrenzt)
+                    (0 = unbegrenzt)
                 </span>
             </div>
         </template>
@@ -78,7 +78,7 @@ export default {
         StudipTooltipIcon,
         StudipIcon
     },
-    
+
     props: {
         room: {
             type: Object,
@@ -122,6 +122,6 @@ export default {
                 this.$emit('labelClicked', this.feature['name']);
             }
         }
-    },    
+    },
 }
 </script>

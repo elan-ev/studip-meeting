@@ -250,7 +250,7 @@
 
                         <label v-if="room['driver'] && Object.keys(config[room['driver']]).includes('preupload')
                                 && config[room['driver']]['preupload'] == true">
-                            <h3 v-translate>
+                            <h3>
                                 <translate>
                                     Automatisches hochladen von Materialien
                                 </translate>

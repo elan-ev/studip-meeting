@@ -32,7 +32,7 @@
             </MessageBox>
 
             <MessageBox v-if="rooms_checked && rooms_list.length && config && course_config.display.addRoom && Object.keys(default_room).length === 0" type="info">
-                <span v-text="$gettext('Wir empfehlen Ihnen einen Default-Raum auszuwählen.')"></span>
+                <span v-text="$gettext('Wir empfehlen Ihnen, einen Standardraum auszuwählen.')"></span>
             </MessageBox>
 
             <p>
