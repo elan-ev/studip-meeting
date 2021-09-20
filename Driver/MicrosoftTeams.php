@@ -126,7 +126,7 @@ class MicrosoftTeams implements DriverInterface
         $data = [
             'accountEnabled'    => true,
             'displayName'       => $user->getFullname(),
-            'userPrincipalName' => $this->sanitazeForMS($username) . '@' . $this->config['domain'],
+            'userPrincipalName' => $mail,
             'mailNickname'      => $this->sanitazeForMS($user->getFullname()),
             'passwordProfile'   => [
                 'forceChangePasswordNextSignIn' => false,
@@ -151,7 +151,7 @@ class MicrosoftTeams implements DriverInterface
     private function getUser(JoinParameters $parameters)
     {
 
-        $upn = $this->sanitazeForMS($parameters->getUsername()) . '@' . $this->config['domain'];
+        $upn = $parameters->getEmail();
 
         $result = $this->client->request('GET',
             'https://graph.microsoft.com/v1.0/users?$filter=startswith(userPrincipalName, \'' . $upn . '\')',
