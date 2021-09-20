@@ -58,7 +58,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     /**
      * {@inheritdoc}
      */
-    public function createMeeting(MeetingParameters &$parameters)
+    public function createMeeting(MeetingParameters $parameters)
     {
         $params = array(
             'name' => $parameters->getMeetingName(),

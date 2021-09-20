@@ -61,7 +61,7 @@ class DfnVc implements DriverInterface
     /**
      * {@inheritdoc}
      */
-    public function createMeeting(MeetingParameters &$parameters)
+    public function createMeeting(MeetingParameters $parameters)
     {
         // request the session cookie
         $sessionCookie = $this->requestSessionCookie();

@@ -259,7 +259,7 @@ class MicrosoftTeams implements DriverInterface
     /**
      * {@inheritdoc}
      */
-    public function createMeeting(MeetingParameters &$parameters)
+    public function createMeeting(MeetingParameters $parameters)
     {
         $meetingName = $parameters->getMeetingName();
         $meetingId =  $parameters->getMeetingId();
