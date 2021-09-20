@@ -3,6 +3,7 @@
 namespace ElanEv\Driver;
 
 use MeetingPlugin;
+use ElanEv\Model\Meeting;
 use GuzzleHttp\ClientInterface;
 use Throwable;
 use GuzzleHttp\Exception\BadResponseException;
@@ -105,8 +106,10 @@ class DfnVc implements DriverInterface
     /**
      * {@inheritdoc}
      */
-    public function deleteMeeting(MeetingParameters $parameters)
+    public function deleteMeeting(Meeting $meeting)
     {
+        $parameters = $meeting->getMeetingParameters();
+
         // request the session cookie
         $sessionCookie = $this->requestSessionCookie();
 

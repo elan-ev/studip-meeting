@@ -7,6 +7,7 @@ use Meetings\Errors\DriverError;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
 use ElanEv\Model\Meeting;
+use Meetings\Models\I18N;
 use ElanEv\Model\Driver;
 use Throwable;
 
@@ -87,6 +88,20 @@ class MicrosoftTeams implements DriverInterface
         return $groupData->id;
     }
 
+    private function deleteGroup($group_id)
+    {
+        $result = $this->client->request('DELETE',
+            'https://graph.microsoft.com/v1.0/groups/' . $group_id,
+            [
+                'headers'     => [
+                    'Authorization' => 'Bearer ' . $this->accessToken
+                ]
+            ]
+        )->getBody()->getContents();
+
+        return json_decode($result);
+    }
+
     private function createTeamsOfGroup($groupId)
     {
         $data = [
@@ -150,7 +165,6 @@ class MicrosoftTeams implements DriverInterface
 
     private function getUser(JoinParameters $parameters)
     {
-
         $upn = $parameters->getEmail();
 
         $result = $this->client->request('GET',
@@ -161,6 +175,7 @@ class MicrosoftTeams implements DriverInterface
                 ]
             ]
         )->getBody()->getContents();
+
 
         $users = json_decode($result);
         $user = reset($users->value);
@@ -277,10 +292,15 @@ class MicrosoftTeams implements DriverInterface
     /**
      * {@inheritdoc}
      */
-    public function deleteMeeting(MeetingParameters $parameters)
+    public function deleteMeeting(Meeting $meeting)
     {
+        $this->accessToken = $this->getAccessToken();
+        $features = json_decode($meeting->features, true);
 
-        //TODO: Launch script to delete Meeting
+        // Gruppe entfernen
+        try {
+            $this->deleteGroup($features['teams']['groupId']);
+        } catch (\Exception $e) {}
 
         return true;
     }
@@ -300,7 +320,6 @@ class MicrosoftTeams implements DriverInterface
         $meeting = $parameters->getMeeting();
         $features = json_decode($meeting->features, true);
 
-
         // add (missing) users to group, this has to happen before creating a teams-session from a group
         if ($parameters->hasModerationPermissions()) {
             $this->groupAddModerator($features['teams']['groupId'], $parameters);
@@ -309,12 +328,25 @@ class MicrosoftTeams implements DriverInterface
         }
 
         if (!$features['teams']['webUrl']) {
-            $features['teams']['webUrl'] = $this->createTeamsOfGroup(
-                $features['teams']['groupId']
-            );
+            try {
+                $features['teams']['webUrl'] = $this->createTeamsOfGroup(
+                    $features['teams']['groupId']
+                );
 
-            $meeting->features = json_encode($features);
-            $meeting->store();
+                $meeting->features = json_encode($features);
+                $meeting->store();
+            } catch (\Exception $e) {
+                // show message to user what happened
+                \PageLayout::postMessage(
+                    \MessageBox::warning(
+                        I18N::_('Der Raum wurde auf dem Microsoft-Server noch nicht angelegt, dies dauert 1-2 Minuten.'
+                            .' Bitte versuchen sie es gleich noch einmal!'
+                        )
+                    )
+                );
+
+                return \PluginEngine::getLink('meetingplugin/index', ['cid' => \Context::getId()]);
+            }
         }
 
         return $features['teams']['webUrl'];

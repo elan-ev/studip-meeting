@@ -142,8 +142,10 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     /**
      * {@inheritdoc}
      */
-    public function deleteMeeting(MeetingParameters $parameters)
+    public function deleteMeeting(Meeting $meeting)
     {
+        $parameters = $meeting->getMeetingParameters();
+
         // Big Blue Button meetings are not persistent and therefore cannot
         // be removed
         $recordings = $this->getRecordings($parameters);

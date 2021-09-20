@@ -27,6 +27,9 @@ class JoinParameters extends Parameters
 
     private $hasModerationPermissions;
 
+    /**
+     * @var ElanEv\Model\Meeting
+     */
     private $meeting;
 
     public function setUsername($username)

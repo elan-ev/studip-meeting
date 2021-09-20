@@ -25,7 +25,7 @@ class RoomDelete extends MeetingsController
      * @param string $room_id room id
      * @param string $cid course id
      *
-     * @return json message 
+     * @return json message
      *
      * @throws \Exception \Error if something goes wrong with driver room deletion
      */
@@ -50,28 +50,37 @@ class RoomDelete extends MeetingsController
             if (!$meetingCourse->isNew()) {
                 // don't associate the meeting and the course any more
                 $meetingId = $meetingCourse->meeting->id;
-                $meetingCourse->delete();
 
                 $meeting = new Meeting($room_id);
 
                 // if the meeting isn't associated with at least one course at all,
                 // it can be removed entirely
-                if (count($meeting->courses) === 0) {
+                if (count($meeting->courses) === 1) {
                     // inform the driver to delete the meeting as well
                     $driver = $driver_factory->getDriver($meeting->driver, $meeting->server_index);
                     try {
-                        $driver->deleteMeeting($meeting->getMeetingParameters());
+                        if ($driver->deleteMeeting($meeting)) {
+                            $meetingCourse->delete();
+                            $meeting->delete();
+
+                            $message = [
+                                'text' => I18N::_('Meeting wurde gelöscht.'),
+                                'type' => 'success'
+                            ];
+                        } else {
+                            $message = [
+                                'text' => I18N::_('Der Raum konnte nicht auf dem Meetingerver gelöscht werden und bleibt deshalb hier gelistet!'),
+                                'type' => 'success'
+                            ];
+                        }
                     } catch (Exception $e) {
                         throw new Error($e->getMessage(), ($e->getCode() ? $e->getCode() : 404));
                     }
 
-                    $meeting->delete();
-                    $message = [
-                        'text' => I18N::_('Meeting wurde gelöscht.'),
-                        'type' => 'success'
-                    ];
+
                 }
             }
+
             return $this->createResponse([
                 'message'=> $message,
             ], $response);
