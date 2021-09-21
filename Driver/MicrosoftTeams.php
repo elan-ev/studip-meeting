@@ -410,7 +410,7 @@ class MicrosoftTeams implements DriverInterface
                 dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Verzeichnis-ID (Mandant)')
             ),
             new ConfigOption('client_secret',
-                dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Geheimer Clientschlüssel (Wert)')
+                dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Geheimer Clientschlüssel (Wert)') , null, null, 'password'
             )
         );
     }
