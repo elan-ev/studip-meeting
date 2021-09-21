@@ -32,6 +32,11 @@ table.conference-meetings {
         &:last-child, &.td_center {
             text-align: center !important;
         }
+        &.password{
+            color: transparent;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+            cursor: help;
+        }
     }
 
     thead {
@@ -343,5 +348,27 @@ span.meeting-badge {
     img {
         vertical-align:middle;
         margin-right: 9px;
+    }
+}
+
+.dialog-content {
+    form {
+        div {
+            label {
+                div.form-password-input {
+                    position: relative ;
+                    img {
+                        position: absolute;
+                        top: 8px;
+                        right: 9px;
+                        cursor: pointer;
+                    }
+
+                    input {
+                        padding-right: 30px;
+                    }
+                }
+            }
+        }
     }
 }

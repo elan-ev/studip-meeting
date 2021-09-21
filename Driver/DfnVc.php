@@ -395,7 +395,7 @@ class DfnVc implements DriverInterface
             new ConfigOption('label', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Label'), 'Server #'),
             new ConfigOption('url', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'API-Endpoint'), 'https://connect.vc.dfn.de'),
             new ConfigOption('login', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Funktionskennung')),
-            new ConfigOption('password', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Passwort')),
+            new ConfigOption('password', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Passwort'), null, null, 'password'),
             new ConfigOption('course_types', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Veranstaltungstyp'), MeetingPlugin::getSemClasses(), _('Nur in folgenden Veranstaltungskategorien nutzbar')),
             new ConfigOption('description', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Beschreibung'), '', _('Ein Beschreibungstext wird angezeigt, um den Server zu führen oder zu beschreiben.'))
         );

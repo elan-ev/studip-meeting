@@ -109,7 +109,7 @@
                                 <td>{{ index + 1 }}</td>
                                 <template v-for="(value, key) in driver.config">
                                     <td :key="key" v-if="value.name && value.name != 'roomsize-presets' && value.name != 'description'"
-                                    :class="{td_center:value.name == 'active'}"
+                                    :class="{td_center:value.name == 'active', password: value.attr && value.attr == 'password'}"
                                     :title="(value.name != 'active' && value.name != 'course_types' ? server[value.name] : '')"
                                     >
                                         <template v-if="value.name == 'maxParticipants'
