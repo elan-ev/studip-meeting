@@ -344,7 +344,7 @@ export default {
             type_id = type_id + '';
             var class_id = type_id.split('_')[0];
             var config_course_types = this.drivers[driver_name]['config'].find( cf => { return cf.name == 'course_types'});
-            if (config_course_types.value && config_course_types.value[class_id]['subs'] && config_course_types.value[class_id]['subs'][type_id]) {
+            if (config_course_types.value && config_course_types.value[class_id] && config_course_types.value[class_id]['subs'] && config_course_types.value[class_id]['subs'][type_id]) {
                 return config_course_types.value[class_id]['subs'][type_id];
             } else {
                 return 'Unbekannt';
