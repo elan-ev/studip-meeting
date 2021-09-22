@@ -3,6 +3,7 @@
 namespace ElanEv\Driver;
 
 use MeetingPlugin;
+use ElanEv\Model\Meeting;
 use GuzzleHttp\ClientInterface;
 use Throwable;
 use GuzzleHttp\Exception\BadResponseException;
@@ -105,8 +106,10 @@ class DfnVc implements DriverInterface
     /**
      * {@inheritdoc}
      */
-    public function deleteMeeting(MeetingParameters $parameters)
+    public function deleteMeeting(Meeting $meeting)
     {
+        $parameters = $meeting->getMeetingParameters();
+
         // request the session cookie
         $sessionCookie = $this->requestSessionCookie();
 
@@ -223,7 +226,7 @@ class DfnVc implements DriverInterface
             return $request->getBody(true);
         } catch (BadResponseException $e) {
             $response = $e->getResponse()->getBody(true);
-            $xml = new \SimpleXMLElement($response);
+            $xml = @new \SimpleXMLElement($response);
             $status_code = 500;
             $error = _('Internal Error');
             $message = _('Please contact a system administrator!');
@@ -392,7 +395,7 @@ class DfnVc implements DriverInterface
             new ConfigOption('label', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Label'), 'Server #'),
             new ConfigOption('url', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'API-Endpoint'), 'https://connect.vc.dfn.de'),
             new ConfigOption('login', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Funktionskennung')),
-            new ConfigOption('password', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Passwort')),
+            new ConfigOption('password', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Passwort'), null, null, 'password'),
             new ConfigOption('course_types', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Veranstaltungstyp'), MeetingPlugin::getSemClasses(), _('Nur in folgenden Veranstaltungskategorien nutzbar')),
             new ConfigOption('description', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Beschreibung'), '', _('Ein Beschreibungstext wird angezeigt, um den Server zu führen oder zu beschreiben.'))
         );

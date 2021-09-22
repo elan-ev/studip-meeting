@@ -32,6 +32,7 @@ table.conference-meetings {
         &:last-child, &.td_center {
             text-align: center !important;
         }
+
     }
 
     thead {
@@ -51,7 +52,7 @@ table.conference-meetings {
             }
         }
     }
-    
+
     img {
         &.info {
             cursor: pointer;
@@ -231,6 +232,10 @@ fieldset {
                 }
             }
         }
+
+        input.inline-block, span.inline-block {
+            display: inline-block !important;
+        }
     }
 }
 
@@ -328,5 +333,38 @@ span.meeting-badge {
 
     &.tooltip {
         cursor: default;
+    }
+}
+
+.ui-dialog-titlebar-close:focus-visible {
+    outline: none;
+}
+
+.meeting-confirmation {
+    img {
+        vertical-align:middle;
+        margin-right: 9px;
+    }
+}
+
+.dialog-content {
+    form {
+        div {
+            label {
+                div.form-password-input {
+                    position: relative ;
+                    img {
+                        position: absolute;
+                        top: 8px;
+                        right: 9px;
+                        cursor: pointer;
+                    }
+
+                    input {
+                        padding-right: 30px;
+                    }
+                }
+            }
+        }
     }
 }

@@ -19,13 +19,24 @@
                     <translate>Feedback Support-Adresse</translate>
                     <input type="text" v-model.trim="general_config['feedback_contact_address']">
                 </label>
+                <label>
+                    <translate>Feedback Absenderadresse</translate>
+                    <br>
+                    <input type="radio"
+                        value="standard_mail"
+                        v-model="general_config['feedback_sender_address']">
+                    <translate>Standard-Mail</translate>
+                    <input type="radio"
+                        value="user_mail"
+                        v-model="general_config['feedback_sender_address']">
+                    <translate>User-Mail</translate>
+                </label>
             </fieldset>
             <fieldset v-for="(driver, driver_name) in drivers" :key="driver_name">
                 <legend>
                     {{ driver.title }}
                 </legend>
-
-                <label v-if="Object.keys(config[driver_name]).includes('enable')">
+                <label>
                         <input type="checkbox"
                         true-value="1"
                         false-value="0"
@@ -82,7 +93,7 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <template v-for="(value, key) in driver.config">
+                                <template v-for="(value, key) in driver.config" v-if="value.attr != 'password'">
                                     <th v-if="value.name != 'roomsize-presets' && value.name != 'description'" :key="key"
                                     :class="{td_center:value.name == 'active'}"
                                     :title="value.display_name">
@@ -96,7 +107,7 @@
                             <tr v-for="(server, index) in config[driver_name].servers" :key="index"
                                 :class="{'active nohover': (server_object[driver_name]['index'] == index)}">
                                 <td>{{ index + 1 }}</td>
-                                <template v-for="(value, key) in driver.config">
+                                <template v-for="(value, key) in driver.config" v-if="value.attr != 'password'">
                                     <td :key="key" v-if="value.name && value.name != 'roomsize-presets' && value.name != 'description'"
                                     :class="{td_center:value.name == 'active'}"
                                     :title="(value.name != 'active' && value.name != 'course_types' ? server[value.name] : '')"
@@ -308,7 +319,7 @@ export default {
                 this.$set(this.server_object, driver_name, server_config);
             }
         },
-        
+
         handleRecordings(driver_name, recording_option) {
             // It is used to allow only one recording option at a time
             setTimeout(() => {
@@ -333,7 +344,7 @@ export default {
             type_id = type_id + '';
             var class_id = type_id.split('_')[0];
             var config_course_types = this.drivers[driver_name]['config'].find( cf => { return cf.name == 'course_types'});
-            if (config_course_types.value && config_course_types.value[class_id]['subs'] && config_course_types.value[class_id]['subs'][type_id]) {
+            if (config_course_types.value && config_course_types.value[class_id] && config_course_types.value[class_id]['subs'] && config_course_types.value[class_id]['subs'][type_id]) {
                 return config_course_types.value[class_id]['subs'][type_id];
             } else {
                 return 'Unbekannt';

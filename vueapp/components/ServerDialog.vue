@@ -28,6 +28,13 @@
                                 :false-value="false"
                                 v-model="server[driver_name][value.name]">
                             <textarea v-else-if="value.name == 'description'" v-model="server[driver_name][value.name]"></textarea>
+                            <template v-else-if="value.attr && value.attr == 'password'">
+                                <div class="form-password-input" @click.prevent="togglePasswordText($event, value.name)">
+                                    <input type="password" :ref="value.name" v-model="server[driver_name][value.name]">
+                                    <StudipIcon class="overlay-input-icon" icon="visibility-visible"
+                                        role="clickable" size="16"></StudipIcon>
+                                </div>
+                            </template>
                             <input v-else class="size-l" :type="(value.name == 'maxParticipants') ? 'number' : 'text'" min="0" @change="(value.name == 'maxParticipants') ? reduceMins() : ''"
                                 v-model="server[driver_name][value.name]"
                                 :placeholder="value.value">
@@ -61,6 +68,7 @@ import StudipButton from "@/components/StudipButton";
 import ServerRoomSize from "@/components/ServerRoomSize";
 import MessageBox from "@/components/MessageBox";
 import StudipTooltipIcon from "@/components/StudipTooltipIcon";
+import StudipIcon from "@/components/StudipIcon";
 
 import { dialog } from '@/common/dialog.mixins'
 
@@ -81,6 +89,7 @@ export default {
         ServerRoomSize,
         MessageBox,
         StudipTooltipIcon,
+        StudipIcon
     },
 
     data() {
@@ -159,8 +168,31 @@ export default {
         },
 
         initDefaultValues() {
+            if (this.server[this.driver_name] && this.driver.config) {
+                for (var i = 0; i < this.driver.config.length; i++) {
+                    let option = this.driver.config[i];
+
+                    if (!this.server[this.driver_name][option.name] && option.value) {
+                        this.server[this.driver_name][option.name] = option.value
+                    }
+                }
+            }
+
             if (this.server[this.driver_name] && !Object.keys(this.server[this.driver_name]).includes('course_types')) {
                 this.$set(this.server[this.driver_name], 'course_types', '');
+            }
+        },
+
+        togglePasswordText(event, ref) {
+            if (!event.target) {
+                return;
+            }
+            if ($(event.target).prop('tagName') == 'IMG') {
+                if (this.$refs && this.$refs[ref]) {
+                    this.$refs[ref][0].type = (this.$refs[ref][0].type == 'password') ? 'text' : 'password';
+                }
+            } else if ($(event.target).prop('tagName') == 'INPUT') {
+                $(event.target).focus();
             }
         }
     },
@@ -169,6 +201,7 @@ export default {
         DialogVisible: function() {
             this.visible = this.DialogVisible;
             if (this.visible) {
+                this.initDefaultValues();
                 this.reduceMins();
             } else {
                 this.dialog_message = {};

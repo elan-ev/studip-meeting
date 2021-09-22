@@ -17,7 +17,15 @@ export default {
             type: String,
             required: true
         },
-        parentId: [String]
+        parentId: [String],
+        minHeight: {
+            type: Number,
+            required: false,
+        },
+        confirmation: {
+            type: Boolean,
+            required: false,
+        }
     },
     data() {
         return {
@@ -55,6 +63,16 @@ export default {
             options.maxHeight = $(window).height() * 0.8;
             options.modal = true;
             options.title = this.title;
+            if (this.minHeight) {
+                options.minHeight = this.minHeight;
+            }
+            if (this.confirmation) {
+                options.classes = {
+                    "ui-dialog": "studip-confirmation"
+                };
+            }
+            
+            // .studip-confirmation
             options.open = (event, ui) => {
                 //Handle blur background
                 var wrapperFilter = $('#layout_wrapper').css('filter');

@@ -28,11 +28,12 @@
                             :false-value="0"
                             v-model="room['is_default']">
                             <translate>
-                                Als Default Raum markieren
+                                Als Standardraum markieren
                             </translate>
                             <StudipTooltipIcon
-                                :text="$gettext('Ein Default Raum wird zuerst sortiert und für die gebuchten Termine und Widgets verwendet.' + 
-                                ' Wenn Sie diesen Raum als Default markieren, wird der andere Default Raum automatisch abgewählt.')">
+                                :text="$gettext('Ein Standardraum wird immer als erster Raum in der Raumliste angezeigt.' +
+                                ' Auf dem Startseitenwidget werden die gebuchten Termine dieser Veranstaltung gelistet und ein Direktlink zum Standardraum angeboten.' +
+                                ' Wenn Sie diesen Raum als Standard markieren, wird ein bereits vorhandener Standardraum automatisch abgewählt.')">
                             </StudipTooltipIcon>
                         </label>
                     </fieldset>
@@ -55,7 +56,7 @@
                                 </option>
                                 <option v-for="(driver_config, driver) in availableServers" :key="driver"
                                         :value="driver"
-                                        :disabled="Object.keys(config[driver]['servers']).length == 1 
+                                        :disabled="Object.keys(config[driver]['servers']).length == 1
                                                     && ((config[driver]['server_course_type']
                                                     && config[driver]['server_course_type'][0] &&
                                                     !config[driver]['server_course_type'][0]['valid']) || !config[driver]['servers'][0])">
@@ -65,7 +66,7 @@
                                                 && config[driver]['server_details'][0]['label'] && config[driver]['server_details'][0]['label'] != ''"
                                                 v-translate="{
                                                     label: config[driver]['server_details'][0]['label']
-                                                }"    
+                                                }"
                                             >
                                                 (%{ label })
                                             </span>
@@ -101,7 +102,7 @@
                                     Bitte wählen Sie einen Server aus
                                 </option>
                                 <option v-for="(server_config, server_index) in config[room['driver']]['servers']" :key="server_index"
-                                        :value="'' + server_index" 
+                                        :value="'' + server_index"
                                         :disabled="!server_config || (config[room['driver']]['server_course_type'] && config[room['driver']]['server_course_type'][server_index] &&
                                                     !config[room['driver']]['server_course_type'][server_index]['valid'])"
                                         >
@@ -161,7 +162,7 @@
                                 && Object.keys(config[room['driver']]['features']['create']['roomsize']).length">
                         <legend v-text="$gettext('Raumgröße')"></legend>
                         <template v-for="(feature, index) in config[room['driver']]['features']['create']['roomsize']">
-                            <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" 
+                            <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature"
                                 :maxAllowedParticipants="maxAllowedParticipants"
                                 :minParticipants="minParticipants"
                                 @checkPresets="checkPresets"
@@ -177,17 +178,13 @@
                         <template v-for="(feature, index) in config[room['driver']]['features']['record']['record_setting']">
                             <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :maxDuration="maxDuration"
                                 @labelClicked="labelClickHandler"
-                                :badge="(Object.keys(config[room['driver']]).includes('opencast') && config[room['driver']]['opencast'] == '1'
+                                :badge="(feature['name'] == 'record' && Object.keys(config[room['driver']]).includes('opencast') && config[room['driver']]['opencast'] == '1'
                                             && feature['info'].toLowerCase().includes('opencast')) ? {show: true, text: $gettext('beta')} : {}"
                                 :key="index"/>
                         </template>
                     </fieldset>
 
-                    <fieldset id="privacy_settings_section" class="collapsable collapsed"
-                            v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
-                                && Object.keys(config[room['driver']]['features']).includes('create')
-                                && Object.keys(config[room['driver']]['features']['create']).includes('privacy')
-                                && Object.keys(config[room['driver']]['features']['create']['privacy']).length">
+                    <fieldset v-if="room['driver']" id="privacy_settings_section" class="collapsable collapsed">
                         <legend v-text="$gettext('Datenschutzeinstellungen')"></legend>
                         <label>
                             <input type="checkbox"
@@ -199,22 +196,28 @@
                                     Alle Teilnehmenden haben Moderationsrechte
                                 </translate>
                         </label>
-                        <template v-for="(feature, index) in config[room['driver']]['features']['create']['privacy']">
-                            <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :key="index"
-                                :inlineFeatureWarningIcon="(feature['name'] == 'room_anyone_can_start' && printRoomStartWarning()) ? {messagebox_id: 'room_start_warning'} : {}" 
-                                @toggleInlineFeatureWarning="toggleInlineFeatureWarning"
-                            />
-                            <MessageBox
-                                v-if="feature['name'] == 'room_anyone_can_start' && printRoomStartWarning()"
-                                :key="'msgbx' + index" id="room_start_warning"
-                                class="inline-feature-warning"
-                                type="warning"
-                                @hide="toggleInlineFeatureWarning('room_start_warning')"
-                            >
-                                <span v-text="$gettext('Es ist bei Aufzeichnungen dringend empfohlen die Veranstaltung und somit die Aufzeichnungen erst zu beginnen, ' +
-                                    'wenn Lehrende die Videokonferenz betreten.')"></span>
-                            </MessageBox>
-                        </template>
+                        <span v-if="Object.keys(config[room['driver']]).includes('features')
+                            && Object.keys(config[room['driver']]['features']).includes('create')
+                            && Object.keys(config[room['driver']]['features']['create']).includes('privacy')
+                            && Object.keys(config[room['driver']]['features']['create']['privacy']).length"
+                        >
+                            <template v-for="(feature, index) in config[room['driver']]['features']['create']['privacy']">
+                                <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :key="index"
+                                    :inlineFeatureWarningIcon="(feature['name'] == 'room_anyone_can_start' && printRoomStartWarning()) ? {messagebox_id: 'room_start_warning'} : {}"
+                                    @toggleInlineFeatureWarning="toggleInlineFeatureWarning"
+                                />
+                                <MessageBox
+                                    v-if="feature['name'] == 'room_anyone_can_start' && printRoomStartWarning()"
+                                    :key="'msgbx' + index" id="room_start_warning"
+                                    class="inline-feature-warning"
+                                    type="warning"
+                                    @hide="toggleInlineFeatureWarning('room_start_warning')"
+                                >
+                                    <span v-text="$gettext('Es ist bei Aufzeichnungen dringend empfohlen die Veranstaltung und somit die Aufzeichnungen erst zu beginnen, ' +
+                                        'wenn Lehrende die Videokonferenz betreten.')"></span>
+                                </MessageBox>
+                            </template>
+                        </span>
                     </fieldset>
 
                     <fieldset id="group_settings_section" class="collapsable collapsed" v-if="room['driver'] && Object.keys(course_groups).length">
@@ -578,7 +581,7 @@ export default {
                         let section = this.config[this.room['driver']]['features']['create'][section_name];
                         section.forEach(feature => {
                             // set all selects to first entry
-                            if (typeof feature.value === 'object' && !Array.isArray(feature.value)) {                                
+                            if (typeof feature.value === 'object' && !Array.isArray(feature.value)) {
                                 this.room['features'][feature['name']] = Object.keys(feature['value'])[0];
                             } else {
                                 this.$set(this.room['features'], feature.name , feature.value);
@@ -591,8 +594,8 @@ export default {
                         Object.keys(this.config[this.room['driver']]['server_defaults']).length &&
                         Object.keys(this.config[this.room['driver']]['server_defaults']).includes(this.room['server_index'])) {
                         for (const [feature_name, feature_value] of Object.entries(this.config[this.room['driver']]['server_defaults'][this.room['server_index']])) {
-                            if (feature_name != 'maxAllowedParticipants') {
-                                this.$set(this.room['features'], ((feature_name == 'totalMembers') ? 'maxParticipants' : feature_name ), feature_value);
+                            if (feature_name != 'maxAllowedParticipants' && feature_name != 'totalMembers') {
+                                this.$set(this.room['features'], feature_name , feature_value);
                             }
                         }
                     }
@@ -604,7 +607,7 @@ export default {
                         let section = this.config[this.room['driver']]['features']['record'][section_name];
                         section.forEach(feature => {
                             // set all selects to first entry
-                            if (typeof feature.value === 'object' && !Array.isArray(feature.value)) {                                
+                            if (typeof feature.value === 'object' && !Array.isArray(feature.value)) {
                                 this.room['features'][feature['name']] = Object.keys(feature['value'])[0];
                             } else {
                                 this.$set(this.room['features'], feature.name , feature.value);
@@ -658,7 +661,7 @@ export default {
                     this.modal_message.text = err_message;
                 }, 150);
             }
-            
+
             return isValid;
         },
 
@@ -677,9 +680,9 @@ export default {
                                     //Apply validation based on type of input
                                     switch (typeof config_feature.value) {
                                         case 'boolean':
-                                            if ((typeof this.room['features'][config_feature.name] == 'string' && 
-                                                this.room['features'][config_feature.name] != 'true' && this.room['features'][config_feature.name] != 'false') 
-                                                || (typeof this.room['features'][config_feature.name] != 'string' 
+                                            if ((typeof this.room['features'][config_feature.name] == 'string' &&
+                                                this.room['features'][config_feature.name] != 'true' && this.room['features'][config_feature.name] != 'false')
+                                                || (typeof this.room['features'][config_feature.name] != 'string'
                                                     && typeof this.room['features'][config_feature.name] != 'boolean')) {
                                                 invalidInputs.push(config_feature.display_name)
                                                 isValid = false;
@@ -688,7 +691,8 @@ export default {
                                         break;
                                         case 'number':
                                             var value = parseInt(this.room['features'][config_feature.name]);
-                                            if (Number.isInteger(value) && value > 0) {
+                                            var range_value = (config_feature.name == 'maxParticipants') ? -1 : 0;
+                                            if (Number.isInteger(value) && value > range_value) {
                                                 this.$set(this.room['features'], config_feature.name, value);
                                             } else {
                                                 invalidInputs.push(config_feature.display_name)
@@ -719,7 +723,7 @@ export default {
                     }
                 }
             }
-            
+
             if (invalidInputs.length > 0) {
                 var invalid_inputs_str = invalidInputs.join('), (');
                 this.$set(this.modal_message, "text" , "");
@@ -750,7 +754,7 @@ export default {
                     this.modal_message.text = err_message;
                 }, 150);
             }
-            
+
             return isValid;
         },
 
@@ -891,7 +895,7 @@ export default {
                     if ($('#privacy_settings_section').hasClass('collapsed')) {
                         $('#privacy_settings_section').removeClass('collapsed');
                     }
-                    
+
                     var dialogComponent = this.$children.filter( (children) => {
                         return children.$options.name == 'Dialog'
                     });
@@ -912,7 +916,7 @@ export default {
 
         toggleInlineFeatureWarning(id) {
             if ($(`#${id}`) != undefined) {
-                $(`#${id}`).toggle(); 
+                $(`#${id}`).toggle();
             }
         },
     }

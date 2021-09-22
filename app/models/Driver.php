@@ -156,7 +156,7 @@ class Driver
             }
 
             // Make sure Opencast Plugin is activated
-            if (isset(self::$config[$driver_name]['opencast']) && !MeetingPlugin::checkOpenCast()) {
+            if ($GLOBALS['user']->id != 'nobody' && isset(self::$config[$driver_name]['opencast']) && !MeetingPlugin::checkOpenCast()) {
                 unset(self::$config[$driver_name]['opencast']);
                 $is_config_corrected = true;
             }

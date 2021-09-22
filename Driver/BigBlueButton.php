@@ -94,7 +94,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 unset($features['guestPolicy-ASK_MODERATOR']);
             }
 
-            // The logic from BBB seems not to work with ALWAYS_DENY only for guests, in fact, 
+            // The logic from BBB seems not to work with ALWAYS_DENY only for guests, in fact,
             // it denies both guests and participants.
             if ($features['guestPolicy'] == 'ALWAYS_DENY') {
                 unset($features['guestPolicy']);
@@ -103,6 +103,11 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             // Remove extra feature param (invite_moderator) which is not accaptable by BBB.
             if (isset($features['invite_moderator'])) {
                 unset($features['invite_moderator']);
+            }
+
+            // Remove extra feature param (room_anyone_can_start) which is not accaptable by BBB.
+            if (isset($features['room_anyone_can_start'])) {
+                unset($features['room_anyone_can_start']);
             }
 
             // Remove extra feature param (default_slide_course_news) which is not accaptable by BBB.
@@ -126,8 +131,27 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 $features['welcome'] = Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'welcome');
             }
 
+            // Handel Opencast Webcam Recording.
+            $opencast_webcam_record = false;
+            if (isset($features['opencast_webcam_record'])) {
+                $opencast_webcam_record = filter_var($features['opencast_webcam_record'], FILTER_VALIDATE_BOOLEAN);
+                unset($features['opencast_webcam_record']);
+            }
+
             if (isset($features['meta_opencast-dc-isPartOf'])) {
                 $features['meta_opencast-dc-title'] = htmlspecialchars($params['name']);
+
+                // If the Opencast is responsible for recording, then we pass webcam recording flag as well.
+                $features['meta_opencast-add-webcams'] = $opencast_webcam_record;
+            }
+
+            if (intval($features['maxParticipants']) == 0) {
+                $servers = Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'servers');
+                if ($servers && isset($servers[$parameters->getMeetingServerIndex()]) && $servers[$parameters->getMeetingServerIndex()]['maxParticipants']) {
+                    $features['maxParticipants'] = intval($servers[$parameters->getMeetingServerIndex()]['maxParticipants']);
+                } else {
+                    unset($features['maxParticipants']);
+                }
             }
 
             $params = array_merge($params, $features);
@@ -156,8 +180,10 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     /**
      * {@inheritdoc}
      */
-    public function deleteMeeting(MeetingParameters $parameters)
+    public function deleteMeeting(Meeting $meeting)
     {
+        $parameters = $meeting->getMeetingParameters();
+
         // Big Blue Button meetings are not persistent and therefore cannot
         // be removed
         $recordings = $this->getRecordings($parameters);
@@ -352,7 +378,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     {
         $segments = array();
         foreach ($params as $key => $value) {
-            if (filter_var($value, FILTER_VALIDATE_BOOLEAN) && $key != 'duration') {
+            if (is_bool($value) && $key != 'duration') {
                 $encoded_value = $value == true ? 'true' : 'false';
             } else {
                 $encoded_value = rawurlencode($value);
@@ -372,7 +398,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             new ConfigOption('active', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aktiv?'), true),
             new ConfigOption('label', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Label'), 'Server #'),
             new ConfigOption('url',     dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'URL des BBB-Servers')),
-            new ConfigOption('api-key', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Api-Key (Salt)')),
+            new ConfigOption('api-key', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Api-Key (Salt)'), null, null, 'password'),
             new ConfigOption('proxy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugriff über Proxy')),
             new ConfigOption('connection_timeout', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Connection Timeout (e.g. 0.5)')),
             new ConfigOption('request_timeout', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Request Timeout (e.g. 3.4)')),
@@ -419,7 +445,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                     240,
                     _('Die maximale Länge (in Minuten) für das Meeting. Nach Ablauf der eingestellen Dauer wird das Meeting automatisch beendet, d.h. der Raum wird geschlossen. Falls bereits vor Ablauf der Zeit alle Teilnehmenden das Meeting verlassen haben, oder ein Moderator das Meeting aktiv beendet wird der Raum ebenfalls geschlossen.'));
 
-        $res['maxParticipants'] = new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 50, self::getFeatureInfo('maxParticipants'));
+        $res['maxParticipants'] = new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 0, self::getFeatureInfo('maxParticipants'));
 
         $res['invite_moderator'] = new ConfigOption('invite_moderator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Moderatorenzugang via Link'), false,
                  _('Legen Sie fest, ob externe Gäste mit Einladungslink als Moderator an der Besprechung teilnehmen dürfen.'));
@@ -460,6 +486,10 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         $info = '';
         if ($opencast_config) {
             $info = _('Opencast wird als Aufzeichnungsserver verwendet. Diese Funktion ist im Testbetrieb und es kann noch zu Fehlern kommen.');
+            
+            $res['opencast_webcam_record'] = new ConfigOption('opencast_webcam_record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnen von Webcams zulassen.'),
+                false, _('Sofern erlaubt, werden auch die Webcams aufgezeichnet. Das Opencast-System muss diese Funktion unterstützen, um diese Einstellung anzuwenden.'));
+
         } else if ($record_config) {
             $info = _('Erlaubt es Moderatoren, die Medien und Ereignisse in der Sitzung für die spätere Wiedergabe aufzuzeichnen. Die Aufzeichnung muss innerhalb der Sitzung von einem Moderator gestartet werden.');
         }
@@ -508,6 +538,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 'record_setting' => [
                     'duration',
                     'record',
+                    'opencast_webcam_record',
                     'giveAccessToRecordings'
                 ]
             ]
@@ -588,11 +619,11 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     public function prepareSlides($meetingId)
     {
         $options = [];
-        
+
         if (Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'preupload') == false) {
             return $options;
         }
-        
+
         $meeting = new Meeting($meetingId);
 
         if ($meeting->isNew()) {

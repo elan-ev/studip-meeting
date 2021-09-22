@@ -156,12 +156,12 @@ export default {
                 this.$store.dispatch(FEEDBACK_SUBMIT, this.feedback)
                 .then(({ data }) => {
                     this.message = data.message;
-                    this.$store.commit(FEEDBACK_CLEAR);
                     if (this.message.type == 'error') {
                         this.$set(this.modal_message, "type" , "error");
                         this.$set(this.modal_message, "text" , this.message.text);
                     } else {
                         this.$emit('done', { message: this.message });
+                        this.$store.commit(FEEDBACK_CLEAR);
                     }
                 }).catch (({error}) => {
                     this.$emit('cancel');
