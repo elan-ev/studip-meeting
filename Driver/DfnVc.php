@@ -397,7 +397,7 @@ class DfnVc implements DriverInterface
             new ConfigOption('login', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Funktionskennung')),
             new ConfigOption('password', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Passwort'), null, null, 'password'),
             new ConfigOption('course_types', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Veranstaltungstyp'), MeetingPlugin::getSemClasses(), _('Nur in folgenden Veranstaltungskategorien nutzbar')),
-            new ConfigOption('description', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Beschreibung'), '', _('Ein Beschreibungstext wird angezeigt, um den Server zu führen oder zu beschreiben.'))
+            new ConfigOption('description', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Beschreibung'), '', _('Der Beschreibungstext wird Lehrenden angezeigt wenn dieser Server ausgewählt wird.'))
         );
     }
 
