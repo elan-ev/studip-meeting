@@ -15,51 +15,18 @@ use Meetings\Errors\Error;
 use Meetings\DefaultSlideHandler;
 
 use Exception;
+
 use ElanEv\Model\Meeting;
 use ElanEv\Model\MeetingToken;
 
-class DefaultSlideShow extends MeetingsController
+class TemplatePreview extends MeetingsController
 {
     use MeetingsTrait;
-    /**
-     * Prepares and shows files
-     *
-     * @param string $meeting_id meeting id
-     * @param string $slide_id slide id
-     * @param string $token token id
-     *
-     *
-     * @return File the specific file on header
-     *
-     * @throws \Error in case of failure or wrong folder data
-     */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $meeting_id = filter_var(escapeshellcmd(basename($args['meeting_id'])), FILTER_SANITIZE_STRING);
-        $token = filter_var(escapeshellcmd(basename($args['token'])), FILTER_SANITIZE_STRING);
-        if (!$meeting_id && !$token) {
-            return;
-        }
+        $page = filter_var($args['page'], FILTER_SANITIZE_NUMBER_INT);
         try {
-            $meeting = new Meeting($meeting_id);
-
-            //Token check
-            if (!$meeting->meeting_token || !$meeting->meeting_token->is_valid($token)) {
-                return;
-            }
-
-            $courseid = $meeting->courses[0]->seminar_id;
-            if ($meeting->isNew() || !$courseid) {
-                return;
-            }
-
-            // If there is any template uploaded by admin, we use them only!
-            if (DefaultSlideHandler::checkCustomizedTemplates()) {
-                $pdf = DefaultSlideHandler::generateCustomizedPDF($meeting, $courseid);
-            } else { // Otherwise, we go for the studip default pdf generator system.
-                $pdf = DefaultSlideHandler::generateStudIPDefaultPDF($meeting, $courseid);
-            }
-
+            $pdf = DefaultSlideHandler::generatePDFPreview($page);
             if (!$pdf) {
                 return;
             }

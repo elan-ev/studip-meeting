@@ -655,6 +655,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             foreach ($folder->getTypedFolder()->getFiles() as $file_ref) {
                 if ($file_ref->id && $file_ref->name) {
                     $document_url = \PluginEngine::getURL('meetingplugin', [], "api/slides/$meetingId/{$file_ref->id}/$token");
+                    $document_url = strtok($document_url, '?');
                     if (isset($_SERVER['SERVER_NAME']) && strpos($document_url, $_SERVER['SERVER_NAME']) === FALSE) {
                         $document_url = $base_url . $document_url;
                     }
@@ -666,6 +667,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         // The default slide is now by default in place when there is no Folder is seleced, or there is no File in a selected folder.
         if (empty($documents)) {
             $default_slide_url = \PluginEngine::getURL('meetingplugin', [], "api/defaultSlide/$meetingId/$token");
+            $default_slide_url = strtok($default_slide_url, '?');
             if (isset($_SERVER['SERVER_NAME']) && strpos($default_slide_url, $_SERVER['SERVER_NAME']) === FALSE) {
                 $default_slide_url = $base_url . $default_slide_url;
             }

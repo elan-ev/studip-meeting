@@ -368,3 +368,18 @@ span.meeting-badge {
         }
     }
 }
+
+label.with-append{
+    input[type="file"] {
+        display: none;
+    }
+    input[type="text"] {
+        cursor: default;
+        background-color: white !important;
+        &:focus {
+            outline: none;
+            border: 1px solid #c5c7ca;
+            
+        }
+    }
+}

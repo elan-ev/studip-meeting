@@ -31,6 +31,13 @@
                         v-model="general_config['feedback_sender_address']">
                     <translate>User-Mail</translate>
                 </label>
+                
+                <StudipButton style="margin-top: 0;"
+                    @click="defaultSlideManagerShow = !defaultSlideManagerShow">
+                    <translate>Standard-Folie verwalten</translate>
+                </StudipButton>
+
+                <DefaultSlideManagerDialog v-if="defaultSlideManagerShow" @close="defaultSlideManagerShow = false"/>
             </fieldset>
             <fieldset v-for="(driver, driver_name) in drivers" :key="driver_name">
                 <legend>
@@ -193,6 +200,7 @@ import StudipIcon from "@/components/StudipIcon";
 import MessageBox from "@/components/MessageBox";
 import MessageList from "@/components/MessageList";
 import ServerDialog from "@/components/ServerDialog";
+import DefaultSlideManagerDialog from "@/components/DefaultSlideManagerDialog";
 
 import {
     CONFIG_LIST_READ,
@@ -212,7 +220,8 @@ export default {
         MessageBox,
         MessageList,
         StudipIcon,
-        ServerDialog
+        ServerDialog,
+        DefaultSlideManagerDialog
     },
 
     data() {
@@ -220,7 +229,8 @@ export default {
             message: null,
             server_object: {},
             serverDialogVisible: false,
-            changes_made: false
+            changes_made: false,
+            defaultSlideManagerShow: false
         }
     },
 

@@ -20,9 +20,6 @@
         <div id="intro">
             <h3><?= htmlReady($texts['welcome']) ?></h3>
             <h4><?= htmlReady($texts['course_name'] . ' - ' . $texts['meeting_name']) ?></h4>
-            <? if (isset($texts['date'])): ?>
-                <h5><?= htmlReady($texts['date']) ?></h5>
-            <? endif; ?>
         </div>
         <? if (isset($course_news)): ?>
             <h4><?= htmlReady($texts['course_news_title']) ?>:</h4>
