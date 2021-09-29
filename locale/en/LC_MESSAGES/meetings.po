@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-20 17:28+0200\n"
-"PO-Revision-Date: 2021-09-20 17:23+0200\n"
+"POT-Creation-Date: 2021-09-22 14:33+0200\n"
+"PO-Revision-Date: 2021-09-22 14:33+0200\n"
 "Last-Translator: April Suddendorf, 2020\n"
 "Language-Team: English (https://www.transifex.com/uol-it/teams/52597/en/)\n"
 "Language: en\n"
@@ -21,7 +21,7 @@ msgstr ""
 #: vueapp/components/MeetingMessageDialog.vue:17
 #: vueapp/components/MeetingMessageDialog.vue:54
 msgid "_ctx"
-msgstr ""
+msgstr "_ctx"
 
 #: vueapp/components/MeetingAdd.vue:68 vueapp/components/MeetingAdd.vue:109
 #: vueapp/components/MeetingAdd.vue:65 vueapp/components/MeetingAdd.vue:106
@@ -32,7 +32,7 @@ msgstr "- not available"
 #: vueapp/components/MeetingAdd.vue:56 vueapp/components/MeetingAdd.vue:53
 #: vueapp/components/MeetingAdd.vue:1
 msgid "(%{ label })"
-msgstr ""
+msgstr "(%{ label })"
 
 #: vueapp/components/MeetingModeratorGuest.vue:15
 #: vueapp/components/MeetingModeratorGuest.vue:12
@@ -71,11 +71,11 @@ msgstr "{{ fvalue }}"
 
 #: vueapp/views/Admin.vue:98 vueapp/views/Admin.vue:6
 msgid "{{ getCourseTypeName(server[value.name], driver_name) }}"
-msgstr ""
+msgstr "{{ getCourseTypeName(server[value.name], driver_name) }}"
 
 #: vueapp/components/MeetingAdd.vue:89 vueapp/components/MeetingAdd.vue:86
 msgid "%{ label }"
-msgstr ""
+msgstr "%{ label }"
 
 #: vueapp/views/Lobby.vue:4
 msgid ""
@@ -84,7 +84,7 @@ msgid ""
 "    </img>"
 msgstr ""
 "<img :src=\"loadingURL\">\n"
-"      You will join the meeting automatically as soon as it starts.\n"
+"      You will join the conference automatically as soon as it starts.\n"
 "    </img>"
 
 #: vueapp/views/Admin.vue:101 vueapp/views/Admin.vue:9
@@ -92,13 +92,15 @@ msgid ""
 "<StudipIcon :icon=\"(server[value.name]) ? 'checkbox-checked' : 'checkbox-"
 "unchecked'\" role=\"clickable\" size=\"14\"/>"
 msgstr ""
+"<StudipIcon :icon=\"(server[value.name]) ? 'checkbox-checked' : 'checkbox-"
+"unchecked'\" role=\"clickable\" size=\"14\"/>"
 
 #: vueapp/components/MeetingAdd.vue:322 vueapp/components/MeetingAdd.vue:9
 #: vueapp/components/MeetingFeedback.vue:74
 #: vueapp/components/MeetingFeedback.vue:5
 #: vueapp/components/MeetingModeratorGuest.vue:40
 #: vueapp/components/MeetingModeratorGuest.vue:9
-#: vueapp/components/ServerDialog.vue:40 vueapp/components/ServerDialog.vue:5
+#: vueapp/components/ServerDialog.vue:46 vueapp/components/ServerDialog.vue:5
 #: app/views/index/config.php:32
 msgid "Abbrechen"
 msgstr "Cancel"
@@ -114,7 +116,7 @@ msgid "Aktuell ausgewählter Ordner:"
 msgstr "Currently selected folder:"
 
 #: vueapp/components/ServerDialog.vue:14 vueapp/components/ServerDialog.vue:11
-#: MeetingPlugin.php:401
+#: MeetingPlugin.php:402
 msgid "Alle"
 msgstr "All"
 
@@ -201,7 +203,7 @@ msgid ""
 "Bisher existieren keine Meeting-Räume für diese Veranstaltung.\n"
 "                    Möchten Sie einen anlegen?"
 msgstr ""
-"There are no meeting rooms for this course yet.\n"
+"There are no conference rooms for this course yet.\n"
 "\t\tWould you like to create one?"
 
 #: vueapp/components/MeetingComponent.vue:86
@@ -249,19 +251,19 @@ msgstr "Browser version"
 
 #: vueapp/components/MeetingComponent.vue:70
 msgid "Das Meeting gehört der Gruppe"
-msgstr "The meeting belongs to the group"
+msgstr "The conference belongs to the group"
 
 #: vueapp/views/Lobby.vue:2
 msgid "Das Meeting hat noch nicht begonnen"
-msgstr "The meeting has not yet started"
+msgstr "The conference has not yet started"
 
 #: vueapp/components/MeetingComponent.vue:219
 msgid "Das Meeting ist für die Teilnehmer sichtbar"
-msgstr "The meeting is visible to the participants"
+msgstr "The conference is visible to the participants"
 
 #: vueapp/components/MeetingComponent.vue:220
 msgid "Das Meeting ist für die Teilnehmer unsichtbar"
-msgstr "The meeting is not visible to the participants"
+msgstr "The conference is not visible to the participants"
 
 #: vueapp/components/MeetingAdd.vue:381
 msgid "Datenschutzeinstellungen"
@@ -365,7 +367,7 @@ msgid ""
 "Es ist bei Aufzeichnungen dringend empfohlen die Veranstaltung und somit die "
 "Aufzeichnungen erst zu beginnen, wenn Lehrende die Videokonferenz betreten."
 msgstr ""
-"It is strongly recommend to start the meeting and therefore the recording "
+"It is strongly recommend to start the conference and therefore the recording "
 "not until lecturers have joined."
 
 #: vueapp/views/Course.vue:11
@@ -466,15 +468,15 @@ msgstr "Link"
 
 #: vueapp/components/MeetingComponent.vue:205
 msgid "Meeting für Teilnehmende sichtbar schalten"
-msgstr "Make meeting visible for participants"
+msgstr "Make conference visible for participants"
 
 #: vueapp/components/MeetingComponent.vue:204
 msgid "Meeting für Teilnehmende unsichtbar schalten"
-msgstr "Hide meeting for participants"
+msgstr "Hide conference for participants"
 
 #: vueapp/views/Admin.vue:2 MeetingPlugin.php:50
 msgid "Meetings konfigurieren"
-msgstr "Configure meetings"
+msgstr "Configure conferences"
 
 #: vueapp/components/MeetingComponent.vue:139
 #: vueapp/components/MeetingModeratorGuest.vue:24
@@ -600,7 +602,7 @@ msgstr "Add server"
 msgid "Serverbeschreibung"
 msgstr "Server description"
 
-#: vueapp/components/ServerDialog.vue:23
+#: vueapp/components/ServerDialog.vue:24
 msgid "Serverkonfiguration"
 msgstr "Server configuration"
 
@@ -647,7 +649,7 @@ msgstr "Give participants administration rights"
 msgid "Teilnehmenden nur eingeschränkte Rechte geben"
 msgstr "Give participants only limited rights"
 
-#: vueapp/components/ServerDialog.vue:36 vueapp/components/ServerDialog.vue:1
+#: vueapp/components/ServerDialog.vue:42 vueapp/components/ServerDialog.vue:1
 msgid "Übernehmen"
 msgstr "Apply"
 
@@ -671,8 +673,8 @@ msgid ""
 "Meeting zwischen den Dateien wechseln."
 msgstr ""
 "Link a file folder with this room. All files in that folder will be uploaded "
-"automatically when the meeting starts. You can switch between files in the "
-"meeting."
+"automatically when the conference starts. You can switch between files in "
+"the conference."
 
 #: vueapp/views/Admin.vue:36
 msgid "Verwenden dieses Treibers zulassen"
@@ -738,7 +740,7 @@ msgstr "State your name"
 
 #: app/views/room/index.php:8 app/views/room/moderator.php:12
 msgid "Meeting betreten"
-msgstr "Join meeting"
+msgstr "Join conference"
 
 #: app/views/room/moderator.php:2
 msgid "Sie wurden eingeladen, als Moderator beizutreten"
@@ -746,7 +748,7 @@ msgstr "You have been invited to join as a moderator"
 
 #: app/views/room/moderator.php:8
 msgid "Zugangscode des Meetings"
-msgstr "Access code for the meeting"
+msgstr "Access code for the conference"
 
 #: app/controllers/index.php:146 lib/Routes/Rooms/RoomAdd.php:117
 msgid "Der ausgewählte Server ist deaktiviert."
@@ -763,7 +765,7 @@ msgid ""
 "Entfernungen überbrückt, externe Fachleute einbezogen und Studierende in "
 "Projekten und Praktika begleitet werden."
 msgstr ""
-"Conduct and manage live online meetings, events and  video conferencing. "
+"Conduct and manage live online conferences, events and video conferencing. "
 "Face-to-face communication can be used to bridge distances, external experts "
 "can be involved and students can be accompanied in projects and internships."
 
@@ -771,52 +773,53 @@ msgstr ""
 msgid ""
 "Arbeitsbereich zum Anpassen der Gesamtansicht der Meetings einer "
 "Veranstaltung."
-msgstr "Workspace to customize the overall view of a course meeting."
+msgstr "Workspace to customize the overall view of a course conferences."
 
 #: app/controllers/index.php:260
 msgid ""
 "Gesamtansicht aller von Ihnen erstellten Meetings nach Semestern oder nach "
 "Namen sortiert."
-msgstr "View of all meetings you have created sorted by semester or by name."
+msgstr ""
+"View of all conferences you have created sorted by semester or by name."
 
 #: app/controllers/index.php:276 app/controllers/index.php:278
-#: MeetingPlugin.php:152 MeetingPlugin.php:304 MeetingPlugin.php:305
+#: MeetingPlugin.php:152 MeetingPlugin.php:305 MeetingPlugin.php:306
 msgid "Meetings"
-msgstr "Meetings"
+msgstr "Conferences"
 
 #: app/controllers/admin.php:112
 msgid "Meetings Administration"
-msgstr "Meeting administration"
+msgstr "Conferences administration"
 
 #: app/controllers/admin.php:129
 msgid ""
 "Administrationsseite für das Plugin zur Durchführung und Verwaltung von Live-"
 "Online-Treffen, Veranstaltungen und Videokonferenzen."
 msgstr ""
-"Plug-in administration page for holding and managing live online meetings, "
-"seminars and video conferences."
+"Plug-in administration page for holding and managing live online "
+"conferences, seminars and video conferences."
 
-#: app/controllers/room.php:62 app/controllers/room.php:107
+#: app/controllers/room.php:61 app/controllers/room.php:106
 msgid "Stud.IP Meeting"
-msgstr "Stud.IP meeting"
+msgstr "Stud.IP conference"
 
-#: app/controllers/room.php:66 app/controllers/room.php:111
-#: app/controllers/room.php:175 app/controllers/room.php:182
-#: app/controllers/room.php:203
+#: app/controllers/room.php:65 app/controllers/room.php:110
+#: app/controllers/room.php:174 app/controllers/room.php:181
+#: app/controllers/room.php:202
 msgid "Das gesuchte Meeting existiert nicht mehr!"
-msgstr "The meeting does not exists anymore!"
+msgstr "The conference does not exists anymore!"
 
-#: app/controllers/room.php:77 app/controllers/room.php:84
-#: app/controllers/room.php:122 app/controllers/room.php:129
-#: app/controllers/room.php:217
+#: app/controllers/room.php:76 app/controllers/room.php:83
+#: app/controllers/room.php:121 app/controllers/room.php:128
+#: app/controllers/room.php:216
 msgid "Das gesuchte Meeting ist nicht verfügbar!"
-msgstr "The searched meeting is not available!"
+msgstr "The conference you search for is not available!"
 
-#: app/controllers/room.php:98 app/controllers/room.php:160
+#: app/controllers/room.php:97 app/controllers/room.php:159
 msgid "Meeting-Name"
-msgstr "Meetingname"
+msgstr "Conference name"
 
-#: app/controllers/room.php:141
+#: app/controllers/room.php:140
 msgid "Zugangscode ist ungültig!"
 msgstr "Access code is invalid!"
 
@@ -846,11 +849,11 @@ msgstr "Secret ID (value)"
 
 #: Driver/BigBlueButton.php:350 Driver/DfnVc.php:231
 msgid "Internal Error"
-msgstr ""
+msgstr "Internal Error"
 
 #: Driver/BigBlueButton.php:351 Driver/DfnVc.php:232
 msgid "Please contact a system administrator!"
-msgstr ""
+msgstr "Please contact a system administrator!"
 
 #: Driver/BigBlueButton.php:389 Driver/DfnVc.php:394
 msgid "Aktiv?"
@@ -858,7 +861,7 @@ msgstr "Active?"
 
 #: Driver/BigBlueButton.php:390 Driver/DfnVc.php:395
 msgid "Label"
-msgstr ""
+msgstr "Label"
 
 #: Driver/BigBlueButton.php:391
 msgid "URL des BBB-Servers"
@@ -874,11 +877,11 @@ msgstr "Access via Proxy"
 
 #: Driver/BigBlueButton.php:394
 msgid "Connection Timeout (e.g. 0.5)"
-msgstr ""
+msgstr "Connection Timeout (e.g. 0.5)"
 
 #: Driver/BigBlueButton.php:395
 msgid "Request Timeout (e.g. 3.4)"
-msgstr ""
+msgstr "Request Timeout (e.g. 3.4)"
 
 #: Driver/BigBlueButton.php:396
 msgid "Maximale Teilnehmer"
@@ -894,9 +897,9 @@ msgstr "Only usable in the following course categories"
 
 #: Driver/BigBlueButton.php:398 Driver/DfnVc.php:400
 msgid ""
-"Ein Beschreibungstext wird angezeigt, um den Server zu führen oder zu "
-"beschreiben."
-msgstr ""
+"Der Beschreibungstext wird Lehrenden angezeigt wenn dieser Server ausgewählt "
+"wird."
+msgstr "This description will be shown lecturers if this server is selected."
 
 #: Driver/BigBlueButton.php:399
 msgid "Raumgrößenvoreinstellungen"
@@ -930,6 +933,10 @@ msgid ""
 "Meeting verlassen haben, oder ein Moderator das Meeting aktiv beendet wird "
 "der Raum ebenfalls geschlossen."
 msgstr ""
+"The maximum length (in minutes) for this conference. After the configured "
+"duration the conference (room) will be closed automatically. If all "
+"participants left before the the time runs out or a moderator actively "
+"finishes the meeting the room will be closed as well."
 
 #: Driver/BigBlueButton.php:439
 msgid "Maximale Teilnehmerzahl"
@@ -944,7 +951,7 @@ msgid ""
 "Legen Sie fest, ob externe Gäste mit Einladungslink als Moderator an der "
 "Besprechung teilnehmen dürfen."
 msgstr ""
-"Specify whether users with an invitation link can attend the meeting as "
+"Specify whether users with an invitation link can attend the conference as "
 "moderator."
 
 #: Driver/BigBlueButton.php:444
@@ -956,7 +963,7 @@ msgid ""
 "Legen Sie fest, ob Benutzer mit Einladungslink als Gäste an der Besprechung "
 "teilnehmen dürfen."
 msgstr ""
-"Specify whether users with an invitation link can attend the meeting as "
+"Specify whether users with an invitation link can attend the conference as "
 "guests."
 
 #: Driver/BigBlueButton.php:447
@@ -968,6 +975,8 @@ msgid ""
 "Legen Sie fest, ob Gäste und Teilnehmer dem Meeting direkt beitreten können "
 "oder ihre Teilnahme von einem Moderator bestätigt werden muss."
 msgstr ""
+"Decide if guests and participants can join the conference directly or if a "
+"moderator has to approve every join."
 
 #: Driver/BigBlueButton.php:450
 msgid "Private Chats deaktivieren"
@@ -991,7 +1000,7 @@ msgstr "Only moderators can see webcams"
 
 #: Driver/BigBlueButton.php:462
 msgid "Jeder Teilnehmer kann die Konferenz starten"
-msgstr ""
+msgstr "Every participant can start the conference"
 
 #: Driver/BigBlueButton.php:464
 msgid "Alle Teilnehmenden initial stumm schalten"
@@ -1014,6 +1023,8 @@ msgid ""
 "Sofern erlaubt, werden auch die Webcams aufgezeichnet. Das Opencast-System "
 "muss diese Funktion unterstützen, um diese Einstellung anzuwenden."
 msgstr ""
+"If allowed, webcams will be recorded as well. The Opencast system has to "
+"support this function in order for it to work."
 
 #: Driver/BigBlueButton.php:485
 msgid ""
@@ -1021,10 +1032,12 @@ msgid ""
 "spätere Wiedergabe aufzuzeichnen. Die Aufzeichnung muss innerhalb der "
 "Sitzung von einem Moderator gestartet werden."
 msgstr ""
+"Allows moderators to record the session for later playback. The recording "
+"has to be started by a moderator during the session."
 
 #: Driver/BigBlueButton.php:488
 msgid "Sitzungen können aufgezeichnet werden."
-msgstr "Meetings can be recorded."
+msgstr "Conferences can be recorded."
 
 #: Driver/BigBlueButton.php:492
 msgid "Aufzeichnungen für Teilnehmende sichtbar schalten"
@@ -1047,6 +1060,8 @@ msgid ""
 "Wenn diese Option aktiviert ist, ist die Aufzeichnung nur mit einer gültigen "
 "Serien-ID für den Kurs zulässig."
 msgstr ""
+"If this option is enabled, recordings are only possible with a correct "
+"series id associated to the course."
 
 #: Driver/BigBlueButton.php:554
 msgid ""
@@ -1064,6 +1079,9 @@ msgid ""
 "                %% CONFNAME %% (Sitzungsname), %% DIALNUM %% "
 "(Sitzungswahlnummer)"
 msgstr ""
+"If empty, a default message will be displayed. You can add the following "
+"keywords, which will be replaced automatically:\n"
+"                %% CONFNAME %% (session name), %% DIALNUM %% (dial up number)"
 
 #: Driver/DfnVc.php:396
 msgid "API-Endpoint"
@@ -1079,15 +1097,15 @@ msgstr "Password"
 
 #: lib/MeetingsController.php:82
 msgid "Validation failed!"
-msgstr ""
+msgstr "Validation failed!"
 
 #: lib/MeetingsController.php:102
 msgid "Unable to check Assigned Folder"
-msgstr ""
+msgstr "Unable to check Assigned Folder"
 
 #: lib/MeetingsController.php:164
 msgid "Unable to check Assigned Group"
-msgstr ""
+msgstr "Unable to check Assigned Group"
 
 #: lib/Routes/Config/ConfigAdd.php:36
 #, php-format
@@ -1101,11 +1119,11 @@ msgstr ""
 #: lib/Routes/Config/ConfigAdd.php:39
 #, php-format
 msgid "Der Treiber %s kann nicht verwendet werden, da er keinen Server hat."
-msgstr ""
+msgstr "The driver %s cannot be used because it has not server."
 
 #: lib/Routes/Config/ConfigAdd.php:48
 msgid "Die Adresse des Feedback-Supports muss eine gültige E-Mail-Adresse sein"
-msgstr ""
+msgstr "Die mail address for the feedback support has to be vaild"
 
 #: lib/Routes/Config/ConfigAdd.php:55
 msgid "Konfiguration gespeichert."
@@ -1139,13 +1157,15 @@ msgstr "This room could not be found"
 
 #: lib/Routes/Rooms/RoomDelete.php:67
 msgid "Meeting wurde gelöscht."
-msgstr "Meeting was deleted."
+msgstr "Conference was deleted."
 
 #: lib/Routes/Rooms/RoomDelete.php:72
 msgid ""
 "Der Raum konnte nicht auf dem Meetingerver gelöscht werden und bleibt "
 "deshalb hier gelistet!"
 msgstr ""
+"The room could not be deleted on the conference server and therefore will "
+"still be listed here!"
 
 #: lib/Routes/Rooms/RoomEdit.php:96 lib/Routes/Rooms/RoomAdd.php:86
 msgid "Raumeinstellung kann nicht bearbeitet werden!"
@@ -1174,14 +1194,16 @@ msgid ""
 "Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server "
 "fehlgeschlagen."
 msgstr ""
-"Could not join the meeting, communication with the meeting server failed."
+"Could not join the conference, communication with the conference server "
+"failed."
 
 #: lib/Routes/Rooms/RoomJoin.php:165
 msgid ""
 "Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server "
 "fehlgeschlagen. ("
 msgstr ""
-"Could not join the meeting, communication with the meeting server failed. ("
+"Could not join the conference, communication with the conference server "
+"failed. ("
 
 #: lib/Routes/Rooms/RoomJoinGuest.php:62
 msgid "Gäste können nicht eingeladen werden!"
@@ -1193,7 +1215,7 @@ msgstr "Automatically upload of materials is currently not possible"
 
 #: lib/Routes/Rooms/RoomsList.php:130
 msgid "Sitzungsaufzeichnung ist nicht erlaubt."
-msgstr ""
+msgstr "Session recording is not allowed."
 
 #: lib/Routes/Rooms/RoomJoinModerator.php:65
 msgid "Moderator-Gäste können nicht eingeladen werden!"
@@ -1217,7 +1239,7 @@ msgstr "Server is not defined"
 
 #: lib/Routes/Rooms/RoomAdd.php:141
 msgid "Die ausgewählte Gruppe ist nicht mehr verfügbar"
-msgstr ""
+msgstr "The selected group is not available anymore"
 
 #: lib/Routes/Rooms/RoomAdd.php:198
 msgid "Raum wurde erfolgreich erstellt."
@@ -1233,7 +1255,7 @@ msgstr ""
 
 #: lib/Routes/Feedback/FeedbackSubmit.php:56
 msgid "Feedback zum Meetings-Plugin"
-msgstr "Feedback on the Meetings Plugin"
+msgstr "Feedback on the conferences plugin"
 
 #: lib/Routes/Feedback/FeedbackSubmit.php:72
 msgid "Ihr Feedback wird gesendet."
@@ -1265,7 +1287,7 @@ msgstr "Error loading main folder!"
 
 #: lib/WidgetHandler.php:117
 msgid "Heute"
-msgstr ""
+msgstr "Today"
 
 #: lib/Models/Config.php:86
 msgid "Es wurde kein Servicetyp angegeben."
@@ -1273,23 +1295,23 @@ msgstr "No service type was specified."
 
 #: lib/Errors/ExceptionHandler.php:49
 msgid " - Slim Application Internal Error"
-msgstr ""
+msgstr " - Slim Application Internal Error"
 
 #: MeetingPlugin.php:188
 #, php-format
 msgid "%d Meeting(s), %d neue"
-msgstr "%d meeting(s), %d new"
+msgstr "%d conference(s), %d new"
 
 #: MeetingPlugin.php:192
 #, php-format
 msgid "%d Meeting(s)"
-msgstr "%d meeting(s)"
+msgstr "%d conference(s)"
 
 #: MeetingPlugin.php:223
 msgid "Anpassen"
 msgstr "Customize"
 
-#: MeetingPlugin.php:307
+#: MeetingPlugin.php:308
 msgid ""
 "Virtueller Raum, mit dem Live-Online-Treffen, Veranstaltungen und "
 "Videokonferenzen durchgeführt werden können. Die Teilnehmenden können sich "
@@ -1301,19 +1323,20 @@ msgid ""
 "Außerdem kann die Veranstaltung aufgezeichnet und Interessierten zur "
 "Verfügung gestellt werden."
 msgstr ""
-"Virtual room with which live online meetings, courses and  video conferences "
-"can be held. Participants can hear each other  during a meeting and, via a "
-"connected webcam, see and work with each other, if available. Slides can be "
-"presented and queries can be carried out. A window in the user interface of "
-"one's own computer can be made visible to others in order to show certain "
-"websites or applications to the participants, for example. In addition, the "
-"course can be recorded and made available to interested parties."
+"Virtual room with which live online conference, courses and video "
+"conferences can be held. Participants can hear each other during a "
+"conference and, via a connected webcam, see and work with each other, if "
+"available. Slides can be presented and queries can be carried out. A window "
+"in the user interface of one's own computer can be made visible to others in "
+"order to show certain websites or applications to the participants, for "
+"example. In addition, the course can be recorded and made available to "
+"interested parties."
 
-#: MeetingPlugin.php:316
+#: MeetingPlugin.php:317
 msgid "Face-to-face-Kommunikation mit Adobe Connect oder BigBlueButton"
 msgstr "Face-to-face communication with Adobe Connect or BigBlueButton"
 
-#: MeetingPlugin.php:318
+#: MeetingPlugin.php:319
 msgid ""
 "Videokonferenz- und Veranstaltungsmöglichkeit; Live im Netz präsentieren "
 "sowie gemeinsam zeichnen und arbeiten;Kommunikation über Mikrofon und "
@@ -1325,37 +1348,37 @@ msgstr ""
 "decentralised learning and working groups;Linking to already existing own "
 "rooms"
 
-#: MeetingPlugin.php:466
+#: MeetingPlugin.php:467
 msgid "Alle Veranstaltungstypen"
 msgstr "All course types"
 
-#: MeetingPlugin.php:507
-msgid "Derzeit finden keine Meetings in den gebuchten Kursen statt."
-msgstr ""
-
 #: MeetingPlugin.php:508
-msgid "Derzeitige Meetings"
-msgstr "Current meetings"
+msgid "Derzeit finden keine Meetings in den gebuchten Kursen statt."
+msgstr "Currently no conferences are planned in your courses."
 
 #: MeetingPlugin.php:509
-msgid "Kommende Meetings"
-msgstr "Upcoming meetings"
+msgid "Derzeitige Meetings"
+msgstr "Current conferences"
 
 #: MeetingPlugin.php:510
-msgid "Zur Meeting-Liste"
-msgstr "Meetingslist"
+msgid "Kommende Meetings"
+msgstr "Upcoming conferences"
 
 #: MeetingPlugin.php:511
+msgid "Zur Meeting-Liste"
+msgstr "Conference list"
+
+#: MeetingPlugin.php:512
 msgid "Direkt zum Meeting"
-msgstr "Directly to meeting"
+msgstr "Directly to the conference"
 
 #: migrations/029_new_general_config.php:31
 msgid "Allgemeine Konfiguration des Meetings-Plugins im JSON Format"
-msgstr ""
+msgstr "General configuration for the conferences plugin in JSON"
 
 #: migrations/018_new_config.php:32
 msgid "Konfiguration des Meetings-Plugins im JSON Format"
-msgstr ""
+msgstr "Configuration for the conferences plugin in JSON"
 
 #~ msgid "%{ count } Teilnehmende aktiv"
 #~ msgstr "%{ count } active participants"
