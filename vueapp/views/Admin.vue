@@ -93,8 +93,8 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <template v-for="(value, key) in driver.config" v-if="value.attr != 'password'">
-                                    <th v-if="value.name != 'roomsize-presets' && value.name != 'description'" :key="key"
+                                <template v-for="(value, key) in driver.config">
+                                    <th v-if="value.name != 'roomsize-presets' && value.name != 'description' && (!value.attr || value.attr != 'password')" :key="key"
                                     :class="{td_center:value.name == 'active'}"
                                     :title="value.display_name">
                                          {{ value.display_name }}
@@ -107,8 +107,8 @@
                             <tr v-for="(server, index) in config[driver_name].servers" :key="index"
                                 :class="{'active nohover': (server_object[driver_name]['index'] == index)}">
                                 <td>{{ index + 1 }}</td>
-                                <template v-for="(value, key) in driver.config" v-if="value.attr != 'password'">
-                                    <td :key="key" v-if="value.name && value.name != 'roomsize-presets' && value.name != 'description'"
+                                <template v-for="(value, key) in driver.config">
+                                    <td :key="key" v-if="value.name && value.name != 'roomsize-presets' && value.name != 'description' && (!value.attr || value.attr != 'password')"
                                     :class="{td_center:value.name == 'active'}"
                                     :title="(value.name != 'active' && value.name != 'course_types' ? server[value.name] : '')"
                                     >
