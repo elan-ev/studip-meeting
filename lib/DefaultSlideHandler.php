@@ -20,8 +20,8 @@ use Meetings\Errors\Error;
  * @author Farbod Zamani Broujeni (zamani@elan-ev.de)
  */
 
-define(DEFAULT_SLIDE_TEMPLATE_DIR, dirname(__DIR__, 1) . '/templates/default_slides');
-define(TEMPLATES_DIR, dirname(__DIR__, 1) . '/templates');
+define('DEFAULT_SLIDE_TEMPLATE_DIR', dirname(__DIR__, 1) . '/templates/default_slides');
+define('TEMPLATES_DIR', dirname(__DIR__, 1) . '/templates');
 class DefaultSlideHandler
 {
     static protected $font_dir = DEFAULT_SLIDE_TEMPLATE_DIR . '/font/';
@@ -112,7 +112,7 @@ class DefaultSlideHandler
                 // Apply php templates, if only the template exists and the it is the first page of uploaded pdf!
                 if (isset($page['php']) && file_exists("{$page['php']['dirname']}/{$page['php']['basename']}") && $slide_page == 1) {
                     $php_path = "{$page['php']['dirname']}/{$page['php']['basename']}";
-                    $template = self::getFlexiTemplate($page['php']['dirname'], $page['php']['basename'], $meeting);
+                    $template = self::getFlexiTemplate($page['php']['dirname'], $page['php']['basename'], $meeting, true);
                     if (!$template) {
                         continue;
                     }
@@ -131,10 +131,9 @@ class DefaultSlideHandler
     * It generates the pdf from the uploaded slides and templates by admin
     *
     * @param Meeting $meeting the meeting object
-    * @param string $courseid the course id
     * @return Fpdi $pdf the generated pdf object
     */
-    public static function generateCustomizedPDF(Meeting $meeting, $courseid)
+    public static function generateCustomizedPDF(Meeting $meeting)
     {
         $pdf = new Fpdi();
 
@@ -176,10 +175,12 @@ class DefaultSlideHandler
     * @param string $template_factory_dir the directory path of templates
     * @param string $template_name the name of the template to use
     * @param Meeting $meeting the meeting object
+    * @param boolean $dummy the flag which makes preveiw feature more efficient
     * @return Flexi_TemplateFactory $template generated template
     */
-    private static function getFlexiTemplate($template_factory_dir, $template_name, Meeting $meeting)
+    private static function getFlexiTemplate($template_factory_dir, $template_name, Meeting $meeting, $dummy = false)
     {
+        $courseid = $meeting->courses[0]->seminar_id;
         $template_factory = new Flexi_TemplateFactory($template_factory_dir);
         $template = $template_factory->open($template_name);
         if (!$template) {
@@ -201,17 +202,46 @@ class DefaultSlideHandler
             $template->set_attribute('studip_news', $studip_news);
         }
 
+        // Handle preview.
+        if ($dummy) {
+            $dummy_news = self::createDummyNewsList();
+            $template->set_attribute('course_news', $dummy_news);
+            $template->set_attribute('studip_news', $dummy_news);
+        }
+
         return $template;
+    }
+
+    /**
+    * It creates dummy array list of news to be shown in preview feature
+    *
+    * @return array $dummy dummy news array
+    */
+    private static function createDummyNewsList() 
+    {
+        $topic = I18N::_('Nachrichtenthema');
+        $body = I18N::_('Nachrichteninhalt');
+        $author = 'Test StudIP';
+        $date = date();
+        $news = [];
+        for ($i = 0; $i < 3; $i++) {
+            $news[$i] = [
+                'topic' => $topic . ($i + 1),
+                'body' => $body,
+                'author' => $author,
+                'date' => $date,
+            ];
+        }
+        return $news;
     }
 
     /**
     * It generates the default StudIP supported PDF and renders the template in it
     *
     * @param Meeting $meeting the meeting object
-    * @param string $courseid the course id
     * @return ExportPDF $pdf the generated TCPDF pdf object
     */
-    public static function generateStudIPDefaultPDF(Meeting $meeting, $courseid)
+    public static function generateStudIPDefaultPDF(Meeting $meeting)
     {
         $template = self::getFlexiTemplate(TEMPLATES_DIR, 'default_slide.php', $meeting);
         if (!$template) {
@@ -406,6 +436,9 @@ class DefaultSlideHandler
         );
 
         $pages_directory = rtrim(self::$pages_dir, '/');
+        if (!is_dir($pages_directory)) {
+            mkdir($pages_directory);
+        }
         $pages = scandir($pages_directory);
         $templates = [];
         foreach ($pages as $page) {

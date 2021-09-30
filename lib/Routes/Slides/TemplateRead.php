@@ -22,6 +22,15 @@ class TemplateRead extends MeetingsController
     {
         try {
             $installed_templates = DefaultSlideHandler::getInstalledTemplates();
+            // Removing dirnames from the content (security measure)
+            foreach ($installed_templates as $page => $template) {
+                if (isset($template['pdf']['dirname'])) {
+                    unset($installed_templates[$page]['pdf']['dirname']);
+                }
+                if (isset($template['php']['dirname'])) {
+                    unset($installed_templates[$page]['php']['dirname']);
+                }
+            }
             return $this->createResponse([
                 'templates' => $installed_templates,
             ], $response);

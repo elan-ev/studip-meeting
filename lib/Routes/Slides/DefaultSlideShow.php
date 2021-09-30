@@ -55,9 +55,9 @@ class DefaultSlideShow extends MeetingsController
 
             // If there is any template uploaded by admin, we use them only!
             if (DefaultSlideHandler::checkCustomizedTemplates()) {
-                $pdf = DefaultSlideHandler::generateCustomizedPDF($meeting, $courseid);
+                $pdf = DefaultSlideHandler::generateCustomizedPDF($meeting);
             } else { // Otherwise, we go for the studip default pdf generator system.
-                $pdf = DefaultSlideHandler::generateStudIPDefaultPDF($meeting, $courseid);
+                $pdf = DefaultSlideHandler::generateStudIPDefaultPDF($meeting);
             }
 
             if (!$pdf) {
