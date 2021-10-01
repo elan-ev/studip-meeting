@@ -17,4 +17,11 @@ interface FolderManagementInterface
      * @return array an extra option array for the request
      */
     public function prepareSlides($meetingId);
+
+    /**
+     * Returns configOptions related to File Management and PDF generation to show as slides in meetings when creating the room
+     *
+     * @return ConfigOption a single configOption record feature
+     */
+    public static function getPreUploadFeature();
 }

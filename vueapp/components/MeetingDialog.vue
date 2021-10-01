@@ -22,6 +22,10 @@ export default {
             type: Number,
             required: false,
         },
+        minWidth: {
+            type: Number,
+            required: false,
+        },
         confirmation: {
             type: Boolean,
             required: false,
@@ -65,6 +69,9 @@ export default {
             options.title = this.title;
             if (this.minHeight) {
                 options.minHeight = this.minHeight;
+            }
+            if (this.minWidth) {
+                options.minWidth = this.minWidth;
             }
             if (this.confirmation) {
                 options.classes = {

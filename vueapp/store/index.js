@@ -7,6 +7,7 @@ import rooms_list from "./room.module";
 import recording_list from "./recording.module";
 import feedback from "./feedback.module";
 import folder from "./folder.module";
+import default_slide from "./default_slide.module";
 
 
 Vue.use(Vuex);
@@ -18,6 +19,7 @@ export default new Vuex.Store({
     rooms_list,
     recording_list,
     feedback,
-    folder
+    folder,
+    default_slide
   }
 });
