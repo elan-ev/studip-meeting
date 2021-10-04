@@ -32,3 +32,5 @@ export const FEEDBACK_SUBMIT    = "feedbackSubmit";
 
 export const FOLDER_READ        = "foldersRead";
 export const FOLDER_CREATE      = "foldersCreate";
+
+export const ROOM_GENERATE_QR_CODE      = "roomGenerateQRCode";

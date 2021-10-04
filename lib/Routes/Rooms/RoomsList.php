@@ -11,6 +11,7 @@ use Meetings\Errors\Error;
 use Meetings\Errors\DriverError;
 use Exception;
 use Meetings\Models\I18N;
+use Meetings\RoomManager;
 
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
@@ -48,7 +49,7 @@ class RoomsList extends MeetingsController
             // Default Room:
             // In case there is only one room and it is not default, we forcefully select the room as default.
             if (count($meeting_course_list_raw) == 1 && $meeting_course_list_raw[0]->is_default == 0) {
-                $this->autoSelectCourseDefaultRoom($meeting_course_list_raw[0]);
+                RoomManager::autoSelectCourseDefaultRoom($meeting_course_list_raw[0]);
             }
         } else {
             $meeting_course_list_raw = MeetingCourse::findActiveByCourseId($cid);
@@ -59,10 +60,10 @@ class RoomsList extends MeetingsController
             try {
 
                 // Check Assigned Group
-                $meetingCourse = $this->checkAssignedGroup($meetingCourse);
+                $meetingCourse = RoomManager::checkAssignedGroup($meetingCourse);
 
                 // Check group access permission
-                if ($meetingCourse->group_id && !$this->checkGroupPermission($meetingCourse->group_id, $cid)) {
+                if ($meetingCourse->group_id && !RoomManager::checkGroupPermission($meetingCourse->group_id, $cid)) {
                     continue;
                 }
 
@@ -88,7 +89,7 @@ class RoomsList extends MeetingsController
                 }
 
                 // Checking folder existence
-                $this->checkAssignedFolder($meetingCourse->meeting);
+                RoomManager::checkAssignedFolder($meetingCourse->meeting);
                 if (!filter_var(Driver::getConfigValueByDriver($meetingCourse->meeting->driver, 'preupload'), FILTER_VALIDATE_BOOLEAN)) {
                     $meeting['preupload_not_allowed'] = _('Das automatische Hochladen von Folien ist derzeit nicht möglich');
                 }
@@ -119,7 +120,7 @@ class RoomsList extends MeetingsController
 
                 // Check Recording Capability
                 if (isset($meeting['features']['record']) && filter_var($meeting['features']['record'], FILTER_VALIDATE_BOOLEAN)) {
-                    $recording_capability = $this->checkRecordingCapability($meetingCourse->meeting->driver, $cid);
+                    $recording_capability = RoomManager::checkRecordingCapability($meetingCourse->meeting->driver, $cid);
                     $record_not_allowed = '';
                     if ($recording_capability['allow_recording'] == false
                         || ($recording_capability['allow_recording'] == true && $recording_capability['type'] == 'opencast'

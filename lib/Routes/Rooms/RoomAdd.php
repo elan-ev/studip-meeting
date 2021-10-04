@@ -10,6 +10,7 @@ use Meetings\MeetingsController;
 use Meetings\Errors\Error;
 use Exception;
 use Meetings\Models\I18N;
+use Meetings\RoomManager;
 
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
@@ -80,7 +81,7 @@ class RoomAdd extends MeetingsController
             // Apply validation on features inputs
             if ($json['features']) {
                 try {
-                    $validated_features = $this->validateFeatureInputs($json['features'], $json['driver']);
+                    $validated_features = RoomManager::validateFeatureInputs($json['features'], $json['driver']);
                     if (!$validated_features) {
                         $message = [
                             'text' => I18N::_('Raumeinstellung kann nicht bearbeitet werden!'),
@@ -120,7 +121,7 @@ class RoomAdd extends MeetingsController
             //Handle recording stuff
             if (isset($json['features']) && isset($json['features']['record'])
                 && filter_var($json['features']['record'], FILTER_VALIDATE_BOOLEAN)) { // Recording is asked...
-                $recording_capability = $this->checkRecordingCapability($json['driver'], $json['cid']);
+                $recording_capability = RoomManager::checkRecordingCapability($json['driver'], $json['cid']);
                 if ($recording_capability['allow_recording'] == false
                     || ($recording_capability['allow_recording'] == true && $recording_capability['type'] == 'opencast'
                         && empty($recording_capability['seriesid']))) {
@@ -192,7 +193,7 @@ class RoomAdd extends MeetingsController
 
                 // Handel course default room.
                 $is_default = isset($json['is_default']) ? $json['is_default'] : 0;
-                $this->manageCourseDefaultRoom($meeting->id, $json['cid'], $is_default);
+                RoomManager::manageCourseDefaultRoom($meeting->id, $json['cid'], $is_default);
 
                 $message = [
                     'text' => I18N::_('Raum wurde erfolgreich erstellt.'),

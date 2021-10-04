@@ -57,7 +57,8 @@
                     v-on:getModeratorGuestInfo="showModeratorGuestDialog"
                     v-on:getFeatures="showEditRoom"
                     v-on:setMessage="showMessage"
-                    v-on:getFeedback="showFeedbackDialog">
+                    v-on:getFeedback="showFeedbackDialog"
+                    v-on:displayQRCode="showQRCodeDialog">
                 </MeetingComponent>
             </form>
         </span>
@@ -91,6 +92,11 @@
             @done="showModeratorGuest = false"
             @cancel="showModeratorGuest = false"
         />
+
+        <MeetingQRCodeDialog v-if="showQRCode"
+            :room="showQRCode"
+            @cancel="showQRCode = false"
+        />
     </div>
 </template>
 
@@ -107,6 +113,7 @@ import MeetingRecordings from "@/components/MeetingRecordings";
 import MeetingFeedback from "@/components/MeetingFeedback";
 import MeetingGuest from "@/components/MeetingGuest";
 import MeetingModeratorGuest from "@/components/MeetingModeratorGuest";
+import MeetingQRCodeDialog from "@/components/MeetingQRCodeDialog";
 
 import {
     CONFIG_COURSE_READ, ROOM_LIST, ROOM_INFO,
@@ -128,7 +135,8 @@ export default {
         MeetingRecordings,
         MeetingFeedback,
         MeetingGuest,
-        MeetingModeratorGuest
+        MeetingModeratorGuest,
+        MeetingQRCodeDialog
     },
 
     computed: {
@@ -159,7 +167,8 @@ export default {
             showRecordings: false,
             showFeedback: false,
             showGuest: false,
-            showModeratorGuest: false
+            showModeratorGuest: false,
+            showQRCode: false
         }
     },
 
@@ -232,6 +241,10 @@ export default {
             if (params != undefined && params.message != undefined) {
                 this.showMessage(params.message);
             }
+        },
+
+        showQRCodeDialog(room) {
+            this.showQRCode = room;
         }
     },
 

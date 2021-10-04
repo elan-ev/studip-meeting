@@ -9,30 +9,31 @@ use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use Meetings\Errors\Error;
 use Exception;
-use Throwable;
 use Meetings\Models\I18N;
 use Meetings\RoomSlimController;
 
-class RoomJoin extends MeetingsController
+class RoomGenerateQRCode extends MeetingsController
 {
     use MeetingsTrait;
-    /**
-     * Processes the join request.
-     *
-     * @param string $room_id room id
-     * @param string $cid course id
-     *
-     *
-     * @throws \Error if there is any problem
-     */
+    
     public function __invoke(Request $request, Response $response, $args)
     {
         $room_id = filter_var($args['room_id'], FILTER_SANITIZE_NUMBER_INT);
         $cid = filter_var($args['cid'], FILTER_SANITIZE_STRING);
+
         try {
-            RoomSlimController::performJoin($room_id, $cid);
-        } catch (Exception $e) {
-            throw new Error($e->getMessage(), ($e->getCode() ? $e->getCode() : 404));
+            $qr_code_object = RoomSlimController::generateQRCode($room_id, $cid);
+            if ($qr_code_object) {
+                return $this->createResponse(['qr_code' => $qr_code_object], $response);
+            }
+
+            $message = [
+                'type' => 'error',
+                'text' => I18N::_('QR-Code kann nicht generiert werden')
+            ];
+            return $this->createResponse(['message' => $message], $response);
+        } catch (Exception $ex) {
+            throw new Error('Room Parameters not found', 404);
         }
     }
 }

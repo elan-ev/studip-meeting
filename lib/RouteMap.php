@@ -64,6 +64,9 @@ class RouteMap
         $this->app->get('/rooms/join/{cid}/{room_id}/{moderator_name}/{moderator_password}/moderator', Routes\Rooms\RoomJoinModerator::class);
         $this->app->get('/rooms/inviteModerator/{cid}/{room_id}',  Routes\Rooms\RoomModeratorInvitationLink::class);
 
+        //generate QR Code
+        $this->app->get('/rooms/qr_code/{cid}/{room_id}',  Routes\Rooms\RoomGenerateQRCode::class);
+
         //recordings with perm
         $this->app->get('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingShow::class);
         $this->app->delete('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingDelete::class);

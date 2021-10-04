@@ -80,6 +80,12 @@ class Meeting extends \SimpleORMap
             'on_delete' => 'delete',
         );
 
+        $config['has_one']['qr_code_token'] = array(
+            'class_name' => 'ElanEv\Model\QRCodeToken',
+            'assoc_foreign_key' => 'meeting_id',
+            'on_delete' => 'delete',
+        );
+
         parent::configure($config);
     }
 
