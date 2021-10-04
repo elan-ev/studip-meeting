@@ -1,6 +1,6 @@
 <template>
     <div>
-        <MeetingDialog :minHeight="20" :confirmation="!message.type || message.type == 'question'" :title="$gettext(message.title ? message.title : 'Bitte bestätigen Sie die Aktion')" @close="cancel($event)">
+        <MeetingDialog :parentId="parentDialogId" :minHeight="20" :confirmation="!message.type || message.type == 'question'" :title="$gettext(message.title ? message.title : 'Bitte bestätigen Sie die Aktion')" @close="cancel($event)">
             <template v-slot:content>
                 <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
                     {{ modal_message.text }}
@@ -46,7 +46,8 @@ export default {
                 text: 'Sind Sie sicher, dass Sie das tun möchten?'.toLocaleString(),
                 type: 'info', //info, warning, question
                 isConfirm: false,//optional: true/false
-                callback: null, //optional: null, name of the method to call if accepted
+                callback: null, //optional: null, name of the method to call if accepted,
+                callback_data: {}
             } */
         }
     },
@@ -82,7 +83,7 @@ export default {
                 event.preventDefault();
             }
             this.dialogClose();
-            this.$emit('accept', this.message.callback);
+            this.$emit('accept', this.message.callback, this.message.callback_data);
         }
     }
 }

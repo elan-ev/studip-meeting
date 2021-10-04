@@ -120,9 +120,15 @@ class Driver
                 $record_features = $class::getRecordFeature();
             }
 
+            if (in_array('ElanEv\Driver\FolderManagementInterface', class_implements($class)) !== false) {
+                $upload_features = $class::getPreUploadFeature();
+                // Because the preupload features rely on create feature, we merge them into create features.
+                $create_features = array_merge($create_features, $upload_features);
+            }
+
             if (!empty($feature_arrangement)) { // With feature arrangement.
                 // Merge all features together helps to pick features from different cat in a section.
-                $all_features = array_merge($create_features, $record_features); 
+                $all_features = array_merge($create_features, $record_features);
 
                 // Check if there is any create feature.
                 if (!empty($create_features)) {

@@ -29,7 +29,15 @@ const ApiService = {
 
     delete(resource) {
         return Vue.axios.delete(resource);
-    }
+    },
+
+    upload(resource, form) {
+        return Vue.axios.post(`${resource}`, form, { 
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+    },
 };
 
 export default ApiService;

@@ -89,10 +89,22 @@ class RouteMap
         $this->app->put('/config/{id}', Routes\Config\ConfigEdit::class);
         $this->app->delete('/config/{id}', Routes\Config\ConfigDelete::class);
 
+        //default slide management
+        $this->app->get('/default_slide/font', Routes\Slides\FontRead::class);
+        $this->app->post('/default_slide/font', Routes\Slides\FontUpload::class);
+        $this->app->delete('/default_slide/font/{font_type}', Routes\Slides\FontDelete::class);
+
+        $this->app->get('/default_slide/template', Routes\Slides\TemplateRead::class);
+        $this->app->post('/default_slide/template', Routes\Slides\TemplateUpload::class);
+        $this->app->delete('/default_slide/template/{page}/{what}', Routes\Slides\TemplateDelete::class);
+
+        $this->app->get('/default_slide/template/preview/{page}', Routes\Slides\TemplatePreview::class);
+        $this->app->get('/default_slide/template/sample/{what}', Routes\Slides\TemplateSampleDownload::class);
     }
 
     public function unauthenticatedRoutes() 
     {
         $this->app->get('/slides/{meeting_id}/{slide_id}/{token}', Routes\Slides\SlidesShow::class);
+        $this->app->get('/defaultSlide/{meeting_id}/{token}', Routes\Slides\DefaultSlideShow::class);
     }
 }

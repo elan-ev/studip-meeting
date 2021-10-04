@@ -34,3 +34,12 @@ export const FOLDER_READ        = "foldersRead";
 export const FOLDER_CREATE      = "foldersCreate";
 
 export const ROOM_GENERATE_QR_CODE      = "roomGenerateQRCode";
+
+export const DEFAULT_SLIDE_FONT_READ   = "defaultSlideFontRead";
+export const DEFAULT_SLIDE_FONT_DELETE = "defaultSlideFontDelete";
+export const DEFAULT_SLIDE_FONT_UPLOAD = "defaultSlideFontUpload";
+
+export const DEFAULT_SLIDE_TEMPLATE_READ             = "defaultSlideTemplateRead";
+export const DEFAULT_SLIDE_TEMPLATE_DELETE           = "defaultSlideTemplateDelete";
+export const DEFAULT_SLIDE_TEMPLATE_UPLOAD           = "defaultSlideTemplateUpload";
+export const DEFAULT_SLIDE_SAMPLE_TEMPLATE_DOWNLOAD  = "defaultSlideSampleTemplateDownload";

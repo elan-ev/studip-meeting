@@ -8,3 +8,8 @@ app/views/admin/index.php
 app/views/room/lobby.php
 .DS_Store
 *.zip
+templates/default_slides/page/*
+templates/default_slides/font/regular/*
+templates/default_slides/font/bold/*
+templates/default_slides/font/italic/*
+templates/default_slides/font/bold_italic/*
