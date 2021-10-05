@@ -40,6 +40,11 @@
                             <StudipIcon icon="admin" role="clickable" size="20"></StudipIcon>
                         </a>
                         <a style="cursor: pointer;"
+                            :title="$gettext('QR-Code anzeigen')"
+                            @click.prevent="showQRCode()">
+                            <StudipIcon icon="code-qr" role="clickable" size="22"></StudipIcon>
+                        </a>
+                        <a style="cursor: pointer;"
                             :title="$gettext('Schreiben Sie ein Feedback')"
                             @click.prevent="writeFeedback()">
                             <StudipIcon icon="support" role="clickable" size="22"></StudipIcon>
@@ -409,6 +414,10 @@ export default {
 
         performJoin() {
             window.open(this.join_url, '_blank');
+        },
+
+        showQRCode() {
+            this.$emit('displayQRCode', this.getNonReactiveRoom());
         }
     }
 }

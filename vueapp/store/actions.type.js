@@ -33,6 +33,8 @@ export const FEEDBACK_SUBMIT    = "feedbackSubmit";
 export const FOLDER_READ        = "foldersRead";
 export const FOLDER_CREATE      = "foldersCreate";
 
+export const ROOM_GENERATE_QR_CODE      = "roomGenerateQRCode";
+
 export const DEFAULT_SLIDE_FONT_READ   = "defaultSlideFontRead";
 export const DEFAULT_SLIDE_FONT_DELETE = "defaultSlideFontDelete";
 export const DEFAULT_SLIDE_FONT_UPLOAD = "defaultSlideFontUpload";

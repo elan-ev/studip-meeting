@@ -7,6 +7,8 @@ use ElanEv\Model\InvitationsLink;
 use ElanEv\Model\ModeratorInvitationsLink;
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
+use ElanEv\Model\QRCodeToken;
+use Meetings\RoomSlimController;
 
 class RoomController extends PluginController
 {
@@ -229,6 +231,93 @@ class RoomController extends PluginController
         header('Status: 301 Moved Permanently', false, 301);
         header('Location:' . $join_url);
         die;
+    }
+
+    public function qrcode_action($link_hex, $cid)
+    {
+        PageLayout::setTitle($this->_('Stud.IP Meeting'));
+
+        $this->qr_code_token = QRCodeToken::findOneBySQL('hex = ?', [$link_hex]);
+        if (!$this->qr_code_token || !$this->qr_code_token->meeting) {
+            throw new Exception($this->_('Der QR-Code ist ungültig, versuchen Sie es erneut mit einem neuen QR-Code!'));
+        }
+
+        $meeting = $this->qr_code_token->meeting;
+        $meetingCourse = new MeetingCourse([$meeting->id, $cid]);
+
+        // Checking Course Type
+        $servers = Driver::getConfigValueByDriver($meeting->driver, 'servers');
+        $allow_course_type = MeetingPlugin::checkCourseType($meeting->courses->find($cid), $servers[$meeting->server_index]['course_types']);
+        // Checking Server Active
+        $active_server = $servers[$meeting->server_index]['active'];
+        if (!$allow_course_type || !$active_server) {
+            throw new Exception($this->_('Das gesuchte Meeting ist nicht verfügbar!'));
+        }
+
+        $this->cid = $cid;
+
+        if (Request::isPost() && Request::submitted('accept')) {
+            $token = filter_var(trim(Request::get('token')), FILTER_SANITIZE_STRING);
+            if (empty($token) || $this->qr_code_token->token != $token) {
+                $this->last_token = $token;
+                PageLayout::postError($this->_('Zugangscode ist ungültig!'));
+            } else {
+                $can_join = RoomSlimController::performJoinWithQRCode($this->qr_code_token, $cid);
+                if ($can_join == false) {
+                    PageLayout::postError($this->_('Etwas ist schief gelaufen, versuche es noch einmal mit dem neuen QR-Code!'));
+                }
+            }
+        }
+
+        $widget = new SidebarWidget();
+        $widget->setTitle($this->_('Meeting-Name'));
+        $widget->addElement(
+            new WidgetElement(htmlReady($this->qr_code_token->meeting->name))
+        );
+        Sidebar::Get()->addWidget($widget);
+    }
+
+    public function qrcode_lobby_action($room_id, $cid, $qrcode_hex)
+    {
+        $this->qr_code_token = QRCodeToken::findOneBySQL('hex = ?', [$qrcode_hex]);
+        if (!$this->qr_code_token || $this->qr_code_token->meeting_id != $room_id) {
+            PageLayout::postError($this->_('Ungültige QR-Code-Daten!'));
+        }
+
+        $meeting = $this->qr_code_token->meeting;
+        if (!$meeting) {
+            throw new Exception($this->_('Das gesuchte Meeting existiert nicht mehr!'));
+        }
+
+
+        $features = json_decode($meeting->features, true);
+        $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
+        if (isset($features['room_anyone_can_start']) && $features['room_anyone_can_start'] === 'false') {
+            $meetingCourse = new MeetingCourse([$meeting->id, $cid]);
+            $status = $driver->isMeetingRunning($meetingCourse->meeting->getMeetingParameters()) === 'true' ? true : false;
+
+            if ($status) {
+                $can_join = RoomSlimController::performJoinWithQRCode($this->qr_code_token, $cid);
+                if ($can_join == false) {
+                    PageLayout::postError($this->_('Etwas ist schief gelaufen, versuche es noch einmal mit dem neuen QR-Code!'));
+                }
+            }
+        }
+    }
+
+    public function display_message_action() {
+        PageLayout::setTitle($this->_('Stud.IP Meeting'));
+        if ($err = Request::get('err')) {
+            if ($err == 'server-inactive') {
+                PageLayout::postError(_('Der ausgewählte Server ist deaktiviert.'));
+            }
+            if ($err == 'course-type') {
+                PageLayout::postError(_('Der ausgewählte Server ist in diesem Veranstaltungstyp nicht verfügbar.'));
+            }
+            if ($err == 'accessdenied') {
+                throw new AccessDeniedException();
+            }
+        }
     }
 
     /**

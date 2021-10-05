@@ -26,6 +26,7 @@
         "html-webpack-plugin": "^4.3.0",
         "jquery": "^3.5.0",
         "popper.js": "^1.15.0",
+        "qrcode.vue": "^1.7.0",
         "sass": "^1.32.12",
         "sass-loader": "^10",
         "vue": "^2.6.10",

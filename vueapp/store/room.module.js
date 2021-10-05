@@ -12,7 +12,8 @@ import {
     ROOM_JOIN_GUEST,
     ROOM_INVITATION_LINK,
     ROOM_JOIN_MODERATOR,
-    ROOM_MODERATOR_INVITATION_LINK
+    ROOM_MODERATOR_INVITATION_LINK,
+    ROOM_GENERATE_QR_CODE
 } from "./actions.type";
 
 import {
@@ -120,6 +121,10 @@ export const actions = {
             .then(({ data }) => {
                 context.commit(ROOMS_INFO_SET, data.rooms_info);
             });
+    },
+
+    async [ROOM_GENERATE_QR_CODE](context, room) {
+        return ApiService.get('rooms/qr_code/' + CID + '/' + room.id);
     },
 };
 /* eslint no-param-reassign: ["error", { "props": false }] */

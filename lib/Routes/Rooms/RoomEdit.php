@@ -11,6 +11,7 @@ use Meetings\MeetingsController;
 use Meetings\Errors\Error;
 use Exception;
 use Meetings\Models\I18N;
+use Meetings\RoomManager;
 
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
@@ -76,7 +77,7 @@ class RoomEdit extends MeetingsController
 
             // Handel course default room.
             $is_default = isset($json['is_default']) ? intval($json['is_default']) : 0;
-            $this->manageCourseDefaultRoom($room_id, $json['cid'], $is_default);
+            RoomManager::manageCourseDefaultRoom($room_id, $json['cid'], $is_default);
 
             $meeting = $meetingCourse->meeting;
             $meeting->name = $name;
@@ -90,7 +91,7 @@ class RoomEdit extends MeetingsController
             if (isset($json['features'])) {
                 // Apply validation on features inputs
                 try {
-                    $validated_features = $this->validateFeatureInputs($json['features'], $meeting->driver);
+                    $validated_features = RoomManager::validateFeatureInputs($json['features'], $meeting->driver);
                     if (!$validated_features) {
                         $message = [
                             'text' => I18N::_('Raumeinstellung kann nicht bearbeitet werden!'),
@@ -115,7 +116,7 @@ class RoomEdit extends MeetingsController
                 $has_recording_error = false;
                 $recording_error_text = '';
                 if (isset($json['features']['record']) && filter_var($json['features']['record'], FILTER_VALIDATE_BOOLEAN)) {  // Recording is asked...
-                    $recording_capability = $this->checkRecordingCapability($json['driver'], $json['cid']);
+                    $recording_capability = RoomManager::checkRecordingCapability($json['driver'], $json['cid']);
                     if ($recording_capability['allow_recording'] == false
                         || ($recording_capability['allow_recording'] == true && $recording_capability['type'] == 'opencast'
                             && empty($recording_capability['seriesid']))) {
