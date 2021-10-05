@@ -1,9 +1,10 @@
 <template>
-    <label @click.stop="labelIsClicked">
+    <label @click.stop="labelIsClicked" :class="{disabled: checkDisabled()}">
         <template v-if="(feature['value'] === true || feature['value'] === false)">
             <input type="checkbox"
                 true-value="true"
                 false-value="false"
+                :disabled="checkDisabled()"
                 v-model="room['features'][feature['name']]">
             {{ feature['display_name'] }}
             <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"
@@ -21,7 +22,7 @@
             {{ feature['display_name'] }}
             <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
 
-            <select :id="feature['name']" v-model.trim="room['features'][feature['name']]">
+            <select :id="feature['name']" v-model.trim="room['features'][feature['name']]" :disabled="checkDisabled()">
                 <option v-for="(fvalue, findex) in feature['value']" :key="findex"
                         :value="findex" v-translate>
                         {{ fvalue }}
@@ -49,7 +50,7 @@
             </StudipTooltipIcon>
 
             <div>
-                <input :class="{'inline-block' : feature['name'] == 'maxParticipants'}" :type="(feature['name'] == 'duration' || feature['name'] == 'maxParticipants') ? 'number' : 'text'"
+                <input :disabled="checkDisabled()" :class="{'inline-block' : feature['name'] == 'maxParticipants'}" :type="(feature['name'] == 'duration' || feature['name'] == 'maxParticipants') ? 'number' : 'text'"
                     :max="(
                         (feature['name'] == 'maxParticipants') ?
                         (maxAllowedParticipants != 0) ? maxAllowedParticipants : ''
@@ -120,6 +121,25 @@ export default {
         labelIsClicked() {
             if (this.feature['name'] == 'record') {
                 this.$emit('labelClicked', this.feature['name']);
+            }
+        },
+        checkDisabled() {
+            return this.getDisabledRules(this.feature['name']);
+        },
+        getDisabledRules(feature_name) {
+            switch (feature_name) {
+                case 'opencast_webcam_record':
+                    var disabled = false;
+                    if (this.feature['name'] == 'opencast_webcam_record') {
+                        if (this.room.features && Object.keys(this.room.features).includes('record')
+                            && JSON.parse(this.room.features.record) == false) {
+                            this.$set(this.room.features, 'opencast_webcam_record', 'false');
+                            disabled = true;
+                        }
+                    }
+                    return disabled;
+                default: 
+                    return false;
             }
         }
     },
