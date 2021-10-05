@@ -420,7 +420,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
      */
     public static function checkCourseType(Course $course, $server_course_type)
     {
-        if ($server_course_type == '') { // When empty, it supports all course types
+        if ($server_course_type == '' || is_array($server_course_type)) { // When it is empty or an array, it supports all course types.
             return true;
         }
 
@@ -463,7 +463,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
     */
     public static function getCourseTypeName($server_course_type)
     {
-        if (!$server_course_type ) {
+        if (!$server_course_type || is_array($server_course_type)) { // When it is empty or an array, it supports all course types.
             return _('Alle Veranstaltungstypen');
         }
 
