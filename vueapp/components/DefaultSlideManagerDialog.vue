@@ -98,6 +98,9 @@
                 </StudipButton>
             </template>
             <template v-slot:buttons>
+                <StudipButton icon="accept" type="button"  v-on:click="close" v-translate>
+                    Übernehmen
+                </StudipButton>
                 <StudipButton icon="cancel" type="button"
                     v-on:click="close"
                     class="ui-button ui-corner-all ui-widget"

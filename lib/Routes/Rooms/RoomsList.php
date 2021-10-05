@@ -166,7 +166,7 @@ class RoomsList extends MeetingsController
                 if ($e->getCode()) {
                     $errorCode = $e->getCode();
                 }
-                if (!in_array($e->getMessage(), $errors[$errorCode])) {
+                if (empty($errors) || !in_array($e->getMessage(), $errors[$errorCode])) {
                     $errors[$errorCode][] = $e->getMessage();
                 }
             }
