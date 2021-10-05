@@ -217,13 +217,13 @@ fieldset {
             cursor: pointer;
 
             &[disabled] {
-                cursor: default;
+                cursor: not-allowed;
             }
         }
 
         span {
             &.disabled {
-                color: #3c454e;
+                color: #555;
             }
 
             &.inline-feature-warning-icon {
@@ -235,6 +235,10 @@ fieldset {
 
         input.inline-block, span.inline-block {
             display: inline-block !important;
+        }
+
+        &.disabled {
+            color:#555 !important;
         }
     }
 }
