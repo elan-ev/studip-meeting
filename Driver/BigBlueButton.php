@@ -441,24 +441,17 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                     Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'welcome'),
                     self::getFeatureInfo('welcome'));
 
-        $res['duration'] = new ConfigOption('duration', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Minuten Konferenzdauer'),
-                    240,
-                    _('Die maximale Länge (in Minuten) für das Meeting. Nach Ablauf der eingestellen Dauer wird das Meeting automatisch beendet, d.h. der Raum wird geschlossen. Falls bereits vor Ablauf der Zeit alle Teilnehmenden das Meeting verlassen haben, oder ein Moderator das Meeting aktiv beendet wird der Raum ebenfalls geschlossen.'));
+        $res['duration'] = new ConfigOption('duration', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Minuten Konferenzdauer'), 240, self::getFeatureInfo('duration'));
 
         $res['maxParticipants'] = new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 0, self::getFeatureInfo('maxParticipants'));
 
-        $res['invite_moderator'] = new ConfigOption('invite_moderator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Moderatorenzugang via Link'), false,
-                 _('Legen Sie fest, ob externe Gäste mit Einladungslink als Moderator an der Besprechung teilnehmen dürfen.'));
+        $res['invite_moderator'] = new ConfigOption('invite_moderator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Moderatorenzugang via Link'), false, self::getFeatureInfo('invite_moderator'));
 
-        $res['guestPolicy-ALWAYS_ACCEPT'] = new ConfigOption('guestPolicy-ALWAYS_ACCEPT', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugang via Link'), false,
-                 _('Legen Sie fest, ob Benutzer mit Einladungslink als Gäste an der Besprechung teilnehmen dürfen.'));
+        $res['guestPolicy-ALWAYS_ACCEPT'] = new ConfigOption('guestPolicy-ALWAYS_ACCEPT', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugang via Link'), false, self::getFeatureInfo('guestPolicy-ALWAYS_ACCEPT'));
 
-        $res['guestPolicy-ASK_MODERATOR'] = new ConfigOption('guestPolicy-ASK_MODERATOR', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Moderatoren vor Teilnehmendenzutritt fragen'), false,
-                 _('Legen Sie fest, ob Gäste und Teilnehmer dem Meeting direkt beitreten können oder ihre Teilnahme von einem Moderator bestätigt werden muss.'));
+        $res['guestPolicy-ASK_MODERATOR'] = new ConfigOption('guestPolicy-ASK_MODERATOR', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Moderatoren vor Teilnehmendenzutritt fragen'), false, self::getFeatureInfo('guestPolicy-ASK_MODERATOR'));
 
-        $res['privateChat'] = new ConfigOption('lockSettingsDisablePrivateChat', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Private Chats deaktivieren'),
-                    false, null);
-
+        $res['privateChat'] = new ConfigOption('lockSettingsDisablePrivateChat', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Private Chats deaktivieren'), false, self::getFeatureInfo('lockSettingsDisablePrivateChat'));
 
         $res['lockSettingsDisableNote'] = new ConfigOption('lockSettingsDisableNote', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Gemeinsame Notizen deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableNote'));
 
@@ -570,24 +563,39 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 return _('Wenn leer, wird die Standardnachricht angezeigt. Sie können folgende Schlüsselwörter einfügen, die automatisch ersetzt werden:
                 %% CONFNAME %% (Sitzungsname), %% DIALNUM %% (Sitzungswahlnummer)');
             break;
+            case 'lockSettingsDisablePrivateChat':
+                return _('Der private Chat zwischen Teilnehmern wird eingeschränkt, Teilnehmer können jedoch weiterhin privat mit Moderatoren kommunizieren.');
+                break;
+            case 'duration':
+                return _('Die maximale Länge (in Minuten) für das Meeting. Nach Ablauf der eingestellen Dauer wird das Meeting automatisch beendet, d.h. der Raum wird geschlossen. Falls bereits vor Ablauf der Zeit alle Teilnehmenden das Meeting verlassen haben, oder ein Moderator das Meeting aktiv beendet wird der Raum ebenfalls geschlossen.');
+                break;
+            case 'invite_moderator':
+                return _('Legen Sie fest, ob externe Gäste mit Einladungslink als Moderator an der Besprechung teilnehmen dürfen.');
+                break;
+            case 'guestPolicy-ALWAYS_ACCEPT':
+                return _('Legen Sie fest, ob Benutzer mit Einladungslink als Gäste an der Besprechung teilnehmen dürfen.');
+                break;
+            case 'guestPolicy-ASK_MODERATOR':
+                return _('Legen Sie fest, ob Gäste und Teilnehmer dem Meeting direkt beitreten können oder ihre Teilnahme von einem Moderator bestätigt werden muss.');
+                break;
             case 'maxParticipants':
-                // return _('Die maximale Anzahl von Benutzern, die gleichzeitig an der Konferenz teilnehmen dürfen.');
-                // break;
+                return '';
+                break;
             case 'lockSettingsDisableNote':
-            //     return _('Notizen in dieser Besprechung deaktivieren.');
-            // break;
+                return '';
+                break;
             case 'lockSettingsDisableMic':
-            //     return _('Benutzer können in dieser Besprechung nur zuhören.');
-            // break;
+                return '';
+                break;
             case 'lockSettingsDisableCam':
-            //     return _('Benutzer können ihre Kamera in dieser Besprechung nicht freigeben.');
-            // break;
+                return '';
+                break;
             case 'muteOnStart':
-                // return _('Alle Benutzer starten die Besprechung stummgeschaltet, können ihre Stummschaltung aber jederzeit aufheben.');
-                // break;
+                return '';
+                break;
             case 'room_anyone_can_start':
-                // return _('Jeder Teilnehmer kann die Konferenz starten.');
-                // break;
+                return '';
+                break;
             default:
                 return '';
                 break;
