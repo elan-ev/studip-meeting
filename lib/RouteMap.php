@@ -61,8 +61,8 @@ class RouteMap
         $this->app->get('/rooms/invitationLink/{cid}/{room_id}',  Routes\Rooms\RoomInvitationLink::class);
 
         //generate moderator invitaion link
-        $this->app->get('/rooms/join/{cid}/{room_id}/{moderator_name}/{moderator_password}/moderator', Routes\Rooms\RoomJoinModerator::class);
-        $this->app->get('/rooms/inviteModerator/{cid}/{room_id}',  Routes\Rooms\RoomModeratorInvitationLink::class);
+        $this->app->get('/rooms/join/{cid}/{room_id}/{moderator_password}/moderator', Routes\Rooms\RoomModeratorInvitationLinkCreate::class);
+        $this->app->get('/rooms/inviteModerator/{cid}/{room_id}',  Routes\Rooms\RoomModeratorInvitationLinkGet::class);
 
         //generate QR Code
         $this->app->get('/rooms/qr_code/{cid}/{room_id}',  Routes\Rooms\RoomGenerateQRCode::class);

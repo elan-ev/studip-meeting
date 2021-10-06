@@ -8,17 +8,16 @@
                 <form class="default" @submit.prevent="generateModeratorGuestJoin">
                     <fieldset>
                         <label>
-                            <span class="required" v-translate>Standard-Moderatorsname</span>
-                            <input type="text" v-model.trim="moderator_name" id="moderatorname" @change.once="generateModeratorGuestJoin($event)">
-                        </label>
-                        <label>
                             <span class="required" v-translate>Zugangscode</span>
                             <span
                                 v-translate="{
                                     length: password_length
                                 }"
                             >(%{ length } Zeichen)</span>
-                            <input type="text" :maxlength="password_length" :minlength="password_length" v-model.trim="moderator_password" id="moderatorpassword" @change.once="generateModeratorGuestJoin($event)">
+                            <input type="text" :maxlength="password_length" :minlength="password_length"
+                                v-model.trim="moderator_password" id="moderatorpassword"
+                                @keyup="passwordInputHandler($event)"
+                                @change.once="generateModeratorGuestJoin($event)">
                             <StudipButton id="generate_code_btn" type="button" v-on:click="generateRandomCode($event)">
                                 <translate>Zugangscode generieren</translate>
                             </StudipButton>
@@ -45,6 +44,13 @@
                 </StudipButton>
             </template>
         </MeetingDialog>
+
+        <!-- dialogs -->
+        <MeetingMessageDialog v-if="showConfirmDialog"
+            :message="showConfirmDialog"
+            @accept="handleConfirmCallbacks"
+            @abort="handleConfirmCallbacks"
+        />
     </div>
 </template>
 
@@ -54,6 +60,7 @@ import StudipButton from "@/components/StudipButton";
 import StudipIcon from "@/components/StudipIcon";
 import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import MessageBox from "@/components/MessageBox";
+import MeetingMessageDialog from "@/components/MeetingMessageDialog";
 import { dialog } from '@/common/dialog.mixins'
 
 import {
@@ -76,7 +83,8 @@ export default {
         StudipButton,
         StudipIcon,
         StudipTooltipIcon,
-        MessageBox
+        MessageBox,
+        MeetingMessageDialog
     },
 
     data() {
@@ -84,26 +92,31 @@ export default {
             modal_message: {},
             message: '',
             moderator_access_link: '',
-            moderator_name: '',
             moderator_password: '',
-            password_length: 5
+            password_length: 5,
+            password_changed: false,
+            new_password: true,
+            showConfirmDialog: false
         }
     },
 
     mounted() {
         this.$store.commit(ROOM_CLEAR);
-        this.$store.dispatch(ROOM_MODERATOR_INVITATION_LINK, this.room)
-          .then(({ data }) => {
-            if (data.default_name != '') {
-              this.moderator_name = data.default_name;
-            }
-            if (data.password != '') {
-              this.moderator_password = data.password;
-            }
-        }).catch (({error}) => {});
+        this.getModeratorGuestLink();
     },
 
     methods: {
+        getModeratorGuestLink() {
+            this.$store.dispatch(ROOM_MODERATOR_INVITATION_LINK, this.room)
+            .then(({ data }) => {
+                if (data.password && (data.password != '' || data.password != null)) {
+                    this.moderator_password = data.password;
+                    this.new_password = false;
+                    this.password_changed = false;
+                }
+            }).catch (({error}) => {});
+        },
+
         generateModeratorGuestJoin(event) {
             if (event) {
                 event.preventDefault();
@@ -111,21 +124,24 @@ export default {
 
             this.modal_message = {};
 
-            if (this.room && this.moderator_name && this.moderator_password && this.moderator_password.length == this.password_length) {
-                this.room.moderator_name = this.moderator_name;
+            if (this.room && this.moderator_password && this.moderator_password.length == this.password_length) {
                 this.room.moderator_password = this.moderator_password;
 
-                this.$store.dispatch(ROOM_JOIN_MODERATOR, this.room)
-                .then(({ data }) => {
-                    if (data.join_url != '') {
-                        this.moderator_access_link = data.join_url;
-                    }
-                    if (data.message) {
-                        this.modal_message = data.message;
-                    }
-                }).catch (({error}) => {
-                    this.$emit('cancel');
-                });
+                if (this.new_password || !this.password_changed) {
+                    this.performGenerateModeratorGuestJoinLink();
+                    return;
+                }
+
+                this.showConfirmDialog = false;
+                this.showConfirmDialog = {
+                    title: 'Information',
+                    text: 'Durch das Generieren eines neuen Zugangscodes wären die vorherigen Links nicht mehr zugänglich. Möchten Sie wirklich einen neuen Zugangscode generieren?'.toLocaleString(),
+                    type: 'question', //info, warning, question
+                    isConfirm: true,
+                    callback: 'performGenerateModeratorGuestJoinLink',
+                    cancel_callback: 'getModeratorGuestLink',
+                }
+                
             } else {
                 var err_message = `Bitte füllen Sie alle geforderten Felder aus`.toLocaleString();
                 if (this.moderator_password && this.moderator_password.length != 5) {
@@ -136,13 +152,42 @@ export default {
             }
         },
 
+        performGenerateModeratorGuestJoinLink() {
+            this.$store.dispatch(ROOM_JOIN_MODERATOR, this.room)
+            .then(({ data }) => {
+                if (data.join_url != '') {
+                    this.moderator_access_link = data.join_url;
+                    this.password_changed = false;
+                    this.new_password = false;
+                }
+                if (data.message) {
+                    this.modal_message = data.message;
+                }
+            }).catch (({error}) => {
+                this.$emit('cancel');
+            });
+        },
+
         generateRandomCode(event) {
             if (event) {
                 event.preventDefault();
             }
-
             var random_code = Math.floor(10000 + Math.random() * 90000);
             this.moderator_password = random_code.toString();
+            this.password_changed = true;
+        },
+
+        passwordInputHandler: _.debounce(function (e) {
+            if (this.moderator_password.length == this.password_length) {
+                this.password_changed = true;
+            }
+        }, 500),
+
+        handleConfirmCallbacks(callback) {
+            this.showConfirmDialog = false;
+            if (callback && this[callback] != undefined) {
+                this[callback]();
+            }
         },
 
         cancelModeratorGuest(event) {
@@ -211,9 +256,6 @@ export default {
                 $('#copy_link_btn').hide();
                 $('#generate_link_btn').show();
             }
-        },
-        moderator_name() {
-            this.moderator_access_link = '';
         },
         moderator_password() {
             this.moderator_access_link = '';
