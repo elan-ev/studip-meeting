@@ -22,14 +22,13 @@ use ElanEv\Driver\DriverFactory;
 use ElanEv\Model\Driver;
 use MeetingPlugin;
 
-class RoomJoinModerator extends MeetingsController
+class RoomModeratorInvitationLinkCreate extends MeetingsController
 {
     use MeetingsTrait;
     /**
-     * Returns the parameters of a selected room
+     * Creates the join link for moderators
      *
      * @param string $room_id room id
-     * @param string $moderator_name default name for moderator
      * @param string $moderator_password moderator passwords to enter the room
      * @param string $cid course id
      *
@@ -41,7 +40,6 @@ class RoomJoinModerator extends MeetingsController
     public function __invoke(Request $request, Response $response, $args)
     {
         $room_id = $args['room_id'];
-        $moderator_name = $args['moderator_name'];
         $password = $args['moderator_password'];
         $cid = $args['cid'];
 
@@ -66,7 +64,7 @@ class RoomJoinModerator extends MeetingsController
             throw new Error(I18N::_('Moderator-Gäste können nicht eingeladen werden!'), 404);
         }
 
-        $default_data = ['meeting_id' => $room_id, 'default_name' => $moderator_name, 'password' => $password];
+        $default_data = ['meeting_id' => $room_id, 'password' => $password];
         $moderator_invitations_link = ModeratorInvitationsLink::findOneBySQL('meeting_id = ?', [$room_id]);
         if(!$moderator_invitations_link) {
             $moderator_invitations_link = ModeratorInvitationsLink::create($default_data + ['hex' => md5(uniqid())]);

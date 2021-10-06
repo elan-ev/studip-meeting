@@ -12,11 +12,11 @@ use ElanEv\Model\ModeratorInvitationsLink;
 use Meetings\RoomManager;
 
 
-class RoomModeratorInvitationLink extends MeetingsController
+class RoomModeratorInvitationLinkGet extends MeetingsController
 {
     use MeetingsTrait;
     /**
-     * Returns the parameters of a selected room
+     * Returns moderator invitation link
      *
      * @param string $room_id room id
      * @param string $cid course id
@@ -37,6 +37,6 @@ class RoomModeratorInvitationLink extends MeetingsController
 
         $moderators_invitation_link = ModeratorInvitationsLink::findOneBySQL('meeting_id = ?', [$room_id]);
 
-        return $this->createResponse(['hex' => $moderators_invitation_link->hex, 'default_name' => $moderators_invitation_link->default_name, 'password' => $moderators_invitation_link->password], $response);
+        return $this->createResponse(['hex' => $moderators_invitation_link->hex, 'password' => $moderators_invitation_link->password], $response);
     }
 }

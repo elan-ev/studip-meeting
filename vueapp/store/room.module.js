@@ -105,7 +105,7 @@ export const actions = {
     },
 
     async [ROOM_JOIN_MODERATOR](context, room) {
-        return ApiService.get('rooms/join/' + CID + '/' + room.id + '/' + room.moderator_name + '/' + room.moderator_password + '/moderator');
+        return ApiService.get('rooms/join/' + CID + '/' + room.id + '/' + room.moderator_password + '/moderator');
     },
 
     async [ROOM_MODERATOR_INVITATION_LINK](context, room) {

@@ -133,13 +133,12 @@ class RoomController extends PluginController
         if (Request::isPost() && Request::submitted('accept')) {
             $password = filter_var(trim(Request::get('password')), FILTER_SANITIZE_STRING);
             $moderator_name = filter_var(trim(Request::get('name')), FILTER_SANITIZE_STRING);
-            if (!$moderator_name) {
-                $moderator_name = $this->moderator_invitations_link->default_name;
-            }
 
             if (empty($password) || $this->moderator_invitations_link->password != $password) {
                 $this->last_password = $password;
                 PageLayout::postError($this->_('Zugangscode ist ungültig!'));
+            } else if (!$moderator_name) {
+                PageLayout::postError($this->_('Es kann kein gültiger Name festgelegt werden.'));
             } else {
                 $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
                 $joinParameters = new JoinParameters();
