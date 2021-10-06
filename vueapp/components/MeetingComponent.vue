@@ -171,24 +171,20 @@
                 </div>
             </label>
             <div class="meeting-item-btns">
-                <StudipButton v-if="course_config.display.editRoom && room.features && room.features['invite_moderator'] && room.features['invite_moderator'] == 'true'"
-                    type="button" v-on:click="getModeratorGuestInfo()"
-                    icon="add" v-translate
-                >
-                    Moderator einladen
-                </StudipButton>
-                <StudipButton v-if="course_config.display.editRoom && room.features && room.features['guestPolicy-ALWAYS_ACCEPT'] && room.features['guestPolicy-ALWAYS_ACCEPT'] == 'true'"
-                    type="button" v-on:click="getGuestInfo()"
-                    icon="add" v-translate
-                >
-                    Einladungslink erstellen
-                </StudipButton>
-                <!-- <a v-if="room.enabled" class="button join"
-                    :href="join_url" target="_blank"
-                    v-translate
-                >
-                    Teilnehmen
-                </a> -->
+                <template v-if="course_config.display.editRoom && room.features">
+                    <StudipButton v-if="room.features['invite_moderator'] && room.features['invite_moderator'] == 'true'"
+                        type="button" v-on:click="getModeratorGuestInfo()"
+                        icon="add"
+                    >
+                        <span v-text="$gettext('Moderator einladen')"></span>
+                    </StudipButton>
+                    <StudipButton v-if="room.features['guestPolicy-ALWAYS_ACCEPT'] && room.features['guestPolicy-ALWAYS_ACCEPT'] == 'true'"
+                        type="button" v-on:click="getGuestInfo()"
+                        icon="add"
+                    >
+                        <span v-text="$gettext('Einladungslink erstellen')"></span>
+                    </StudipButton>
+                </template>
                 <a v-if="room.enabled" class="button join"
                     @click="checkPreJoin"
                     v-translate
