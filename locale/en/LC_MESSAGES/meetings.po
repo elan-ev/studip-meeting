@@ -689,8 +689,8 @@ msgid "Willkommensnachricht"
 msgstr "Welcome message"
 
 #: vueapp/views/Course.vue:119
-msgid "Wir empfehlen Ihnen, einen Standardraum auszuwählen."
-msgstr "We recommend to set a default room."
+msgid "Wir empfehlen Ihnen, einen Raum als Standardraum zu definieren (in den Einstellung eines Raums)."
+msgstr "We recommend to set a default room for this course in the room-settings."
 
 #: vueapp/components/MeetingModeratorGuest.vue:14
 #: vueapp/components/MeetingModeratorGuest.vue:11
