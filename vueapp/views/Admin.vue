@@ -331,17 +331,13 @@ export default {
         },
 
         handleRecordings(driver_name, recording_option) {
-            // It is used to allow only one recording option at a time
+            // We want to allow only "opencast" or "record" as recording option to be enabled at the same time!
             setTimeout(() => {
                 if (this.config[driver_name][recording_option] && this.config[driver_name][recording_option] == '1') {
-                    if (this.drivers[driver_name] && this.drivers[driver_name]['recording']
-                    && Array.isArray(this.drivers[driver_name]['recording'])) {
-                        var driver_recording_option_names = this.drivers[driver_name]['recording'].map(r => {return r.name});
-                        for (var recording_option_name of driver_recording_option_names) {
-                            if (recording_option_name != recording_option && this.config[driver_name][recording_option_name]) {
-                                this.$set(this.config[driver_name], recording_option_name, '0');
-                            }
-                        }
+                    if (recording_option == 'opencast' && this.config[driver_name]['record']) { // If opencast going to be enabled, record must be disabled.
+                        this.$set(this.config[driver_name], 'record', '0');
+                    } else if (recording_option == 'record' && this.config[driver_name]['opencast']) {// If record going to be enabled, opencast must be disabled.
+                        this.$set(this.config[driver_name], 'opencast', '0');
                     }
                 }
             }, 100);
