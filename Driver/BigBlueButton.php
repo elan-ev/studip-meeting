@@ -499,7 +499,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         // Show the "autoStartRecording" feature when the "allowStartStopRecording" is enabled by the admin.
         if ($allowStartStopRecording_config) {
             $res['autoStartRecording'] = new ConfigOption('autoStartRecording', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnung automatisch starten'),
-                true, _('Wenn deaktiviert, muss die Sitzungsaufzeichnung von den Moderator:innen bearbeitet werden.'));
+                true, _('Wenn deaktiviert, muss die Sitzungsaufzeichnung von den Moderator:innen manuell gestartet werden.'));
         }
 
         $res['giveAccessToRecordings'] = new ConfigOption('giveAccessToRecordings', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnungen für Teilnehmende sichtbar schalten'),
@@ -746,8 +746,8 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     {
         $res = [];
 
-        $res['allowStartStopRecording'] = new ConfigOption('allowStartStopRecording', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Veränderbaren Aufzeichnung Status zulassen'),
-                false, _('Auf diese Weise können Moderator:innen die Aufzeichnung während einer Sitzung über die Schaltfläche „Aufzeichnen“ in der BBB-Benutzeroberfläche starten, stoppen, anhalten und fortsetzen.'));
+        $res['allowStartStopRecording'] = new ConfigOption('allowStartStopRecording', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnungen konfigurierbar machen'),
+                false, _("Wenn aktiv, so wird den Mentor:innen die Option 'Aufzeichnung automatisch starten' angezeigt und sie haben die Möglichkeit die Aufzeichnung manuell zu starten, pausieren oder stoppen."));
 
         return $res;
     }
