@@ -44,6 +44,17 @@ class Driver
                 if ($oc_config = $class::useOpenCastForRecording()) {
                     $recording_options['opencast'] = $oc_config;
                 }
+
+                $driver_recording_configs = $class::getDriverRecordingAdminConfig();
+                if (!empty($driver_recording_configs)) {
+                    foreach ($driver_recording_configs as $config_name => $config_obj) {
+                        // Prevent conflict.
+                        if (!$config_name || $config_name == 'record' || $config_name == 'opencast') {
+                            continue;
+                        }
+                        $recording_options[$config_name] = $config_obj;
+                    }
+                }
             }
 
             if (in_array('ElanEv\Driver\FolderManagementInterface', class_implements($class)) !== false) {

@@ -50,4 +50,13 @@ interface RecordingInterface
      * @return boolean
      */
     public static function checkRecordingCapability($features);
+
+    /**
+     * Gets Driver's admin configs for recording
+     * 
+     * Config names like: "record" & "opencast" are reserved.
+     * 
+     * @return array driver's related configs list to be shown in admin page
+     */
+    public static function getDriverRecordingAdminConfig();
 }

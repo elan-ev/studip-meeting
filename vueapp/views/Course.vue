@@ -181,18 +181,31 @@ export default {
         showEditRoom(room) {
             // check, if there are any features for this driver at all!
             if (this.config[room.driver]['features'] !== undefined) {
-                if (Object.keys(this.config[room.driver]['features']).includes('record')
-                    && !Object.keys(room.features).includes('giveAccessToRecordings')
-                ) {
-                    var default_feature_obj = this.config[room.driver]['features']['record']
-                        .find(m => m.name == 'giveAccessToRecordings');
+                // Apply defaults for record features.
+                if (Object.keys(this.config[room.driver]).includes('features') &&
+                    Object.keys(this.config[room.driver]['features']).includes('record') && 
+                    Object.keys(this.config[room.driver]['features']['record']).includes('record_setting')) {
+                    let config_record_setting_features = this.config[room.driver]['features']['record']['record_setting'];
+                    var default_feature_obj = {};
+                    if (!Object.keys(room.features).includes('giveAccessToRecordings')) {
+                        default_feature_obj = config_record_setting_features.find(m => m.name == 'giveAccessToRecordings');
 
-                    this.$set(room.features, 'giveAccessToRecordings', ((default_feature_obj)
-                        ? default_feature_obj.value
-                        : true)
-                    );
+                        this.$set(room.features, 'giveAccessToRecordings', ((default_feature_obj)
+                            ? default_feature_obj.value
+                            : true)
+                        );
+                    }
+                    if (!Object.keys(room.features).includes('autoStartRecording')) {
+                        default_feature_obj = config_record_setting_features.find(m => m.name == 'autoStartRecording');
+
+                        this.$set(room.features, 'autoStartRecording', ((default_feature_obj)
+                            ? default_feature_obj.value
+                            : true)
+                        );
+                    }
                 }
 
+                // Apply default for group feature.
                 if (Object.keys(room).includes('group_id') && room.group_id == null) {
                     room.group_id = '';
                 }

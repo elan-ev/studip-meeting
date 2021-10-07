@@ -127,6 +127,9 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 }
             }
 
+            // Handel Auto Start/Stop Recordings.
+            $features = self::handelAutoStartStopRecording($features);
+
             if (!isset($features['welcome'])) {
                 $features['welcome'] = Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'welcome');
             }
@@ -476,6 +479,8 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         $res = [];
         $record_config = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'record'), FILTER_VALIDATE_BOOLEAN);
         $opencast_config = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'opencast'), FILTER_VALIDATE_BOOLEAN);
+        $allowStartStopRecording_config = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'allowStartStopRecording'), FILTER_VALIDATE_BOOLEAN);
+
         $info = '';
         if ($opencast_config) {
             $info = _('Opencast wird als Aufzeichnungsserver verwendet. Diese Funktion ist im Testbetrieb und es kann noch zu Fehlern kommen.');
@@ -489,6 +494,12 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         if ($info) {
             $res['record'] = new ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Sitzungen können aufgezeichnet werden.'),
             false, $info);
+        }
+
+        // Show the "autoStartRecording" feature when the "allowStartStopRecording" is enabled by the admin.
+        if ($allowStartStopRecording_config) {
+            $res['autoStartRecording'] = new ConfigOption('autoStartRecording', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnung automatisch starten'),
+                true, _('Wenn deaktiviert, muss die Sitzungsaufzeichnung von den Moderator:innen manuell gestartet werden.'));
         }
 
         $res['giveAccessToRecordings'] = new ConfigOption('giveAccessToRecordings', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnungen für Teilnehmende sichtbar schalten'),
@@ -532,6 +543,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                     'duration',
                     'record',
                     'opencast_webcam_record',
+                    'autoStartRecording',
                     'giveAccessToRecordings'
                 ]
             ]
@@ -725,5 +737,41 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         }
 
         return $res;
+    }
+
+    /**
+     * {@inheritDoc}
+    */
+    public static function getDriverRecordingAdminConfig()
+    {
+        $res = [];
+
+        $res['allowStartStopRecording'] = new ConfigOption('allowStartStopRecording', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnungen konfigurierbar machen'),
+                false, _("Wenn aktiv, so wird den Mentor:innen die Option 'Aufzeichnung automatisch starten' angezeigt und sie haben die Möglichkeit die Aufzeichnung manuell zu starten, pausieren oder stoppen."));
+
+        return $res;
+    }
+
+    /**
+     *  Applies required rules and manages Auto Start/Stop Recording.
+     *
+     * @param array $features applied features
+     * 
+     * @return array $features managed features
+     */
+    private static function handelAutoStartStopRecording($features)
+    {
+        $allowStartStopRecording = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'allowStartStopRecording'), FILTER_VALIDATE_BOOLEAN);
+        $autoStartRecording = isset($features['autoStartRecording']) ? filter_var($features['autoStartRecording'], FILTER_VALIDATE_BOOLEAN) : true;
+        
+        // In case admin does not allow start/stop recording to be selectable, then we should always pass the auto as "true".
+        if (!$allowStartStopRecording) {
+            $autoStartRecording = true;
+        }
+
+        $features['allowStartStopRecording'] = $allowStartStopRecording;
+        $features['autoStartRecording'] = $autoStartRecording;
+
+        return $features;
     }
 }
