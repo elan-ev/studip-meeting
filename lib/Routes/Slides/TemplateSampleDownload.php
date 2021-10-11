@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use Meetings\Errors\Error;
-use Meetings\DefaultSlideHandler;
+use Meetings\Helpers\DefaultSlideHelper;
 
 
 class TemplateSampleDownload extends MeetingsController
@@ -22,7 +22,7 @@ class TemplateSampleDownload extends MeetingsController
     {
         try {
             $what = filter_var($args['what'], FILTER_SANITIZE_STRING);
-            if ($sample_file_content = DefaultSlideHandler::downloadSampleTemplate($what)) {
+            if ($sample_file_content = DefaultSlideHelper::downloadSampleTemplate($what)) {
                 return $this->createResponse([
                     'content' => $sample_file_content,
                 ], $response);

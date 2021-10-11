@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use Meetings\Errors\Error;
-use Meetings\DefaultSlideHandler;
+use Meetings\Helpers\DefaultSlideHelper;
 
 
 class TemplateUpload extends MeetingsController
@@ -27,7 +27,7 @@ class TemplateUpload extends MeetingsController
                 'type' => 'error',
                 'text' => _('Folie/Template kann nicht hochgeladen werden')
             ];
-            if ($uploadedFiles && $page && (isset($uploadedFiles['php']) || isset($uploadedFiles['pdf'])) && DefaultSlideHandler::uploadTemplate($uploadedFiles, $page)) {
+            if ($uploadedFiles && $page && (isset($uploadedFiles['php']) || isset($uploadedFiles['pdf'])) && DefaultSlideHelper::uploadTemplate($uploadedFiles, $page)) {
                 $message = [
                     'type' => 'success',
                     'text' => _('Folie/Template wurde erfolgreich hochgeladen')

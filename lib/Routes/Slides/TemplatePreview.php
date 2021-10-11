@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use Meetings\Errors\Error;
-use Meetings\DefaultSlideHandler;
+use Meetings\Helpers\DefaultSlideHelper;
 
 use Exception;
 
@@ -26,7 +26,7 @@ class TemplatePreview extends MeetingsController
     {
         $page = filter_var($args['page'], FILTER_SANITIZE_NUMBER_INT);
         try {
-            $pdf = DefaultSlideHandler::generatePDFPreview($page);
+            $pdf = DefaultSlideHelper::generatePDFPreview($page);
             if (!$pdf) {
                 return;
             }

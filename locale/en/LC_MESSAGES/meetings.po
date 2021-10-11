@@ -1285,7 +1285,7 @@ msgstr "The select folder type is invalid!"
 msgid "Fehler beim Laden des Hauptordners!"
 msgstr "Error loading main folder!"
 
-#: lib/WidgetHandler.php:117
+#: lib/WidgetHelper.php:117
 msgid "Heute"
 msgstr "Today"
 

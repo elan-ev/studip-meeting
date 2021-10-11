@@ -10,7 +10,7 @@ use Meetings\MeetingsController;
 use Meetings\Errors\Error;
 use Exception;
 use Meetings\Models\I18N;
-use Meetings\RoomSlimController;
+use Meetings\Helpers\MeetingsHelper;
 
 class RoomGenerateQRCode extends MeetingsController
 {
@@ -22,7 +22,7 @@ class RoomGenerateQRCode extends MeetingsController
         $cid = filter_var($args['cid'], FILTER_SANITIZE_STRING);
 
         try {
-            $qr_code_object = RoomSlimController::generateQRCode($room_id, $cid);
+            $qr_code_object = MeetingsHelper::generateQRCode($room_id, $cid);
             if ($qr_code_object) {
                 return $this->createResponse(['qr_code' => $qr_code_object], $response);
             }

@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use Meetings\Errors\Error;
-use Meetings\DefaultSlideHandler;
+use Meetings\Helpers\DefaultSlideHelper;
 
 
 class FontDelete extends MeetingsController
@@ -26,7 +26,7 @@ class FontDelete extends MeetingsController
                 'type' => 'error',
                 'text' => _('Schriftart kann nicht gelöscht werden')
             ];
-            if ($font_type && DefaultSlideHandler::deleteFont($font_type)) {
+            if ($font_type && DefaultSlideHelper::deleteFont($font_type)) {
                 $message = [
                     'type' => 'success',
                     'text' => _('Schriftart wurde erfolgreich gelöscht')

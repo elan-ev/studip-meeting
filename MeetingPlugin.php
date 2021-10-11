@@ -23,7 +23,7 @@ use ElanEv\Model\Meeting;
 
 use Meetings\AppFactory;
 use Meetings\RouteMap;
-use Meetings\WidgetHandler;
+use Meetings\Helpers\WidgetHelper;
 
 require_once 'compat/StudipVersion.php';
 
@@ -502,7 +502,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
         $template_factory = new Flexi_TemplateFactory(__DIR__ . "/templates");
         $template = $template_factory->open("index.php");
         
-        $template->set_attribute('items', WidgetHandler::getMeetingsForWidget());
+        $template->set_attribute('items', WidgetHelper::getMeetingsForWidget());
 
         $texts = [
             'empty' => $this->_('Derzeit finden keine Meetings in den gebuchten Kursen statt.'),

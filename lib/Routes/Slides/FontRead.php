@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use Meetings\Errors\Error;
-use Meetings\DefaultSlideHandler;
+use Meetings\Helpers\DefaultSlideHelper;
 
 
 class FontRead extends MeetingsController
@@ -21,7 +21,7 @@ class FontRead extends MeetingsController
     public function __invoke(Request $request, Response $response, $args)
     {
         try {
-            $installed_font = DefaultSlideHandler::getInstalledFont();
+            $installed_font = DefaultSlideHelper::getInstalledFont();
             return $this->createResponse([
                 'font' => $installed_font,
             ], $response);

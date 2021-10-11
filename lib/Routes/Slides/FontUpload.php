@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use Meetings\Errors\Error;
-use Meetings\DefaultSlideHandler;
+use Meetings\Helpers\DefaultSlideHelper;
 
 
 class FontUpload extends MeetingsController
@@ -27,7 +27,7 @@ class FontUpload extends MeetingsController
                 'type' => 'error',
                 'text' => _('Schriftart kann nicht hochgeladen werden')
             ];
-            if ($uploadedFiles && isset($uploadedFiles['font']) && DefaultSlideHandler::uploadFont($uploadedFiles['font'], $type)) {
+            if ($uploadedFiles && isset($uploadedFiles['font']) && DefaultSlideHelper::uploadFont($uploadedFiles['font'], $type)) {
                 $message = [
                     'type' => 'success',
                     'text' => _('Schriftart wurde erfolgreich hochgeladen')

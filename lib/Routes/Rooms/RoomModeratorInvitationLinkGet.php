@@ -9,7 +9,7 @@ use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use Meetings\Errors\Error;
 use ElanEv\Model\ModeratorInvitationsLink;
-use Meetings\RoomManager;
+use Meetings\Helpers\RoomManager;
 
 
 class RoomModeratorInvitationLinkGet extends MeetingsController

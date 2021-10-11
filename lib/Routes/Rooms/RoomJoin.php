@@ -11,7 +11,7 @@ use Meetings\Errors\Error;
 use Exception;
 use Throwable;
 use Meetings\Models\I18N;
-use Meetings\RoomSlimController;
+use Meetings\Helpers\MeetingsHelper;
 
 class RoomJoin extends MeetingsController
 {
@@ -30,7 +30,7 @@ class RoomJoin extends MeetingsController
         $room_id = filter_var($args['room_id'], FILTER_SANITIZE_NUMBER_INT);
         $cid = filter_var($args['cid'], FILTER_SANITIZE_STRING);
         try {
-            RoomSlimController::performJoin($room_id, $cid);
+            MeetingsHelper::performJoin($room_id, $cid);
         } catch (Exception $e) {
             throw new Error($e->getMessage(), ($e->getCode() ? $e->getCode() : 404));
         }

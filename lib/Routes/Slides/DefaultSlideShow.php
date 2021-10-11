@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use Meetings\Errors\Error;
-use Meetings\DefaultSlideHandler;
+use Meetings\Helpers\DefaultSlideHelper;
 
 use Exception;
 use ElanEv\Model\Meeting;
@@ -54,10 +54,10 @@ class DefaultSlideShow extends MeetingsController
             }
 
             // If there is any template uploaded by admin, we use them only!
-            if (DefaultSlideHandler::checkCustomizedTemplates()) {
-                $pdf = DefaultSlideHandler::generateCustomizedPDF($meeting);
+            if (DefaultSlideHelper::checkCustomizedTemplates()) {
+                $pdf = DefaultSlideHelper::generateCustomizedPDF($meeting);
             } else { // Otherwise, we go for the studip default pdf generator system.
-                $pdf = DefaultSlideHandler::generateStudIPDefaultPDF($meeting);
+                $pdf = DefaultSlideHelper::generateStudIPDefaultPDF($meeting);
             }
 
             if (!$pdf) {

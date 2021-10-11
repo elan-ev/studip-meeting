@@ -8,7 +8,7 @@ use ElanEv\Model\ModeratorInvitationsLink;
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
 use ElanEv\Model\QRCodeToken;
-use Meetings\RoomSlimController;
+use Meetings\Helpers\MeetingsHelper;
 
 class RoomController extends PluginController
 {
@@ -261,7 +261,7 @@ class RoomController extends PluginController
                 $this->last_token = $token;
                 PageLayout::postError($this->_('Zugangscode ist ungültig!'));
             } else {
-                $can_join = RoomSlimController::performJoinWithQRCode($this->qr_code_token, $cid);
+                $can_join = MeetingsHelper::performJoinWithQRCode($this->qr_code_token, $cid);
                 if ($can_join == false) {
                     PageLayout::postError($this->_('Etwas ist schief gelaufen, versuche es noch einmal mit dem neuen QR-Code!'));
                 }
@@ -296,7 +296,7 @@ class RoomController extends PluginController
             $status = $driver->isMeetingRunning($meetingCourse->meeting->getMeetingParameters()) === 'true' ? true : false;
 
             if ($status) {
-                $can_join = RoomSlimController::performJoinWithQRCode($this->qr_code_token, $cid);
+                $can_join = MeetingsHelper::performJoinWithQRCode($this->qr_code_token, $cid);
                 if ($can_join == false) {
                     PageLayout::postError($this->_('Etwas ist schief gelaufen, versuche es noch einmal mit dem neuen QR-Code!'));
                 }

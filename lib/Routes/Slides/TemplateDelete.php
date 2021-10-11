@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use Meetings\Errors\Error;
-use Meetings\DefaultSlideHandler;
+use Meetings\Helpers\DefaultSlideHelper;
 
 
 class TemplateDelete extends MeetingsController
@@ -27,7 +27,7 @@ class TemplateDelete extends MeetingsController
                 'type' => 'error',
                 'text' => _('Folie/Template kann nicht gelöscht werden')
             ];
-            if (DefaultSlideHandler::deleteTemplate($page, $what)) {
+            if (DefaultSlideHelper::deleteTemplate($page, $what)) {
                 $message = [
                     'type' => 'success',
                     'text' => _('Folie/Template wurde erfolgreich gelöscht')

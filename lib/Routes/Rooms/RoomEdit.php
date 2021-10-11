@@ -11,7 +11,7 @@ use Meetings\MeetingsController;
 use Meetings\Errors\Error;
 use Exception;
 use Meetings\Models\I18N;
-use Meetings\RoomManager;
+use Meetings\Helpers\RoomManager;
 
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;

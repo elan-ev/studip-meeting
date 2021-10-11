@@ -1,6 +1,6 @@
 <?php
 
-namespace Meetings;
+namespace Meetings\Helpers;
 
 use ElanEv\Model\MeetingCourse;
 // use CourseMember;
@@ -9,11 +9,11 @@ use Course;
 use PluginEngine;
 
 /**
- * WidgetHandler.php - contains function for MeetingPlugin widget handling.
+ * WidgetHelper.php - contains function for MeetingPlugin widget handling.
  *
  * @author Farbod Zamani Broujeni (zamani@elan-ev.de)
  */
-class WidgetHandler
+class WidgetHelper
 {
     /**
      * Get all current and up-coming meetings

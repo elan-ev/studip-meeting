@@ -1,8 +1,8 @@
 <?php
 
-namespace Meetings;
+namespace Meetings\Helpers;
 
-use Meetings\RoomManager;
+use Meetings\Helpers\RoomManager;
 use Meetings\Errors\Error;
 use ElanEv\Model\Driver;
 use ElanEv\Model\Join;
@@ -19,11 +19,11 @@ use URLHelper;
 use Seminar_User;
 use PluginEngine;
 /**
- * RoomSlimController.php - contains CRUD functions to controll room requests.
+ * MeetingsHelper.php - contains CRUD functions to controll room requests.
  *
  * @author Farbod Zamani Broujeni (zamani@elan-ev.de)
  */
-class RoomSlimController
+class MeetingsHelper
 {
     /**
     * Evaluates and performs the join request.

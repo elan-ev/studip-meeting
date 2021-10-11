@@ -1,6 +1,6 @@
 <?php
 
-namespace Meetings;
+namespace Meetings\Helpers;
 
 use Meetings\Errors\Error;
 use ElanEv\Model\Meeting;

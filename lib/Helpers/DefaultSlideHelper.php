@@ -1,6 +1,6 @@
 <?php
 
-namespace Meetings;
+namespace Meetings\Helpers;
 use Meetings\Models\I18N;
 use ElanEv\Model\Meeting;
 
@@ -14,15 +14,16 @@ use ExportPDF;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Meetings\Errors\Error;
 /**
- * DefaultSlideHandler.php - contains function to handle news & announcements to show as default slide,
+ * DefaultSlideHelper.php - contains function to handle news & announcements to show as default slide,
  * as well as all the default slide functions to manage by admin.
  *
  * @author Farbod Zamani Broujeni (zamani@elan-ev.de)
  */
 
-define('DEFAULT_SLIDE_TEMPLATE_DIR', dirname(__DIR__, 1) . '/templates/default_slides');
-define('TEMPLATES_DIR', dirname(__DIR__, 1) . '/templates');
-class DefaultSlideHandler
+define('DEFAULT_SLIDE_TEMPLATE_DIR', dirname(__DIR__, 2) . '/templates/default_slides');
+define('TEMPLATES_DIR', dirname(__DIR__, 2) . '/templates');
+
+class DefaultSlideHelper
 {
     static protected $font_dir = DEFAULT_SLIDE_TEMPLATE_DIR . '/font/';
     static protected $pages_dir = DEFAULT_SLIDE_TEMPLATE_DIR . '/page/';
