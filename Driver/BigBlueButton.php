@@ -249,6 +249,10 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 'userID' => '',
                 'webVoiceConf' => '',
             );
+
+            if ($avatar_url = $parameters->getAvatarUrl()) {
+                $params['avatarURL'] = $avatar_url;
+            }
         }
 
         $params['checksum'] = $this->createSignature('join', $params);

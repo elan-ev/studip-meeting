@@ -18,6 +18,7 @@ use MeetingPlugin;
 use URLHelper;
 use Seminar_User;
 use PluginEngine;
+use Avatar;
 /**
  * MeetingsHelper.php - contains CRUD functions to controll room requests.
  *
@@ -150,7 +151,7 @@ class MeetingsHelper
             }
         }
 
-
+        
         $joinParameters = new JoinParameters();
         $joinParameters->setMeetingId($room_id);
         $joinParameters->setIdentifier($meeting->identifier);
@@ -160,7 +161,12 @@ class MeetingsHelper
         $joinParameters->setFirstName($user->Vorname);
         $joinParameters->setLastName($user->Nachname);
         $joinParameters->setMeeting($meeting);
-
+        
+        // Getting user's avatar url.
+        $user_avatar_url = Avatar::getAvatar($user->id)->getURL(Avatar::SMALL);
+        if ($user_avatar_url) {
+            $joinParameters->setAvatarUrl($user_avatar_url);
+        }
 
         if ($perm->have_studip_perm('tutor', $cid) || $meeting->join_as_moderator) {
             $joinParameters->setPassword($meeting->moderator_password);
