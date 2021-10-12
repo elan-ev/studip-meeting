@@ -3,6 +3,9 @@ const path = require('path'); // node.js uses CommonJS modules
 const { VueLoaderPlugin }       = require('vue-loader');
 const HtmlWebpackPlugin         = require('html-webpack-plugin');
 const { CleanWebpackPlugin }    = require('clean-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 
 module.exports = {
     entry: ['./vueapp/app.js', './assets/css/meetings.scss'], // the entry point
@@ -16,25 +19,21 @@ module.exports = {
             test: /\.vue$/,
             use: 'vue-loader'
         }, {
-			test: /.scss$/,
-			use: [
-				{
-					loader: 'file-loader',
-					options: {
-						name: 'styles.css',
-						outputPath: ''
-					}
-				},
+			test: /\.scss$/,
+            use: [
                 {
-					loader: 'extract-loader',
-				},
-				{
-					loader: 'css-loader?-url'
-				},
-				{
-					loader: 'sass-loader'
-				}
-			]
+                    loader: MiniCssExtractPlugin.loader
+                },
+                {
+                    loader: "css-loader",
+                    options: {
+                        importLoaders: 2
+                    }
+                },
+                {
+                    loader: 'sass-loader'
+                }
+            ]
 		}, {
             test: /\.css$/,
             use: [
@@ -46,6 +45,17 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(),
         new VueLoaderPlugin(),
+        new MiniCssExtractPlugin({
+            filename: 'styles.css',
+        }),
+        new CssMinimizerPlugin({
+            minimizerOptions: {
+                discardComments: {
+                    removeAll: true
+                },
+                safe: true
+            }
+        }),
         new HtmlWebpackPlugin({
             template: 'vueapp/course_index.php',
             inject: false,
@@ -63,6 +73,12 @@ module.exports = {
             inject: false,
             minify: false,
             filename: '../app/views/room/lobby.php'
+        }),
+        new HtmlWebpackPlugin({
+            template: 'vueapp/lobby_index.php',
+            inject: false,
+            minify: false,
+            filename: '../app/views/room/qrcode_lobby.php'
         }),
     ],
     resolve: {
