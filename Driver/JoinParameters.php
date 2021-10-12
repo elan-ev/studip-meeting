@@ -27,10 +27,16 @@ class JoinParameters extends Parameters
 
     private $hasModerationPermissions;
 
+    
     /**
      * @var ElanEv\Model\Meeting
      */
     private $meeting;
+    
+    /**
+     * @var ElanEv\Model\Meeting
+     */
+    private $avatarUrl;
 
     public function setUsername($username)
     {
@@ -100,5 +106,15 @@ class JoinParameters extends Parameters
     public function setMeeting($meeting)
     {
         $this->meeting = $meeting;
+    }
+
+    public function getAvatarUrl()
+    {
+        return $this->avatarUrl;
+    }
+
+    public function setAvatarUrl($avatarUrl)
+    {
+        $this->avatarUrl = $avatarUrl;
     }
 }
