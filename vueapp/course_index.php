@@ -9,6 +9,4 @@
     let PLUGIN_ASSET_URL =  '<?= $plugin->getAssetsUrl() ?>';
 </script>
 
-<% for(var i = 0; i < htmlWebpackPlugin.tags.bodyTags.length; i++) { %>
-<? PageLayout::addScript($this->plugin->getPluginUrl() . '/static<%= htmlWebpackPlugin.tags.bodyTags[i].attributes.src %>'); ?>
-<% } %>
+<? PageLayout::addScript($this->plugin->getPluginUrl() . '/static<%= htmlWebpackPlugin.files.js[0] %>'); ?>
