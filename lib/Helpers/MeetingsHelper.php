@@ -163,9 +163,9 @@ class MeetingsHelper
         $joinParameters->setMeeting($meeting);
         
         // Getting user's avatar url.
-        $user_avatar_url = Avatar::getAvatar($user->id)->getURL(Avatar::SMALL);
-        if ($user_avatar_url) {
-            $joinParameters->setAvatarUrl($user_avatar_url);
+        $avatar = Avatar::getAvatar($user->id);
+        if ($avatar && $avatar->is_customized()) {
+            $joinParameters->setAvatarUrl($avatar->getURL(Avatar::SMALL));
         }
 
         if ($perm->have_studip_perm('tutor', $cid) || $meeting->join_as_moderator) {
