@@ -25,7 +25,8 @@
 </template>
 
 <script>
-import pdf from 'vue-pdf'
+import pdf from 'pdfvuer'
+import 'pdfjs-dist/build/pdf.worker.entry'
 
 import StudipButton from "@/components/StudipButton";
 import MessageBox from "@/components/MessageBox";
