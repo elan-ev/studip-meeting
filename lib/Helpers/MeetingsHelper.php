@@ -167,8 +167,6 @@ class MeetingsHelper
         if ($user_avatar_url) {
             $joinParameters->setAvatarUrl($user_avatar_url);
         }
-        
-
 
         if ($perm->have_studip_perm('tutor', $cid) || $meeting->join_as_moderator) {
             $joinParameters->setPassword($meeting->moderator_password);
