@@ -8,6 +8,7 @@ use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Driver;
 use MeetingPlugin;
 use Throwable;
+use PluginEngine;
 /**
  * RoomManager.php - contains general function to manage rooms and to evaluate related features.
  *
@@ -269,5 +270,34 @@ class RoomManager
                 $meetingCourse->meeting->store();
             }
         }
+    }
+
+    /**
+     * Generates the meeting plugin url with dynamic controller and params.
+     * 
+     * @param string $controller where to land in terms of controller
+     * @param array $params the url query string params
+     * 
+     * @return string
+     */
+    public static function generateMeetingBaseURL($controller, $params = []) 
+    {
+        $studip_absolute_url = rtrim($GLOBALS['ABSOLUTE_URI_STUDIP'], '/');
+
+        $url_scheme = strtok($studip_absolute_url, '://');
+        if (!in_array($url_scheme, ['http', 'https'])) {
+            $url_scheme = 'http';
+        }
+        $url_scheme .= '://';
+
+        $url_host = str_replace($url_scheme, '', $studip_absolute_url);
+
+        $meeting_link = ltrim(PluginEngine::getLink('meetingplugin', $params, $controller), '/');
+
+        $url_sections = array_unique(array_merge(explode('/', $url_host), explode('/', $meeting_link)));
+
+        $meeting_base_url = $url_scheme . implode('/', $url_sections);
+
+        return $meeting_base_url;
     }
 }

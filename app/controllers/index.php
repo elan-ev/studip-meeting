@@ -23,6 +23,7 @@ use ElanEv\Model\Meeting;
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Driver;
 use ElanEv\Model\Helper;
+use Meetings\Helpers\RoomManager;
 
 /**
  * @property \MeetingPlugin         $plugin
@@ -138,6 +139,7 @@ class IndexController extends MeetingsController
 
     public function index_action()
     {
+        PageLayout::addScript($this->plugin->getAssetsUrl() . '/js/meetings_return_helper.js');
         PageLayout::setTitle(self::getHeaderLine(Context::getId()));
         $this->getHelpbarContent('main');
         $this->cid = Context::getId();
@@ -194,6 +196,16 @@ class IndexController extends MeetingsController
         }
 
         $this->redirect('index/index');
+    }
+
+    public function return_action() 
+    {
+        PageLayout::addScript($this->plugin->getAssetsUrl() . '/js/meetings_return_helper.js');
+        PageLayout::setTitle(self::getHeaderLine(Context::getId()));
+
+        $cid = Request::get('cid');
+        $return_url = RoomManager::generateMeetingBaseURL('index', ['cid' => $cid]);
+        $this->return_url = $return_url;
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * */
