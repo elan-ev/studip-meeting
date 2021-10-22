@@ -15,7 +15,7 @@
                             </div>
                         </label>
                         <label v-if="token">
-                            <span class="required" v-translate>Zeichen</span>
+                            <span class="required" v-translate>Zugangscode</span>
                             <StudipTooltipIcon :text="$gettext('Verwenden Sie den Code, um sich anzumelden')"></StudipTooltipIcon>
                             <p><strong>{{token}}</strong></p>
                         </label>

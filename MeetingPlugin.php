@@ -24,6 +24,7 @@ use ElanEv\Model\Meeting;
 use Meetings\AppFactory;
 use Meetings\RouteMap;
 use Meetings\Helpers\WidgetHelper;
+use Meetings\Errors\Error;
 
 require_once 'compat/StudipVersion.php';
 
@@ -273,14 +274,10 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
             if ($cid) {
                 if ($plugin_manager->isPluginActivated($opencast_plugin['id'], $cid)) {
                     try {
-                        $OCSeries = \Opencast\Models\OCSeminarSeries::getSeries($cid);
-                        if (!empty($OCSeries)) {
-                            return $OCSeries[0]['series_id'];
-                        }
-                        return false;
+                        return self::getOpencastSeriesId($cid, $opencast_plugin);
                     } catch (Exception $ex) {
                         //Handle Error
-                        return false;
+                        throw new Error('Opencast-Serien-ID konnte nicht abgerufen werden.', 500);
                     }
                 } else {
                     return ""; //because of checkers along the flow (empty string is a sign of Opencast not activated!)
@@ -289,6 +286,29 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
             return true;
         }
         return false;
+    }
+
+    private static function getOpencastSeriesId($cid, $opencast_plugin_info) {
+        if (empty($cid)) {
+            return false;
+        }
+
+        // We need to provide the right files in order to use the getSeries method from OCSeminarSeries
+        // when the user is not authenticated, that happens mostly via QR-Code login.
+        if ($GLOBALS['auth']->auth['uid'] === 'nobody') {
+            $opencast_plugin_path = "{$GLOBALS['ABSOLUTE_PATH_STUDIP']}plugins_packages/{$opencast_plugin_info['path']}";
+            if (!file_exists("$opencast_plugin_path/constants.php") ||
+                !file_exists("$opencast_plugin_path/classes/OCRestClient/OCRestClient.php") ||
+                !file_exists("$opencast_plugin_path/classes/OCRestClient/SeriesClient.php")) {
+                    throw new Error('Opencast-Serien-ID konnte nicht abgerufen werden.', 500);
+            }
+            require("$opencast_plugin_path/constants.php");
+            require("$opencast_plugin_path/classes/OCRestClient/OCRestClient.php");
+            require("$opencast_plugin_path/classes/OCRestClient/SeriesClient.php");
+        }
+
+        $opencastSeminarSeries = \Opencast\Models\OCSeminarSeries::getSeries($cid);
+        return (!empty($opencastSeminarSeries) ? $opencastSeminarSeries[0]['series_id'] : false);
     }
 
     /**

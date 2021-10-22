@@ -17,7 +17,6 @@ use Context;
 use MeetingPlugin;
 use URLHelper;
 use Seminar_User;
-use PluginEngine;
 use Avatar;
 /**
  * MeetingsHelper.php - contains CRUD functions to controll room requests.
@@ -101,10 +100,10 @@ class MeetingsHelper
 
         if ($features = json_decode($meeting->features, true)) {
             //putting mandatory logoutURL into features
-            if (!isset($features['logoutURL'])) {
-                $hostUrl = $request->getUri()->getScheme() . '://' . $request->getUri()->getHost()
-                    .($request->getUri()->getPort() ? ':' . $request->getUri()->getPort() : '');
-                $features['logoutURL'] =  $hostUrl . PluginEngine::getLink('meetingplugin', array('cid' => $cid), 'index');
+            
+            $logout_url = RoomManager::generateMeetingBaseURL('index/return', ['cid' => $cid]);
+            if (!isset($features['logoutURL']) || $features['logoutURL'] != $logout_url) {
+                $features['logoutURL'] = $logout_url;
             }
 
             // Check Recording Capability
