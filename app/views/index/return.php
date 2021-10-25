@@ -5,7 +5,6 @@
 <script type="text/javascript">
     window.onload = () => {
         if (typeof window.page_available !== 'undefined') {
-            console.log(window.page_available);
             if (window.page_available) {
                 window.close();
             } else {
