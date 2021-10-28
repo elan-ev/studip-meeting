@@ -160,7 +160,7 @@
                                 && Object.keys(config[room['driver']]['features']).includes('create')
                                 && Object.keys(config[room['driver']]['features']['create']).includes('roomsize')
                                 && Object.keys(config[room['driver']]['features']['create']['roomsize']).length">
-                        <legend v-text="$gettext('Raumgröße')"></legend>
+                        <legend v-text="$gettext('Raumgröße und Perfomance')"></legend>
                         <template v-for="(feature, index) in config[room['driver']]['features']['create']['roomsize']">
                             <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature"
                                 :maxAllowedParticipants="maxAllowedParticipants"
@@ -185,7 +185,7 @@
                     </fieldset>
 
                     <fieldset v-if="room['driver']" id="privacy_settings_section" class="collapsable collapsed">
-                        <legend v-text="$gettext('Datenschutzeinstellungen')"></legend>
+                        <legend v-text="$gettext('Berechtigungen')"></legend>
                         <label>
                             <input type="checkbox"
                                 id="join_as_moderator"
