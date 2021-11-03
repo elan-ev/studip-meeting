@@ -601,9 +601,8 @@ msgid "QR-Code anzeigen"
 msgstr "Show QR code"
 #: vueapp/components/MeetingQRCodeDialog.vue:26
 #: vueapp/components/MeetingQRCodeDialog.vue:2
-#, fuzzy
 msgid "QR-Code neu generieren"
-msgstr "Generate access code"
+msgstr "Generate QR code"
 
 #: vueapp/components/MeetingQRCodeDialog.vue:9
 #: vueapp/components/MeetingQRCodeDialog.vue:6
@@ -669,9 +668,8 @@ msgid "Schriftart hochladen"
 msgstr "Upload font"
 
 #: vueapp/components/DefaultSlideManagerDialog.vue:148
-#, fuzzy
 msgid "Schriftart löschen"
-msgstr "Delete room"
+msgstr "Delete font"
 
 #: vueapp/components/MeetingAdd.vue:96 vueapp/components/MeetingAdd.vue:93
 msgid "Server {{ (server_index + 1) }}"
@@ -695,14 +693,12 @@ msgid ""
 msgstr "This name will be used if the guest does not state one."
 
 #: vueapp/views/Admin.vue:31
-#, fuzzy
 msgid "Standard-Folie verwalten"
-msgstr "Default moderator name"
+msgstr "Manage default slide"
 
 #: vueapp/components/DefaultSlideManagerDialog.vue:88
-#, fuzzy
 msgid "Standard-Folienmanager"
-msgstr "Default moderator name"
+msgstr "Default slide manager"
 
 #: vueapp/components/MeetingGuest.vue:10 vueapp/components/MeetingGuest.vue:7
 msgid "Standard-Gästename"
@@ -781,14 +777,12 @@ msgstr "Use a QR code scanner (eg. your smarphone's camera) and use the URL to a
 
 #: vueapp/components/DefaultSlideManagerDialog.vue:93
 #: vueapp/components/DefaultSlideManagerDialog.vue:90
-#, fuzzy
 msgid "Vorlage hinzufügen"
-msgstr "Add server"
+msgstr "Add template"
 
 #: vueapp/components/DefaultSlideManagerDialog.vue:228
-#, fuzzy
 msgid "Vorlage löschen"
-msgstr "Delete assignment"
+msgstr "Delete template"
 
 #: vueapp/components/DefaultSlidePreviewDialog.vue:19
 msgid "Vorlagenvorschau"
@@ -997,9 +991,8 @@ msgid "Sitzungen können aufgezeichnet werden."
 msgstr "Conferences can be recorded."
 
 #: Driver/BigBlueButton.php:505
-#, fuzzy
 msgid "Aufzeichnung automatisch starten"
-msgstr "View recording"
+msgstr "Start recording automatically"
 
 #: Driver/BigBlueButton.php:506
 msgid ""
@@ -1103,9 +1096,8 @@ msgid "Ankündigungen aus Stud.IP auf leerer Begrüßungsfolie"
 msgstr "News of Stud.IP on an empty introductory slide"
 
 #: Driver/BigBlueButton.php:753
-#, fuzzy
 msgid "Aufzeichnungen konfigurierbar machen"
-msgstr "View recording"
+msgstr "Enable configuration of recordings"
 
 #: Driver/BigBlueButton.php:754
 msgid ""
@@ -1350,9 +1342,8 @@ msgid "Meeting betreten"
 msgstr "Join conference"
 
 #: app/views/room/qrcode.php:3
-#, fuzzy
 msgid "Bitte geben Sie den Zugangscode des Meetings"
-msgstr "Access code for the conference"
+msgstr "Please present the access code of the conference"
 
 #: app/views/room/moderator.php:2
 msgid "Sie wurden eingeladen, als Moderator beizutreten"
@@ -1379,14 +1370,12 @@ msgid "Willkommen zur Videokonferenz"
 msgstr "Welcome to the videoconference"
 
 #: lib/Helpers/DefaultSlideHelper.php:65
-#, fuzzy
 msgid "Veranstaltungsankündigungen"
-msgstr "Coursetype"
+msgstr "News of course"
 
 #: lib/Helpers/DefaultSlideHelper.php:66
-#, fuzzy
 msgid "Allgemeine Ankündigungen"
-msgstr "General configuration"
+msgstr "General news"
 
 #: lib/Helpers/DefaultSlideHelper.php:223
 msgid "Nachrichtenthema"
@@ -1523,9 +1512,8 @@ msgid "Sitzungsaufzeichnung ist nicht erlaubt."
 msgstr "Session recording is not allowed."
 
 #: lib/Routes/Rooms/RoomGenerateQRCode.php:32
-#, fuzzy
 msgid "QR-Code kann nicht generiert werden"
-msgstr "Feedback could not be sent."
+msgstr "Could not generate QR code."
 
 #: lib/Routes/Rooms/RoomAdd.php:63
 msgid "Es existiert bereits ein gleichnamiger Raum."
@@ -1593,49 +1581,40 @@ msgstr ""
 "still be listed here!"
 
 #: lib/Routes/Slides/TemplateSampleDownload.php:32
-#, fuzzy
 msgid "Mustervorlage konnte nicht gefunden werden"
-msgstr "This room could not be found"
+msgstr "Could not find template"
 
 #: lib/Routes/Slides/FontDelete.php:27
-#, fuzzy
 msgid "Schriftart kann nicht gelöscht werden"
-msgstr "Recording cannot be deleted"
+msgstr "Could not delete font"
 
 #: lib/Routes/Slides/FontDelete.php:32
-#, fuzzy
 msgid "Schriftart wurde erfolgreich gelöscht"
-msgstr "Room was created successfully."
+msgstr "Font was successfully deleted."
 
 #: lib/Routes/Slides/FontUpload.php:28
-#, fuzzy
 msgid "Schriftart kann nicht hochgeladen werden"
-msgstr "Guests cannot be invited!"
+msgstr "Could not upload font"
 
 #: lib/Routes/Slides/FontUpload.php:33
-#, fuzzy
 msgid "Schriftart wurde erfolgreich hochgeladen"
-msgstr "The editing was successfully completed."
+msgstr "Font was successfully uploaded"
 
 #: lib/Routes/Slides/TemplateDelete.php:28
-#, fuzzy
 msgid "Folie/Template kann nicht gelöscht werden"
-msgstr "Recording cannot be deleted"
+msgstr "Could not delete slide/template"
 
 #: lib/Routes/Slides/TemplateDelete.php:33
-#, fuzzy
 msgid "Folie/Template wurde erfolgreich gelöscht"
-msgstr "The editing was successfully completed."
+msgstr "Slide/template was successfully deleted"
 
 #: lib/Routes/Slides/TemplateUpload.php:28
-#, fuzzy
 msgid "Folie/Template kann nicht hochgeladen werden"
-msgstr "Feedback could not be sent."
+msgstr "Could not upload slide/template"
 
 #: lib/Routes/Slides/TemplateUpload.php:33
-#, fuzzy
 msgid "Folie/Template wurde erfolgreich hochgeladen"
-msgstr "The editing was successfully completed."
+msgstr "Slide/template was successfully uploaded"
 
 #: migrations/029_new_general_config.php:31
 msgid "Allgemeine Konfiguration des Meetings-Plugins im JSON Format"
@@ -1646,9 +1625,8 @@ msgid "Konfiguration des Meetings-Plugins im JSON Format"
 msgstr "Configuration for the conferences plugin in JSON"
 
 #: templates/default_slide.php:5
-#, fuzzy
 msgid "Standardfolie"
-msgstr "Default mail"
+msgstr "Default slide"
 
 #~ msgid "Datenschutzeinstellungen"
 #~ msgstr "Data protection settings"
