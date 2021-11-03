@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-03 11:35+0100\n"
+"POT-Creation-Date: 2021-11-03 12:21+0100\n"
 "PO-Revision-Date: 2021-09-22 14:33+0200\n"
 "Last-Translator: April Suddendorf, 2020\n"
 "Language-Team: English (https://www.transifex.com/uol-it/teams/52597/en/)\n"
@@ -575,6 +575,12 @@ msgstr "Choose folder type"
 msgid "PDF Folie"
 msgstr "PDF slide"
 
+#: vueapp/components/DefaultSlideManagerDialog.vue:67
+#: vueapp/components/DefaultSlideManagerDialog.vue:64
+#: vueapp/components/DefaultSlideManagerDialog.vue:31
+msgid "PHP (HTML) Template"
+msgstr "PHP (HTML) template"
+
 #: vueapp/components/DefaultSlideManagerDialog.vue:264
 msgid "PHP Template hochladen"
 msgstr "Upload PHP template"
@@ -599,6 +605,7 @@ msgstr "QR code"
 #: vueapp/components/MeetingComponent.vue:165
 msgid "QR-Code anzeigen"
 msgstr "Show QR code"
+
 #: vueapp/components/MeetingQRCodeDialog.vue:26
 #: vueapp/components/MeetingQRCodeDialog.vue:2
 msgid "QR-Code neu generieren"
@@ -773,7 +780,9 @@ msgstr "Use the QR code to access the meeting"
 msgid ""
 "Verwenden Sie Ihren QR-Code-Leser (z. B. Gerätekamera) und verwenden Sie die "
 "URL-Adresse, um auf dieses Meeting zuzugreifen"
-msgstr "Use a QR code scanner (eg. your smarphone's camera) and use the URL to access this meeting"
+msgstr ""
+"Use a QR code scanner (eg. your smarphone's camera) and use the URL to "
+"access this meeting"
 
 #: vueapp/components/DefaultSlideManagerDialog.vue:93
 #: vueapp/components/DefaultSlideManagerDialog.vue:90
@@ -1048,7 +1057,9 @@ msgstr ""
 msgid ""
 "Der private Chat zwischen Teilnehmern wird eingeschränkt, Teilnehmer können "
 "jedoch weiterhin privat mit Moderatoren kommunizieren."
-msgstr "Private chat between participants is restricted, but participants can still communicate privately with moderators."
+msgstr ""
+"Private chat between participants is restricted, but participants can still "
+"communicate privately with moderators."
 
 #: Driver/BigBlueButton.php:586
 msgid ""
@@ -1104,7 +1115,9 @@ msgid ""
 "Wenn aktiv, so wird den Mentor:innen die Option 'Aufzeichnung automatisch "
 "starten' angezeigt und sie haben die Möglichkeit die Aufzeichnung manuell zu "
 "starten, pausieren oder stoppen."
-msgstr "If activated, mentors will see the option to start a recording automatically and they will be able to start, stop or pause a recording manually."
+msgstr ""
+"If activated, mentors will see the option to start a recording automatically "
+"and they will be able to start, stop or pause a recording manually."
 
 #: Driver/MicrosoftTeams.php:342
 msgid ""
