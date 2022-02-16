@@ -1,9 +1,5 @@
 <template>
     <div>
-        <MessageBox v-if="course_config.introduction" type="info">
-            <span v-html="course_config.introduction"></span>
-        </MessageBox>
-
         <MessageBox v-if="message" :type="message.type" @hide="message = ''">
             {{ message.text }}
         </MessageBox>
@@ -15,16 +11,21 @@
             </translate>
         </MessageBox>
 
-        <span v-else>
+        <template v-else>
+            <section class="meeting-intro contentbox" v-if="course_config.introduction">
+                <header><h1 v-text="$gettext('Einleitung')"></h1></header>
+                <section>
+                    <article>
+                        <span v-html="course_config.introduction"></span>
+                    </article>
+                </section>
+            </section>
+            
             <MessageBox v-if="rooms_checked && !rooms_list.length && config && course_config.display.addRoom" type="info">
                 <translate>
                     Bisher existieren keine Meeting-Räume für diese Veranstaltung.
-                    Möchten Sie einen anlegen?
+                    Bitte fügen Sie einen neuen Raum hinzu.
                 </translate>
-                <br>
-                <StudipButton type="button"  @click="createNewRoom">
-                    <translate>Neuer Raum</translate>
-                </StudipButton>
             </MessageBox>
 
             <MessageBox v-if="!rooms_checked" type="warning">
@@ -35,18 +36,11 @@
                 <span v-text="$gettext('Wir empfehlen Ihnen, einen Raum als Standardraum zu definieren (in den Einstellung eines Raums).')"></span>
             </MessageBox>
 
-            <p>
-                <StudipButton type="button" icon="add" v-if="rooms_list.length && config && course_config.display.addRoom"
-                    @click="createNewRoom">
-                    <translate>Raum hinzufügen</translate>
-                </StudipButton>
+            <MessageBox v-if="rooms_checked && !rooms_list_filtered.length && roomFilter" type="warning">
+                <span v-text="$gettext('Leider konnte keinen Raum gefunden werden.')"></span>
+            </MessageBox>
 
-                <label v-if="rooms_list.length">
-                    <input type="text" :placeholder="$gettext('Räume filtern nach Name')" v-model="searchtext">
-                </label>
-            </p>
-
-            <form class="default conference-meeting" v-if="rooms_list_filtered.length">
+            <div class="conference-meeting" v-if="rooms_list_filtered.length">
                 <MeetingComponent v-for="(room, index) in rooms_list_filtered"
                     :key="index"
                     :room="room"
@@ -60,8 +54,8 @@
                     v-on:getFeedback="showFeedbackDialog"
                     v-on:displayQRCode="showQRCodeDialog">
                 </MeetingComponent>
-            </form>
-        </span>
+            </div>
+        </template>
 
         <!-- dialogs -->
         <MeetingAdd v-if="createEditRoom"
@@ -97,6 +91,21 @@
             :room="showQRCode"
             @cancel="showQRCode = false"
         />
+
+        <!-- Sidebar Contents -->
+        <MountingPortal mountTo="#meeting-action-widget" name="sidebar-actions" v-if="generate_action_items.length">
+            <StudipActionWidget
+                :items="generate_action_items"
+                @createNewRoom="createNewRoom"
+            />
+        </MountingPortal>
+        <MountingPortal mountTo="#meeting-search-widget" name="sidebar-search" v-if="generate_search_needles.length">
+            <StudipSearchWidget 
+                :needles="generate_search_needles"
+                @setRoomFilter="setRoomFilter"
+                @clearRoomFilter="clearRoomFilter"
+            />
+        </MountingPortal>
     </div>
 </template>
 
@@ -114,6 +123,8 @@ import MeetingFeedback from "@/components/MeetingFeedback";
 import MeetingGuest from "@/components/MeetingGuest";
 import MeetingModeratorGuest from "@/components/MeetingModeratorGuest";
 import MeetingQRCodeDialog from "@/components/MeetingQRCodeDialog";
+import StudipActionWidget from '@/components/StudipActionWidget.vue';
+import StudipSearchWidget from '@/components/StudipSearchWidget.vue';
 
 import {
     CONFIG_COURSE_READ, ROOM_LIST, ROOM_INFO,
@@ -136,7 +147,9 @@ export default {
         MeetingFeedback,
         MeetingGuest,
         MeetingModeratorGuest,
-        MeetingQRCodeDialog
+        MeetingQRCodeDialog,
+        StudipActionWidget,
+        StudipSearchWidget
     },
 
     computed: {
@@ -145,24 +158,48 @@ export default {
             'rooms_list', 'rooms_info', 'rooms_checked',
             'default_room'
         ]),
-
         rooms_list_filtered: function() {
             let view = this;
 
-            if (this.searchtext != '') {
+            if (this.roomFilter != '') {
                 return this.rooms_list.filter(function(entry) {
-                    return (entry.name.toLowerCase().indexOf(view.searchtext.toLowerCase()) !== -1);
+                    return (entry.name.toLowerCase().indexOf(view.roomFilter.toLowerCase()) !== -1);
                 });
             } else {
                 return this.rooms_list;
             }
+        },
+        generate_action_items() {
+            let actionItems = [];
+            let id = 1;
+            if (this.rooms_list.length && this.config && this.course_config?.display?.addRoom) {
+                actionItems.push({id: id, label: this.$gettext('Raum hinzufügen'), icon: 'add', emit: 'createNewRoom'});
+                id++;
+            }
+
+            return actionItems;
+        },
+        generate_search_needles() {
+            let searchNeedles = [];
+            let id = 1;
+            searchNeedles.push({
+                id: id,
+                label: this.$gettext('Räume filtern nach Name'),
+                emit: 'setRoomFilter',
+                withLabel: false,
+                value: JSON.parse(JSON.stringify(this.roomFilter)),
+                emitClear: 'clearRoomFilter'
+            });
+            id++;
+
+            return searchNeedles;
         }
     },
 
     data() {
         return {
             message: null,
-            searchtext: '',
+            roomFilter: '',
             createEditRoom: false,
             showRecordings: false,
             showFeedback: false,
@@ -258,6 +295,14 @@ export default {
 
         showQRCodeDialog(room) {
             this.showQRCode = room;
+        },
+
+        setRoomFilter(searchTerm) {
+            this.roomFilter = searchTerm;
+        },
+
+        clearRoomFilter() {
+            this.roomFilter = '';
         }
     },
 
