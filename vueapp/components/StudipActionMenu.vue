@@ -7,7 +7,7 @@
         </a>
         <div class="action-menu-content">
             <div class="action-menu-title">
-                {{ $gettext('Aktionen') }}
+                <translate>Aktionen</translate>
             </div>
             <ul class="action-menu-list">
                 <li v-for="item in navigationItems" :key="item.id" class="action-menu-item">
