@@ -276,19 +276,14 @@ div.inline-feature-warning {
         > footer {
             a, button {
                 display:inline-block;
-                margin-top: 0;
                 margin-bottom: 0;
             }
             position: absolute;
             left: 0;
             bottom: 0;
-            width: 90%;
             border-top-style: none;
             text-align: left;
-            padding: 1em;
-            .join {
-                float: left;
-            }
+            padding: 0 $gap $gap $gap;
         }
     }
 }
@@ -297,6 +292,10 @@ div.inline-feature-warning {
     .conference-meeting .meetingcomponent {
         max-width: $content-half-max-width !important;
     }
+}
+
+.meeting-messagebox {
+    margin-bottom: $gap !important;
 }
 /* End Contents */
 

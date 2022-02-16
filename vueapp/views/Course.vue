@@ -12,15 +12,6 @@
         </MessageBox>
 
         <template v-else>
-            <section class="meeting-intro contentbox" v-if="course_config.introduction">
-                <header><h1 v-text="$gettext('Einleitung')"></h1></header>
-                <section>
-                    <article>
-                        <span v-html="course_config.introduction"></span>
-                    </article>
-                </section>
-            </section>
-            
             <MessageBox v-if="rooms_checked && !rooms_list.length && config && course_config.display.addRoom" type="info">
                 <translate>
                     Bisher existieren keine Meeting-Räume für diese Veranstaltung.
@@ -39,6 +30,15 @@
             <MessageBox v-if="rooms_checked && !rooms_list_filtered.length && roomFilter" type="warning">
                 <span v-text="$gettext('Leider konnte keinen Raum gefunden werden.')"></span>
             </MessageBox>
+
+            <section class="meeting-intro contentbox" v-if="course_config.introduction">
+                <header><h1 v-text="$gettext('Einleitung')"></h1></header>
+                <section>
+                    <article>
+                        <span v-html="course_config.introduction"></span>
+                    </article>
+                </section>
+            </section>
 
             <div class="conference-meeting" v-if="rooms_list_filtered.length">
                 <MeetingComponent v-for="(room, index) in rooms_list_filtered"

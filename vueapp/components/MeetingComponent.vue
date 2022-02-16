@@ -148,6 +148,18 @@
             </article>
         </section>
         <footer>
+            <a v-if="room.enabled" class="button join"
+                @click="checkPreJoin"
+                v-translate
+            >
+                Teilnehmen
+            </a>
+
+            <button v-else class="button join"
+                disabled="disabled" v-translate
+            >
+                Teilnehmen nicht möglich
+            </button>
             <template v-if="course_config.display.editRoom && room.features">
                 <StudipButton v-if="room.features['invite_moderator'] && room.features['invite_moderator'] == 'true'"
                     type="button" v-on:click="getModeratorGuestInfo()"
@@ -162,18 +174,6 @@
                     <span v-text="$gettext('Einladungslink erstellen')"></span>
                 </StudipButton>
             </template>
-            <a v-if="room.enabled" class="button join"
-                @click="checkPreJoin"
-                v-translate
-            >
-                Teilnehmen
-            </a>
-
-            <button v-else class="button join"
-                disabled="disabled" v-translate
-            >
-                Teilnehmen nicht möglich
-            </button>
         </footer>
 
         <!-- dialogs -->
