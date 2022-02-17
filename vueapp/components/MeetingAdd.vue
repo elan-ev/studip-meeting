@@ -160,7 +160,7 @@
                                 && Object.keys(config[room['driver']]['features']).includes('create')
                                 && Object.keys(config[room['driver']]['features']['create']).includes('roomsize')
                                 && Object.keys(config[room['driver']]['features']['create']['roomsize']).length">
-                        <legend v-text="$gettext('Raumgröße und Perfomance')"></legend>
+                        <legend v-text="$gettext('Raumgröße und Leistung')"></legend>
                         <template v-for="(feature, index) in config[room['driver']]['features']['create']['roomsize']">
                             <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature"
                                 :maxAllowedParticipants="maxAllowedParticipants"
@@ -256,7 +256,7 @@
                                 <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :key="index" />
                             </template>
                         </template>
-                        
+
 
                         <label v-if="hasPresentationSetting == 'all' || hasPresentationSetting == 'preupload'">
                             <h3 v-translate>
@@ -510,7 +510,7 @@ export default {
 
             let has_preupload = Object.keys(this.config[this.room['driver']]).includes('preupload')
                                 && this.config[this.room['driver']]['preupload'] == true;
-            
+
             if (has_setting && has_preupload) {
                 return 'all';
             } else if (has_setting && !has_preupload) {
