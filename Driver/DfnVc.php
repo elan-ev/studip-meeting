@@ -88,6 +88,11 @@ class DfnVc implements DriverInterface
         ));
         $xml = new \SimpleXMLElement($response);
         $scoIdAttributes = $xml->xpath('./sco/@sco-id');
+
+        if ((string) $xml->status->attributes()->code !== 'ok') {
+            return false;
+        }
+
         $parameters->setRemoteId((int) $scoIdAttributes[0]);
 
         // make the meeting private (participants have to be granted
