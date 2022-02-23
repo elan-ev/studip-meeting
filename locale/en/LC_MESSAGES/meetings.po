@@ -646,7 +646,7 @@ msgid "Raumeinstellungen"
 msgstr "Room settings"
 
 #: vueapp/components/MeetingAdd.vue:454
-msgid "Raumgröße und Perfomance"
+msgid "Raumgröße und Leistung"
 msgstr "Room size and performance"
 
 #: vueapp/components/MeetingAdd.vue:221
