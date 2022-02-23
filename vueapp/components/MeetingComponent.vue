@@ -1,67 +1,45 @@
 <template>
-    <div class="meetingcomponent">
-        <fieldset>
-            <legend>
-                <div class="meeting-item-header"
-                    :class="{
-                        'meeting-disabled' : !room.enabled
-                    }"
+    <section class="meetingcomponent contentbox">
+        <header class="meeting-item-header"
+            :class="{
+                'meeting-disabled' : !room.enabled
+            }"
+        >
+            <h1>
+                {{room.name}}
+                <StudipTooltipIcon v-if="room.details"
+                    :text="`${room.details['creator']}, ${room.details['date']}`">
+                </StudipTooltipIcon>
+            </h1>
+            <template v-if="room.features && room.features.record && room.features.record == 'true' && !room.record_not_allowed">
+                <StudipTooltipIcon v-show="opencast_webcam_record_enabled"
+                    :text="$gettext('Bitte beachten Sie, dass dieser Raum aufgezeichnet wird! Die Webcams der Teilnehmer könnten auch aufgezeichnet werden!')"
+                    :badge="true"
                 >
-                    <div class="left">
-                        {{room.name}}
-                        <StudipTooltipIcon v-if="room.details"
-                                            :text="`${room.details['creator']}, ${room.details['date']}`">
-                        </StudipTooltipIcon>
-                        <span v-if="showParticipantCount" class="participants" v-text="showParticipantCount"></span>
-                    </div>
-                    <div class="right">
-                        <template v-if="room.features && room.features.record && room.features.record == 'true' && !room.record_not_allowed">
-                            <StudipTooltipIcon v-show="opencast_webcam_record_enabled"
-                                    :text="$gettext('Bitte beachten Sie, dass dieser Raum aufgezeichnet wird! Die Webcams der Teilnehmer könnten auch aufgezeichnet werden!')"
-                                    :badge="true"
-                                    >
-                                <StudipIcon icon="span-full" role="attention" size="11"></StudipIcon> <span v-text="'Rec + Webcam'"></span>
-                            </StudipTooltipIcon>
-                            <StudipTooltipIcon v-if="!opencast_webcam_record_enabled"
-                                    :text="$gettext('Bitte beachten Sie, dass dieser Raum aufgezeichnet wird!')"
-                                    :badge="true"
-                                    >
-                                <StudipIcon icon="span-full" role="attention" size="11"></StudipIcon> <span v-text="'Rec'"></span>
-                            </StudipTooltipIcon>
-                        </template>
-                        <a v-if="room.has_recordings" style="cursor: pointer;"
-                                :title="$gettext('Die vorhandenen Aufzeichnungen')"
-                                @click.prevent="getRecording()">
-                            <StudipIcon icon="video2" role="clickable" size="20"></StudipIcon>
-                        </a>
-                        <a v-if="course_config.display.editRoom" style="cursor: pointer;"
-                            :title="$gettext('Raumeinstellungen')"
-                            @click.prevent="editFeatures()">
-                            <StudipIcon icon="admin" role="clickable" size="20"></StudipIcon>
-                        </a>
-                        <a style="cursor: pointer;"
-                            :title="$gettext('QR-Code anzeigen')"
-                            @click.prevent="showQRCode()">
-                            <StudipIcon icon="code-qr" role="clickable" size="22"></StudipIcon>
-                        </a>
-                        <a style="cursor: pointer;"
-                            :title="$gettext('Schreiben Sie ein Feedback')"
-                            @click.prevent="writeFeedback()">
-                            <StudipIcon icon="support" role="clickable" size="22"></StudipIcon>
-                        </a>
-                        <a v-if="course_config.display.deleteRoom" style="cursor: pointer;"
-                            :title="$gettext('Raum löschen')"
-                            @click.prevent="deleteRoom($event)">
-                            <StudipIcon icon="trash" role="clickable" size="20"></StudipIcon>
-                        </a>
-                    </div>
-                </div>
-            </legend>
-            <label id="details">
-
+                    <StudipIcon icon="span-full" role="attention" size="11"></StudipIcon> <span v-text="'Rec + Webcam'"></span>
+                </StudipTooltipIcon>
+                <StudipTooltipIcon v-if="!opencast_webcam_record_enabled"
+                    :text="$gettext('Bitte beachten Sie, dass dieser Raum aufgezeichnet wird!')"
+                    :badge="true"
+                >
+                    <StudipIcon icon="span-full" role="attention" size="11"></StudipIcon> <span v-text="'Rec'"></span>
+                </StudipTooltipIcon>
+            </template>
+            <StudipActionMenu v-if="generate_menu_items.length"
+                :items="generate_menu_items"
+                @getRecording="getRecording"
+                @editFeatures="editFeatures"
+                @showQRCode="showQRCode"
+                @writeFeedback="writeFeedback"
+                @deleteRoom="deleteRoom"
+            />
+        </header>
+        <section>
+            <article id="details">
+                <span v-if="showParticipantCount" class="participants" v-text="showParticipantCount"></span>
                 <div v-if="course_config.display.editRoom && room.is_default == 1">
                     <StudipIcon class="info-icon" icon="star"
-                            role="clickable" size="24"></StudipIcon>
+                            role="info" size="24"></StudipIcon>
                     <span v-text="$gettext('Dies ist der Standardraum')"></span>
                 </div>
 
@@ -95,7 +73,7 @@
 
                 <div v-if="course_config.display.editRoom && room.group_id">
                     <StudipIcon class="info-icon" icon="group2"
-                            role="status-yellow" size="24"></StudipIcon>
+                            role="info" size="24"></StudipIcon>
                     <span v-translate>
                         Das Meeting gehört der Gruppe
                     </span>
@@ -114,18 +92,16 @@
                     </template>
                     <template v-else>
                         <StudipIcon class="info-icon" icon="folder-empty"
-                            role="inactive" size="24">
+                            role="info" size="24">
                         </StudipIcon>
                         <translate>
                             Ordner für automatische Uploads:
                         </translate>
-                         <a :href="room.details.folder.link" target="_blank">
+                        <a :href="room.details.folder.link" target="_blank">
                             {{ room.details.folder.name }}
                         </a>
                     </template>
-
                 </div>
-
 
                 <div v-if="num_drivers > 1">
                     <StudipIcon class="info-icon" icon="video2"
@@ -169,36 +145,36 @@
                         nicht aktiviert oder falsch konfiguriert ist.
                     </span>
                 </div>
-            </label>
-            <div class="meeting-item-btns">
-                <template v-if="course_config.display.editRoom && room.features">
-                    <StudipButton v-if="room.features['invite_moderator'] && room.features['invite_moderator'] == 'true'"
-                        type="button" v-on:click="getModeratorGuestInfo()"
-                        icon="add"
-                    >
-                        <span v-text="$gettext('Moderator einladen')"></span>
-                    </StudipButton>
-                    <StudipButton v-if="room.features['guestPolicy-ALWAYS_ACCEPT'] && room.features['guestPolicy-ALWAYS_ACCEPT'] == 'true'"
-                        type="button" v-on:click="getGuestInfo()"
-                        icon="add"
-                    >
-                        <span v-text="$gettext('Einladungslink erstellen')"></span>
-                    </StudipButton>
-                </template>
-                <a v-if="room.enabled" class="button join"
-                    @click="checkPreJoin"
-                    v-translate
-                >
-                    Teilnehmen
-                </a>
+            </article>
+        </section>
+        <footer>
+            <a v-if="room.enabled" class="button join"
+                @click="checkPreJoin"
+                v-translate
+            >
+                Teilnehmen
+            </a>
 
-                <button v-else class="button join"
-                    disabled="disabled" v-translate
+            <button v-else class="button join"
+                disabled="disabled" v-translate
+            >
+                Teilnehmen nicht möglich
+            </button>
+            <template v-if="course_config.display.editRoom && room.features">
+                <StudipButton v-if="room.features['invite_moderator'] && room.features['invite_moderator'] == 'true'"
+                    type="button" v-on:click="getModeratorGuestInfo()"
+                    icon="add"
                 >
-                    Teilnehmen nicht möglich
-                </button>
-            </div>
-        </fieldset>
+                    <span v-text="$gettext('Moderator einladen')"></span>
+                </StudipButton>
+                <StudipButton v-if="room.features['guestPolicy-ALWAYS_ACCEPT'] && room.features['guestPolicy-ALWAYS_ACCEPT'] == 'true'"
+                    type="button" v-on:click="getGuestInfo()"
+                    icon="add"
+                >
+                    <span v-text="$gettext('Einladungslink erstellen')"></span>
+                </StudipButton>
+            </template>
+        </footer>
 
         <!-- dialogs -->
         <MeetingMessageDialog v-if="showConfirmDialog"
@@ -206,7 +182,7 @@
             @accept="performConfirm"
             @cancel="showConfirmDialog = false"
         />
-    </div>
+    </section>
 </template>
 
 <script>
@@ -215,6 +191,7 @@ import StudipIcon from "@/components/StudipIcon";
 import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import MessageBox from "@/components/MessageBox";
 import MeetingMessageDialog from "@/components/MeetingMessageDialog";
+import StudipActionMenu from '@/components/StudipActionMenu.vue';
 import { mapGetters } from "vuex";
 import store from "@/store";
 
@@ -230,7 +207,8 @@ export default {
         StudipIcon,
         StudipTooltipIcon,
         MessageBox,
-        MeetingMessageDialog
+        MeetingMessageDialog,
+        StudipActionMenu,
     },
 
     computed: {
@@ -285,6 +263,31 @@ export default {
             } else {
                 return false;
             }
+        },
+
+        generate_menu_items() {
+            let menuItems = [];
+            let id = 1;
+            if (this.course_config?.display?.editRoom) {
+                menuItems.push({id: id, label: this.$gettext('Raumeinstellungen'), icon: 'admin', emit: 'editFeatures'});
+                id++;
+            }
+            if (this.room?.has_recordings) {
+                menuItems.push({id: id, label: this.$gettext('Die vorhandenen Aufzeichnungen'), icon: 'video2', emit: 'getRecording'});
+                id++;
+            }
+            menuItems.push({id: id, label: this.$gettext('QR-Code anzeigen'), icon: 'code-qr', emit: 'showQRCode'});
+            id++;
+
+            menuItems.push({id: id, label: this.$gettext('Schreiben Sie ein Feedback'), icon: 'support', emit: 'writeFeedback'});
+            id++;
+
+            if (this.course_config?.display?.deleteRoom) {
+                menuItems.push({id: id, label: this.$gettext('Raum löschen'), icon: 'trash', emit: 'deleteRoom'});
+                id++;
+            }
+
+            return menuItems;
         }
     },
 

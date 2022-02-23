@@ -12,6 +12,7 @@ import DateFilter from "./common/date.filter";
 import ErrorFilter from "./common/error.filter";
 
 import GetTextPlugin from 'vue-gettext';
+import PortalVue from 'portal-vue';
 import translations from './i18n/translations.json';
 import MeetingDialog from '@/components/MeetingDialog.vue';
 
@@ -41,6 +42,8 @@ Vue.use(GetTextPlugin, {
     translations: translations,
     silent: true,
 });
+
+Vue.use(PortalVue);
 
 $(function() {
     window.Vue = new Vue({

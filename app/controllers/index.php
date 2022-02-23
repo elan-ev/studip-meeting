@@ -154,6 +154,8 @@ class IndexController extends MeetingsController
                 throw new AccessDeniedException();
             }
         }
+
+        $this->setSidebar();
     }
 
     public function config_action()
@@ -289,5 +291,27 @@ class IndexController extends MeetingsController
         } else {
             return Context::getHeaderLine() .' - '. dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Meetings');
         }
+    }
+
+    /**
+     * Adds the content to sidebar
+     */
+    protected function setSidebar()
+    {
+        $sidebar = Sidebar::get();
+
+        if ($this->perm->have_studip_perm('tutor', Context::getId())) {
+            $actions = new TemplateWidget(
+                _('Aktionen'),
+                $this->get_template_factory()->open('index/action_widget')
+            );
+            $sidebar->addWidget($actions)->addLayoutCSSClass('meeting-action-widget');
+        }
+
+        $search = new \TemplateWidget(
+            _('Suche'),
+            $this->get_template_factory()->open('index/search_widget')
+        );
+        $sidebar->addWidget($search)->addLayoutCSSClass('meeting-search-widget');
     }
 }

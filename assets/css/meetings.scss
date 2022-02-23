@@ -1,10 +1,60 @@
+/* Definitions */
+
+$gap: 15px;
+$workspace-max-width: calc(calc(calc(270px * 2) + $gap) * 2);
+$content-full-max-width: $workspace-max-width;
+$content-half-max-width: calc(calc($workspace-max-width / 2) - calc($gap / 2) - 2px);
+$content-min-width: 520px;
+
+/* End definitions */
+
+
 @mixin assets-bg-icon($img) {
     background-image: url("../../../../assets/images/icons/" + $img);
 }
 
+/* Introduction */
+
 div.vc_introduction {
     margin: 10px 10px 20px;
 }
+
+.meeting-intro.contentbox {
+    max-width: $workspace-max-width;
+    min-width: $content-min-width;
+    margin-bottom: $gap;
+}
+
+/* End Introduction */
+
+/* Sidebar */
+.meeting-action-widget {
+    .meeting-widget-links {
+        li {
+            cursor: pointer;
+            padding: 0;
+            a img {
+                vertical-align: middle;
+            }
+        }
+    }
+}
+
+.meeting-search-widget {
+    .meeting-sidebar-search {
+        .clear-search {
+            cursor: pointer;
+            a img {
+                vertical-align: middle;
+            }
+        }
+    }
+}
+
+/* End Sidebar */
+
+/* Contents */
+
 table.conference-meetings {
     table-layout:fixed;
     tr {
@@ -92,125 +142,6 @@ form.create-conference-meeting input[type="text"] {
     }
 }
 
-form.conference-meeting {
-    fieldset legend {
-        a img {
-            position: relative;
-            top: 3px;
-        }
-    }
-}
-
-div.meeting-item-header {
-    .right {
-        a {
-            margin-right: 5px;
-            padding: 0 0px;
-            line-height: 1em;
-
-            img {
-                margin-top: 5px;
-            }
-
-            &[data-badge]:not([data-badge="0"]) {
-                position: relative;
-
-                &::before {
-                    position: absolute;
-                    left: 50%;
-                    top: -10px;
-
-                    margin-left: 5px;
-
-                    background-clip: content-box;
-                    background-color: #D60000;
-                    border-radius: 50%;
-                    color: white;
-                    content: attr(data-badge);
-                    display: inline-block;
-                    font-size: 10px;
-                    text-indent: 5px;
-                    z-index: 2;
-                    width: 16px;
-                    height: 16px;
-                }
-            }
-        }
-
-        span.meeting-badge {
-            vertical-align: text-bottom;
-            margin-right: 5px;
-        }
-    }
-
-    .left {
-        span.participants {
-            font-size: 14px;
-            font-weight: 200;
-        }
-        flex: 1;
-    }
-    padding: 5px;
-    text-indent: 0;
-    flex-wrap: wrap;
-    display: flex;
-}
-
-label#details {
-    img {
-        position: relative;
-        top: 12px;
-
-        &.info-icon {
-            top: 7px;
-            margin-right: 7px;
-        }
-    }
-
-    span {
-        &.red {
-            color: #D60000;
-        }
-
-        &.creator-date {
-            color: #636971;
-            font-size: 12px;
-            float: right;
-            font-style: italic;
-            margin: 10px 0;
-        }
-
-        &.has-changed {
-            animation: alert 1s;
-        }
-
-        @keyframes alert {
-            0% {
-                color: #D60000;
-            }
-            50% {
-                color: darken(#D60000, 7%);
-            }
-            100% {
-                color: inherit;
-            }
-        }
-    }
-}
-
-div.meeting-item-btns {
-    clear: both;
-
-    button.delete {
-        float: right;
-    }
-
-    a.join {
-        float: left;
-
-    }
-}
-
 fieldset {
     label {
         input[type="checkbox"] {
@@ -251,24 +182,129 @@ div.inline-feature-warning {
     margin-bottom: 1.5ex !important;
 }
 
-
-
 .conference-meeting {
-    .meetingcomponent {
-        margin-right: 2px;
-        vertical-align: top;
-        @media only screen and (max-width: 1300px) {
-            width: 100%;
-        }
-        width: 47%;
-    }
+    max-width: $workspace-max-width;
+    margin: 0;
+    padding: 0;
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: $gap;
+    section.meetingcomponent {
+        position: relative;
+        margin: 0;
+        padding-bottom: 58px;
+        max-width: $content-full-max-width;
+        min-width: $content-min-width;
+        width: 100%;
+        .meeting-item-header {
+            span.meeting-badge {
+                margin-right: $gap;
+                align-self: center;
+            }
+        
+            span.tooltip-icon {
+                padding: 0;
+            }
+
+            nav.action-menu {
+                .action-menu-content {
+                    padding: 4px 8px;
+                    top: 1px;
+                    right: 1px;
+                }
+            }
+        }
+
+        article#details {
+            position: relative;
+            div {
+                &:first-of-type {
+                    width: calc(100% - 185px);
+                }
+                img {
+                    position: relative;
+                    top: 12px;
+            
+                    &.info-icon {
+                        top: 7px;
+                        margin-right: 7px;
+                    }
+                }
+            
+                span {
+                    &.red {
+                        color: #D60000;
+                    }
+            
+                    &.creator-date {
+                        color: #636971;
+                        font-size: 12px;
+                        float: right;
+                        font-style: italic;
+                        margin: 10px 0;
+                    }
+            
+                    &.has-changed {
+                        animation: alert 1s;
+                    }
+            
+                    @keyframes alert {
+                        0% {
+                            color: #D60000;
+                        }
+                        50% {
+                            color: darken(#D60000, 7%);
+                        }
+                        100% {
+                            color: inherit;
+                        }
+                    }
+                }
+            }
+        
+            span.participants {
+                position: absolute;
+                right: 0;
+                top: 10px;
+                font-size: 14px;
+                font-weight: 200;
+                color: #636971;
+            }
+        }
+        > footer {
+            a, button {
+                display:inline-block;
+                margin-bottom: 0;
+            }
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            border-top-style: none;
+            text-align: left;
+            padding: 0 $gap $gap $gap;
+        }
+
+        section {
+            padding: 12px;
+        }
+    }
 }
 
+@media only screen and (min-width: 1440px) {
+    .conference-meeting .meetingcomponent {
+        max-width: $content-half-max-width !important;
+    }
+}
 
-/* DIALOGS */
+.meeting-messagebox {
+    margin-bottom: $gap !important;
+}
+/* End Contents */
+
+/* Dialogs */
+
 .course-folder-container {
     margin-top: 5px;
     table.documents {
@@ -387,3 +423,5 @@ label.with-append{
         }
     }
 }
+
+/* End Dialogs */
