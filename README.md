@@ -2,7 +2,7 @@ Stud.IP Video Conference Plugin
 ===============================
 
 Ein Stud.IP-Plugin um Konferenzen aus einer Veranstaltung heraus starten zu können.
-Teilnehmer/innen des Kurses können der Konferenz beitreten.
+Teilnehmende des Kurses können der Konferenz beitreten.
 
 Wichtige Information für Meetings Plugin ab 2.60
 ------------------------------------------------

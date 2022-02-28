@@ -51,7 +51,7 @@ msgid "(für %{ name })"
 msgstr "(for %{ name })"
 
 #: vueapp/components/MeetingAdd.vue:97 vueapp/components/MeetingAdd.vue:94
-msgid "(max. %{ count } Teilnehmer)"
+msgid "(max. %{ count } Teilnehmende)"
 msgstr "(max. %{ count } participants)"
 
 #: vueapp/components/MeetingAddLabelItem.vue:26
@@ -236,7 +236,7 @@ msgstr "Please note that this room is being recorded!"
 #: vueapp/components/MeetingComponent.vue:95
 msgid ""
 "Bitte beachten Sie, dass dieser Raum aufgezeichnet wird! Die Webcams der "
-"Teilnehmer könnten auch aufgezeichnet werden!"
+"Teilnehmende könnten auch aufgezeichnet werden!"
 msgstr ""
 "Please note that this room is being recorded! The participants webcams could "
 "also be recorded!"
@@ -281,11 +281,11 @@ msgid "Das Meeting hat noch nicht begonnen"
 msgstr "The conference has not yet started"
 
 #: vueapp/components/MeetingComponent.vue:260
-msgid "Das Meeting ist für die Teilnehmer sichtbar"
+msgid "Das Meeting ist für die Teilnehmende sichtbar"
 msgstr "The conference is visible to the participants"
 
 #: vueapp/components/MeetingComponent.vue:261
-msgid "Das Meeting ist für die Teilnehmer unsichtbar"
+msgid "Das Meeting ist für die Teilnehmende unsichtbar"
 msgstr "The conference is not visible to the participants"
 
 #: vueapp/components/MeetingRecordings.vue:22
@@ -895,7 +895,7 @@ msgid "Request Timeout (e.g. 3.4)"
 msgstr "Request Timeout (e.g. 3.4)"
 
 #: Driver/BigBlueButton.php:412
-msgid "Maximale Teilnehmer"
+msgid "Maximale Teilnehmende"
 msgstr "Maximum participants"
 
 #: Driver/BigBlueButton.php:415
@@ -927,7 +927,7 @@ msgid "Maximale Teilnehmerzahl"
 msgstr "Maximum number of participants"
 
 #: Driver/BigBlueButton.php:455
-msgid "Moderatorenzugang via Link"
+msgid "Moderierendezugang via Link"
 msgstr "Moderator access via link"
 
 #: Driver/BigBlueButton.php:457
@@ -935,7 +935,7 @@ msgid "Zugang via Link"
 msgstr "Access via link"
 
 #: Driver/BigBlueButton.php:459
-msgid "Moderatoren vor Teilnehmendenzutritt fragen"
+msgid "Moderierende vor Teilnehmendenzutritt fragen"
 msgstr "Ask moderator before participants get access"
 
 #: Driver/BigBlueButton.php:461
@@ -947,19 +947,19 @@ msgid "Gemeinsame Notizen deaktivieren"
 msgstr "Deactivate shared notes"
 
 #: Driver/BigBlueButton.php:465
-msgid "Nur Moderatoren können Audio teilen"
+msgid "Nur Moderierende können Audio teilen"
 msgstr "Only moderators can share audio"
 
 #: Driver/BigBlueButton.php:467
-msgid "Nur Moderatoren können Webcams teilen"
+msgid "Nur Moderierende können Webcams teilen"
 msgstr "Only moderators can share webcams"
 
 #: Driver/BigBlueButton.php:469
-msgid "Nur Moderatoren können Webcams sehen"
+msgid "Nur Moderierende können Webcams sehen"
 msgstr "Only moderators can see webcams"
 
 #: Driver/BigBlueButton.php:471
-msgid "Jeder Teilnehmer kann die Konferenz starten"
+msgid "Jede Teilnehmnde kann die Konferenz starten"
 msgstr "Every participant can start the conference"
 
 #: Driver/BigBlueButton.php:473
@@ -988,7 +988,7 @@ msgstr ""
 
 #: Driver/BigBlueButton.php:496
 msgid ""
-"Erlaubt es Moderatoren, die Medien und Ereignisse in der Sitzung für die "
+"Erlaubt es Moderierende, die Medien und Ereignisse in der Sitzung für die "
 "spätere Wiedergabe aufzuzeichnen. Die Aufzeichnung muss innerhalb der "
 "Sitzung von einem Moderator gestartet werden."
 msgstr ""
@@ -1035,7 +1035,7 @@ msgstr ""
 
 #: Driver/BigBlueButton.php:576
 msgid ""
-"Bei Aktivierung dieser Option können ausschließlich Moderatoren die von "
+"Bei Aktivierung dieser Option können ausschließlich Moderierende die von "
 "Teilnehmenden freigegebenen Webcams sehen."
 msgstr ""
 "If this option is activated, only moderators can see the webcams shared by "
@@ -1055,8 +1055,8 @@ msgstr ""
 
 #: Driver/BigBlueButton.php:583
 msgid ""
-"Der private Chat zwischen Teilnehmern wird eingeschränkt, Teilnehmer können "
-"jedoch weiterhin privat mit Moderatoren kommunizieren."
+"Der private Chat zwischen den Teilnehmenden wird eingeschränkt, Teilnehmende können "
+"jedoch weiterhin privat mit Moderierenden kommunizieren."
 msgstr ""
 "Private chat between participants is restricted, but participants can still "
 "communicate privately with moderators."
@@ -1092,7 +1092,7 @@ msgstr ""
 
 #: Driver/BigBlueButton.php:595
 msgid ""
-"Legen Sie fest, ob Gäste und Teilnehmer dem Meeting direkt beitreten können "
+"Legen Sie fest, ob Gäste und Teilnehmende dem Meeting direkt beitreten können "
 "oder ihre Teilnahme von einem Moderator bestätigt werden muss."
 msgstr ""
 "Decide if guests and participants can join the conference directly or if a "
@@ -1726,7 +1726,7 @@ msgstr "Default slide"
 #~ "The maximum length (in minutes) for the meeting. After the set duration ha"
 
 #~ msgid ""
-#~ "Erlaubt es Moderatoren, die Medien und Ereignisse in der Sitzung für di"
+#~ "Erlaubt es Moderierende, die Medien und Ereignisse in der Sitzung für di"
 #~ msgstr ""
 #~ "Allows moderators to record the media and events in the session for late"
 

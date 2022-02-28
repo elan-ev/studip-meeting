@@ -13,7 +13,7 @@
             </h1>
             <template v-if="room.features && room.features.record && room.features.record == 'true' && !room.record_not_allowed">
                 <StudipTooltipIcon v-show="opencast_webcam_record_enabled"
-                    :text="$gettext('Bitte beachten Sie, dass dieser Raum aufgezeichnet wird! Die Webcams der Teilnehmer könnten auch aufgezeichnet werden!')"
+                    :text="$gettext('Bitte beachten Sie, dass dieser Raum aufgezeichnet wird! Die Webcams der Teilnehmende könnten auch aufgezeichnet werden!')"
                     :badge="true"
                 >
                     <StudipIcon icon="span-full" role="attention" size="11"></StudipIcon> <span v-text="'Rec + Webcam'"></span>
@@ -66,8 +66,8 @@
                             role="clickable" size="24"></StudipIcon>
                     </a>
                     <span :id="'active-info-text-' + room.id" class="">{{ room.active == 1 ?
-                        $gettext('Das Meeting ist für die Teilnehmer sichtbar')
-                        : $gettext('Das Meeting ist für die Teilnehmer unsichtbar') }}
+                        $gettext('Das Meeting ist für die Teilnehmende sichtbar')
+                        : $gettext('Das Meeting ist für die Teilnehmende unsichtbar') }}
                     </span>
                 </div>
 
