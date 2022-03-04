@@ -122,7 +122,7 @@
                                                 count: config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants']
                                             }"
                                         >
-                                            (max. %{ count } Teilnehmer)
+                                            (max. %{ count } Teilnehmende)
                                         </span>
                                         <span v-if="config[room['driver']]['server_course_type'] && config[room['driver']]['server_course_type'][server_index] &&
                                                     config[room['driver']]['server_course_type'][server_index]['name']"

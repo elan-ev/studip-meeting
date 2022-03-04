@@ -409,7 +409,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             new ConfigOption('proxy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugriff über Proxy')),
             new ConfigOption('connection_timeout', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Connection Timeout (e.g. 0.5)')),
             new ConfigOption('request_timeout', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Request Timeout (e.g. 3.4)')),
-            new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmer')),
+            new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Max. Zahl von Teilnehmenden')),
             new ConfigOption('course_types', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Veranstaltungstyp'), MeetingPlugin::getSemClasses(), _('Nur in folgenden Veranstaltungskategorien nutzbar')),
             new ConfigOption('description', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Beschreibung'), '', _('Der Beschreibungstext wird Lehrenden angezeigt wenn dieser Server ausgewählt wird.')),
             new ConfigOption('roomsize-presets', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Raumgrößenvoreinstellungen'), self::getRoomSizePresets()),
@@ -452,23 +452,23 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
         $res['maxParticipants'] = new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 0, self::getFeatureInfo('maxParticipants'));
 
-        $res['invite_moderator'] = new ConfigOption('invite_moderator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Moderatorenzugang via Link'), false, self::getFeatureInfo('invite_moderator'));
+        $res['invite_moderator'] = new ConfigOption('invite_moderator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Moderierendenzugang via Link'), false, self::getFeatureInfo('invite_moderator'));
 
         $res['guestPolicy-ALWAYS_ACCEPT'] = new ConfigOption('guestPolicy-ALWAYS_ACCEPT', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugang via Link'), false, self::getFeatureInfo('guestPolicy-ALWAYS_ACCEPT'));
 
-        $res['guestPolicy-ASK_MODERATOR'] = new ConfigOption('guestPolicy-ASK_MODERATOR', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Moderatoren vor Teilnehmendenzutritt fragen'), false, self::getFeatureInfo('guestPolicy-ASK_MODERATOR'));
+        $res['guestPolicy-ASK_MODERATOR'] = new ConfigOption('guestPolicy-ASK_MODERATOR', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Moderierende vor Teilnehmendenzutritt fragen'), false, self::getFeatureInfo('guestPolicy-ASK_MODERATOR'));
 
         $res['privateChat'] = new ConfigOption('lockSettingsDisablePrivateChat', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Private Chats deaktivieren'), false, self::getFeatureInfo('lockSettingsDisablePrivateChat'));
 
         $res['lockSettingsDisableNote'] = new ConfigOption('lockSettingsDisableNote', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Gemeinsame Notizen deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableNote'));
 
-        $res['lockSettingsDisableMic'] = new ConfigOption('lockSettingsDisableMic', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Nur Moderatoren können Audio teilen'), false, self::getFeatureInfo('lockSettingsDisableMic'));
+        $res['lockSettingsDisableMic'] = new ConfigOption('lockSettingsDisableMic', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Nur Moderierende können Audio teilen'), false, self::getFeatureInfo('lockSettingsDisableMic'));
 
-        $res['lockSettingsDisableCam'] = new ConfigOption('lockSettingsDisableCam', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Nur Moderatoren können Webcams teilen'), false, self::getFeatureInfo('lockSettingsDisableCam'));
+        $res['lockSettingsDisableCam'] = new ConfigOption('lockSettingsDisableCam', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Nur Moderierende können Webcams teilen'), false, self::getFeatureInfo('lockSettingsDisableCam'));
 
-        $res['webcamsOnlyForModerator'] = new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Nur Moderatoren können Webcams sehen'), false, self::getFeatureInfo('webcamsOnlyForModerator'));
+        $res['webcamsOnlyForModerator'] = new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Nur Moderierende können Webcams sehen'), false, self::getFeatureInfo('webcamsOnlyForModerator'));
 
-        $res['room_anyone_can_start'] = new ConfigOption('room_anyone_can_start', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Jeder Teilnehmer kann die Konferenz starten'), true, self::getFeatureInfo('room_anyone_can_start'));
+        $res['room_anyone_can_start'] = new ConfigOption('room_anyone_can_start', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Alle Teilnehmenden können die Konferenz starten'), true, self::getFeatureInfo('room_anyone_can_start'));
 
         $res['muteOnStart'] = new ConfigOption('muteOnStart', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Alle Teilnehmenden initial stumm schalten'), false, self::getFeatureInfo('muteOnStart'));
 
@@ -494,7 +494,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 false, _('Sofern erlaubt, werden auch die Webcams aufgezeichnet. Das Opencast-System muss diese Funktion unterstützen, um diese Einstellung anzuwenden.'));
 
         } else if ($record_config) {
-            $info = _('Erlaubt es Moderatoren, die Medien und Ereignisse in der Sitzung für die spätere Wiedergabe aufzuzeichnen. Die Aufzeichnung muss innerhalb der Sitzung von einem Moderator gestartet werden.');
+            $info = _('Erlaubt es Moderierenden, die Medien und Ereignisse in der Sitzung für die spätere Wiedergabe aufzuzeichnen. Die Aufzeichnung muss innerhalb der Sitzung von einem Moderator gestartet werden.');
         }
         if ($info) {
             $res['record'] = new ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Sitzungen können aufgezeichnet werden.'),
@@ -574,14 +574,14 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     static private function getFeatureInfo($name)  {
         switch ($name) {
             case 'webcamsOnlyForModerator':
-                return _('Bei Aktivierung dieser Option können ausschließlich Moderatoren die von Teilnehmenden freigegebenen Webcams sehen.');
+                return _('Bei Aktivierung dieser Option können ausschließlich Moderierende die von Teilnehmenden freigegebenen Webcams sehen.');
             break;
             case 'welcome':
                 return _('Wenn leer, wird die Standardnachricht angezeigt. Sie können folgende Schlüsselwörter einfügen, die automatisch ersetzt werden:
                 %% CONFNAME %% (Sitzungsname), %% DIALNUM %% (Sitzungswahlnummer)');
             break;
             case 'lockSettingsDisablePrivateChat':
-                return _('Der private Chat zwischen Teilnehmern wird eingeschränkt, Teilnehmer können jedoch weiterhin privat mit Moderatoren kommunizieren.');
+                return _('Der private Chat zwischen den Teilnehmenden wird eingeschränkt, Teilnehmende können jedoch weiterhin privat mit Moderierenden kommunizieren.');
                 break;
             case 'duration':
                 return _('Die maximale Länge (in Minuten) für das Meeting. Nach Ablauf der eingestellen Dauer wird das Meeting automatisch beendet, d.h. der Raum wird geschlossen. Falls bereits vor Ablauf der Zeit alle Teilnehmenden das Meeting verlassen haben, oder ein Moderator das Meeting aktiv beendet wird der Raum ebenfalls geschlossen.');
@@ -593,7 +593,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 return _('Legen Sie fest, ob Benutzer mit Einladungslink als Gäste an der Besprechung teilnehmen dürfen.');
                 break;
             case 'guestPolicy-ASK_MODERATOR':
-                return _('Legen Sie fest, ob Gäste und Teilnehmer dem Meeting direkt beitreten können oder ihre Teilnahme von einem Moderator bestätigt werden muss.');
+                return _('Legen Sie fest, ob Gäste und Teilnehmende dem Meeting direkt beitreten können oder die Teilnahme von einem Moderierenden bestätigt werden muss.');
                 break;
             case 'maxParticipants':
                 return '';
