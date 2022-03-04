@@ -409,7 +409,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             new ConfigOption('proxy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugriff über Proxy')),
             new ConfigOption('connection_timeout', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Connection Timeout (e.g. 0.5)')),
             new ConfigOption('request_timeout', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Request Timeout (e.g. 3.4)')),
-            new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmende')),
+            new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Max. Zahl von Teilnehmenden')),
             new ConfigOption('course_types', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Veranstaltungstyp'), MeetingPlugin::getSemClasses(), _('Nur in folgenden Veranstaltungskategorien nutzbar')),
             new ConfigOption('description', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Beschreibung'), '', _('Der Beschreibungstext wird Lehrenden angezeigt wenn dieser Server ausgewählt wird.')),
             new ConfigOption('roomsize-presets', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Raumgrößenvoreinstellungen'), self::getRoomSizePresets()),
@@ -452,7 +452,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
         $res['maxParticipants'] = new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 0, self::getFeatureInfo('maxParticipants'));
 
-        $res['invite_moderator'] = new ConfigOption('invite_moderator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Moderierendezugang via Link'), false, self::getFeatureInfo('invite_moderator'));
+        $res['invite_moderator'] = new ConfigOption('invite_moderator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Moderierendenzugang via Link'), false, self::getFeatureInfo('invite_moderator'));
 
         $res['guestPolicy-ALWAYS_ACCEPT'] = new ConfigOption('guestPolicy-ALWAYS_ACCEPT', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugang via Link'), false, self::getFeatureInfo('guestPolicy-ALWAYS_ACCEPT'));
 
@@ -468,7 +468,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
         $res['webcamsOnlyForModerator'] = new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Nur Moderierende können Webcams sehen'), false, self::getFeatureInfo('webcamsOnlyForModerator'));
 
-        $res['room_anyone_can_start'] = new ConfigOption('room_anyone_can_start', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Jede Teilnehmnde kann die Konferenz starten'), true, self::getFeatureInfo('room_anyone_can_start'));
+        $res['room_anyone_can_start'] = new ConfigOption('room_anyone_can_start', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Alle Teilnehmenden können die Konferenz starten'), true, self::getFeatureInfo('room_anyone_can_start'));
 
         $res['muteOnStart'] = new ConfigOption('muteOnStart', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Alle Teilnehmenden initial stumm schalten'), false, self::getFeatureInfo('muteOnStart'));
 
@@ -493,7 +493,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 false, _('Sofern erlaubt, werden auch die Webcams aufgezeichnet. Das Opencast-System muss diese Funktion unterstützen, um diese Einstellung anzuwenden.'));
 
         } else if ($record_config) {
-            $info = _('Erlaubt es Moderierende, die Medien und Ereignisse in der Sitzung für die spätere Wiedergabe aufzuzeichnen. Die Aufzeichnung muss innerhalb der Sitzung von einem Moderator gestartet werden.');
+            $info = _('Erlaubt es Moderierenden, die Medien und Ereignisse in der Sitzung für die spätere Wiedergabe aufzuzeichnen. Die Aufzeichnung muss innerhalb der Sitzung von einem Moderator gestartet werden.');
         }
         if ($info) {
             $res['record'] = new ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Sitzungen können aufgezeichnet werden.'),
@@ -592,7 +592,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 return _('Legen Sie fest, ob Benutzer mit Einladungslink als Gäste an der Besprechung teilnehmen dürfen.');
                 break;
             case 'guestPolicy-ASK_MODERATOR':
-                return _('Legen Sie fest, ob Gäste und Teilnehmende dem Meeting direkt beitreten können oder ihre Teilnahme von einem Moderator bestätigt werden muss.');
+                return _('Legen Sie fest, ob Gäste und Teilnehmende dem Meeting direkt beitreten können oder die Teilnahme von einem Moderierenden bestätigt werden muss.');
                 break;
             case 'maxParticipants':
                 return '';
@@ -760,14 +760,14 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
      *  Applies required rules and manages Auto Start/Stop Recording.
      *
      * @param array $features applied features
-     * 
+     *
      * @return array $features managed features
      */
     private static function handelAutoStartStopRecording($features)
     {
         $allowStartStopRecording = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'allowStartStopRecording'), FILTER_VALIDATE_BOOLEAN);
         $autoStartRecording = isset($features['autoStartRecording']) ? filter_var($features['autoStartRecording'], FILTER_VALIDATE_BOOLEAN) : true;
-        
+
         // In case admin does not allow start/stop recording to be selectable, then we should always pass the auto as "true".
         if (!$allowStartStopRecording) {
             $autoStartRecording = true;
