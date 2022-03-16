@@ -42,7 +42,7 @@
                                 && Object.keys(config[room['driver']]['servers']).length > 1)">
 
                         <legend v-translate>
-                            Konferenz Systemeinstellung
+                            Konferenzsystem
                         </legend>
 
                         <label v-if="Object.keys(config).length > 1">
