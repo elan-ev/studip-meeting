@@ -873,7 +873,7 @@ msgstr "Reset"
 
 #: app/views/room/qrcode.php:3
 msgid "Bitte geben Sie den Zugangscode des Meetings"
-msgstr "Please present the access code of the conference"
+msgstr "Please enter the access code of the conference"
 
 #: app/views/room/qrcode.php:7 app/views/room/index.php:8
 #: app/views/room/moderator.php:12

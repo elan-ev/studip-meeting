@@ -274,7 +274,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
             if ($cid) {
                 if ($plugin_manager->isPluginActivated($opencast_plugin['id'], $cid)) {
                     try {
-                        return self::getOpencastSeriesId($cid, $opencast_plugin);
+                        return self::getOpencastSeriesId($cid);
                     } catch (Exception $ex) {
                         //Handle Error
                         throw new Error('Opencast-Serien-ID konnte nicht abgerufen werden.', 500);
@@ -288,27 +288,21 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
         return false;
     }
 
-    private static function getOpencastSeriesId($cid, $opencast_plugin_info) {
+    private static function getOpencastSeriesId($cid) {
         if (empty($cid)) {
             return false;
         }
 
-        // We need to provide the right files in order to use the getSeries method from OCSeminarSeries
-        // when the user is not authenticated, that happens mostly via QR-Code login.
-        if ($GLOBALS['auth']->auth['uid'] === 'nobody') {
-            $opencast_plugin_path = "{$GLOBALS['ABSOLUTE_PATH_STUDIP']}plugins_packages/{$opencast_plugin_info['path']}";
-            if (!file_exists("$opencast_plugin_path/constants.php") ||
-                !file_exists("$opencast_plugin_path/classes/OCRestClient/OCRestClient.php") ||
-                !file_exists("$opencast_plugin_path/classes/OCRestClient/SeriesClient.php")) {
-                    throw new Error('Opencast-Serien-ID konnte nicht abgerufen werden.', 500);
-            }
-            require("$opencast_plugin_path/constants.php");
-            require("$opencast_plugin_path/classes/OCRestClient/OCRestClient.php");
-            require("$opencast_plugin_path/classes/OCRestClient/SeriesClient.php");
+        // Getting series id directly from database to make everything simpler.
+        $series = DBManager::get()->fetchOne(
+            'SELECT series_id FROM oc_seminar_series 
+                    WHERE seminar_id = :cid ORDER BY `mkdate` ASC',
+            [':cid' => $cid]);
+        if (empty($series)) {
+            return false;
         }
 
-        $opencastSeminarSeries = \Opencast\Models\OCSeminarSeries::getSeries($cid);
-        return (!empty($opencastSeminarSeries) ? $opencastSeminarSeries[0]['series_id'] : false);
+        return $series['series_id'];
     }
 
     /**
