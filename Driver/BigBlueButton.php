@@ -147,6 +147,16 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
                 // If the Opencast is responsible for recording, then we pass webcam recording flag as well.
                 $features['meta_opencast-add-webcams'] = $opencast_webcam_record;
+
+                $course = \Course::find(\Context::getId());
+
+                $creators = [];
+
+                foreach ($course->getMembersWithStatus('dozent') as $member) {
+                    $creators[] = get_fullname($member->user_id);
+                }
+                // if we have a series, whe also have a creator
+                $features['meta_opencast-dc-creator'] = implode(', ', $creators);
             }
 
             if (intval($features['maxParticipants']) == 0) {
