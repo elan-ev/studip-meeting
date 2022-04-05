@@ -168,6 +168,14 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 }
             }
 
+            // Make sure that pre-defined params' values take priority over features.
+            foreach ($params as $param_key => $param_value) {
+                // We remove anything that overlaps in features, so be careful with choosing the feature key name!
+                if (isset($features[$param_key])) {
+                    unset($features[$param_key]);
+                }
+            }
+
             $params = array_merge($params, $features);
         }
 
