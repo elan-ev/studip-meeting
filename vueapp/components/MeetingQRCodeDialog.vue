@@ -7,6 +7,10 @@
                 </MessageBox>
                 <form class="default">
                     <fieldset>
+                        <label>
+                            <span v-translate>QR Code nur für persönlichen Gebrauch</span>
+                            <StudipTooltipIcon :text="$gettext('Verwenden Sie diesen QR-Code nur für Ihren privaten Gebrauch und teilen Sie ihn nicht mit anderen!')"></StudipTooltipIcon>
+                        </label>
                         <span class="required" v-translate>QR-Code scannen</span>
                         <StudipTooltipIcon :text="$gettext('Verwenden Sie Ihren QR-Code-Leser (z. B. Gerätekamera) und verwenden Sie die URL-Adresse, um auf dieses Meeting zuzugreifen')"></StudipTooltipIcon>
                         <label v-if="url">
