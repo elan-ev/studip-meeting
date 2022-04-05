@@ -522,8 +522,8 @@ msgid "Keine Schriftart"
 msgstr "No font"
 
 #: vueapp/components/MeetingAdd.vue:37 vueapp/components/MeetingAdd.vue:34
-msgid "Konferenz Systemeinstellung"
-msgstr "Conference system setting"
+msgid "Konferenzsystem"
+msgstr "Conference system"
 
 #: vueapp/components/MeetingAdd.vue:42 vueapp/components/MeetingAdd.vue:39
 msgid "Konferenzsystem"

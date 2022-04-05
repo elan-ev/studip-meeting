@@ -40,7 +40,7 @@
 
                     <fieldset id="server_settings_section" class="collapsable" :class="{collapsed: !isAddRoom}" v-if="show_server_settings_section">
                         <legend v-translate>
-                            Konferenz Systemeinstellung
+                            Konferenzsystem
                         </legend>
 
                         <label v-if="Object.keys(config).length > 1">

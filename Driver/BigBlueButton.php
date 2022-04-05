@@ -485,6 +485,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         $record_config = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'record'), FILTER_VALIDATE_BOOLEAN);
         $opencast_config = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'opencast'), FILTER_VALIDATE_BOOLEAN);
         $allowStartStopRecording_config = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'allowStartStopRecording'), FILTER_VALIDATE_BOOLEAN);
+        $startStopRecording_config = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'startStopRecording'), FILTER_VALIDATE_BOOLEAN);
 
         $info = '';
         if ($opencast_config) {
@@ -504,7 +505,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         // Show the "autoStartRecording" feature when the "allowStartStopRecording" is enabled by the admin.
         if ($allowStartStopRecording_config) {
             $res['autoStartRecording'] = new ConfigOption('autoStartRecording', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnung automatisch starten'),
-                true, _('Wenn deaktiviert, muss die Sitzungsaufzeichnung von den Moderator:innen manuell gestartet werden.'));
+                $startStopRecording_config, _('Wenn deaktiviert, muss die Sitzungsaufzeichnung von den Moderator:innen manuell gestartet werden.'));
         }
 
         $res['giveAccessToRecordings'] = new ConfigOption('giveAccessToRecordings', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnungen für Teilnehmende sichtbar schalten'),
@@ -753,6 +754,8 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
         $res['allowStartStopRecording'] = new ConfigOption('allowStartStopRecording', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnungen konfigurierbar machen'),
                 false, _("Wenn aktiv, so wird den Mentor:innen die Option 'Aufzeichnung automatisch starten' angezeigt und sie haben die Möglichkeit die Aufzeichnung manuell zu starten, pausieren oder stoppen."));
+        $res['startStopRecording'] = new ConfigOption('startStopRecording', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnungen standardmäßig automatisch starten'),
+                true, _("Standardwert für die Konferenzraum-Einstellung 'Aufzeichnung automatisch starten'."));
 
         return $res;
     }
@@ -767,14 +770,16 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     private static function handelAutoStartStopRecording($features)
     {
         $allowStartStopRecording = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'allowStartStopRecording'), FILTER_VALIDATE_BOOLEAN);
-        $autoStartRecording = isset($features['autoStartRecording']) ? filter_var($features['autoStartRecording'], FILTER_VALIDATE_BOOLEAN) : true;
+        $startStopRecording = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'startStopRecording'), FILTER_VALIDATE_BOOLEAN);
+        $autoStartRecording = isset($features['autoStartRecording']) ? filter_var($features['autoStartRecording'], FILTER_VALIDATE_BOOLEAN) : $startStopRecording;
 
-        // In case admin does not allow start/stop recording to be selectable, then we should always pass the auto as "true".
+        // In case admin does not allow start/stop recording to be selectable, then we should always pass that recording should be auto-started.
         if (!$allowStartStopRecording) {
             $autoStartRecording = true;
         }
 
         $features['allowStartStopRecording'] = $allowStartStopRecording;
+        $features['startStopRecording'] = $startStopRecording;
         $features['autoStartRecording'] = $autoStartRecording;
 
         return $features;
