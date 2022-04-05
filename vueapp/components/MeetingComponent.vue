@@ -239,13 +239,13 @@ export default {
         },
 
         show_recording_badge() {
-            return this.room?.driver &&
+            return this.room?.driver && this.config &&
                 (parseInt(this.config[this.room.driver]?.record) || parseInt(this.config[this.room.driver]?.opencast)) &&
                 this.room?.features?.record == 'true' && !this.room?.record_not_allowed;
         },
 
         opencast_webcam_record_enabled() {
-            return this.room?.driver && parseInt(this.config[this.room.driver]?.opencast) && this.room?.features?.opencast_webcam_record == 'true';
+            return this.room?.driver && this.config && parseInt(this.config[this.room.driver]?.opencast) && this.room?.features?.opencast_webcam_record == 'true';
         },
 
         showParticipantCount() {
