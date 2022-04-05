@@ -138,7 +138,17 @@ export default {
                         }
                     }
                     return disabled;
-                default: 
+                case 'autoStartRecording':
+                    var disabled = false;
+                    if (this.feature['name'] == 'autoStartRecording') {
+                        if (this.room.features && Object.keys(this.room.features).includes('record')
+                            && JSON.parse(this.room.features.record) == false) {
+                            this.$set(this.room.features, 'autoStartRecording', 'false');
+                            disabled = true;
+                        }
+                    }
+                    return disabled;
+                default:
                     return false;
             }
         }
