@@ -100,7 +100,7 @@
             />
         </MountingPortal>
         <MountingPortal mountTo="#meeting-search-widget" name="sidebar-search" v-if="generate_search_needles.length">
-            <StudipSearchWidget 
+            <StudipSearchWidget
                 :needles="generate_search_needles"
                 @setRoomFilter="setRoomFilter"
                 @clearRoomFilter="clearRoomFilter"
@@ -172,7 +172,7 @@ export default {
         generate_action_items() {
             let actionItems = [];
             let id = 1;
-            if (this.rooms_list.length && this.config && this.course_config?.display?.addRoom) {
+            if (this.config && this.course_config?.display?.addRoom) {
                 actionItems.push({id: id, label: this.$gettext('Raum hinzufügen'), icon: 'add', emit: 'createNewRoom'});
                 id++;
             }
@@ -220,7 +220,7 @@ export default {
             if (this.config[room.driver]['features'] !== undefined) {
                 // Apply defaults for record features.
                 if (Object.keys(this.config[room.driver]).includes('features') &&
-                    Object.keys(this.config[room.driver]['features']).includes('record') && 
+                    Object.keys(this.config[room.driver]['features']).includes('record') &&
                     Object.keys(this.config[room.driver]['features']['record']).includes('record_setting')) {
                     let config_record_setting_features = this.config[room.driver]['features']['record']['record_setting'];
                     var default_feature_obj = {};
