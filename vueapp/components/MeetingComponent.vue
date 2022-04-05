@@ -11,7 +11,7 @@
                     :text="`${room.details['creator']}, ${room.details['date']}`">
                 </StudipTooltipIcon>
             </h1>
-            <template v-if="room.features && room.features.record && room.features.record == 'true' && !room.record_not_allowed">
+            <template v-if="show_recording_badge">
                 <StudipTooltipIcon v-show="opencast_webcam_record_enabled"
                     :text="$gettext('Bitte beachten Sie, dass dieser Raum aufgezeichnet wird! Die Webcams der Teilnehmenden könnten auch aufgezeichnet werden!')"
                     :badge="true"
@@ -238,9 +238,14 @@ export default {
             return group_name;
         },
 
+        show_recording_badge() {
+            return this.room?.driver &&
+                (parseInt(this.config[this.room.driver]?.record) || parseInt(this.config[this.room.driver]?.opencast)) &&
+                this.room?.features?.record == 'true' && !this.room?.record_not_allowed;
+        },
+
         opencast_webcam_record_enabled() {
-            return (this.room && this.room.driver && this.room.features && this.room.features.opencast_webcam_record &&
-                JSON.parse(this.room.features.opencast_webcam_record) == true && this.config && Object.keys(this.config[this.room.driver]).includes('opencast') && this.config[this.room.driver].opencast == '1');
+            return this.room?.driver && parseInt(this.config[this.room.driver]?.opencast) && this.room?.features?.opencast_webcam_record == 'true';
         },
 
         showParticipantCount() {

@@ -128,7 +128,9 @@ class RoomsList extends MeetingsController
                         if (isset($meeting['features']['meta_opencast-dc-isPartOf'])) {
                             unset($meeting['features']['meta_opencast-dc-isPartOf']);
                         }
-                        $record_not_allowed = _($recording_capability['message'] ? $recording_capability['message'] : 'Sitzungsaufzeichnung ist nicht erlaubt.');
+                        if (!empty($recording_capability['type'])) {
+                            $record_not_allowed = _($recording_capability['message'] ? $recording_capability['message'] : 'Sitzungsaufzeichnung derzeit deaktiviert.');
+                        }
                     } else {
                         if ($recording_capability['type'] == 'opencast') {
                             $meeting['features']['meta_opencast-dc-isPartOf'] = $recording_capability['seriesid'];

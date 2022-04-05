@@ -108,7 +108,7 @@ class RoomManager
      */
     public static function checkRecordingCapability($driver, $cid) {
         $allow_recording = false;
-        $message = 'Sitzungsaufzeichnung ist nicht erlaubt.';
+        $message = 'Sitzungsaufzeichnung derzeit deaktiviert.';
         $type = '';
         $seriesid = '';
         $record_config = filter_var(Driver::getConfigValueByDriver($driver, 'record'), FILTER_VALIDATE_BOOLEAN);

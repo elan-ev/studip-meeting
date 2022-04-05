@@ -122,7 +122,7 @@ class RoomAdd extends MeetingsController
             if (isset($json['features']) && isset($json['features']['record'])
                 && filter_var($json['features']['record'], FILTER_VALIDATE_BOOLEAN)) { // Recording is asked...
                 $recording_capability = RoomManager::checkRecordingCapability($json['driver'], $json['cid']);
-                if ($recording_capability['allow_recording'] == false
+                if (!empty($recording_capability['type']) && $recording_capability['allow_recording'] == false
                     || ($recording_capability['allow_recording'] == true && $recording_capability['type'] == 'opencast'
                         && empty($recording_capability['seriesid']))) {
                     $has_error = true;

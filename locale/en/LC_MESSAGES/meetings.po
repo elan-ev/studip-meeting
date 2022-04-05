@@ -1472,7 +1472,7 @@ msgid "Das automatische Hochladen von Folien ist derzeit nicht möglich"
 msgstr "Automatically upload of materials is currently not possible"
 
 #: lib/Routes/Rooms/RoomsList.php:131
-msgid "Sitzungsaufzeichnung ist nicht erlaubt."
+msgid "Sitzungsaufzeichnung derzeit deaktiviert."
 msgstr "Session recording is not allowed."
 
 #: lib/Routes/Rooms/RoomGenerateQRCode.php:32

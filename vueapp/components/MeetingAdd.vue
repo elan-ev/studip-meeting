@@ -38,9 +38,7 @@
                         </label>
                     </fieldset>
 
-                    <fieldset id="server_settings_section" class="collapsable" :class="{collapsed: !isAddRoom}" v-if="(Object.keys(config).length > 1) || (room['driver']
-                                && Object.keys(config[room['driver']]['servers']).length > 1)">
-
+                    <fieldset id="server_settings_section" class="collapsable" :class="{collapsed: !isAddRoom}" v-if="show_server_settings_section">
                         <legend v-translate>
                             Konferenzsystem
                         </legend>
@@ -170,10 +168,7 @@
                         </template>
                     </fieldset>
 
-                    <fieldset id="recording_settings_section" class="collapsable collapsed" v-if="room['driver'] && Object.keys(config[room['driver']]).includes('features')
-                                && Object.keys(config[room['driver']]['features']).includes('record')
-                                && Object.keys(config[room['driver']]['features']['record']).includes('record_setting')
-                                && Object.keys(config[room['driver']]['features']['record']['record_setting']).length">
+                    <fieldset id="recording_settings_section" class="collapsable collapsed" v-if="show_recording_settings_section">
                         <legend v-text="$gettext('Aufzeichnung')"></legend>
                         <template v-for="(feature, index) in config[room['driver']]['features']['record']['record_setting']">
                             <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :maxDuration="maxDuration"
@@ -474,6 +469,14 @@ export default {
             'config',
             'course_config', 'course_groups', 'folder'
         ]),
+
+        show_server_settings_section() {
+            return ((Object.keys(this.config).length > 1) || (this.room?.driver && this.config[this.room.driver]?.servers?.length > 1));
+        },
+
+        show_recording_settings_section() {
+            return this.room?.driver && (parseInt(this.config[this.room.driver]?.record) || parseInt(this.config[this.room.driver]?.opencast)) && this.config[this.room.driver]?.features?.record?.record_setting?.length;
+        },
 
         availableServers() {
             let availableServers = {};

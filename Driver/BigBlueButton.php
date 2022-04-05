@@ -123,6 +123,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 if (self::checkRecordingCapability($features)) {
                     $params['name'] = $params['name'] . ' (' . date('Y-m-d H:i:s') . ')';
                 } else {
+                    $features['duration'] = '';
                     $features['record'] = 'false';
                 }
             }
