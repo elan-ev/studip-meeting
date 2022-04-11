@@ -63,6 +63,12 @@
             <template v-slot:buttons>
             </template>
          </MeetingDialog>
+
+         <!-- dialogs -->
+        <MeetingMessageDialog v-if="showConfirmDialog"
+            :message="showConfirmDialog"
+            @accept="handleConfirmCallbacks"
+        />
     </div>
 </template>
 
@@ -74,6 +80,7 @@ import StudipButton from "@/components/StudipButton";
 import StudipIcon from "@/components/StudipIcon";
 import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import MessageBox from "@/components/MessageBox";
+import MeetingMessageDialog from "@/components/MeetingMessageDialog";
 import { dialog } from '@/common/dialog.mixins'
 
 
@@ -96,13 +103,15 @@ export default {
         StudipButton,
         StudipIcon,
         StudipTooltipIcon,
-        MessageBox
+        MessageBox,
+        MeetingMessageDialog
     },
 
     data() {
         return {
             modal_message: {},
-            message: ''
+            message: '',
+            showConfirmDialog: false
         }
     },
 
@@ -118,6 +127,17 @@ export default {
 
     methods: {
         deleteRecording(recording) {
+            this.showConfirmDialog = false;
+            this.showConfirmDialog = {
+                title: 'Aufzeichnung löschen'.toLocaleString(),
+                text: 'Sind sie sicher, dass Sie diese Aufzeichnung löschen möchten?'.toLocaleString(),
+                type: 'question', //info, warning, question
+                isConfirm: true,
+                callback: 'performDeleteRecording',
+                callback_data: {recording},
+            }
+        },
+        performDeleteRecording({recording}) {
             this.$store.dispatch(RECORDING_DELETE, recording);
             this.$store.dispatch(RECORDING_LIST, recording.room_id).then(({ data }) => {
                 this.$store.commit(RECORDING_LIST_SET, data);
@@ -129,7 +149,13 @@ export default {
                     room.recordings_count = data.length;
                 }
             });
-        }
+        },
+        handleConfirmCallbacks(callback, data = null) {
+            this.showConfirmDialog = false;
+            if (callback && this[callback] != undefined) {
+                this[callback](data);
+            }
+        },
     }
 }
 </script>
