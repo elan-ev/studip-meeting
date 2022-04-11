@@ -15,11 +15,11 @@
                                 }"
                             >(%{ length } Zeichen)</span>
                             <input type="text" :maxlength="password_length" :minlength="password_length"
-                                v-model.trim="moderator_password" id="moderatorpassword"
+                                :value="moderator_password" id="moderatorpassword" readonly
                                 @keyup="passwordInputHandler($event)"
                                 @change.once="generateModeratorGuestJoin($event)">
                             <StudipButton id="generate_code_btn" type="button" v-on:click="generateRandomCode($event)">
-                                <translate>Zugangscode generieren</translate>
+                                <translate>Neues Zugangscode generieren</translate>
                             </StudipButton>
                         </label>
                         <label id="guest_link_label" v-if="moderator_access_link">
