@@ -317,8 +317,14 @@ div.inline-feature-warning {
             flex-wrap: wrap;
             font-size: 16px !important;
         }
-        tbody.subfolders, tbody.files {
+        tbody {
+            display: block;
+            max-height: 130px;
+            overflow: auto;
             tr {
+                display: table;
+                width: 100%;
+                table-layout: fixed;
                 td {
                     a, div {
                         display: flex;
@@ -327,6 +333,9 @@ div.inline-feature-warning {
                             margin-right: 5px;
                         }
                     }
+                }
+                &:last-child > td {
+                    border-bottom: none;
                 }
             }
         }
