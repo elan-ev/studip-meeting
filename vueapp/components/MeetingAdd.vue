@@ -299,53 +299,52 @@
                                             <th v-translate>Name</th>
                                         </tr>
                                     </thead>
-                                    <template v-if="(Object.keys(folder).includes('subfolders') && Object.keys(folder['subfolders']).length > 0) ||
-                                                    (Object.keys(folder).includes('files') && Object.keys(folder['files']).length > 0)">
-                                        <tbody class="subfolders" v-if="Object.keys(folder['subfolders']).length > 0">
-                                            <tr v-for="(sfinfo, sfid) in folder.subfolders" :key="sfid" :id="'row_folder_' + sfid">
-                                                <td>
-                                                    <a :title="$gettext('Als aktueller Ordner auswählen')"
-                                                        @click.prevent="FolderHandler(sfid)">
-                                                        <StudipIcon v-if="sfinfo.icon" :icon="sfinfo.icon"
-                                                            role="clickable" size="16"></StudipIcon>
-                                                        <span>{{sfinfo.name}}</span>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                        <tbody class="files" v-if="Object.keys(folder['files']).length <= numFileInFolderLimit || showFilesInFolder">
-                                            <tr v-for="(finfo, fid) in folder.files" :key="fid">
-                                                <td>
-                                                    <div>
-                                                        <StudipIcon v-if="finfo.icon" :icon="finfo.icon"
-                                                            role="clickable" size="16"></StudipIcon>
-                                                        <span>{{finfo.name}}</span>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-
-                                        <tbody v-else>
-                                            <tr class="empty">
-                                                <td>
-                                                    <span v-if="Object.keys(folder).includes('files')
-                                                        && Object.keys(folder['files']).length > numFileInFolderLimit"
-                                                        v-translate="{
-                                                            count: Object.keys(folder['files']).length
-                                                        }"
-                                                    >
-                                                        In diesem Ordner befinden sich %{ count } Dateien <br>
-                                                        die aus Gründen der Übersichtlichkeit ausgeblendet wurden. <br>
-                                                        Wählen sie "Alle Dateien anzeigen" um diese Dateien aufzulisten
-                                                    </span>
-                                                    <span v-else v-translate>
-                                                        Dieser Ordner ist leer
-                                                    </span>
-                                                </td>
-                                            </tr>
+                                    <template v-if="folder_has_content">
+                                        <tbody>
+                                            <template v-if="Object.keys(folder['subfolders']).length > 0">
+                                                <tr v-for="(sfinfo, sfid) in folder.subfolders" :key="sfid" :id="'row_folder_' + sfid">
+                                                    <td>
+                                                        <a :title="$gettext('Als aktueller Ordner auswählen')"
+                                                            @click.prevent="FolderHandler(sfid)">
+                                                            <StudipIcon v-if="sfinfo.icon" :icon="sfinfo.icon"
+                                                                role="clickable" size="16"></StudipIcon>
+                                                            <span>{{sfinfo.name}}</span>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                            <template v-if="Object.keys(folder['files']).length <= numFileInFolderLimit || showFilesInFolder">
+                                                <tr v-for="(finfo, fid) in folder.files" :key="fid">
+                                                    <td>
+                                                        <div>
+                                                            <StudipIcon v-if="finfo.icon" :icon="finfo.icon"
+                                                                role="clickable" size="16"></StudipIcon>
+                                                            <span>{{finfo.name}}</span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                            <template v-else>
+                                                <tr class="empty">
+                                                    <td>
+                                                        <span v-if="Object.keys(folder).includes('files')
+                                                            && Object.keys(folder['files']).length > numFileInFolderLimit"
+                                                            v-translate="{
+                                                                count: Object.keys(folder['files']).length
+                                                            }"
+                                                        >
+                                                            In diesem Ordner befinden sich %{ count } Dateien <br>
+                                                            die aus Gründen der Übersichtlichkeit ausgeblendet wurden. <br>
+                                                            Wählen sie "Alle Dateien anzeigen" um diese Dateien aufzulisten
+                                                        </span>
+                                                        <span v-else v-translate>
+                                                            Dieser Ordner ist leer
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </template>
                                         </tbody>
                                     </template>
-
                                     <template v-else>
                                         <tbody>
                                             <tr class="empty">
@@ -506,13 +505,11 @@ export default {
                 return false;
             }
 
-            let has_setting = Object.keys(this.config[this.room['driver']]).includes('features')
-                                && Object.keys(this.config[this.room['driver']]['features']).includes('create')
-                                && Object.keys(this.config[this.room['driver']]['features']['create']).includes('presentation_sildes')
-                                && Object.keys(this.config[this.room['driver']]['features']['create']['presentation_sildes']).length;
+            let has_setting = this.config && this.room?.driver
+                                    && this.config[this.room['driver']]?.features?.create?.presentation_sildes?.length > 0
 
-            let has_preupload = Object.keys(this.config[this.room['driver']]).includes('preupload')
-                                && this.config[this.room['driver']]['preupload'] == true;
+            let has_preupload = this.config && this.room?.driver
+                                    && this.config[this.room['driver']]?.preupload == true;
 
             if (has_setting && has_preupload) {
                 return 'all';
@@ -523,6 +520,10 @@ export default {
             } else {
                 return false;
             }
+        },
+
+        folder_has_content() {
+            return this.folder && (this.folder?.subfolders?.length > 0 || this.folder?.files?.length);
         }
     },
 
