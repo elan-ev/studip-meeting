@@ -31,8 +31,21 @@
                         v-model="general_config['feedback_sender_address']">
                     <translate>User-Mail</translate>
                 </label>
+
+                <label>
+                    <translate>Stud.IP für Standardfolien verwenden</translate>
+                    <br>
+                    <input type="radio"
+                        value="studip"
+                        v-model="general_config['read_default_slides_from']">
+                    <translate>Ja</translate>
+                    <input type="radio"
+                        value="server"
+                        v-model="general_config['read_default_slides_from']">
+                    <translate>Nein</translate>
+                </label>
                 
-                <StudipButton style="margin-top: 0;"
+                <StudipButton style="margin-top: 0;" :disabled="general_config['read_default_slides_from'] == 'server'"
                     @click="defaultSlideManagerShow = !defaultSlideManagerShow">
                     <translate>Standard-Folie verwalten</translate>
                 </StudipButton>

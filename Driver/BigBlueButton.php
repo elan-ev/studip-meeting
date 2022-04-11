@@ -708,8 +708,10 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             }
         }
 
-        // The default slide is now by default in place when there is no Folder is seleced, or there is no File in a selected folder.
-        if (empty($documents)) {
+        // If admin has selected the option to use studip default slides and there is no slides selected for this course!
+        $defaults_from = Driver::getGeneralConfigValue('read_default_slides_from');
+        $studip_default_sildes = !empty($defaults_from) && $defaults_from == 'studip' ? true : false;
+        if (empty($documents) && $studip_default_sildes) {
             $default_slide_url = \PluginEngine::getURL('meetingplugin', [], "api/defaultSlide/$meetingId/$token");
             $default_slide_url = strtok($default_slide_url, '?');
             if (isset($_SERVER['SERVER_NAME']) && strpos($default_slide_url, $_SERVER['SERVER_NAME']) === FALSE) {
