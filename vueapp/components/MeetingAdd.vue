@@ -672,8 +672,8 @@ export default {
         validateFeatureInputs() {
             var isValid = true;
             var invalidInputs = [];
-             this.$set(this.modal_message, "text" , "");
-            if (Object.keys(this.config[this.room['driver']]).includes('features') && Object.keys(this.room).includes('features')) {
+            this.$set(this.modal_message, "text" , "");
+            if (this.config && this.room?.driver && this.config[this.room.driver]?.features && this.room?.features) {
                 //loop through the config features...
                 for (const [config_feature_cat, config_feature_contents] of Object.entries(this.config[this.room['driver']]['features'])) {
                     for (const [section, section_contents] of Object.entries(config_feature_contents)) {
