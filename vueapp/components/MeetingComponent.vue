@@ -369,7 +369,7 @@ export default {
 
             this.showConfirmDialog = {
                 title: 'Raum löschen'.toLocaleString(),
-                text: 'Sind sie sicher, dass sie diesen Raum löschen möchten?'.toLocaleString(),
+                text: 'Sind sie sicher, dass Sie diesen Raum löschen möchten?'.toLocaleString(),
                 type: 'question', //info, warning, question
                 isConfirm: true,
                 callback: 'performDeleteRoom',
