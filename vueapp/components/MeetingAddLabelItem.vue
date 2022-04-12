@@ -131,7 +131,7 @@ export default {
                 case 'opencast_webcam_record':
                     var disabled = false;
                     if (this.feature['name'] == 'opencast_webcam_record') {
-                        if (this.room?.features?.record && JSON.parse(this.room.features.record) == false) {
+                        if (!this.room?.features?.record || (this.room.features.record && JSON.parse(this.room.features.record) == false)) {
                             this.$set(this.room.features, 'opencast_webcam_record', 'false');
                             disabled = true;
                         }
@@ -140,7 +140,7 @@ export default {
                 case 'autoStartRecording':
                     var disabled = false;
                     if (this.feature['name'] == 'autoStartRecording') {
-                        if (this.room?.features?.record && JSON.parse(this.room.features.record) == false) {
+                        if (!this.room?.features?.record || (this.room.features.record && JSON.parse(this.room.features.record) == false)) {
                             // If the room is in edit mode (NOT NEW), we change the value,
                             // otherwise we don't in order to make the config value work!
                             if (this.room?.mkdate) {
