@@ -1,7 +1,7 @@
 <template>
     <ul class="widget-list widget-links meeting-widget-links">
         <li v-for="(item, index) in items" :key="index">
-            <a  v-on="linkEvents(item)">
+            <a v-on="linkEvents(item)" href="#">
                 <StudipIcon :title="item.label" :icon="item.icon" role="clickable" size="16"></StudipIcon>
                 {{ item.label }}
             </a>
