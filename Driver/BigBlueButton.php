@@ -757,8 +757,9 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     {
         $res = [];
         $preupload_config = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'preupload'), FILTER_VALIDATE_BOOLEAN);
+        $defaults_from = Driver::getGeneralConfigValue('read_default_slides_from');
         // Settings that depend on admin config to upload slides.
-        if ($preupload_config) {
+        if ($preupload_config && $defaults_from == 'studip') {
             $res['default_slide_course_news'] = new ConfigOption('default_slide_course_news', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Ankündigungen aus dem Kurs auf leerer Begrüßungsfolie'),
                 false, '');
             $res['default_slide_studip_news'] = new ConfigOption('default_slide_studip_news', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Ankündigungen aus Stud.IP auf leerer Begrüßungsfolie'),
