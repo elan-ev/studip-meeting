@@ -144,7 +144,7 @@ class RoomAdd extends MeetingsController
             }
             if (!$has_error) {
                 //putting mandatory logoutURL into features
-                $logout_url = RoomManager::generateMeetingBaseURL('index/return', ['cid' => $cid]);
+                $logout_url = RoomManager::generateMeetingBaseURL('index/return', ['cid' => $json['cid']]);
                 $json['features']['logoutURL'] = $logout_url;
 
                 //Adding default "duration" of 240 Minutes into features if it is not set
