@@ -703,7 +703,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                     if (isset($_SERVER['SERVER_NAME']) && strpos($document_url, $_SERVER['SERVER_NAME']) === FALSE) {
                         $document_url = $base_url . $document_url;
                     }
-                    $documents[] = "<document url='$document_url' filename='{$file_ref->name}' />";
+                    $documents[] = ['filename' => $file_ref->name, 'url' => $document_url];
                 }
             }
         }
@@ -717,16 +717,19 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             if (isset($_SERVER['SERVER_NAME']) && strpos($default_slide_url, $_SERVER['SERVER_NAME']) === FALSE) {
                 $default_slide_url = $base_url . $default_slide_url;
             }
-            $documents[] = "<document url='$default_slide_url' filename='default.pdf' />";
+            $documents[] = ['filename' => 'default.pdf', 'url' => $default_slide_url];
         }
 
         if (count($documents)) {
-            $modules = " <modules>	<module name='presentation'> ";
+            $modules_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><modules/>');
+            $module_xml = $modules_xml->addChild('module');
+            $module_xml->addAttribute('name', 'presentation');
             foreach ($documents as $document) {
-                $modules .= $document;
+                $document_xml = $module_xml->addChild('document');
+                $document_xml->addAttribute('filename', $document['filename']);
+                $document_xml->addAttribute('url', $document['url']);
             }
-            $modules .= "</module></modules>";
-            $options['body'] = "<?xml version='1.0' encoding='UTF-8'?>" . $modules;
+            $options['body'] = $modules_xml->asXML();
         }
 
         return $options;

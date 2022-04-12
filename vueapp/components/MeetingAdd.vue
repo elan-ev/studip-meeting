@@ -523,7 +523,9 @@ export default {
         },
 
         folder_has_content() {
-            return this.folder && (this.folder?.subfolders?.length > 0 || this.folder?.files?.length);
+            let has_files = this.folder?.files?.length;
+            let has_subfolders = this.folder?.subfolders && Object.keys(this.folder.subfolders).length > 0;
+            return this.folder && (has_files || has_subfolders);
         }
     },
 
