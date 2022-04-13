@@ -226,7 +226,7 @@ export default {
             }
             this.showConfirmDialog = {
                 title: 'Schriftart löschen'.toLocaleString(),
-                text: 'Sind sie sicher, dass sie diesen Schriftart löschen möchten?'.toLocaleString(),
+                text: 'Sind Sie sicher, dass Sie diesen Schriftart löschen möchten?'.toLocaleString(),
                 type: 'question', //info, warning, question
                 isConfirm: true,
                 callback: 'performDeleteFont',
@@ -290,9 +290,9 @@ export default {
                 }
                 return;
             } else {
-                var text = 'Es wird die gesamte Vorlage löschen! Sind sie sicher, dass sie diese Vorlage löschen möchten?'.toLocaleString();
+                var text = 'Es wird die gesamte Vorlage löschen! Sind Sie sicher, dass Sie diese Vorlage löschen möchten?'.toLocaleString();
                 if (what == 'php') {
-                    text = 'Sind sie sicher, dass sie diese Template löschen möchten?'.toLocaleString();
+                    text = 'Sind Sie sicher, dass Sie diese Template löschen möchten?'.toLocaleString();
                 }
                 this.showConfirmDialog = false;
                 this.showConfirmDialog = {

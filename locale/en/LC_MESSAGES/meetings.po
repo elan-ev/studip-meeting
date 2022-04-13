@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-13 09:48+0200\n"
+"POT-Creation-Date: 2022-04-13 16:20+0200\n"
 "PO-Revision-Date: 2022-03-04 10:09+0100\n"
 "Last-Translator: April Suddendorf, 2020\n"
 "Language-Team: English (https://www.transifex.com/uol-it/teams/52597/en/)\n"
@@ -149,8 +149,8 @@ msgstr ""
 msgid "Abbrechen"
 msgstr "Cancel"
 
+#: vueapp/components/MeetingRecordings.vue:26
 #: vueapp/components/MeetingRecordings.vue:23
-#: vueapp/components/MeetingRecordings.vue:20
 #: vueapp/components/StudipActionMenu.vue:9
 #: vueapp/components/StudipActionMenu.vue:34 vueapp/views/Admin.vue:101
 #: app/controllers/index.php:223 app/controllers/index.php:305
@@ -212,10 +212,10 @@ msgstr "Display name"
 msgid "Aufzeichnung"
 msgstr "Recording"
 
+#: vueapp/components/MeetingRecordings.vue:36
+#: vueapp/components/MeetingRecordings.vue:41
 #: vueapp/components/MeetingRecordings.vue:33
 #: vueapp/components/MeetingRecordings.vue:38
-#: vueapp/components/MeetingRecordings.vue:30
-#: vueapp/components/MeetingRecordings.vue:35
 msgid "Aufzeichnung ansehen"
 msgstr "View recording"
 
@@ -319,8 +319,8 @@ msgstr "The conference is visible for the participants"
 msgid "Das Meeting ist für die Teilnehmenden unsichtbar"
 msgstr "The conference is not visible for the participants"
 
+#: vueapp/components/MeetingRecordings.vue:25
 #: vueapp/components/MeetingRecordings.vue:22
-#: vueapp/components/MeetingRecordings.vue:19
 msgid "Datum"
 msgstr "Date"
 
@@ -335,8 +335,8 @@ msgstr "Close dialogue"
 msgid "Die vorhandenen Aufzeichnungen"
 msgstr "The existing recordings"
 
+#: vueapp/components/MeetingRecordings.vue:15
 #: vueapp/components/MeetingRecordings.vue:12
-#: vueapp/components/MeetingRecordings.vue:9
 msgid "Die vorhandenen Aufzeichnungen auf Opencast"
 msgstr "The existing recording on Opencast"
 
@@ -500,8 +500,8 @@ msgstr "Yes"
 msgid "Kein Ordner"
 msgstr "No folder"
 
+#: vueapp/components/MeetingRecordings.vue:8
 #: vueapp/components/MeetingRecordings.vue:5
-#: vueapp/components/MeetingRecordings.vue:2
 msgid "Keine Aufzeichnungen für Raum \"{{ room.name }}\" vorhanden"
 msgstr "No recordings available for room \"{{ room.name }}"
 
@@ -608,6 +608,10 @@ msgstr "Choose folder type"
 msgid "PDF Folie"
 msgstr "PDF slide"
 
+#: vueapp/components/MeetingComponent.vue:96
+msgid "Persönlichen QR-Code anzeigen"
+msgstr "Show personal QR code"
+
 #: vueapp/components/DefaultSlideManagerDialog.vue:67
 #: vueapp/components/DefaultSlideManagerDialog.vue:64
 #: vueapp/components/DefaultSlideManagerDialog.vue:31
@@ -636,17 +640,13 @@ msgid "Prozessortyp"
 msgstr "Processor type"
 
 #: vueapp/components/MeetingQRCodeDialog.vue:35
-msgid "QR Code"
-msgstr "QR code"
+msgid "QR Code für Raum"
+msgstr ""
 
 #: vueapp/components/MeetingQRCodeDialog.vue:10
 #: vueapp/components/MeetingQRCodeDialog.vue:7
 msgid "QR Code nur für persönlichen Gebrauch"
 msgstr ""
-
-#: vueapp/components/MeetingComponent.vue:96
-msgid "QR-Code anzeigen"
-msgstr "Show QR code"
 
 #: vueapp/components/MeetingQRCodeDialog.vue:30
 #: vueapp/components/MeetingQRCodeDialog.vue:2
@@ -1358,12 +1358,12 @@ msgstr ""
 "Plug-in administration page for holding and managing live online "
 "conferences, seminars and video conferences."
 
-#: app/controllers/index.php:148 app/controllers/room.php:311
+#: app/controllers/index.php:148 app/controllers/room.php:312
 #: lib/Routes/Rooms/RoomAdd.php:118
 msgid "Der ausgewählte Server ist deaktiviert."
 msgstr "The selected server is deactivated."
 
-#: app/controllers/index.php:151 app/controllers/room.php:314
+#: app/controllers/index.php:151 app/controllers/room.php:315
 #: lib/Routes/Rooms/RoomAdd.php:112
 msgid "Der ausgewählte Server ist in diesem Veranstaltungstyp nicht verfügbar."
 msgstr "The selected server is no available for this course type."
@@ -1397,46 +1397,46 @@ msgid "Suche"
 msgstr "Search"
 
 #: app/controllers/room.php:63 app/controllers/room.php:108
-#: app/controllers/room.php:237 app/controllers/room.php:308
+#: app/controllers/room.php:238 app/controllers/room.php:309
 msgid "Stud.IP Meeting"
 msgstr "Stud.IP conference"
 
 #: app/controllers/room.php:67 app/controllers/room.php:112
-#: app/controllers/room.php:175 app/controllers/room.php:182
-#: app/controllers/room.php:203 app/controllers/room.php:288
+#: app/controllers/room.php:176 app/controllers/room.php:183
+#: app/controllers/room.php:204 app/controllers/room.php:289
 msgid "Das gesuchte Meeting existiert nicht mehr!"
 msgstr "The conference does not exists anymore!"
 
 #: app/controllers/room.php:78 app/controllers/room.php:85
 #: app/controllers/room.php:123 app/controllers/room.php:130
-#: app/controllers/room.php:217 app/controllers/room.php:253
+#: app/controllers/room.php:218 app/controllers/room.php:254
 msgid "Das gesuchte Meeting ist nicht verfügbar!"
 msgstr "The conference you search for is not available!"
 
-#: app/controllers/room.php:99 app/controllers/room.php:160
-#: app/controllers/room.php:272
+#: app/controllers/room.php:99 app/controllers/room.php:161
+#: app/controllers/room.php:273
 msgid "Meeting-Name"
 msgstr "Conference name"
 
-#: app/controllers/room.php:139 app/controllers/room.php:262
+#: app/controllers/room.php:140 app/controllers/room.php:263
 msgid "Zugangscode ist ungültig!"
 msgstr "Access code is invalid!"
 
-#: app/controllers/room.php:141
+#: app/controllers/room.php:142
 msgid "Es kann kein gültiger Name festgelegt werden."
 msgstr "No valid name could be determined."
 
-#: app/controllers/room.php:241
+#: app/controllers/room.php:242
 msgid ""
 "Der QR-Code ist ungültig, versuchen Sie es erneut mit einem neuen QR-Code!"
 msgstr "The QR code is invalid. Try this with a new QR code again!"
 
-#: app/controllers/room.php:266 app/controllers/room.php:301
+#: app/controllers/room.php:267 app/controllers/room.php:302
 msgid ""
 "Etwas ist schief gelaufen, versuche es noch einmal mit dem neuen QR-Code!"
 msgstr "Something went wrong. Try this with a new QR code again!"
 
-#: app/controllers/room.php:283
+#: app/controllers/room.php:284
 msgid "Ungültige QR-Code-Daten!"
 msgstr "Invalid QR code!"
 
@@ -1714,6 +1714,9 @@ msgstr "Configuration for the conferences plugin in JSON"
 #: templates/default_slide.php:5
 msgid "Standardfolie"
 msgstr "Default slide"
+
+#~ msgid "QR Code"
+#~ msgstr "QR code"
 
 #~ msgid "Schreiben Sie ein Feedback"
 #~ msgstr "Write feedback"
