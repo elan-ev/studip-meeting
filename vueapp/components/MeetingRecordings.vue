@@ -2,6 +2,9 @@
     <div>
          <MeetingDialog :title="$gettext('Aufzeichnungen für Raum') + ' ' +  room.name" @close="$emit('cancel')">
             <template v-slot:content>
+                <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
+                    {{ modal_message.text }}
+                </MessageBox>
                 <MessageBox type="info"
                     v-if="Object.keys(recording_list).length == 0"
                 >
@@ -130,7 +133,7 @@ export default {
             this.showConfirmDialog = false;
             this.showConfirmDialog = {
                 title: 'Aufzeichnung löschen'.toLocaleString(),
-                text: 'Sind sie sicher, dass Sie diese Aufzeichnung löschen möchten?'.toLocaleString(),
+                text: 'Sind Sie sicher, dass Sie diese Aufzeichnung löschen möchten?'.toLocaleString(),
                 type: 'question', //info, warning, question
                 isConfirm: true,
                 callback: 'performDeleteRecording',
@@ -138,15 +141,17 @@ export default {
             }
         },
         performDeleteRecording({recording}) {
-            this.$store.dispatch(RECORDING_DELETE, recording);
-            this.$store.dispatch(RECORDING_LIST, recording.room_id).then(({ data }) => {
-                this.$store.commit(RECORDING_LIST_SET, data);
-                if (!data.length) {
-                    $('button.ui-dialog-titlebar-close').trigger('click');
-                }
-                var room = this.rooms_list.find(m => m.meeting_id == recording.room_id);
-                if (room) {
-                    room.recordings_count = data.length;
+            if (!recording) {
+                return;
+            }
+            this.$store.dispatch(RECORDING_DELETE, recording)
+            .then(({data}) => {
+                if (data.message) {
+                    this.$set(this.modal_message, "type" , data.message.type);
+                    this.$set(this.modal_message, "text" , data.message.text);
+                    if (data.message.type == 'success') {
+                        this.$store.dispatch(RECORDING_LIST, recording.room_id);
+                    }
                 }
             });
         },
