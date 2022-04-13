@@ -136,6 +136,7 @@ class RoomController extends PluginController
 
             if (empty($password) || $this->moderator_invitations_link->password != $password) {
                 $this->last_password = $password;
+                $this->last_moderator_name = $moderator_name;
                 PageLayout::postError($this->_('Zugangscode ist ungültig!'));
             } else if (!$moderator_name) {
                 PageLayout::postError($this->_('Es kann kein gültiger Name festgelegt werden.'));

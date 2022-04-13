@@ -143,10 +143,13 @@ export default {
                 }
                 
             } else {
-                var err_message = `Bitte füllen Sie alle geforderten Felder aus`.toLocaleString();
-                if (this.moderator_password && this.moderator_password.length != 5) {
+                var err_message = '';
+                if (!this.moderator_password) {
+                    err_message = `Ein Zugangscode mit ${this.password_length} Zeichen ist erforderlich`.toLocaleString();
+                } else if (this.moderator_password && this.moderator_password.length != this.password_length) {
                     err_message = `Der Zugangscode darf nur aus ${this.password_length} Zeichen bestehen`.toLocaleString();
                 }
+
                 this.modal_message.type = 'error';
                 this.modal_message.text = err_message;
             }

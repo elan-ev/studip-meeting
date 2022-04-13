@@ -2,7 +2,7 @@
     <h1><?= $_('Sie wurden eingeladen, als Moderator beizutreten')?></h1>
     <label>
         <span class="required"><?= $_('Geben Sie einen Namen ein')?></span>
-        <input type="text" name="name" value="" required>
+        <input type="text" name="name" value="<?= ($last_moderator_name) ? $last_moderator_name : '' ?>" required>
     </label>
     <label>
         <span class="required"><?= $_('Zugangscode des Meetings')?></span>
