@@ -281,7 +281,7 @@ export default {
                 menuItems.push({id: id, label: this.$gettext('Die vorhandenen Aufzeichnungen'), icon: 'video2', emit: 'getRecording'});
                 id++;
             }
-            menuItems.push({id: id, label: this.$gettext('QR-Code anzeigen'), icon: 'code-qr', emit: 'showQRCode'});
+            menuItems.push({id: id, label: this.$gettext('Persönlichen QR-Code anzeigen'), icon: 'code-qr', emit: 'showQRCode'});
             id++;
 
             menuItems.push({id: id, label: this.$gettext('Melden Sie ein Problem'), icon: 'support', emit: 'writeFeedback'});

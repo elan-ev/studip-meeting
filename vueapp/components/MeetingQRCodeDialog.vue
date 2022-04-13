@@ -1,6 +1,6 @@
 <template>
     <div>
-        <MeetingDialog :title="$gettext('QR Code')" @close="close($event)">
+        <MeetingDialog :title="$gettext('QR Code für Raum') + ' '  + room.name" @close="close($event)">
             <template v-slot:content>
                 <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
                     {{ modal_message.text }}
