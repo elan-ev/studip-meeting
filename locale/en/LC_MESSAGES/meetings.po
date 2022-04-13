@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-12 15:03+0200\n"
+"POT-Creation-Date: 2022-04-13 09:48+0200\n"
 "PO-Revision-Date: 2022-03-04 10:09+0100\n"
 "Last-Translator: April Suddendorf, 2020\n"
 "Language-Team: English (https://www.transifex.com/uol-it/teams/52597/en/)\n"
@@ -439,15 +439,6 @@ msgstr ""
 msgid "Feedback Absenderadresse"
 msgstr "Feedback senders address"
 
-#: vueapp/components/MeetingFeedback.vue:78
-msgid "Feedback für Raum"
-msgstr "Feedback for room"
-
-#: vueapp/components/MeetingFeedback.vue:19
-#: vueapp/components/MeetingFeedback.vue:16
-msgid "Feedback Informationen"
-msgstr "Feedback information"
-
 #: vueapp/views/Admin.vue:18
 msgid "Feedback Support-Adresse"
 msgstr "Feedback support address"
@@ -549,6 +540,10 @@ msgstr "Hide conference for participants"
 msgid "Meetings konfigurieren"
 msgstr "Configure conferences"
 
+#: vueapp/components/MeetingComponent.vue:99
+msgid "Melden Sie ein Problem"
+msgstr "Report a problem"
+
 #: vueapp/components/MeetingComponent.vue:354
 #: vueapp/components/MeetingModeratorGuest.vue:37
 msgid "Moderator einladen"
@@ -631,6 +626,10 @@ msgstr "Delete PHP template"
 msgid "Präsentationsfolien"
 msgstr "Slides"
 
+#: vueapp/components/MeetingFeedback.vue:78
+msgid "Problemmeldung für Raum"
+msgstr "Report a problem for room"
+
 #: vueapp/components/MeetingFeedback.vue:51
 #: vueapp/components/MeetingFeedback.vue:48
 msgid "Prozessortyp"
@@ -709,10 +708,6 @@ msgstr "Room name"
 msgid "Schließen"
 msgstr "Close"
 
-#: vueapp/components/MeetingComponent.vue:99
-msgid "Schreiben Sie ein Feedback"
-msgstr "Write feedback"
-
 #: vueapp/components/DefaultSlideManagerDialog.vue:138
 msgid "Schriftart hochladen"
 msgstr "Upload font"
@@ -761,6 +756,11 @@ msgstr "Default mail"
 #: vueapp/views/Admin.vue:31
 msgid "Stud.IP für Standardfolien verwenden"
 msgstr "Use Stud.IP for default slides"
+
+#: vueapp/components/MeetingFeedback.vue:19
+#: vueapp/components/MeetingFeedback.vue:16
+msgid "Technische Informationen"
+msgstr "Technical information"
 
 #: vueapp/components/MeetingComponent.vue:122
 msgid "Teilnehmen"
@@ -1174,19 +1174,19 @@ msgstr ""
 "Decide if guests and participants can join the conference directly or if a "
 "moderator has to approve every join."
 
-#: Driver/BigBlueButton.php:762
+#: Driver/BigBlueButton.php:763
 msgid "Ankündigungen aus dem Kurs auf leerer Begrüßungsfolie"
 msgstr "News of the course on an empty introductory slide"
 
-#: Driver/BigBlueButton.php:764
+#: Driver/BigBlueButton.php:765
 msgid "Ankündigungen aus Stud.IP auf leerer Begrüßungsfolie"
 msgstr "News of Stud.IP on an empty introductory slide"
 
-#: Driver/BigBlueButton.php:778
+#: Driver/BigBlueButton.php:779
 msgid "Aufzeichnungen konfigurierbar machen"
 msgstr "Enable configuration of recordings"
 
-#: Driver/BigBlueButton.php:779
+#: Driver/BigBlueButton.php:780
 msgid ""
 "Wenn aktiv, so wird den Mentor:innen die Option 'Aufzeichnung automatisch "
 "starten' angezeigt und sie haben die Möglichkeit die Aufzeichnung manuell zu "
@@ -1195,11 +1195,11 @@ msgstr ""
 "If activated, mentors will see the option to start a recording automatically "
 "and they will be able to start, stop or pause a recording manually."
 
-#: Driver/BigBlueButton.php:780
+#: Driver/BigBlueButton.php:781
 msgid "Aufzeichnungen standardmäßig automatisch starten"
 msgstr "Start recording automatically by default"
 
-#: Driver/BigBlueButton.php:781
+#: Driver/BigBlueButton.php:782
 msgid ""
 "Standardwert für die Konferenzraum-Einstellung 'Aufzeichnung automatisch "
 "starten'."
@@ -1714,6 +1714,9 @@ msgstr "Configuration for the conferences plugin in JSON"
 #: templates/default_slide.php:5
 msgid "Standardfolie"
 msgstr "Default slide"
+
+#~ msgid "Schreiben Sie ein Feedback"
+#~ msgstr "Write feedback"
 
 #~ msgid "Neuer Raum"
 #~ msgstr "New room"

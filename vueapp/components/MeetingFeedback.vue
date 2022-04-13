@@ -1,6 +1,6 @@
 <template>
     <div>
-        <MeetingDialog :title="$gettext('Feedback für Raum') + ' ' +  room.name" @close="cancelFeedback($event)">
+        <MeetingDialog :title="$gettext('Problemmeldung für Raum') + ' ' +  room.name" @close="cancelFeedback($event)">
             <template v-slot:content>
                 <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
                     {{ modal_message.text }}
@@ -20,7 +20,7 @@
                     </fieldset>
                     <fieldset>
                         <legend v-translate>
-                            Feedback Informationen
+                            Technische Informationen
                         </legend>
                         <label class="col-3">
                             <span v-translate>Browser-Name</span>

@@ -284,7 +284,7 @@ export default {
             menuItems.push({id: id, label: this.$gettext('QR-Code anzeigen'), icon: 'code-qr', emit: 'showQRCode'});
             id++;
 
-            menuItems.push({id: id, label: this.$gettext('Schreiben Sie ein Feedback'), icon: 'support', emit: 'writeFeedback'});
+            menuItems.push({id: id, label: this.$gettext('Melden Sie ein Problem'), icon: 'support', emit: 'writeFeedback'});
             id++;
 
             if (this.course_config?.display?.deleteRoom) {
