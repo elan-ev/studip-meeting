@@ -47,7 +47,7 @@
                             </h1>
                             <nav>
                                 <a href="<?= $item['meeting_join_url'] ?>" target="_blank">
-                                    <?= Icon::create('door-enter', 'clickable')->asImg(['class' => 'text-bottom']) ?>
+                                    <?= Icon::create('chat', 'clickable')->asImg(['class' => 'text-bottom']) ?>
                                 </a>
                                 <a href="<?= $item['meeting_course_url'] ?>">
                                     <?= Icon::create('seminar', 'clickable')->asImg(['class' => 'text-bottom']) ?>
