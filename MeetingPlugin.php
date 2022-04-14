@@ -221,7 +221,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
 
         if ($GLOBALS['perm']->have_studip_perm('dozent', $courseId)) {
             $main->addSubNavigation('config', new Navigation(
-                _('Anpassen'),
+                _('Seite Anpassen'),
                 PluginEngine::getLink($this, [], 'index/config')
             ));
         }
