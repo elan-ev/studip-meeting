@@ -14,7 +14,6 @@ $content-min-width: 520px;
 }
 
 /* Introduction */
-
 div.vc_introduction {
     margin: 10px 10px 20px;
 }
@@ -182,6 +181,12 @@ div.inline-feature-warning {
     margin-bottom: 1.5ex !important;
 }
 
+.accept-records {
+    margin: 10px 0;
+    display:block;
+   font-weight: bold;
+}
+
 .conference-meeting {
     max-width: $workspace-max-width;
     margin: 0;
@@ -203,7 +208,7 @@ div.inline-feature-warning {
                 margin-right: $gap;
                 align-self: center;
             }
-        
+
             span.tooltip-icon {
                 padding: 0;
             }
@@ -226,18 +231,18 @@ div.inline-feature-warning {
                 img {
                     position: relative;
                     top: 12px;
-            
+
                     &.info-icon {
                         top: 7px;
                         margin-right: 7px;
                     }
                 }
-            
+
                 span {
                     &.red {
                         color: #D60000;
                     }
-            
+
                     &.creator-date {
                         color: #636971;
                         font-size: 12px;
@@ -245,11 +250,11 @@ div.inline-feature-warning {
                         font-style: italic;
                         margin: 10px 0;
                     }
-            
+
                     &.has-changed {
                         animation: alert 1s;
                     }
-            
+
                     @keyframes alert {
                         0% {
                             color: #D60000;
@@ -263,7 +268,7 @@ div.inline-feature-warning {
                     }
                 }
             }
-        
+
             span.participants {
                 position: absolute;
                 right: 0;
@@ -428,7 +433,7 @@ label.with-append{
         &:focus {
             outline: none;
             border: 1px solid #c5c7ca;
-            
+
         }
     }
 }

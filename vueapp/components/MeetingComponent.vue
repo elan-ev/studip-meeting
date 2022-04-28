@@ -145,15 +145,22 @@
                         nicht aktiviert oder falsch konfiguriert ist.
                     </span>
                 </div>
+
+                <label v-if="show_recording_badge" class="accept-records">
+                    <input type="checkbox" v-model="recordsAccepted">
+                    <translate>
+                        Ich bin damit einverstanden, dass diese Sitzung aufgezeichnet wird. Die Aufzeichnung kann Sprach- und Videoaufnahmen von mir beinhalten. Bitte beachten Sie, dass die Aufnahme im Anschluss geteilt werden kann.
+                    </translate>
+                </label>
             </article>
         </section>
         <footer>
-            <a v-if="room.enabled" class="button join"
+            <button v-if="room.enabled" class="button join"
                 @click="checkPreJoin"
                 v-translate
-            >
+                    :disabled="!recordsAccepted && show_recording_badge">
                 Teilnehmen
-            </a>
+            </button>
 
             <button v-else class="button join"
                 disabled="disabled" v-translate
@@ -237,7 +244,6 @@ export default {
             }
             return group_name;
         },
-
         show_recording_badge() {
             return this.room?.driver && this.config &&
                 (parseInt(this.config[this.room.driver]?.record) || parseInt(this.config[this.room.driver]?.opencast)) &&
@@ -309,7 +315,8 @@ export default {
     data() {
         return {
             interval: null,
-            showConfirmDialog: false
+            showConfirmDialog: false,
+            recordsAccepted: false
         }
     },
 
