@@ -148,12 +148,12 @@
             </article>
         </section>
         <footer>
-            <a v-if="room.enabled" class="button join"
+            <button v-if="room.enabled" class="button join"
                 @click="checkPreJoin"
                 v-translate
             >
                 Teilnehmen
-            </a>
+            </button>
 
             <button v-else class="button join"
                 disabled="disabled" v-translate
@@ -212,7 +212,7 @@ export default {
     },
 
     computed: {
-        ...mapGetters(['course_config', 'config', 'course_groups']),
+        ...mapGetters(['course_config', 'config', 'course_groups', 'course_general_config']),
 
         join_url() {
             return API_URL + '/rooms/join/' + this.room.course_id + '/' + this.room.id;
@@ -404,6 +404,16 @@ export default {
                     isConfirm: true,
                     callback: 'performJoin',
                 }
+            } else if (this.room?.features?.record == 'true' && this.course_general_config?.show_recording_privacy_text) {
+                this.showConfirmDialog = {
+                    title: 'Datenschutzerklärung'.toLocaleString(),
+                    text: 'Ich bin damit einverstanden, dass diese Sitzung aufgezeichnet wird. Die Aufzeichnung kann Sprach- und Videoaufnahmen von mir beinhalten.' +
+                        ' Bitte beachten Sie, dass die Aufnahme im Anschluss geteilt werden kann.' +
+                        ' Möchten Sie trotzdem teilnehmen?'.toLocaleString(),
+                    type: 'info', //info, warning, question
+                    isConfirm: true,
+                    callback: 'performJoin',
+                }
             } else {
                 window.open(this.join_url, '_blank');
             }
@@ -426,7 +436,3 @@ export default {
     }
 }
 </script>
-
-<style>
-
-</style>

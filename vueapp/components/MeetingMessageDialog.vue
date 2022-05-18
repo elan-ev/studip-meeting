@@ -6,11 +6,15 @@
                     {{ modal_message.text }}
                 </MessageBox>
                 <div class="meeting-confirmation">
-                    <template v-if="message.type">
-                        <StudipIcon v-if="message.type == 'info'" icon="info-circle-full" role="clickable" size="32"></StudipIcon>
-                        <StudipIcon v-else-if="message.type == 'warning'" icon="exclaim-circle-full" role="status-red" size="32"></StudipIcon>
+                    <template v-if="message.type && message.type != 'question'">
+                        <div>
+                            <StudipIcon v-if="message.type == 'info'" icon="info-circle-full" role="clickable" size="32"></StudipIcon>
+                            <StudipIcon v-else-if="message.type == 'warning'" icon="exclaim-circle-full" role="status-red" size="32"></StudipIcon>
+                        </div>
                     </template>
-                    <span v-text="$gettext(message.text ? message.text : 'Sind Sie sicher, dass Sie das tun möchten?')"></span>
+                    <div>
+                        <span v-text="$gettext(message.text ? message.text : 'Sind Sie sicher, dass Sie das tun möchten?')"></span>
+                    </div>
                 </div>
             </template>
             <template v-slot:buttons>
