@@ -141,19 +141,7 @@ class RoomController extends PluginController
             } else if (!$moderator_name) {
                 PageLayout::postError($this->_('Es kann kein gültiger Name festgelegt werden.'));
             } else {
-                $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
-                $joinParameters = new JoinParameters();
-                $joinParameters->setMeetingId($meeting->id);
-                $joinParameters->setIdentifier($meeting->identifier);
-                $joinParameters->setRemoteId($meeting->remote_id);
-                $joinParameters->setPassword($meeting->moderator_password);
-                $joinParameters->setHasModerationPermissions(true);
-                $joinParameters->setUsername('guest_moderator');
-                $joinParameters->setFirstName($moderator_name);
-                $join_url = $driver->getJoinMeetingUrl($joinParameters);
-                header('Status: 301 Moved Permanently', false, 301);
-                header('Location:' . $join_url);
-                die;
+                MeetingsHelper::performJoinWithoutUser($meeting, $cid, 'guest_moderator', $moderator_name, true);
             }
         }
 
@@ -218,19 +206,7 @@ class RoomController extends PluginController
             throw new Exception($this->_('Das gesuchte Meeting ist nicht verfügbar!'));
         }
 
-        $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
-        $joinParameters = new JoinParameters();
-        $joinParameters->setMeetingId($meeting->id);
-        $joinParameters->setIdentifier($meeting->identifier);
-        $joinParameters->setRemoteId($meeting->remote_id);
-        $joinParameters->setPassword($meeting->attendee_password);
-        $joinParameters->setHasModerationPermissions(false);
-        $joinParameters->setUsername('guest');
-        $joinParameters->setFirstName($name);
-        $join_url = $driver->getJoinMeetingUrl($joinParameters);
-        header('Status: 301 Moved Permanently', false, 301);
-        header('Location:' . $join_url);
-        die;
+        MeetingsHelper::performJoinWithoutUser($meeting, $cid, 'guest', $name, false);
     }
 
     public function qrcode_action($link_hex, $cid)
