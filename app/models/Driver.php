@@ -102,7 +102,6 @@ class Driver
             return;
         }
 
-        $is_config_corrected = false;
         foreach (self::$config as $driver_name => $config) {
             $class = 'ElanEv\\Driver\\' . $driver_name;
 
@@ -165,19 +164,7 @@ class Driver
                     self::$config[$driver_name]['features']['record']['record_setting'] =  self::convertDriverConfigToArray($record_features);
                 }
             }
-
-            // Make sure Opencast Plugin is activated
-            if ($GLOBALS['user']->id != 'nobody' && isset(self::$config[$driver_name]['opencast']) && !MeetingPlugin::checkOpenCast()) {
-                unset(self::$config[$driver_name]['opencast']);
-                $is_config_corrected = true;
-            }
         }
-
-        // When the config is corrected in between, it should be saved again.
-        if ($is_config_corrected) {
-            \Config::get()->store('VC_CONFIG', json_encode(self::$config));
-        }
-
     }
 
     static function extractFeatures($feature_arrangement, $features) {

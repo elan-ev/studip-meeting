@@ -23,10 +23,11 @@ const initialState = {
         "introduction": "",
         "display": {}
     },
+    course_general_config: {
+    },
     course_groups: {
     },
     general_config: {
-        
     }
 };
 
@@ -42,6 +43,9 @@ const getters = {
     },
     course_groups(state) {
         return state.course_groups;
+    },
+    course_general_config(state) {
+        return state.course_general_config;
     },
     general_config() {
         return state.general_config;
@@ -118,6 +122,9 @@ export const mutations = {
         }
         if (data.course_groups) {
             state.course_groups = data.course_groups;
+        }
+        if (data.course_general_config) {
+            state.course_general_config = data.course_general_config;
         }
     }
 };

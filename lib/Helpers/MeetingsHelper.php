@@ -98,28 +98,7 @@ class MeetingsHelper
             exit;            
         }
 
-        if ($features = json_decode($meeting->features, true)) {
-            //putting mandatory logoutURL into features
-            
-            $logout_url = RoomManager::generateMeetingBaseURL('index/return', ['cid' => $cid]);
-            if (!isset($features['logoutURL']) || $features['logoutURL'] != $logout_url) {
-                $features['logoutURL'] = $logout_url;
-            }
-
-            // Check Recording Capability
-            if (isset($features['record']) && filter_var($features['record'], FILTER_VALIDATE_BOOLEAN)) {
-                $recording_capability = RoomManager::checkRecordingCapability($meeting->driver, $cid);
-                if ($recording_capability['allow_recording'] == true
-                    && $recording_capability['type'] == 'opencast'
-                    && !empty($recording_capability['seriesid'])) {
-                    $features['meta_opencast-dc-isPartOf'] = $recording_capability['seriesid'];
-                } else if (isset($features['meta_opencast-dc-isPartOf'])) {
-                    unset($features['meta_opencast-dc-isPartOf']);
-                }
-            }
-            $meeting->features = json_encode($features);
-            $meeting->store();
-        }
+        self::adjustFeaturesBeforeJoin($meeting, $cid);
 
         $driver = $driver_factory->getDriver($meeting->driver, $meeting->server_index);
 
@@ -294,5 +273,85 @@ class MeetingsHelper
             $qr_code_token->delete();
         }
     }
-    
+
+    /**
+     * Performs join for requests that have no authenticated user,
+     * such as regular and moderator guests.
+     *
+     * @param Meeting $meeting the meeting object
+     * @param string $cid course id
+     * @param string $username username of the guest user to be displayed
+     * @param string $firstname firstname of the guest user to be displayed
+     * @param bool $is_moderator whether the join is for a moderator or not
+     *
+     * @throws Error
+     */
+    public static function performJoinWithoutUser(Meeting $meeting, $cid, $username, $firstname, $is_moderator = false)
+    {
+        self::adjustFeaturesBeforeJoin($meeting, $cid);
+
+        $password = $is_moderator ? $meeting->moderator_password : $meeting->attendee_password;
+
+        $driver_factory = new DriverFactory(Driver::getConfig());
+        $driver = $driver_factory->getDriver($meeting->driver, $meeting->server_index);
+
+        $joinParameters = new JoinParameters();
+        $joinParameters->setMeetingId($meeting->id);
+        $joinParameters->setIdentifier($meeting->identifier);
+        $joinParameters->setRemoteId($meeting->remote_id);
+        $joinParameters->setPassword($password);
+        $joinParameters->setHasModerationPermissions($is_moderator);
+        $joinParameters->setUsername($username);
+        $joinParameters->setFirstName($firstname);
+        
+        $error_message = '';
+        try {
+            if ($join_url = $driver->getJoinMeetingUrl($joinParameters)) {
+                // directly redirect to room
+                header('Status: 301 Moved Permanently', false, 301);
+                header('Location:' . $join_url);
+                die;
+            } else {
+                $error_message = I18N::_('Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server fehlgeschlagen.');
+            }
+        } catch (Exception $e) {
+            $error_message = I18N::_('Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server fehlgeschlagen. ('. $e->getMessage() .')');
+            throw new Error($error_message, ($e->getCode() ? $e->getCode() : 404));
+        }
+
+        throw new Error($error_message, 404);
+    }
+
+    /**
+     * Adjusts the meeting feature parameters before joining the room
+     *
+     * @param Meeting $meeting the meeting object
+     * @param string $cid course id
+     *
+     */
+    private static function adjustFeaturesBeforeJoin(Meeting $meeting, $cid)
+    {
+        if ($features = json_decode($meeting->features, true)) {
+            //putting mandatory logoutURL into features
+            
+            $logout_url = RoomManager::generateMeetingBaseURL('index/return', ['cid' => $cid]);
+            if (!isset($features['logoutURL']) || $features['logoutURL'] != $logout_url) {
+                $features['logoutURL'] = $logout_url;
+            }
+
+            // Check Recording Capability
+            if (isset($features['record']) && filter_var($features['record'], FILTER_VALIDATE_BOOLEAN)) {
+                $recording_capability = RoomManager::checkRecordingCapability($meeting->driver, $cid);
+                if ($recording_capability['allow_recording'] == true
+                    && $recording_capability['type'] == 'opencast'
+                    && !empty($recording_capability['seriesid'])) {
+                    $features['meta_opencast-dc-isPartOf'] = $recording_capability['seriesid'];
+                } else if (isset($features['meta_opencast-dc-isPartOf'])) {
+                    unset($features['meta_opencast-dc-isPartOf']);
+                }
+            }
+            $meeting->features = json_encode($features);
+            $meeting->store();
+        }
+    }
 }

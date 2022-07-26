@@ -664,9 +664,12 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     {
         $options = [];
 
-        if (Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'preupload') == false) {
-            return $options;
-        }
+        // Optimizing base url.
+        $base_url = sprintf(
+            "%s://%s",
+            isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
+            $_SERVER['SERVER_NAME']
+        );
 
         $meeting = new Meeting($meetingId);
 
@@ -685,33 +688,12 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             $meeting_token->store();
         }
 
-        // Optimizing base url.
-        $base_url = sprintf(
-            "%s://%s",
-            isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http',
-            $_SERVER['SERVER_NAME']
-        );
-
-        $documents = [];
-        $folder = \Folder::find($meeting->folder_id);
-
-        if ($folder) {
-            foreach ($folder->getTypedFolder()->getFiles() as $file_ref) {
-                if ($file_ref->id && $file_ref->name) {
-                    $document_url = \PluginEngine::getURL('meetingplugin', [], "api/slides/$meetingId/{$file_ref->id}/$token");
-                    $document_url = strtok($document_url, '?');
-                    if (isset($_SERVER['SERVER_NAME']) && strpos($document_url, $_SERVER['SERVER_NAME']) === FALSE) {
-                        $document_url = $base_url . $document_url;
-                    }
-                    $documents[] = ['filename' => $file_ref->name, 'url' => $document_url];
-                }
-            }
-        }
-
-        // If admin has selected the option to use studip default slides and there is no slides selected for this course!
+        // Step 1.
+        // We prepare the default slide based on the global condig setting to use StudIP to render the default slide.
         $defaults_from = Driver::getGeneralConfigValue('read_default_slides_from');
         $studip_default_sildes = !empty($defaults_from) && $defaults_from == 'studip' ? true : false;
-        if (empty($documents) && $studip_default_sildes) {
+        $documents = [];
+        if ($studip_default_sildes) {
             $default_slide_url = \PluginEngine::getURL('meetingplugin', [], "api/defaultSlide/$meetingId/$token");
             $default_slide_url = strtok($default_slide_url, '?');
             if (isset($_SERVER['SERVER_NAME']) && strpos($default_slide_url, $_SERVER['SERVER_NAME']) === FALSE) {
@@ -720,6 +702,29 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             $documents[] = ['filename' => 'default.pdf', 'url' => $default_slide_url];
         }
 
+        // Step 2.
+        // We prepare the slides from the course folder when the admin config is set and there is any folder assigned.
+        $preupload_allowed = Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'preupload');
+        if ($preupload_allowed) {
+            $folder = \Folder::find($meeting->folder_id);
+            if ($folder) {
+                // Reset the document to follow the default behavior of BBB, in which there is no default.pdf when custom slides are uploaded.
+                $documents = [];
+                foreach ($folder->getTypedFolder()->getFiles() as $file_ref) {
+                    if ($file_ref->id && $file_ref->name) {
+                        $document_url = \PluginEngine::getURL('meetingplugin', [], "api/slides/$meetingId/{$file_ref->id}/$token");
+                        $document_url = strtok($document_url, '?');
+                        if (isset($_SERVER['SERVER_NAME']) && strpos($document_url, $_SERVER['SERVER_NAME']) === FALSE) {
+                            $document_url = $base_url . $document_url;
+                        }
+                        $documents[] = ['filename' => $file_ref->name, 'url' => $document_url];
+                    }
+                }
+            }
+        }
+
+        // Step 3.
+        // We prepare the xml from document and put it in the body.
         if (count($documents)) {
             $modules_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><modules/>');
             $module_xml = $modules_xml->addChild('module');
@@ -732,6 +737,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             $options['body'] = $modules_xml->asXML();
         }
 
+        // Finally, we return the options, either with or without body.
         return $options;
     }
 
@@ -756,10 +762,9 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     public static function getPreUploadFeature()
     {
         $res = [];
-        $preupload_config = filter_var(Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'preupload'), FILTER_VALIDATE_BOOLEAN);
         $defaults_from = Driver::getGeneralConfigValue('read_default_slides_from');
         // Settings that depend on admin config to upload slides.
-        if ($preupload_config && $defaults_from == 'studip') {
+        if ($defaults_from == 'studip') {
             $res['default_slide_course_news'] = new ConfigOption('default_slide_course_news', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Ankündigungen aus dem Kurs auf leerer Begrüßungsfolie'),
                 false, '');
             $res['default_slide_studip_news'] = new ConfigOption('default_slide_studip_news', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Ankündigungen aus Stud.IP auf leerer Begrüßungsfolie'),

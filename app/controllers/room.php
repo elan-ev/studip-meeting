@@ -51,10 +51,15 @@ class RoomController extends PluginController
      */
     public function __call($method, $arguments)
     {
-        $variables = get_object_vars($this);
+        $variables = $this->get_assigned_variables();
         if (isset($variables[$method]) && is_callable($variables[$method])) {
             return call_user_func_array($variables[$method], $arguments);
         }
+
+        if (is_callable('parent::__call')) {
+            return parent::__call($method, $arguments);
+        }
+
         throw new RuntimeException("Method {$method} does not exist");
     }
 
@@ -95,6 +100,12 @@ class RoomController extends PluginController
             }
         }
 
+        // Display Privacy Agreement.
+        $showRecordingPrivacyText = Driver::getGeneralConfigValue('show_recording_privacy_text');
+        if ($showRecordingPrivacyText && isset($features['record']) && $features['record'] == 'true') {
+            $this->check_recording_privacy_agreement = true;
+        }
+
         $widget = new SidebarWidget();
         $widget->setTitle($this->_('Meeting-Name'));
         $widget->addElement(
@@ -130,6 +141,12 @@ class RoomController extends PluginController
             throw new Exception($this->_('Das gesuchte Meeting ist nicht verfügbar!'));
         }
 
+        // Display Privacy Agreement.
+        $showRecordingPrivacyText = Driver::getGeneralConfigValue('show_recording_privacy_text');
+        if ($showRecordingPrivacyText && isset($features['record']) && $features['record'] == 'true') {
+            $this->check_recording_privacy_agreement = true;
+        }
+
         if (Request::isPost() && Request::submitted('accept')) {
             $password = filter_var(trim(Request::get('password')), FILTER_SANITIZE_STRING);
             $moderator_name = filter_var(trim(Request::get('name')), FILTER_SANITIZE_STRING);
@@ -140,20 +157,11 @@ class RoomController extends PluginController
                 PageLayout::postError($this->_('Zugangscode ist ungültig!'));
             } else if (!$moderator_name) {
                 PageLayout::postError($this->_('Es kann kein gültiger Name festgelegt werden.'));
+            } else if ($this->check_recording_privacy_agreement && empty(Request::get('recording_privacy_agreement'))) {
+                // Checking Privacy Agreement.
+                PageLayout::postError($this->_('Um dem Meeting beizutreten, muss dem Datenschutz zugestimmt werden!'));
             } else {
-                $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
-                $joinParameters = new JoinParameters();
-                $joinParameters->setMeetingId($meeting->id);
-                $joinParameters->setIdentifier($meeting->identifier);
-                $joinParameters->setRemoteId($meeting->remote_id);
-                $joinParameters->setPassword($meeting->moderator_password);
-                $joinParameters->setHasModerationPermissions(true);
-                $joinParameters->setUsername('guest_moderator');
-                $joinParameters->setFirstName($moderator_name);
-                $join_url = $driver->getJoinMeetingUrl($joinParameters);
-                header('Status: 301 Moved Permanently', false, 301);
-                header('Location:' . $join_url);
-                die;
+                MeetingsHelper::performJoinWithoutUser($meeting, $cid, 'guest_moderator', $moderator_name, true);
             }
         }
 
@@ -228,19 +236,7 @@ class RoomController extends PluginController
             throw new Exception($this->_('Das gesuchte Meeting ist nicht verfügbar!'));
         }
 
-        $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
-        $joinParameters = new JoinParameters();
-        $joinParameters->setMeetingId($meeting->id);
-        $joinParameters->setIdentifier($meeting->identifier);
-        $joinParameters->setRemoteId($meeting->remote_id);
-        $joinParameters->setPassword($meeting->attendee_password);
-        $joinParameters->setHasModerationPermissions(false);
-        $joinParameters->setUsername('guest');
-        $joinParameters->setFirstName($name);
-        $join_url = $driver->getJoinMeetingUrl($joinParameters);
-        header('Status: 301 Moved Permanently', false, 301);
-        header('Location:' . $join_url);
-        die;
+        MeetingsHelper::performJoinWithoutUser($meeting, $cid, 'guest', $name, false);
     }
 
     public function qrcode_action($link_hex, $cid)
@@ -266,11 +262,21 @@ class RoomController extends PluginController
 
         $this->cid = $cid;
 
+        // Display Privacy Agreement.
+        $features = json_decode($meeting->features, true);
+        $showRecordingPrivacyText = Driver::getGeneralConfigValue('show_recording_privacy_text');
+        if ($showRecordingPrivacyText && isset($features['record']) && $features['record'] == 'true') {
+            $this->check_recording_privacy_agreement = true;
+        }
+
         if (Request::isPost() && Request::submitted('accept')) {
             $token = filter_var(trim(Request::get('token')), FILTER_SANITIZE_STRING);
             if (empty($token) || $this->qr_code_token->token != $token) {
                 $this->last_token = $token;
                 PageLayout::postError($this->_('Zugangscode ist ungültig!'));
+            } else if ($this->check_recording_privacy_agreement && empty(Request::get('recording_privacy_agreement'))) {
+                // Checking Privacy Agreement.
+                PageLayout::postError($this->_('Um dem Meeting beizutreten, muss dem Datenschutz zugestimmt werden!'));
             } else {
                 $can_join = MeetingsHelper::performJoinWithQRCode($this->qr_code_token, $cid);
                 if ($can_join == false) {
