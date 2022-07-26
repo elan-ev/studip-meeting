@@ -14,7 +14,6 @@ $content-min-width: 520px;
 }
 
 /* Introduction */
-
 div.vc_introduction {
     margin: 10px 10px 20px;
 }
@@ -203,7 +202,7 @@ div.inline-feature-warning {
                 margin-right: $gap;
                 align-self: center;
             }
-        
+
             span.tooltip-icon {
                 padding: 0;
             }
@@ -226,18 +225,18 @@ div.inline-feature-warning {
                 img {
                     position: relative;
                     top: 12px;
-            
+
                     &.info-icon {
                         top: 7px;
                         margin-right: 7px;
                     }
                 }
-            
+
                 span {
                     &.red {
                         color: #D60000;
                     }
-            
+
                     &.creator-date {
                         color: #636971;
                         font-size: 12px;
@@ -245,11 +244,11 @@ div.inline-feature-warning {
                         font-style: italic;
                         margin: 10px 0;
                     }
-            
+
                     &.has-changed {
                         animation: alert 1s;
                     }
-            
+
                     @keyframes alert {
                         0% {
                             color: #D60000;
@@ -263,7 +262,7 @@ div.inline-feature-warning {
                     }
                 }
             }
-        
+
             span.participants {
                 position: absolute;
                 right: 0;
@@ -392,7 +391,12 @@ span.meeting-badge {
 .meeting-confirmation {
     img {
         vertical-align:middle;
-        margin-right: 9px;
+        margin-right: 5px;
+    }
+
+    display: flex;
+    div:nth-child(2) {
+        padding: 8px 5px;
     }
 }
 
@@ -428,7 +432,7 @@ label.with-append{
         &:focus {
             outline: none;
             border: 1px solid #c5c7ca;
-            
+
         }
     }
 }

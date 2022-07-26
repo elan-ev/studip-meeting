@@ -33,6 +33,19 @@
                 </label>
 
                 <label>
+                    <translate>Müssen die Teilnehmende einem Datenschutztext zustimmen, bevor sie einem Meeting mit Aufzeichnung beitreten können?</translate>
+                    <br>
+                    <input type="radio"
+                        :value="true"
+                        v-model="general_config['show_recording_privacy_text']">
+                    <translate>Ja</translate>
+                    <input type="radio"
+                        :value="false"
+                        v-model="general_config['show_recording_privacy_text']">
+                    <translate>Nein</translate>
+                </label>
+
+                <label>
                     <translate>Stud.IP für Standardfolien verwenden</translate>
                     <br>
                     <input type="radio"
