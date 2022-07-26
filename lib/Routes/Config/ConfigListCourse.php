@@ -79,10 +79,19 @@ class ConfigListCourse extends MeetingsController
             }
         }
 
+        $course_general_config = [];
+        $showRecordingPrivacyText = Driver::getGeneralConfigValue('show_recording_privacy_text');
+        if ($perm->have_studip_perm('tutor', $cid)) {
+            $showRecordingPrivacyText = false;
+        }
+        $course_general_config['show_recording_privacy_text'] = $showRecordingPrivacyText;
+
+
         $response_result = [];
         !$config ?: $response_result['config'] = $config;
         !$course_config ?: $response_result['course_config'] = $course_config;
         !$course_groups ?: $response_result['course_groups'] = $course_groups;
+        !$course_general_config ?: $response_result['course_general_config'] = $course_general_config;
 
         if (!empty($response_result)) {
             return $this->createResponse($response_result, $response);
