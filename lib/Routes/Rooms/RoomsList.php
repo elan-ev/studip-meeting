@@ -88,12 +88,12 @@ class RoomsList extends MeetingsController
                     }
                 }
 
+                $meeting = $meetingCourse->meeting->toArray();
                 // Checking folder existence
                 RoomManager::checkAssignedFolder($meetingCourse->meeting);
                 if (!filter_var(Driver::getConfigValueByDriver($meetingCourse->meeting->driver, 'preupload'), FILTER_VALIDATE_BOOLEAN)) {
                     $meeting['preupload_not_allowed'] = _('Das automatische Hochladen von Folien ist derzeit nicht möglich');
                 }
-                $meeting = $meetingCourse->meeting->toArray();
                 $meeting = array_merge($meetingCourse->toArray(), $meeting);
                 
                 $meeting['has_recordings'] = false;

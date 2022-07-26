@@ -73,10 +73,15 @@ class AdminController extends MeetingsController
      */
     public function __call($method, $arguments)
     {
-        $variables = get_object_vars($this);
+        $variables = $this->get_assigned_variables();
         if (isset($variables[$method]) && is_callable($variables[$method])) {
             return call_user_func_array($variables[$method], $arguments);
         }
+
+        if (is_callable('parent::__call')) {
+            return parent::__call($method, $arguments);
+        }
+
         throw new RuntimeException("Method {$method} does not exist");
     }
 

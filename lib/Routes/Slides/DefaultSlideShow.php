@@ -35,8 +35,8 @@ class DefaultSlideShow extends MeetingsController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $meeting_id = filter_var(escapeshellcmd(basename($args['meeting_id'])), FILTER_SANITIZE_STRING);
-        $token = filter_var(escapeshellcmd(basename($args['token'])), FILTER_SANITIZE_STRING);
+        $meeting_id = htmlspecialchars(escapeshellcmd(basename($args['meeting_id'])));
+        $token = htmlspecialchars(escapeshellcmd(basename($args['token'])));
         if (!$meeting_id && !$token) {
             return;
         }
@@ -127,7 +127,7 @@ class DefaultSlideShow extends MeetingsController
             }
             header("Cache-Control: post-check=0, pre-check=0", false);
             header("Content-Type: $content_type");
-            header("Content-Disposition: $content_disposition; " . encode_header_parameter('filename', 'default.pdf'));
+            header("Content-Disposition: inline; " . encode_header_parameter('filename', 'default.pdf'));
             readfile_chunked($temp_file, $start, $end);
 
             unlink($temp_file);
