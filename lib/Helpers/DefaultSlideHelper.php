@@ -20,14 +20,44 @@ use Meetings\Errors\Error;
  * @author Farbod Zamani Broujeni (zamani@elan-ev.de)
  */
 
-define('DEFAULT_SLIDE_TEMPLATE_DIR', dirname(__DIR__, 2) . '/templates/default_slides');
+define('MEETING_DOC_PATH', $GLOBALS['UPLOAD_PATH'] . '/meetings_doc');
 define('TEMPLATES_DIR', dirname(__DIR__, 2) . '/templates');
 
 class DefaultSlideHelper
 {
-    static protected $font_dir = DEFAULT_SLIDE_TEMPLATE_DIR . '/font/';
-    static protected $pages_dir = DEFAULT_SLIDE_TEMPLATE_DIR . '/page/';
-    static protected $samples_dir = DEFAULT_SLIDE_TEMPLATE_DIR . '/samples/';
+    static protected $font_dir = MEETING_DOC_PATH . '/font/';
+    static protected $pages_dir = MEETING_DOC_PATH . '/page/';
+    static protected $samples_dir = TEMPLATES_DIR . '/samples/';
+
+    /**
+     * Make sure upload path is ready.
+     * 
+     * @return bool whether th path is ready or not
+     */
+    private static function checkUploadPath() {
+        if (is_dir($GLOBALS['UPLOAD_PATH']) && is_writable($GLOBALS['UPLOAD_PATH'])) {
+            // Create the required folder structure
+            return self::prepareUploadDirectories();
+        }
+        return false;
+    }
+
+    /**
+     * Makes sure that Upload directories are prepared, if not it creates them.
+     * 
+     * @return bool whether the upload directories are prepared or not.
+     */
+    private static function prepareUploadDirectories()
+    {
+        return
+            is_dir(MEETING_DOC_PATH) ?: mkdir(MEETING_DOC_PATH, 0750, true) &&
+            is_dir(self::$font_dir) ?: mkdir(rtrim(self::$font_dir, '/')) &&
+            is_dir(rtrim(self::$font_dir, '/') . '/regular') ?: mkdir(rtrim(self::$font_dir, '/') . '/regular') &&
+            is_dir(rtrim(self::$font_dir, '/') . '/bold') ?: mkdir(rtrim(self::$font_dir, '/') . '/bold') &&
+            is_dir(rtrim(self::$font_dir, '/') . '/italic') ?: mkdir(rtrim(self::$font_dir, '/') . '/italic') &&
+            is_dir(rtrim(self::$font_dir, '/') . '/bold_italic') ?: mkdir(rtrim(self::$font_dir, '/') . '/bold_italic') &&
+            is_dir(self::$pages_dir) ?: mkdir(rtrim(self::$pages_dir, '/'));
+    }
 
     /**
      * Get all news from course and studip
@@ -112,13 +142,12 @@ class DefaultSlideHelper
 
                 // Apply php templates, if only the template exists and the it is the first page of uploaded pdf!
                 if (isset($page['php']) && file_exists("{$page['php']['dirname']}/{$page['php']['basename']}") && $slide_page == 1) {
-                    $php_path = "{$page['php']['dirname']}/{$page['php']['basename']}";
-                    $template = self::getFlexiTemplate($page['php']['dirname'], $page['php']['basename'], $meeting, true);
-                    if (!$template) {
+                    $template_html = self::getFlexiTemplateHTML($page['php']['dirname'], $page['php']['basename'], $meeting, true);
+                    if (empty($template_html)) {
                         continue;
                     }
-                    
-                    $pdf->writeHTML($template->render());
+
+                    $pdf->writeHTML($template_html);
                 }
             }
 
@@ -155,13 +184,12 @@ class DefaultSlideHelper
 
                     // Apply php templates, if only the template exists and the it is the first page of uploaded pdf!
                     if (isset($page['php']) && file_exists("{$page['php']['dirname']}/{$page['php']['basename']}") && $slide_page == 1) {
-                        $php_path = "{$page['php']['dirname']}/{$page['php']['basename']}";
-                        $template = self::getFlexiTemplate($page['php']['dirname'], $page['php']['basename'], $meeting);
-                        if (!$template) {
+                        $template_html = self::getFlexiTemplateHTML($page['php']['dirname'], $page['php']['basename'], $meeting);
+                        if (empty($template_html)) {
                             continue;
                         }
 
-                        $pdf->writeHTML($template->render());
+                        $pdf->writeHTML($template_html);
                     }
                 }
             }
@@ -171,20 +199,31 @@ class DefaultSlideHelper
     }
 
     /**
-    * It generates the Flexi_Template object and sets attributes based on configs
+    * Returns HTML of the template by generating the Flexi_Template object and sets attributes based on configs
     *
     * @param string $template_factory_dir the directory path of templates
     * @param string $template_name the name of the template to use
     * @param Meeting $meeting the meeting object
     * @param boolean $dummy the flag which makes preveiw feature more efficient
-    * @return Flexi_TemplateFactory $template generated template
+    * @return string rendered html from template
     */
-    private static function getFlexiTemplate($template_factory_dir, $template_name, Meeting $meeting, $dummy = false)
+    private static function getFlexiTemplateHTML($template_factory_dir, $template_name, Meeting $meeting, $dummy = false)
     {
+        $php_temp_path = '';
+        $processed_template_name = $template_name;
+        if ($template_factory_dir != TEMPLATES_DIR) {
+            $php_temp_path = "$template_factory_dir/_template.php";
+            $content = file_get_contents("$template_factory_dir/$template_name");
+            $decode_content = base64_decode($content);
+            file_put_contents($php_temp_path, $decode_content);
+            $processed_template_name = '_template.php';
+        }
+
         $courseid = $meeting->courses[0]->seminar_id;
         $template_factory = new Flexi_TemplateFactory($template_factory_dir);
-        $template = $template_factory->open($template_name);
+        $template = $template_factory->open($processed_template_name);
         if (!$template) {
+            self::removeFile($php_temp_path);
             return false;
         }
 
@@ -210,7 +249,20 @@ class DefaultSlideHelper
             $template->set_attribute('studip_news', $dummy_news);
         }
 
-        return $template;
+        $html = $template->render();
+        self::removeFile($php_temp_path);
+        return $html;
+    }
+
+    /**
+     * Removes a file
+     * 
+     * @param string $file_path the full file path
+     */
+    private static function removeFile($file_path) {
+        if (!empty($file_path) && file_exists($file_path)) {
+            unlink($file_path);
+        }
     }
 
     /**
@@ -223,7 +275,7 @@ class DefaultSlideHelper
         $topic = I18N::_('Nachrichtenthema');
         $body = I18N::_('Nachrichteninhalt');
         $author = 'Test StudIP';
-        $date = date();
+        $date = date("d.m.Y H:i");
         $news = [];
         for ($i = 0; $i < 3; $i++) {
             $news[$i] = [
@@ -244,8 +296,8 @@ class DefaultSlideHelper
     */
     public static function generateStudIPDefaultPDF(Meeting $meeting)
     {
-        $template = self::getFlexiTemplate(TEMPLATES_DIR, 'default_slide.php', $meeting);
-        if (!$template) {
+        $template_html = self::getFlexiTemplateHTML(TEMPLATES_DIR, 'default_slide.php', $meeting);
+        if (empty($template_html)) {
             return;
         }
 
@@ -256,8 +308,8 @@ class DefaultSlideHelper
         $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 
         $pdf->addPage('L', '', true, false);
-        $pdf->SetFont($font_name, '', ($decrease_font_size) ? 12 : 18);
-        $pdf->writeHTML($template->render(), true, false, true, false, '');
+
+        $pdf->writeHTML($template_html, true, false, true, false, '');
 
         $pdf->lastPage();
 
@@ -349,11 +401,8 @@ class DefaultSlideHelper
     public static function getInstalledFont()
     {
         // Take care of init folder structure.
-        if (!is_dir(self::$font_dir)) {
-            mkdir(rtrim(self::$font_dir, '/') . '/regular', 0777, true);
-            mkdir(rtrim(self::$font_dir, '/') . '/bold');
-            mkdir(rtrim(self::$font_dir, '/') . '/italic');
-            mkdir(rtrim(self::$font_dir, '/') . '/bold_italic');
+        if (!self::checkUploadPath()) {
+            return false;
         }
         $font = [];
         $font_types = scandir(self::$font_dir);
@@ -386,10 +435,10 @@ class DefaultSlideHelper
     */
     public static function uploadFont(UploadedFile $font_file, $type)
     {
-        $font_type_path = rtrim(self::$font_dir, '/') . '/' . $type;
-        if (!is_dir($font_type_path)) {
-            mkdir($font_type_path, 0777, true);
+        if (!self::checkUploadPath()) {
+            return false;
         }
+        $font_type_path = rtrim(self::$font_dir, '/') . '/' . $type;
         if ($font_file->getError() === UPLOAD_ERR_OK && pathinfo($font_file->getClientFilename(), PATHINFO_EXTENSION) == 'ttf') {
             $filename = self::moveUploadedFile($font_type_path, $font_file);
             // Clear other prev. fonts!
@@ -412,12 +461,9 @@ class DefaultSlideHelper
     public static function deleteFont($font_type)
     {
         $font_type_path = rtrim(self::$font_dir, '/') . '/' . $font_type;
-        if (!is_dir($font_type_path)) {
-            mkdir($font_type_path, 0777, true);
-        }
         foreach (glob("$font_type_path/*") as $file ) {
             // Clear all font files.
-            unlink($file);
+            self::removeFile($file);
         }
         return count(glob("$font_type_path/*")) ? false : true;
     }
@@ -437,9 +483,6 @@ class DefaultSlideHelper
         );
 
         $pages_directory = rtrim(self::$pages_dir, '/');
-        if (!is_dir($pages_directory)) {
-            mkdir($pages_directory);
-        }
         $pages = scandir($pages_directory);
         $templates = [];
         foreach ($pages as $page) {
@@ -518,6 +561,9 @@ class DefaultSlideHelper
     */
     public static function uploadTemplate($uploaded_files, $page)
     {
+        if (!self::checkUploadPath()) {
+            return false;
+        }
         $uploaded = false;
         if (isset($uploaded_files['php'])) {
             $uploaded = self::uploadPHPTemplate($uploaded_files['php'], $page);
@@ -547,6 +593,11 @@ class DefaultSlideHelper
                     unlink($file);
                 }
             }
+            // Encode the content of php file
+            $content = file_get_contents($target_page_dir . '/' . $filename);
+            $encode_content = base64_encode($content);
+            file_put_contents($target_page_dir . '/' . $filename, $encode_content);
+
             return true;
         }
         return false;
@@ -565,7 +616,7 @@ class DefaultSlideHelper
         $target_page_dir = "$pages_directory/$page";
         // We create the page dir if not exists!
         if (!is_dir($target_page_dir)) {
-            mkdir($target_page_dir, 0777, true);
+            mkdir($target_page_dir, 0750);
         }
         if (is_dir($target_page_dir) && $pdf_file->getError() === UPLOAD_ERR_OK && pathinfo($pdf_file->getClientFilename(), PATHINFO_EXTENSION) == 'pdf') {
             $filename = self::moveUploadedFile($target_page_dir, $pdf_file);
@@ -590,7 +641,6 @@ class DefaultSlideHelper
      */
     private static function moveUploadedFile($directory, UploadedFile $uploadedFile)
     {
-        $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
         $filename = $uploadedFile->getClientFilename();
 
         $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
@@ -602,13 +652,14 @@ class DefaultSlideHelper
     * Reads the content of available sample file and returns it to be downloaded by client.
     *
     * @param string $what the sample file extension to download
-    * @return string/boolean $content
+    * @return string|boolean $content or false
     */
     public static function downloadSampleTemplate($what) {
         if ($what != 'php' && $what != 'pdf') {
             return false;
         }
-        $file_path = rtrim(self::$samples_dir, '/') . '/' . 'samples.' . $what;
+        $extension = $what == 'php' ? '.txt' : '.pdf';
+        $file_path = rtrim(self::$samples_dir, '/') . '/' . 'samples' . $extension;
         if (!file_exists($file_path)) {
             return false;
         }
