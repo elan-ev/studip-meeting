@@ -3,7 +3,7 @@
 </div>
 
 <script type="text/javascript">
-    let API_URL  = '<?= PluginEngine::getURL('meetingplugin', [], 'api') ?>';
+    let API_URL  = '<?= PluginEngine::getURL('meetingplugin', [], $is_public ? 'public' : 'api') ?>';
     let ICON_URL = '<?= Assets::url('images/icons/') ?>';
     let LOADING_ICON_URL = '<?= Assets::url('images/ajax-indicator-black.svg') ?>';
 </script>

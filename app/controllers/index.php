@@ -156,6 +156,11 @@ class IndexController extends MeetingsController
         }
 
         $this->setSidebar();
+
+        // Here we handle the path to be routed when the plugin is used for public courses.
+        if (MeetingPlugin::isCoursePublic($this->cid)) {
+            $this->is_public = true;
+        }
     }
 
     public function config_action()
