@@ -175,19 +175,9 @@ class RoomController extends PluginController
 
     public function lobby_action($room_id, $cid)
     {
-        $room_id = filter_var($room_id, FILTER_SANITIZE_NUMBER_INT);
-        $cid = filter_var($cid, FILTER_SANITIZE_STRING);
-        
-        if (MeetingPlugin::isCoursePublic($cid)) {
-            $this->is_public = true;
-        }
-
         if ($GLOBALS['perm']->have_studip_perm('user', $cid)) {
             $meeting = Meeting::findOneBySql('id = ?', [$room_id]);
             $link = PluginEngine::getURL($this->dispatcher->current_plugin, [], 'api/rooms/join/'. $cid .'/'. $room_id);
-        } else if ($this->is_public) {
-            $meeting = Meeting::findOneBySql('id = ?', [$room_id]);
-            $link = 'room/public/' . $room_id . '/' . $cid;
         } else {
             $invitations_link = InvitationsLink::findOneBySQL('meeting_id = ?', [$room_id]);
             if (!$invitations_link) {
@@ -211,6 +201,9 @@ class RoomController extends PluginController
                 $this->redirect($link);
                 return;
             }
+        } else {
+            $this->redirect($link);
+            return;
         }
 
     }
@@ -269,6 +262,18 @@ class RoomController extends PluginController
             $this->check_recording_privacy_agreement = true;
         }
 
+        $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
+        if (isset($features['room_anyone_can_start']) && $features['room_anyone_can_start'] === 'false') {
+            $meetingCourse = new MeetingCourse([$meeting->id, $cid]);
+            $status = $driver->isMeetingRunning($meetingCourse->meeting->getMeetingParameters()) === 'true' ? true : false;
+
+            if (!$status) {
+                $qrcode_lobby_link = "room/qrcode_lobby/{$meeting->id}/$cid/$link_hex/#lobby";
+                $this->redirect($qrcode_lobby_link);
+                return;
+            }
+        }
+
         if (Request::isPost() && Request::submitted('accept')) {
             $token = filter_var(trim(Request::get('token')), FILTER_SANITIZE_STRING);
             if (empty($token) || $this->qr_code_token->token != $token) {
@@ -305,6 +310,7 @@ class RoomController extends PluginController
             throw new Exception($this->_('Das gesuchte Meeting existiert nicht mehr!'));
         }
 
+        $qrcode_link = "room/qrcode/$qrcode_hex/$cid";
 
         $features = json_decode($meeting->features, true);
         $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
@@ -313,15 +319,16 @@ class RoomController extends PluginController
             $status = $driver->isMeetingRunning($meetingCourse->meeting->getMeetingParameters()) === 'true' ? true : false;
 
             if ($status) {
-                $can_join = MeetingsHelper::performJoinWithQRCode($this->qr_code_token, $cid);
-                if ($can_join == false) {
-                    PageLayout::postError($this->_('Etwas ist schief gelaufen, versuche es noch einmal mit dem neuen QR-Code!'));
-                }
+                $this->redirect($qrcode_link);
+                return;
             }
+        } else {
+            $this->redirect($qrcode_link);
+            return;
         }
     }
 
-    public function public_action($room_id, $cid)
+    public function public_action($room_id, $cid, $qr = false)
     {
         $room_id = filter_var($room_id, FILTER_SANITIZE_NUMBER_INT);
         $cid = filter_var($cid, FILTER_SANITIZE_STRING);
@@ -345,6 +352,7 @@ class RoomController extends PluginController
 
         $this->cid = $cid;
         $this->room_id = $room_id;
+        $this->qr = $qr;
 
         $features = json_decode($meeting->features, true);
         $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
@@ -353,8 +361,27 @@ class RoomController extends PluginController
             $status = $driver->isMeetingRunning($meetingCourse->meeting->getMeetingParameters()) === 'true' ? true : false;
 
             if (!$status) {
-                $this->redirect('room/lobby/' . $meeting->id . '/' . $cid . '/#lobby');
+                $public_lobby_link = "room/public_lobby/{$meeting->id}/$cid" . ($qr ? '/1' : '') . '/#lobby';
+                $this->redirect($public_lobby_link);
                 return;
+            }
+        }
+
+        // Display Privacy Agreement.
+        $showRecordingPrivacyText = Driver::getGeneralConfigValue('show_recording_privacy_text');
+        if ($qr && $showRecordingPrivacyText && isset($features['record']) && $features['record'] == 'true') {
+            $this->check_recording_privacy_agreement = true;
+        }
+
+        if (Request::isPost() && Request::submitted('accept')) {
+            $name = trim(Request::get('name'));
+            if (!$name) {
+                PageLayout::postError($this->_('Um dem Meeting beizutreten, ein Name ist erforderlich!'));
+            } else if ($qr && $this->check_recording_privacy_agreement && empty(Request::get('recording_privacy_agreement'))) {
+                // Checking Privacy Agreement.
+                PageLayout::postError($this->_('Um dem Meeting beizutreten, muss dem Datenschutz zugestimmt werden!'));
+            } else {
+                MeetingsHelper::performJoinWithoutUser($meeting, $cid, 'guest', $name, false);
             }
         }
 
@@ -366,44 +393,33 @@ class RoomController extends PluginController
         Sidebar::Get()->addWidget($widget);
     }
 
-    public function join_public_action($room_id, $cid)
+    public function public_lobby_action($room_id, $cid, $qr = false)
     {
         $room_id = filter_var($room_id, FILTER_SANITIZE_NUMBER_INT);
         $cid = filter_var($cid, FILTER_SANITIZE_STRING);
-        $name = trim(Request::get('name'));
-        if (!$name) {
-            throw new Exception($this->_('Name is erförderlich'));
-        }
 
-        $is_public = MeetingPlugin::isCoursePublic($cid);
+        $this->is_public = MeetingPlugin::isCoursePublic($cid);
 
         $meeting = Meeting::find($room_id);
-        if (!$is_public || !$meeting) {
-            throw new Exception($this->_('Das gesuchte Meeting ist nicht verfügbar!'));
+        $link = 'room/public/' . $room_id . '/' . $cid . ($qr ? '/1' : '');
+
+        if (!$this->is_public || !$meeting) {
+            throw new Exception($this->_('Das gesuchte Meeting existiert nicht mehr!'));
         }
 
-        // Checking Course Type
-        $servers = Driver::getConfigValueByDriver($meeting->driver, 'servers');
-        $allow_course_type = MeetingPlugin::checkCourseType($meeting->courses->find($cid), $servers[$meeting->server_index]['course_types']);
-        // Checking Server Active
-        $active_server = $servers[$meeting->server_index]['active'];
-        if (!$allow_course_type || !$active_server) {
-            throw new Exception($this->_('Das gesuchte Meeting ist nicht verfügbar!'));
-        }
-
+        $features = json_decode($meeting->features, true);
         $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
-        $joinParameters = new JoinParameters();
-        $joinParameters->setMeetingId($meeting->id);
-        $joinParameters->setIdentifier($meeting->identifier);
-        $joinParameters->setRemoteId($meeting->remote_id);
-        $joinParameters->setPassword($meeting->attendee_password);
-        $joinParameters->setHasModerationPermissions(false);
-        $joinParameters->setUsername('guest');
-        $joinParameters->setFirstName($name);
-        $join_url = $driver->getJoinMeetingUrl($joinParameters);
-        header('Status: 301 Moved Permanently', false, 301);
-        header('Location:' . $join_url);
-        die;
+        if (isset($features['room_anyone_can_start']) && $features['room_anyone_can_start'] === 'false') {
+            $meetingCourse = new MeetingCourse([$meeting->id, $cid]);
+            $status = $driver->isMeetingRunning($meetingCourse->meeting->getMeetingParameters()) === 'true' ? true : false;
+
+            if ($status) {
+                $this->redirect($link);
+                return;
+            }
+        } else {
+            $this->redirect($link);
+        }
     }
 
     public function display_message_action() {
