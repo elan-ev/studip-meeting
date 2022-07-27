@@ -7,6 +7,7 @@ app/views/index/index.php
 app/views/admin/index.php
 app/views/room/lobby.php
 app/views/room/qrcode_lobby.php
+app/views/room/public_lobby.php
 .DS_Store
 *.zip
 templates/default_slides/page/*

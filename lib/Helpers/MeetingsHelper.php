@@ -100,6 +100,7 @@ class MeetingsHelper
 
         self::adjustFeaturesBeforeJoin($meeting, $cid);
 
+        $features = json_decode($meeting->features, true);
         $driver = $driver_factory->getDriver($meeting->driver, $meeting->server_index);
 
         if (isset($features['room_anyone_can_start'])

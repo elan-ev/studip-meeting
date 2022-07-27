@@ -201,6 +201,9 @@ class RoomController extends PluginController
                 $this->redirect($link);
                 return;
             }
+        } else {
+            $this->redirect($link);
+            return;
         }
 
     }
@@ -259,6 +262,18 @@ class RoomController extends PluginController
             $this->check_recording_privacy_agreement = true;
         }
 
+        $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
+        if (isset($features['room_anyone_can_start']) && $features['room_anyone_can_start'] === 'false') {
+            $meetingCourse = new MeetingCourse([$meeting->id, $cid]);
+            $status = $driver->isMeetingRunning($meetingCourse->meeting->getMeetingParameters()) === 'true' ? true : false;
+
+            if (!$status) {
+                $qrcode_lobby_link = "room/qrcode_lobby/{$meeting->id}/$cid/$link_hex/#lobby";
+                $this->redirect($qrcode_lobby_link);
+                return;
+            }
+        }
+
         if (Request::isPost() && Request::submitted('accept')) {
             $token = filter_var(trim(Request::get('token')), FILTER_SANITIZE_STRING);
             if (empty($token) || $this->qr_code_token->token != $token) {
@@ -295,6 +310,7 @@ class RoomController extends PluginController
             throw new Exception($this->_('Das gesuchte Meeting existiert nicht mehr!'));
         }
 
+        $qrcode_link = "room/qrcode/$qrcode_hex/$cid";
 
         $features = json_decode($meeting->features, true);
         $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
@@ -303,11 +319,106 @@ class RoomController extends PluginController
             $status = $driver->isMeetingRunning($meetingCourse->meeting->getMeetingParameters()) === 'true' ? true : false;
 
             if ($status) {
-                $can_join = MeetingsHelper::performJoinWithQRCode($this->qr_code_token, $cid);
-                if ($can_join == false) {
-                    PageLayout::postError($this->_('Etwas ist schief gelaufen, versuche es noch einmal mit dem neuen QR-Code!'));
-                }
+                $this->redirect($qrcode_link);
+                return;
             }
+        } else {
+            $this->redirect($qrcode_link);
+            return;
+        }
+    }
+
+    public function public_action($room_id, $cid, $qr = false)
+    {
+        $room_id = filter_var($room_id, FILTER_SANITIZE_NUMBER_INT);
+        $cid = filter_var($cid, FILTER_SANITIZE_STRING);
+        PageLayout::setTitle($this->_('Stud.IP Meeting'));
+
+        $is_public = MeetingPlugin::isCoursePublic($cid);
+
+        $meeting = Meeting::find($room_id);
+        if (!$is_public || !$meeting) {
+            throw new Exception($this->_('Das gesuchte Meeting ist nicht verfügbar!'));
+        }
+
+        // Checking Course Type
+        $servers = Driver::getConfigValueByDriver($meeting->driver, 'servers');
+        $allow_course_type = MeetingPlugin::checkCourseType($meeting->courses->find($cid), $servers[$meeting->server_index]['course_types']);
+        // Checking Server Active
+        $active_server = $servers[$meeting->server_index]['active'];
+        if (!$allow_course_type || !$active_server) {
+            throw new Exception($this->_('Das gesuchte Meeting ist nicht verfügbar!'));
+        }
+
+        $this->cid = $cid;
+        $this->room_id = $room_id;
+        $this->qr = $qr;
+
+        $features = json_decode($meeting->features, true);
+        $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
+        if (isset($features['room_anyone_can_start']) && $features['room_anyone_can_start'] === 'false') {
+            $meetingCourse = new MeetingCourse([$meeting->id, $cid]);
+            $status = $driver->isMeetingRunning($meetingCourse->meeting->getMeetingParameters()) === 'true' ? true : false;
+
+            if (!$status) {
+                $public_lobby_link = "room/public_lobby/{$meeting->id}/$cid" . ($qr ? '/1' : '') . '/#lobby';
+                $this->redirect($public_lobby_link);
+                return;
+            }
+        }
+
+        // Display Privacy Agreement.
+        $showRecordingPrivacyText = Driver::getGeneralConfigValue('show_recording_privacy_text');
+        if ($qr && $showRecordingPrivacyText && isset($features['record']) && $features['record'] == 'true') {
+            $this->check_recording_privacy_agreement = true;
+        }
+
+        if (Request::isPost() && Request::submitted('accept')) {
+            $name = trim(Request::get('name'));
+            if (!$name) {
+                PageLayout::postError($this->_('Um dem Meeting beizutreten, ein Name ist erforderlich!'));
+            } else if ($qr && $this->check_recording_privacy_agreement && empty(Request::get('recording_privacy_agreement'))) {
+                // Checking Privacy Agreement.
+                PageLayout::postError($this->_('Um dem Meeting beizutreten, muss dem Datenschutz zugestimmt werden!'));
+            } else {
+                MeetingsHelper::performJoinWithoutUser($meeting, $cid, 'guest', $name, false);
+            }
+        }
+
+        $widget = new SidebarWidget();
+        $widget->setTitle($this->_('Meeting-Name'));
+        $widget->addElement(
+            new WidgetElement(htmlReady($meeting->name))
+        );
+        Sidebar::Get()->addWidget($widget);
+    }
+
+    public function public_lobby_action($room_id, $cid, $qr = false)
+    {
+        $room_id = filter_var($room_id, FILTER_SANITIZE_NUMBER_INT);
+        $cid = filter_var($cid, FILTER_SANITIZE_STRING);
+
+        $this->is_public = MeetingPlugin::isCoursePublic($cid);
+
+        $meeting = Meeting::find($room_id);
+        $link = 'room/public/' . $room_id . '/' . $cid . ($qr ? '/1' : '');
+
+        if (!$this->is_public || !$meeting) {
+            throw new Exception($this->_('Das gesuchte Meeting existiert nicht mehr!'));
+        }
+
+        $features = json_decode($meeting->features, true);
+        $driver = $this->driver_factory->getDriver($meeting->driver, $meeting->server_index);
+        if (isset($features['room_anyone_can_start']) && $features['room_anyone_can_start'] === 'false') {
+            $meetingCourse = new MeetingCourse([$meeting->id, $cid]);
+            $status = $driver->isMeetingRunning($meetingCourse->meeting->getMeetingParameters()) === 'true' ? true : false;
+
+            if ($status) {
+                $this->redirect($link);
+                return;
+            }
+        } else {
+            $this->redirect($link);
         }
     }
 

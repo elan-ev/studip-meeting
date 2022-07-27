@@ -23,6 +23,7 @@ use ElanEv\Model\Meeting;
 
 use Meetings\AppFactory;
 use Meetings\RouteMap;
+use Meetings\RouteMapPublic;
 use Meetings\Helpers\WidgetHelper;
 use Meetings\Errors\Error;
 
@@ -241,7 +242,12 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
             $app = $appFactory->makeApp($this);
             $app->group('/meetingplugin/api', new RouteMap($app));
             $app->run();
-        } else {
+        } else if (substr($unconsumed_path, 0, 6) == 'public') {
+            $appFactory = new AppFactory();
+            $app = $appFactory->makeApp($this);
+            $app->group('/meetingplugin/public', new RouteMapPublic($app));
+            $app->run();
+        }else {
             PageLayout::addStylesheet($this->getPluginUrl() . '/static/styles.css');
 
             $trails_root = $this->getPluginPath() . '/app';
@@ -528,5 +534,16 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
         $template->set_attribute('texts', $texts);
 
         return $template;
+    }
+
+    public static function isCoursePublic($cid)
+    {
+        $course = \Course::find($cid);
+        if (\Config::get()->ENABLE_FREE_ACCESS && $GLOBALS['user']->id == 'nobody'
+        && $course && $course->lesezugriff == 0) {
+            return true;
+        }
+
+        return false;
     }
 }

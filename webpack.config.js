@@ -80,6 +80,12 @@ module.exports = {
             minify: false,
             filename: '../app/views/room/qrcode_lobby.php'
         }),
+        new HtmlWebpackPlugin({
+            template: 'vueapp/lobby_index.php',
+            inject: false,
+            minify: false,
+            filename: '../app/views/room/public_lobby.php'
+        }),
     ],
     resolve: {
         extensions: ['.vue', '.js'],
