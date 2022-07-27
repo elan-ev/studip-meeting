@@ -35,8 +35,8 @@ class FolderList extends MeetingsController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $cid = filter_var($args['cid'], FILTER_SANITIZE_STRING);
-        $folder_id = filter_var($args['folder_id'], FILTER_SANITIZE_STRING);
+        $cid = htmlspecialchars($args['cid']);
+        $folder_id = htmlspecialchars($args['folder_id']);
 
         try {
 

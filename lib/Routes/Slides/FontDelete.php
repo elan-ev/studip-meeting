@@ -21,7 +21,7 @@ class FontDelete extends MeetingsController
     public function __invoke(Request $request, Response $response, $args)
     {
         try {
-            $font_type = filter_var($args['font_type'], FILTER_SANITIZE_STRING);
+            $font_type = htmlspecialchars($args['font_type']);
             $message = [
                 'type' => 'error',
                 'text' => _('Schriftart kann nicht gelöscht werden')

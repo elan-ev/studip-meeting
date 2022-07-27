@@ -22,7 +22,7 @@ class FontUpload extends MeetingsController
     {
         try {
             $uploadedFiles = $request->getUploadedFiles();
-            $type = filter_var($request->getParam('type'), FILTER_SANITIZE_STRING);
+            $type = htmlspecialchars($request->getParam('type'));
             $message = [
                 'type' => 'error',
                 'text' => _('Schriftart kann nicht hochgeladen werden')

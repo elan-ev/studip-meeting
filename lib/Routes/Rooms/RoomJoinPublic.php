@@ -26,7 +26,7 @@ class RoomJoinPublic extends MeetingsController
     public function __invoke(Request $request, Response $response, $args)
     {
         $room_id = filter_var($args['room_id'], FILTER_SANITIZE_NUMBER_INT);
-        $cid = filter_var($args['cid'], FILTER_SANITIZE_STRING);
+        $cid = htmlspecialchars($args['cid']);
         try {
             $public_room_url = RoomManager::generateMeetingBaseURL("room/public/$room_id/$cid", ['cancel_login' => 1]);
             header('Location:' . $public_room_url);

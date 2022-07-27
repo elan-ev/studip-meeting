@@ -19,7 +19,7 @@ class RoomGenerateQRCode extends MeetingsController
     public function __invoke(Request $request, Response $response, $args)
     {
         $room_id = filter_var($args['room_id'], FILTER_SANITIZE_NUMBER_INT);
-        $cid = filter_var($args['cid'], FILTER_SANITIZE_STRING);
+        $cid = htmlspecialchars($args['cid']);
 
         try {
             $qr_code_object = MeetingsHelper::generateQRCode($room_id, $cid);

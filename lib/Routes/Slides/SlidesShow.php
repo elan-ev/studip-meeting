@@ -37,9 +37,9 @@ class SlidesShow extends MeetingsController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
-        $meeting_id = filter_var(escapeshellcmd(basename($args['meeting_id'])), FILTER_SANITIZE_STRING);
-        $silde_id = filter_var(escapeshellcmd(basename($args['slide_id'])), FILTER_SANITIZE_STRING);
-        $token = filter_var(escapeshellcmd(basename($args['token'])), FILTER_SANITIZE_STRING);
+        $meeting_id = htmlspecialchars(escapeshellcmd(basename($args['meeting_id'])));
+        $silde_id = htmlspecialchars(escapeshellcmd(basename($args['slide_id'])));
+        $token = htmlspecialchars(escapeshellcmd(basename($args['token'])));
         if (!$meeting_id && !$silde_id && !$token) {
             return;
         }

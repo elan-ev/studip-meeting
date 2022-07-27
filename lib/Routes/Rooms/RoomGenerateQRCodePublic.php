@@ -17,7 +17,7 @@ class RoomGenerateQRCodePublic extends MeetingsController
     public function __invoke(Request $request, Response $response, $args)
     {
         $room_id = filter_var($args['room_id'], FILTER_SANITIZE_NUMBER_INT);
-        $cid = filter_var($args['cid'], FILTER_SANITIZE_STRING);
+        $cid = htmlspecialchars($args['cid']);
 
         try {
             $join_url = RoomManager::generateMeetingBaseURL("room/public/$room_id/$cid/1", ['cancel_login' => 1]);

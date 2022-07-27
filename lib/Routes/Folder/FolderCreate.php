@@ -37,11 +37,11 @@ class FolderCreate extends MeetingsController
     {
         $json = $this->getRequestData($request);
         try {
-            $cid = filter_var($json['cid'], FILTER_SANITIZE_STRING);
-            $parent_id = filter_var($json['parent_id'], FILTER_SANITIZE_STRING);
-            $name = filter_var($json['name'], FILTER_SANITIZE_STRING);
-            $desc = filter_var($json['desc'], FILTER_SANITIZE_STRING);
-            $folder_type = filter_var($json['type'], FILTER_SANITIZE_STRING);
+            $cid = htmlspecialchars($json['cid']);
+            $parent_id = htmlspecialchars($json['parent_id']);
+            $name = htmlspecialchars($json['name']);
+            $desc = htmlspecialchars($json['desc']);
+            $folder_type = htmlspecialchars($json['type']);
 
             if (empty($cid) || empty($parent_id) || empty($name) || empty($folder_type)) {
                 return $this->createResponse([

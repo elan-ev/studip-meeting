@@ -22,7 +22,7 @@ class TemplateDelete extends MeetingsController
     {
         try {
             $page = filter_var($args['page'], FILTER_SANITIZE_NUMBER_INT);
-            $what = filter_var($args['what'], FILTER_SANITIZE_STRING);
+            $what = htmlspecialchars($args['what']);
             $message = [
                 'type' => 'error',
                 'text' => _('Folie/Template kann nicht gelöscht werden')

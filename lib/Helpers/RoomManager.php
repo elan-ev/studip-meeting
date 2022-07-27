@@ -63,7 +63,7 @@ class RoomManager
                                     if ($create_feature_name == 'welcome') {
                                         $text = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $value);
                                     } else {
-                                        $text = filter_var($value, FILTER_SANITIZE_STRING);
+                                        $text = htmlspecialchars($value);
                                     }
                                     $features[$create_feature_name] = $text;
                             }

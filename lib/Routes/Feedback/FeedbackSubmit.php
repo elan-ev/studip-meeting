@@ -43,7 +43,7 @@ class FeedbackSubmit extends MeetingsController
 
             $to = filter_var($feedback_contact_address, FILTER_VALIDATE_EMAIL);
             $room_id = filter_var($json['room_id'], FILTER_SANITIZE_NUMBER_INT);
-            $cid = filter_var($json['cid'], FILTER_SANITIZE_STRING);
+            $cid = htmlspecialchars($json['cid']);
             $meetingCourse = new MeetingCourse([$room_id, $cid ]);
 
             if (!$to) {

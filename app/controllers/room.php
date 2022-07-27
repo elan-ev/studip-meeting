@@ -148,8 +148,8 @@ class RoomController extends PluginController
         }
 
         if (Request::isPost() && Request::submitted('accept')) {
-            $password = filter_var(trim(Request::get('password')), FILTER_SANITIZE_STRING);
-            $moderator_name = filter_var(trim(Request::get('name')), FILTER_SANITIZE_STRING);
+            $password = htmlspecialchars(trim(Request::get('password')));
+            $moderator_name = htmlspecialchars(trim(Request::get('name')));
 
             if (empty($password) || $this->moderator_invitations_link->password != $password) {
                 $this->last_password = $password;
@@ -275,7 +275,7 @@ class RoomController extends PluginController
         }
 
         if (Request::isPost() && Request::submitted('accept')) {
-            $token = filter_var(trim(Request::get('token')), FILTER_SANITIZE_STRING);
+            $token = htmlspecialchars(trim(Request::get('token')));
             if (empty($token) || $this->qr_code_token->token != $token) {
                 $this->last_token = $token;
                 PageLayout::postError($this->_('Zugangscode ist ungültig!'));
@@ -331,7 +331,7 @@ class RoomController extends PluginController
     public function public_action($room_id, $cid, $qr = false)
     {
         $room_id = filter_var($room_id, FILTER_SANITIZE_NUMBER_INT);
-        $cid = filter_var($cid, FILTER_SANITIZE_STRING);
+        $cid = htmlspecialchars($cid);
         PageLayout::setTitle($this->_('Stud.IP Meeting'));
 
         $is_public = MeetingPlugin::isCoursePublic($cid);
@@ -396,7 +396,7 @@ class RoomController extends PluginController
     public function public_lobby_action($room_id, $cid, $qr = false)
     {
         $room_id = filter_var($room_id, FILTER_SANITIZE_NUMBER_INT);
-        $cid = filter_var($cid, FILTER_SANITIZE_STRING);
+        $cid = htmlspecialchars($cid);
 
         $this->is_public = MeetingPlugin::isCoursePublic($cid);
 

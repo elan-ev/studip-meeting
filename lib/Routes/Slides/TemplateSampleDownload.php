@@ -21,7 +21,7 @@ class TemplateSampleDownload extends MeetingsController
     public function __invoke(Request $request, Response $response, $args)
     {
         try {
-            $what = filter_var($args['what'], FILTER_SANITIZE_STRING);
+            $what = htmlspecialchars($args['what']);
             if ($sample_file_content = DefaultSlideHelper::downloadSampleTemplate($what)) {
                 return $this->createResponse([
                     'content' => $sample_file_content,
