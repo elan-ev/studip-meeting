@@ -1,6 +1,6 @@
 <template>
     <div>
-        <MeetingDialog :title="$gettext('Moderator einladen')" @close="cancelModeratorGuest($event)">
+        <MeetingDialog :title="$gettext('Moderierende einladen')" @close="cancelModeratorGuest($event)">
             <template v-slot:content>
                 <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
                     {{ modal_message.text }}

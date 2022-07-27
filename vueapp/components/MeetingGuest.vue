@@ -1,6 +1,6 @@
 <template>
     <div>
-        <MeetingDialog :title="$gettext('Gast einladen')" @close="cancelGuest($event)">
+        <MeetingDialog :title="$gettext('Teilnehmende einladen')" @close="cancelGuest($event)">
             <template v-slot:content>
                 <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
                     {{ modal_message.text }}
@@ -32,7 +32,7 @@
                 </StudipButton>
 
                 <StudipButton icon="cancel" type="button" v-on:click="cancelGuest($event)">
-                    <translate>Dialog schließen</translate>
+                    <translate>Abbrechen</translate>
                 </StudipButton>
             </template>
         </MeetingDialog>
