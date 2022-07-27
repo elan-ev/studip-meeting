@@ -165,13 +165,13 @@
                     type="button" v-on:click="getModeratorGuestInfo()"
                     icon="add"
                 >
-                    <span v-text="$gettext('Moderator einladen')"></span>
+                    <span v-text="$gettext('Moderierende einladen')"></span>
                 </StudipButton>
                 <StudipButton v-if="room.features['guestPolicy-ALWAYS_ACCEPT'] && room.features['guestPolicy-ALWAYS_ACCEPT'] == 'true'"
                     type="button" v-on:click="getGuestInfo()"
                     icon="add"
                 >
-                    <span v-text="$gettext('Einladungslink erstellen')"></span>
+                    <span v-text="$gettext('Teilnehmende einladen')"></span>
                 </StudipButton>
             </template>
         </footer>
