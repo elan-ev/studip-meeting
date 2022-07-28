@@ -170,6 +170,18 @@ fieldset {
         &.disabled {
             color:#555 !important;
         }
+
+        &.radio-label {
+            cursor: pointer;
+
+            input[type="radio"] {
+                cursor: pointer;
+    
+                &[disabled] {
+                    cursor: not-allowed;
+                }
+            }
+        }
     }
 }
 

@@ -140,6 +140,14 @@ class RoomsList extends MeetingsController
                     $meetingCourse->meeting->store();
                     if ($record_not_allowed) {
                         $meeting['record_not_allowed'] = $record_not_allowed;
+                    } else {
+                        // Display early recording warning.
+                        $early_recording_config = !filter_var(Driver::getConfigValueByDriver($meeting['driver'], 'allowStartStopRecording'), FILTER_VALIDATE_BOOLEAN) &&
+                            isset($meeting['features']['room_anyone_can_start']) && filter_var($meeting['features']['room_anyone_can_start'], FILTER_VALIDATE_BOOLEAN);
+                        $early_recording_room_setting = filter_var(Driver::getConfigValueByDriver($meeting['driver'], 'allowStartStopRecording'), FILTER_VALIDATE_BOOLEAN) &&
+                            isset($meeting['features']['room_anyone_can_start']) && filter_var($meeting['features']['room_anyone_can_start'], FILTER_VALIDATE_BOOLEAN) &&
+                            isset($meeting['features']['autoStartRecording']) && filter_var($meeting['features']['autoStartRecording'], FILTER_VALIDATE_BOOLEAN);
+                        $meeting['early_recording'] = $early_recording_config || $early_recording_room_setting;
                     }
                 }
 

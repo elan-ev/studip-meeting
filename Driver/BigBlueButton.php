@@ -126,6 +126,9 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                     $features['duration'] = '';
                     $features['record'] = 'false';
                 }
+            } else {
+                // Applying duration only when recording is on!
+                $features['duration'] = '';
             }
 
             // Handel Auto Start/Stop Recordings.
@@ -467,7 +470,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                     Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'welcome'),
                     self::getFeatureInfo('welcome'));
 
-        $res['duration'] = new ConfigOption('duration', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Minuten Konferenzdauer'), 240, self::getFeatureInfo('duration'));
+        $res['duration'] = new ConfigOption('duration', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Aufzeichnungsdauer pro Sitzung'), 240, self::getFeatureInfo('duration'));
 
         $res['maxParticipants'] = new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 0, self::getFeatureInfo('maxParticipants'));
 
@@ -509,24 +512,24 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         if ($opencast_config) {
             $info = _('Opencast wird als Aufzeichnungsserver verwendet. Diese Funktion ist im Testbetrieb und es kann noch zu Fehlern kommen.');
 
-            $res['opencast_webcam_record'] = new ConfigOption('opencast_webcam_record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnen von Webcams zulassen.'),
+            $res['opencast_webcam_record'] = new ConfigOption('opencast_webcam_record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnung von Webcams zulassen.'),
                 false, _('Sofern erlaubt, werden auch die Webcams aufgezeichnet. Das Opencast-System muss diese Funktion unterstützen, um diese Einstellung anzuwenden.'));
 
         } else if ($record_config) {
             $info = _('Erlaubt es Moderierenden, die Medien und Ereignisse in der Sitzung für die spätere Wiedergabe aufzuzeichnen. Die Aufzeichnung muss innerhalb der Sitzung von einem Moderator gestartet werden.');
         }
         if ($info) {
-            $res['record'] = new ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Sitzungen können aufgezeichnet werden.'),
+            $res['record'] = new ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnungsfunktion aktivieren'),
             false, $info);
         }
 
         // Show the "autoStartRecording" feature when the "allowStartStopRecording" is enabled by the admin.
         if ($allowStartStopRecording_config) {
-            $res['autoStartRecording'] = new ConfigOption('autoStartRecording', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnung automatisch starten'),
-                $startStopRecording_config, _('Wenn deaktiviert, muss die Sitzungsaufzeichnung von den Moderator:innen manuell gestartet werden.'));
+            $res['autoStartRecording'] = new ConfigOption('autoStartRecording', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnung starten'),
+            $startStopRecording_config, _('Legen Sie fest, ob die Sitzungsaufzeichnung automatisch oder von den Moderierenden manuell gestartet werden soll.'));
         }
 
-        $res['giveAccessToRecordings'] = new ConfigOption('giveAccessToRecordings', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnungen für Teilnehmende sichtbar schalten'),
+        $res['giveAccessToRecordings'] = new ConfigOption('giveAccessToRecordings', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnungen direkt für Teilnehmende sichtbar schalten'),
                 true, _('Legen Sie fest, ob neben Lehrenden auch Teilnehmende Zugriff auf die Aufzeichnungen haben sollen.'));
         return $res;
     }
@@ -564,11 +567,11 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             ],
             'record' => [
                 'record_setting' => [
-                    'duration',
                     'record',
                     'opencast_webcam_record',
+                    'giveAccessToRecordings',
                     'autoStartRecording',
-                    'giveAccessToRecordings'
+                    'duration',
                 ]
             ]
         ];
