@@ -112,11 +112,7 @@
                         : room.driver }}
                 </div>
 
-                <div v-if="course_config.display.editRoom && room.driver &&
-                    ((Object.keys(config[room.driver]).includes('record') && JSON.parse(config[room.driver].record) == true) ||
-                    (Object.keys(config[room.driver]).includes('opencast') && JSON.parse(config[room.driver].opencast) == true)) &&
-                    room.features && room.features.record && room.features.room_anyone_can_start &&
-                    JSON.parse(room.features.record) == true && JSON.parse(room.features.room_anyone_can_start) == true">
+                <div v-if="display_room_recording_warning">
                     <a>
                         <StudipIcon class="info-icon" icon="exclaim-circle"
                             role="status-yellow" size="24"></StudipIcon>
@@ -293,6 +289,10 @@ export default {
             }
 
             return menuItems;
+        },
+
+        display_room_recording_warning() {
+            return this.room?.early_recording;
         }
     },
 

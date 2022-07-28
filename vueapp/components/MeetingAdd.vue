@@ -526,6 +526,15 @@ export default {
             let has_files = this.folder?.files?.length;
             let has_subfolders = this.folder?.subfolders && Object.keys(this.folder.subfolders).length > 0;
             return this.folder && (has_files || has_subfolders);
+        },
+
+        auto_starts_recording() {
+            let config = (Object.keys(this.config[this.room['driver']]).includes('allowStartStopRecording') &&
+                JSON.parse(this.config[this.room['driver']]['allowStartStopRecording']) == false);
+            let room_setting = (Object.keys(this.room['features']).includes('autoStartRecording') &&
+                JSON.parse(this.room['features']['autoStartRecording']) == true &&
+                JSON.parse(this.config[this.room['driver']]['allowStartStopRecording']) == true)
+            return config || room_setting;
         }
     },
 
@@ -878,7 +887,7 @@ export default {
                 Object.keys(this.room['features']).includes('room_anyone_can_start') &&
                 Object.keys(this.room['features']).includes('record') &&
                 JSON.parse(this.room['features']['room_anyone_can_start']) == true &&
-                JSON.parse(this.room['features']['record']) == true)
+                JSON.parse(this.room['features']['record']) == true && this.auto_starts_recording)
             {
                 if ($('#privacy_settings_section').hasClass('collapsed')) {
                     $('#privacy_settings_section').removeClass('collapsed');
@@ -889,7 +898,7 @@ export default {
         },
 
         labelClickHandler(feature_name) {
-            if (feature_name == 'record') {
+            if (feature_name == 'record' || feature_name == 'autoStartRecording') {
                 this.scrollToRoomStartWarning();
             }
         },

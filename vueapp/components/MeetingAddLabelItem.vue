@@ -1,6 +1,34 @@
 <template>
     <label @click.stop="labelIsClicked" :class="{disabled: checkDisabled()}">
-        <template v-if="(feature['value'] === true || feature['value'] === false)">
+        <template v-if="feature['name'] == 'autoStartRecording'">
+            {{ feature['display_name'] }}
+            <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"
+                :badge="(badge && badge.show == true) ? true : false">
+                {{ (badge && badge.text) ? badge.text : ''}}
+            </StudipTooltipIcon>
+            <br>
+            <label class="radio-label">
+                <input type="radio"
+                    :disabled="checkDisabled()"
+                    value="true"
+                    v-model="room['features'][feature['name']]">
+                <translate>Aufzeichnung automatisch starten und beenden</translate>
+            </label>
+            <label class="radio-label">
+                <input type="radio"
+                    :disabled="checkDisabled()"
+                    value="false"
+                    v-model="room['features'][feature['name']]">
+                <translate>Aufzeichnung manuell starten und beenden</translate>
+            </label>
+            <span class="inline-feature-warning-icon" v-if="inlineFeatureWarningIcon && inlineFeatureWarningIcon.messagebox_id">
+                <a href="#" @click.prevent="toggleInlineFeatureWarning(inlineFeatureWarningIcon['messagebox_id'])">
+                    <StudipIcon icon="exclaim-circle-full"
+                        role="status-yellow" size="16"></StudipIcon>
+                </a>
+            </span>
+        </template>
+        <template v-else-if="(feature['value'] === true || feature['value'] === false)">
             <input type="checkbox"
                 true-value="true"
                 false-value="false"
@@ -119,7 +147,7 @@ export default {
             this.$emit('toggleInlineFeatureWarning', messagebox_id);
         },
         labelIsClicked() {
-            if (this.feature['name'] == 'record') {
+            if (this.feature['name'] == 'record' || this.feature['name'] == 'autoStartRecording') {
                 this.$emit('labelClicked', this.feature['name']);
             }
         },
@@ -146,6 +174,24 @@ export default {
                             if (this.room?.mkdate) {
                                 this.$set(this.room.features, 'autoStartRecording', 'false');
                             }
+                            disabled = true;
+                        }
+                    }
+                    return disabled;
+                case 'duration':
+                    var disabled = false;
+                    if (this.feature['name'] == 'duration') {
+                        if (!this.room?.features?.record || (this.room.features.record && JSON.parse(this.room.features.record) == false)) {
+                            this.$set(this.room.features, 'duration', this.feature['value']);
+                            disabled = true;
+                        }
+                    }
+                    return disabled;
+                case 'giveAccessToRecordings':
+                    var disabled = false;
+                    if (this.feature['name'] == 'giveAccessToRecordings') {
+                        if (!this.room?.features?.record || (this.room.features.record && JSON.parse(this.room.features.record) == false)) {
+                            this.$set(this.room.features, 'giveAccessToRecordings', 'false');
                             disabled = true;
                         }
                     }
