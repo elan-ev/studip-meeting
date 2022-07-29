@@ -10,6 +10,7 @@ use ElanEv\Model\Driver;
 use Throwable;
 use GuzzleHttp\Exception\BadResponseException;
 use Meetings\Errors\Error;
+use Meetings\Models\I18N;
 
 /**
  * Big Blue Button driver implementation.
@@ -385,14 +386,14 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             $response = $e->getResponse()->getBody(true);
             $xml = new \SimpleXMLElement($response);
             $status_code = 500;
-            $error = _('Internal Error');
-            $message = _('Please contact a system administrator!');
+            $error = I18N::_('Internal Error');
+            $message = I18N::_('Please contact a system administrator!');
             if ($xml instanceof \SimpleXMLElement) {
                 $message = (string) $xml->message ? (string) $xml->message : $message;
                 $error = (string) $xml->error ? (string) $xml->error : $error;
                 $status_code = (string) $xml->status ? (string) $xml->status : $status_code;
             }
-            throw new Error(_($error) . ': ' . _($message), $status_code);
+            throw new Error(I18N::_($error) . ': ' . I18N::_($message), $status_code);
         }
 
         return $request->getBody(true);
@@ -424,25 +425,25 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     public static function getConfigOptions()
     {
         return array(
-            new ConfigOption('active', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aktiv?'), true),
-            new ConfigOption('label', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Label'), 'Server #'),
-            new ConfigOption('url',     dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'URL des BBB-Servers')),
-            new ConfigOption('api-key', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Api-Key (Salt)'), null, null, 'password'),
-            new ConfigOption('proxy', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugriff über Proxy')),
-            new ConfigOption('connection_timeout', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Connection Timeout (e.g. 0.5)')),
-            new ConfigOption('request_timeout', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Request Timeout (e.g. 3.4)')),
-            new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Max. Zahl von Teilnehmenden')),
-            new ConfigOption('course_types', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Veranstaltungstyp'), MeetingPlugin::getSemClasses(), _('Nur in folgenden Veranstaltungskategorien nutzbar')),
-            new ConfigOption('description', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Beschreibung'), '', _('Der Beschreibungstext wird Lehrenden angezeigt wenn dieser Server ausgewählt wird.')),
-            new ConfigOption('roomsize-presets', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Raumgrößenvoreinstellungen'), self::getRoomSizePresets()),
+            new ConfigOption('active', I18N::_('Aktiv?'), true),
+            new ConfigOption('label', I18N::_('Label'), 'Server #'),
+            new ConfigOption('url',     I18N::_('URL des BBB-Servers')),
+            new ConfigOption('api-key', I18N::_('Api-Key (Salt)'), null, null, 'password'),
+            new ConfigOption('proxy', I18N::_('Zugriff über Proxy')),
+            new ConfigOption('connection_timeout', I18N::_('Connection Timeout (e.g. 0.5)')),
+            new ConfigOption('request_timeout', I18N::_('Request Timeout (e.g. 3.4)')),
+            new ConfigOption('maxParticipants', I18N::_('Max. Zahl von Teilnehmenden')),
+            new ConfigOption('course_types', I18N::_('Veranstaltungstyp'), MeetingPlugin::getSemClasses(), I18N::_('Nur in folgenden Veranstaltungskategorien nutzbar')),
+            new ConfigOption('description', I18N::_('Beschreibung'), '', I18N::_('Der Beschreibungstext wird Lehrenden angezeigt wenn dieser Server ausgewählt wird.')),
+            new ConfigOption('roomsize-presets', I18N::_('Raumgrößenvoreinstellungen'), self::getRoomSizePresets()),
         );
     }
 
     private static function getRoomSizePresets() {
         return array(
-            new ConfigOption('small', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Kleiner Raum'), self::getRoomSizeFeature(0)),
-            new ConfigOption('medium', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Mittlerer Raum'), self::getRoomSizeFeature(50)),
-            new ConfigOption('large', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Großer Raum'), self::getRoomSizeFeature(150)),
+            new ConfigOption('small', I18N::_('Kleiner Raum'), self::getRoomSizeFeature(0)),
+            new ConfigOption('medium', I18N::_('Mittlerer Raum'), self::getRoomSizeFeature(50)),
+            new ConfigOption('large', I18N::_('Großer Raum'), self::getRoomSizeFeature(150)),
         );
     }
 
@@ -457,7 +458,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                                 'muteOnStart',
                             ]);
         });
-        $roomsize_features['minParticipants'] = new ConfigOption('minParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Min. Teilnehmerzahl'), $minParticipants);
+        $roomsize_features['minParticipants'] = new ConfigOption('minParticipants', I18N::_('Min. Teilnehmerzahl'), $minParticipants);
         return array_reverse($roomsize_features);
     }
 
@@ -466,33 +467,33 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
      */
     public static function getCreateFeatures()
     {
-        $res['welcome'] = new ConfigOption('welcome', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Willkommensnachricht'),
+        $res['welcome'] = new ConfigOption('welcome', I18N::_('Willkommensnachricht'),
                     Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'welcome'),
                     self::getFeatureInfo('welcome'));
 
-        $res['duration'] = new ConfigOption('duration', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Aufzeichnungsdauer pro Sitzung'), 240, self::getFeatureInfo('duration'));
+        $res['duration'] = new ConfigOption('duration', I18N::_('Maximale Aufzeichnungsdauer pro Sitzung'), 240, self::getFeatureInfo('duration'));
 
-        $res['maxParticipants'] = new ConfigOption('maxParticipants', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Maximale Teilnehmerzahl'), 0, self::getFeatureInfo('maxParticipants'));
+        $res['maxParticipants'] = new ConfigOption('maxParticipants', I18N::_('Maximale Teilnehmerzahl'), 0, self::getFeatureInfo('maxParticipants'));
 
-        $res['invite_moderator'] = new ConfigOption('invite_moderator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Moderierendenzugang via Link'), false, self::getFeatureInfo('invite_moderator'));
+        $res['invite_moderator'] = new ConfigOption('invite_moderator', I18N::_('Moderierendenzugang via Link'), false, self::getFeatureInfo('invite_moderator'));
 
-        $res['guestPolicy-ALWAYS_ACCEPT'] = new ConfigOption('guestPolicy-ALWAYS_ACCEPT', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Zugang via Link'), false, self::getFeatureInfo('guestPolicy-ALWAYS_ACCEPT'));
+        $res['guestPolicy-ALWAYS_ACCEPT'] = new ConfigOption('guestPolicy-ALWAYS_ACCEPT', I18N::_('Zugang via Link'), false, self::getFeatureInfo('guestPolicy-ALWAYS_ACCEPT'));
 
-        $res['guestPolicy-ASK_MODERATOR'] = new ConfigOption('guestPolicy-ASK_MODERATOR', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Moderierende vor Teilnehmendenzutritt fragen'), false, self::getFeatureInfo('guestPolicy-ASK_MODERATOR'));
+        $res['guestPolicy-ASK_MODERATOR'] = new ConfigOption('guestPolicy-ASK_MODERATOR', I18N::_('Moderierende vor Teilnehmendenzutritt fragen'), false, self::getFeatureInfo('guestPolicy-ASK_MODERATOR'));
 
-        $res['privateChat'] = new ConfigOption('lockSettingsDisablePrivateChat', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Private Chats deaktivieren'), false, self::getFeatureInfo('lockSettingsDisablePrivateChat'));
+        $res['privateChat'] = new ConfigOption('lockSettingsDisablePrivateChat', I18N::_('Private Chats deaktivieren'), false, self::getFeatureInfo('lockSettingsDisablePrivateChat'));
 
-        $res['lockSettingsDisableNote'] = new ConfigOption('lockSettingsDisableNote', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Gemeinsame Notizen deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableNote'));
+        $res['lockSettingsDisableNote'] = new ConfigOption('lockSettingsDisableNote', I18N::_('Gemeinsame Notizen deaktivieren'), false, self::getFeatureInfo('lockSettingsDisableNote'));
 
-        $res['lockSettingsDisableMic'] = new ConfigOption('lockSettingsDisableMic', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Nur Moderierende können Audio teilen'), false, self::getFeatureInfo('lockSettingsDisableMic'));
+        $res['lockSettingsDisableMic'] = new ConfigOption('lockSettingsDisableMic', I18N::_('Nur Moderierende können Audio teilen'), false, self::getFeatureInfo('lockSettingsDisableMic'));
 
-        $res['lockSettingsDisableCam'] = new ConfigOption('lockSettingsDisableCam', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Nur Moderierende können Webcams teilen'), false, self::getFeatureInfo('lockSettingsDisableCam'));
+        $res['lockSettingsDisableCam'] = new ConfigOption('lockSettingsDisableCam', I18N::_('Nur Moderierende können Webcams teilen'), false, self::getFeatureInfo('lockSettingsDisableCam'));
 
-        $res['webcamsOnlyForModerator'] = new ConfigOption('webcamsOnlyForModerator', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Nur Moderierende können Webcams sehen'), false, self::getFeatureInfo('webcamsOnlyForModerator'));
+        $res['webcamsOnlyForModerator'] = new ConfigOption('webcamsOnlyForModerator', I18N::_('Nur Moderierende können Webcams sehen'), false, self::getFeatureInfo('webcamsOnlyForModerator'));
 
-        $res['room_anyone_can_start'] = new ConfigOption('room_anyone_can_start', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Alle Teilnehmenden können die Konferenz starten'), true, self::getFeatureInfo('room_anyone_can_start'));
+        $res['room_anyone_can_start'] = new ConfigOption('room_anyone_can_start', I18N::_('Alle Teilnehmenden können die Konferenz starten'), true, self::getFeatureInfo('room_anyone_can_start'));
 
-        $res['muteOnStart'] = new ConfigOption('muteOnStart', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Alle Teilnehmenden initial stumm schalten'), false, self::getFeatureInfo('muteOnStart'));
+        $res['muteOnStart'] = new ConfigOption('muteOnStart', I18N::_('Alle Teilnehmenden initial stumm schalten'), false, self::getFeatureInfo('muteOnStart'));
 
         return array_reverse($res);
     }
@@ -510,27 +511,27 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
         $info = '';
         if ($opencast_config) {
-            $info = _('Opencast wird als Aufzeichnungsserver verwendet. Diese Funktion ist im Testbetrieb und es kann noch zu Fehlern kommen.');
+            $info = I18N::_('Opencast wird als Aufzeichnungsserver verwendet. Diese Funktion ist im Testbetrieb und es kann noch zu Fehlern kommen.');
 
-            $res['opencast_webcam_record'] = new ConfigOption('opencast_webcam_record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnung von Webcams zulassen.'),
-                false, _('Sofern erlaubt, werden auch die Webcams aufgezeichnet. Das Opencast-System muss diese Funktion unterstützen, um diese Einstellung anzuwenden.'));
+            $res['opencast_webcam_record'] = new ConfigOption('opencast_webcam_record', I18N::_('Aufzeichnung von Webcams zulassen.'),
+                false, I18N::_('Sofern erlaubt, werden auch die Webcams aufgezeichnet. Das Opencast-System muss diese Funktion unterstützen, um diese Einstellung anzuwenden.'));
 
         } else if ($record_config) {
-            $info = _('Erlaubt es Moderierenden, die Medien und Ereignisse in der Sitzung für die spätere Wiedergabe aufzuzeichnen. Die Aufzeichnung muss innerhalb der Sitzung von einem Moderator gestartet werden.');
+            $info = I18N::_('Erlaubt es Moderierenden, die Medien und Ereignisse in der Sitzung für die spätere Wiedergabe aufzuzeichnen. Die Aufzeichnung muss innerhalb der Sitzung von einem Moderator gestartet werden.');
         }
         if ($info) {
-            $res['record'] = new ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnungsfunktion aktivieren'),
+            $res['record'] = new ConfigOption('record', I18N::_('Aufzeichnungsfunktion aktivieren'),
             false, $info);
         }
 
         // Show the "autoStartRecording" feature when the "allowStartStopRecording" is enabled by the admin.
         if ($allowStartStopRecording_config) {
-            $res['autoStartRecording'] = new ConfigOption('autoStartRecording', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnung starten'),
-            $startStopRecording_config, _('Legen Sie fest, ob die Sitzungsaufzeichnung automatisch oder von den Moderierenden manuell gestartet werden soll.'));
+            $res['autoStartRecording'] = new ConfigOption('autoStartRecording', I18N::_('Aufzeichnung starten'),
+            $startStopRecording_config, I18N::_('Legen Sie fest, ob die Sitzungsaufzeichnung automatisch oder von den Moderierenden manuell gestartet werden soll.'));
         }
 
-        $res['giveAccessToRecordings'] = new ConfigOption('giveAccessToRecordings', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnungen direkt für Teilnehmende sichtbar schalten'),
-                true, _('Legen Sie fest, ob neben Lehrenden auch Teilnehmende Zugriff auf die Aufzeichnungen haben sollen.'));
+        $res['giveAccessToRecordings'] = new ConfigOption('giveAccessToRecordings', I18N::_('Aufzeichnungen direkt für Teilnehmende sichtbar schalten'),
+                true, I18N::_('Legen Sie fest, ob neben Lehrenden auch Teilnehmende Zugriff auf die Aufzeichnungen haben sollen.'));
         return $res;
     }
 
@@ -583,8 +584,8 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     public static function useOpenCastForRecording()
     {
         $res = false;
-        !MeetingPlugin::checkOpenCast() ?: $res = new ConfigOption('opencast', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Opencast für Aufzeichnungen verwenden')
-                                                , false, _('Wenn diese Option aktiviert ist, ist die Aufzeichnung nur mit einer gültigen Serien-ID für den Kurs zulässig.'));
+        !MeetingPlugin::checkOpenCast() ?: $res = new ConfigOption('opencast', I18N::_('Opencast für Aufzeichnungen verwenden')
+                                                , false, I18N::_('Wenn diese Option aktiviert ist, ist die Aufzeichnung nur mit einer gültigen Serien-ID für den Kurs zulässig.'));
         return $res;
     }
 
@@ -596,26 +597,26 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     static private function getFeatureInfo($name)  {
         switch ($name) {
             case 'webcamsOnlyForModerator':
-                return _('Bei Aktivierung dieser Option können ausschließlich Moderierende die von Teilnehmenden freigegebenen Webcams sehen.');
+                return I18N::_('Bei Aktivierung dieser Option können ausschließlich Moderierende die von Teilnehmenden freigegebenen Webcams sehen.');
             break;
             case 'welcome':
-                return _('Wenn leer, wird die Standardnachricht angezeigt. Sie können folgende Schlüsselwörter einfügen, die automatisch ersetzt werden:
+                return I18N::_('Wenn leer, wird die Standardnachricht angezeigt. Sie können folgende Schlüsselwörter einfügen, die automatisch ersetzt werden:
                 %% CONFNAME %% (Sitzungsname), %% DIALNUM %% (Sitzungswahlnummer)');
             break;
             case 'lockSettingsDisablePrivateChat':
-                return _('Der private Chat zwischen den Teilnehmenden wird eingeschränkt, Teilnehmende können jedoch weiterhin privat mit Moderierenden kommunizieren.');
+                return I18N::_('Der private Chat zwischen den Teilnehmenden wird eingeschränkt, Teilnehmende können jedoch weiterhin privat mit Moderierenden kommunizieren.');
                 break;
             case 'duration':
-                return _('Die maximale Länge (in Minuten) für das Meeting. Nach Ablauf der eingestellen Dauer wird das Meeting automatisch beendet, d.h. der Raum wird geschlossen. Falls bereits vor Ablauf der Zeit alle Teilnehmenden das Meeting verlassen haben, oder ein Moderator das Meeting aktiv beendet wird der Raum ebenfalls geschlossen.');
+                return I18N::_('Die maximale Länge (in Minuten) für das Meeting. Nach Ablauf der eingestellen Dauer wird das Meeting automatisch beendet, d.h. der Raum wird geschlossen. Falls bereits vor Ablauf der Zeit alle Teilnehmenden das Meeting verlassen haben, oder ein Moderator das Meeting aktiv beendet wird der Raum ebenfalls geschlossen.');
                 break;
             case 'invite_moderator':
-                return _('Legen Sie fest, ob externe Gäste mit Einladungslink als Moderator an der Besprechung teilnehmen dürfen.');
+                return I18N::_('Legen Sie fest, ob externe Gäste mit Einladungslink als Moderator an der Besprechung teilnehmen dürfen.');
                 break;
             case 'guestPolicy-ALWAYS_ACCEPT':
-                return _('Legen Sie fest, ob Benutzer mit Einladungslink als Gäste an der Besprechung teilnehmen dürfen.');
+                return I18N::_('Legen Sie fest, ob Benutzer mit Einladungslink als Gäste an der Besprechung teilnehmen dürfen.');
                 break;
             case 'guestPolicy-ASK_MODERATOR':
-                return _('Legen Sie fest, ob Gäste und Teilnehmende dem Meeting direkt beitreten können oder die Teilnahme von einem Moderierenden bestätigt werden muss.');
+                return I18N::_('Legen Sie fest, ob Gäste und Teilnehmende dem Meeting direkt beitreten können oder die Teilnahme von einem Moderierenden bestätigt werden muss.');
                 break;
             case 'maxParticipants':
                 return '';
@@ -768,9 +769,9 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         $defaults_from = Driver::getGeneralConfigValue('read_default_slides_from');
         // Settings that depend on admin config to upload slides.
         if ($defaults_from == 'studip') {
-            $res['default_slide_course_news'] = new ConfigOption('default_slide_course_news', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Ankündigungen aus dem Kurs auf leerer Begrüßungsfolie'),
+            $res['default_slide_course_news'] = new ConfigOption('default_slide_course_news', I18N::_('Ankündigungen aus dem Kurs auf leerer Begrüßungsfolie'),
                 false, '');
-            $res['default_slide_studip_news'] = new ConfigOption('default_slide_studip_news', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Ankündigungen aus Stud.IP auf leerer Begrüßungsfolie'),
+            $res['default_slide_studip_news'] = new ConfigOption('default_slide_studip_news', I18N::_('Ankündigungen aus Stud.IP auf leerer Begrüßungsfolie'),
                 false, '');
         }
 
@@ -784,10 +785,10 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     {
         $res = [];
 
-        $res['allowStartStopRecording'] = new ConfigOption('allowStartStopRecording', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnungen konfigurierbar machen'),
-                false, _("Wenn aktiv, so wird den Mentor:innen die Option 'Aufzeichnung automatisch starten' angezeigt und sie haben die Möglichkeit die Aufzeichnung manuell zu starten, pausieren oder stoppen."));
-        $res['startStopRecording'] = new ConfigOption('startStopRecording', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aufzeichnungen standardmäßig automatisch starten'),
-                true, _("Standardwert für die Konferenzraum-Einstellung 'Aufzeichnung automatisch starten'."));
+        $res['allowStartStopRecording'] = new ConfigOption('allowStartStopRecording', I18N::_('Aufzeichnungen konfigurierbar machen'),
+                false, I18N::_("Wenn aktiv, so wird den Mentor:innen die Option 'Aufzeichnung automatisch starten' angezeigt und sie haben die Möglichkeit die Aufzeichnung manuell zu starten, pausieren oder stoppen."));
+        $res['startStopRecording'] = new ConfigOption('startStopRecording', I18N::_('Aufzeichnungen standardmäßig automatisch starten'),
+                true, I18N::_("Standardwert für die Konferenzraum-Einstellung 'Aufzeichnung automatisch starten'."));
 
         return $res;
     }

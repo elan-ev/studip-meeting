@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-29 10:43+0200\n"
+"POT-Creation-Date: 2022-07-29 11:00+0200\n"
 "PO-Revision-Date: 2022-03-04 10:09+0100\n"
 "Last-Translator: April Suddendorf, 2020\n"
 "Language-Team: English (https://www.transifex.com/uol-it/teams/52597/en/)\n"
@@ -250,7 +250,7 @@ msgstr "Permissions"
 #: vueapp/components/MeetingAddNewFolder.vue:15
 #: vueapp/components/MeetingFeedback.vue:10
 #: vueapp/components/MeetingFeedback.vue:7 Driver/DfnVc.php:405
-#: Driver/BigBlueButton.php:436
+#: Driver/BigBlueButton.php:437
 msgid "Beschreibung"
 msgstr "Description"
 
@@ -878,7 +878,7 @@ msgstr "Preview"
 msgid "Wählen sie eine zugehörige Gruppe aus"
 msgstr "Select a corresponding group"
 
-#: vueapp/views/Admin.vue:93 Driver/BigBlueButton.php:469
+#: vueapp/views/Admin.vue:93 Driver/BigBlueButton.php:470
 msgid "Willkommensnachricht"
 msgstr "Welcome message"
 
@@ -928,19 +928,19 @@ msgstr "Directory (tenant) ID"
 msgid "Geheimer Clientschlüssel (Wert)"
 msgstr "Secret ID (value)"
 
-#: Driver/DfnVc.php:236 Driver/BigBlueButton.php:388
+#: Driver/DfnVc.php:236 Driver/BigBlueButton.php:389
 msgid "Internal Error"
 msgstr "Internal Error"
 
-#: Driver/DfnVc.php:237 Driver/BigBlueButton.php:389
+#: Driver/DfnVc.php:237 Driver/BigBlueButton.php:390
 msgid "Please contact a system administrator!"
 msgstr "Please contact a system administrator!"
 
-#: Driver/DfnVc.php:399 Driver/BigBlueButton.php:427
+#: Driver/DfnVc.php:399 Driver/BigBlueButton.php:428
 msgid "Aktiv?"
 msgstr "Active?"
 
-#: Driver/DfnVc.php:400 Driver/BigBlueButton.php:428
+#: Driver/DfnVc.php:400 Driver/BigBlueButton.php:429
 msgid "Label"
 msgstr "Label"
 
@@ -956,113 +956,113 @@ msgstr "Function ID"
 msgid "Passwort"
 msgstr "Password"
 
-#: Driver/DfnVc.php:404 Driver/BigBlueButton.php:435
+#: Driver/DfnVc.php:404 Driver/BigBlueButton.php:436
 msgid "Veranstaltungstyp"
 msgstr "Coursetype"
 
-#: Driver/DfnVc.php:404 Driver/BigBlueButton.php:435
+#: Driver/DfnVc.php:404 Driver/BigBlueButton.php:436
 msgid "Nur in folgenden Veranstaltungskategorien nutzbar"
 msgstr "Only usable in the following course categories"
 
-#: Driver/DfnVc.php:405 Driver/BigBlueButton.php:436
+#: Driver/DfnVc.php:405 Driver/BigBlueButton.php:437
 msgid ""
 "Der Beschreibungstext wird Lehrenden angezeigt wenn dieser Server ausgewählt "
 "wird."
 msgstr "This description will be shown lecturers if this server is selected."
 
-#: Driver/BigBlueButton.php:429
+#: Driver/BigBlueButton.php:430
 msgid "URL des BBB-Servers"
 msgstr "URL of the BBB server"
 
-#: Driver/BigBlueButton.php:430
+#: Driver/BigBlueButton.php:431
 msgid "Api-Key (Salt)"
 msgstr "API key (Salt)"
 
-#: Driver/BigBlueButton.php:431
+#: Driver/BigBlueButton.php:432
 msgid "Zugriff über Proxy"
 msgstr "Access via Proxy"
 
-#: Driver/BigBlueButton.php:432
+#: Driver/BigBlueButton.php:433
 msgid "Connection Timeout (e.g. 0.5)"
 msgstr "Connection Timeout (e.g. 0.5)"
 
-#: Driver/BigBlueButton.php:433
+#: Driver/BigBlueButton.php:434
 msgid "Request Timeout (e.g. 3.4)"
 msgstr "Request Timeout (e.g. 3.4)"
 
-#: Driver/BigBlueButton.php:434
+#: Driver/BigBlueButton.php:435
 msgid "Max. Zahl von Teilnehmenden"
 msgstr "Max. number of participants"
 
-#: Driver/BigBlueButton.php:437
+#: Driver/BigBlueButton.php:438
 msgid "Raumgrößenvoreinstellungen"
 msgstr "Room size presets"
 
-#: Driver/BigBlueButton.php:443
+#: Driver/BigBlueButton.php:444
 msgid "Kleiner Raum"
 msgstr "Small room"
 
-#: Driver/BigBlueButton.php:444
+#: Driver/BigBlueButton.php:445
 msgid "Mittlerer Raum"
 msgstr "Medium room"
 
-#: Driver/BigBlueButton.php:445
+#: Driver/BigBlueButton.php:446
 msgid "Großer Raum"
 msgstr "Large room"
 
-#: Driver/BigBlueButton.php:460
+#: Driver/BigBlueButton.php:461
 msgid "Min. Teilnehmerzahl"
 msgstr "Minimum number of participants"
 
-#: Driver/BigBlueButton.php:473
+#: Driver/BigBlueButton.php:474
 msgid "Maximale Aufzeichnungsdauer pro Sitzung"
 msgstr "Maximum recording time per session"
 
-#: Driver/BigBlueButton.php:475
+#: Driver/BigBlueButton.php:476
 msgid "Maximale Teilnehmerzahl"
 msgstr "Maximum number of participants"
 
-#: Driver/BigBlueButton.php:477
+#: Driver/BigBlueButton.php:478
 msgid "Moderierendenzugang via Link"
 msgstr "Moderator access via link"
 
-#: Driver/BigBlueButton.php:479
+#: Driver/BigBlueButton.php:480
 msgid "Zugang via Link"
 msgstr "Access via link"
 
-#: Driver/BigBlueButton.php:481
+#: Driver/BigBlueButton.php:482
 msgid "Moderierende vor Teilnehmendenzutritt fragen"
 msgstr "Ask moderator before participants get access"
 
-#: Driver/BigBlueButton.php:483
+#: Driver/BigBlueButton.php:484
 msgid "Private Chats deaktivieren"
 msgstr "Deactivate private chats"
 
-#: Driver/BigBlueButton.php:485
+#: Driver/BigBlueButton.php:486
 msgid "Gemeinsame Notizen deaktivieren"
 msgstr "Deactivate shared notes"
 
-#: Driver/BigBlueButton.php:487
+#: Driver/BigBlueButton.php:488
 msgid "Nur Moderierende können Audio teilen"
 msgstr "Only moderators can share audio"
 
-#: Driver/BigBlueButton.php:489
+#: Driver/BigBlueButton.php:490
 msgid "Nur Moderierende können Webcams teilen"
 msgstr "Only moderators can share webcams"
 
-#: Driver/BigBlueButton.php:491
+#: Driver/BigBlueButton.php:492
 msgid "Nur Moderierende können Webcams sehen"
 msgstr "Only moderators can see webcams"
 
-#: Driver/BigBlueButton.php:493
+#: Driver/BigBlueButton.php:494
 msgid "Alle Teilnehmenden können die Konferenz starten"
 msgstr "Every participant can start the conference"
 
-#: Driver/BigBlueButton.php:495
+#: Driver/BigBlueButton.php:496
 msgid "Alle Teilnehmenden initial stumm schalten"
 msgstr "Mute all participants initially"
 
-#: Driver/BigBlueButton.php:513
+#: Driver/BigBlueButton.php:514
 msgid ""
 "Opencast wird als Aufzeichnungsserver verwendet. Diese Funktion ist im "
 "Testbetrieb und es kann noch zu Fehlern kommen."
@@ -1070,11 +1070,11 @@ msgstr ""
 "Opencast is used as recording server. This function is in test mode and "
 "errors may still occur."
 
-#: Driver/BigBlueButton.php:515
+#: Driver/BigBlueButton.php:516
 msgid "Aufzeichnung von Webcams zulassen."
 msgstr "Allow recording of webcams."
 
-#: Driver/BigBlueButton.php:516
+#: Driver/BigBlueButton.php:517
 msgid ""
 "Sofern erlaubt, werden auch die Webcams aufgezeichnet. Das Opencast-System "
 "muss diese Funktion unterstützen, um diese Einstellung anzuwenden."
@@ -1082,7 +1082,7 @@ msgstr ""
 "If allowed, webcams will be recorded as well. The Opencast system has to "
 "support this function in order for it to work."
 
-#: Driver/BigBlueButton.php:519
+#: Driver/BigBlueButton.php:520
 msgid ""
 "Erlaubt es Moderierenden, die Medien und Ereignisse in der Sitzung für die "
 "spätere Wiedergabe aufzuzeichnen. Die Aufzeichnung muss innerhalb der "
@@ -1091,15 +1091,15 @@ msgstr ""
 "Allows moderators to record the session for later playback. The recording "
 "has to be started by a moderator during the session."
 
-#: Driver/BigBlueButton.php:522
+#: Driver/BigBlueButton.php:523
 msgid "Aufzeichnungsfunktion aktivieren"
 msgstr "Activate recording function"
 
-#: Driver/BigBlueButton.php:528
+#: Driver/BigBlueButton.php:529
 msgid "Aufzeichnung starten"
 msgstr "Start recording"
 
-#: Driver/BigBlueButton.php:529
+#: Driver/BigBlueButton.php:530
 msgid ""
 "Legen Sie fest, ob die Sitzungsaufzeichnung automatisch oder von den "
 "Moderierenden manuell gestartet werden soll."
@@ -1107,11 +1107,11 @@ msgstr ""
 "Specify whether the session recording should be started automatically or "
 "manually by the moderators."
 
-#: Driver/BigBlueButton.php:532
+#: Driver/BigBlueButton.php:533
 msgid "Aufzeichnungen direkt für Teilnehmende sichtbar schalten"
 msgstr "Make recordings directly visible to participants"
 
-#: Driver/BigBlueButton.php:533
+#: Driver/BigBlueButton.php:534
 msgid ""
 "Legen Sie fest, ob neben Lehrenden auch Teilnehmende Zugriff auf die "
 "Aufzeichnungen haben sollen."
@@ -1119,11 +1119,11 @@ msgstr ""
 "Specify whether not only teachers but also participants should have access "
 "to the recordings."
 
-#: Driver/BigBlueButton.php:586
+#: Driver/BigBlueButton.php:587
 msgid "Opencast für Aufzeichnungen verwenden"
 msgstr "Use Opencast for recordings"
 
-#: Driver/BigBlueButton.php:587
+#: Driver/BigBlueButton.php:588
 msgid ""
 "Wenn diese Option aktiviert ist, ist die Aufzeichnung nur mit einer gültigen "
 "Serien-ID für den Kurs zulässig."
@@ -1131,7 +1131,7 @@ msgstr ""
 "If this option is enabled, recordings are only possible with a correct "
 "series id associated to the course."
 
-#: Driver/BigBlueButton.php:599
+#: Driver/BigBlueButton.php:600
 msgid ""
 "Bei Aktivierung dieser Option können ausschließlich Moderierende die von "
 "Teilnehmenden freigegebenen Webcams sehen."
@@ -1139,7 +1139,7 @@ msgstr ""
 "If this option is activated, only moderators can see the webcams shared by "
 "participants."
 
-#: Driver/BigBlueButton.php:602
+#: Driver/BigBlueButton.php:603
 #, php-format
 msgid ""
 "Wenn leer, wird die Standardnachricht angezeigt. Sie können folgende "
@@ -1151,7 +1151,7 @@ msgstr ""
 "keywords, which will be replaced automatically:\n"
 "                %% CONFNAME %% (session name), %% DIALNUM %% (dial up number)"
 
-#: Driver/BigBlueButton.php:606
+#: Driver/BigBlueButton.php:607
 msgid ""
 "Der private Chat zwischen den Teilnehmenden wird eingeschränkt, Teilnehmende "
 "können jedoch weiterhin privat mit Moderierenden kommunizieren."
@@ -1159,7 +1159,7 @@ msgstr ""
 "Private chat between participants is restricted, but participants can still "
 "communicate privately with moderators."
 
-#: Driver/BigBlueButton.php:609
+#: Driver/BigBlueButton.php:610
 msgid ""
 "Die maximale Länge (in Minuten) für das Meeting. Nach Ablauf der "
 "eingestellen Dauer wird das Meeting automatisch beendet, d.h. der Raum wird "
@@ -1172,7 +1172,7 @@ msgstr ""
 "participants left before the the time runs out or a moderator actively "
 "finishes the meeting the room will be closed as well."
 
-#: Driver/BigBlueButton.php:612
+#: Driver/BigBlueButton.php:613
 msgid ""
 "Legen Sie fest, ob externe Gäste mit Einladungslink als Moderator an der "
 "Besprechung teilnehmen dürfen."
@@ -1180,7 +1180,7 @@ msgstr ""
 "Specify whether users with an invitation link can attend the conference as "
 "moderator."
 
-#: Driver/BigBlueButton.php:615
+#: Driver/BigBlueButton.php:616
 msgid ""
 "Legen Sie fest, ob Benutzer mit Einladungslink als Gäste an der Besprechung "
 "teilnehmen dürfen."
@@ -1188,7 +1188,7 @@ msgstr ""
 "Specify whether users with an invitation link can attend the conference as "
 "guests."
 
-#: Driver/BigBlueButton.php:618
+#: Driver/BigBlueButton.php:619
 msgid ""
 "Legen Sie fest, ob Gäste und Teilnehmende dem Meeting direkt beitreten "
 "können oder die Teilnahme von einem Moderierenden bestätigt werden muss."
@@ -1196,19 +1196,19 @@ msgstr ""
 "Decide if guests and participants can join the conference directly or if a "
 "moderator has to approve every join."
 
-#: Driver/BigBlueButton.php:771
+#: Driver/BigBlueButton.php:772
 msgid "Ankündigungen aus dem Kurs auf leerer Begrüßungsfolie"
 msgstr "News of the course on an empty introductory slide"
 
-#: Driver/BigBlueButton.php:773
+#: Driver/BigBlueButton.php:774
 msgid "Ankündigungen aus Stud.IP auf leerer Begrüßungsfolie"
 msgstr "News of Stud.IP on an empty introductory slide"
 
-#: Driver/BigBlueButton.php:787
+#: Driver/BigBlueButton.php:788
 msgid "Aufzeichnungen konfigurierbar machen"
 msgstr "Enable configuration of recordings"
 
-#: Driver/BigBlueButton.php:788
+#: Driver/BigBlueButton.php:789
 msgid ""
 "Wenn aktiv, so wird den Mentor:innen die Option 'Aufzeichnung automatisch "
 "starten' angezeigt und sie haben die Möglichkeit die Aufzeichnung manuell zu "
@@ -1217,11 +1217,11 @@ msgstr ""
 "If activated, mentors will see the option to start a recording automatically "
 "and they will be able to start, stop or pause a recording manually."
 
-#: Driver/BigBlueButton.php:789
+#: Driver/BigBlueButton.php:790
 msgid "Aufzeichnungen standardmäßig automatisch starten"
 msgstr "Start recording automatically by default"
 
-#: Driver/BigBlueButton.php:790
+#: Driver/BigBlueButton.php:791
 msgid ""
 "Standardwert für die Konferenzraum-Einstellung 'Aufzeichnung automatisch "
 "starten'."
