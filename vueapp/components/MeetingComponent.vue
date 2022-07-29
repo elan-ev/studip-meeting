@@ -292,7 +292,7 @@ export default {
         },
 
         display_room_recording_warning() {
-            return this.room?.early_recording;
+            return this.course_config?.display?.editRoom && this.room?.early_recording;
         }
     },
 
