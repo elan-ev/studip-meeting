@@ -3,12 +3,12 @@
     "description": "integrate video conference services into the Stud.IP LMS",
     "config": {
         "platform": {
-            "php": "7.0.0"
+            "php": "7.2.5"
         }
     },
     "require": {
-        "guzzlehttp/guzzle": "^6.3",
-        "guzzlehttp/psr7": "~1.4.2",
+        "guzzlehttp/guzzle": "7.4.5",
+        "guzzlehttp/psr7": "^2.4",
         "slim/slim": "^3.12",
         "setasign/fpdi": "^2.0"
     },
