@@ -1,6 +1,11 @@
 <template>
     <nav v-if="shouldCollapse" class="action-menu">
-        <a class="action-menu-icon" :title="$gettext('Aktionen')" aria-expanded="false" :aria-label="$gettext('Aktionsmenü')" href="#">
+        <button v-if="render_button_icon" class="action-menu-icon" :title="$gettext('Aktionen')" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <a v-else class="action-menu-icon" :title="$gettext('Aktionen')" aria-expanded="false" :aria-label="$gettext('Aktionsmenü')" href="#">
             <div></div>
             <div></div>
             <div></div>
@@ -107,6 +112,10 @@ export default {
                 return true;
             }
             return Number.parseInt(this.collapseAt) <= this.items.length;
+        },
+
+        render_button_icon() {
+            return (STUDIP_VERSION != undefined && STUDIP_VERSION >= 5.2) ? true : false;
         }
     }
 }
