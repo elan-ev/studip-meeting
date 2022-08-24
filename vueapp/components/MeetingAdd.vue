@@ -530,9 +530,11 @@ export default {
 
         auto_starts_recording() {
             let config = (Object.keys(this.config[this.room['driver']]).includes('allowStartStopRecording') &&
-                JSON.parse(this.config[this.room['driver']]['allowStartStopRecording']) == false);
+                JSON.parse(this.config[this.room['driver']]['allowStartStopRecording']) == false) ||
+                !Object.keys(this.config[this.room['driver']]).includes('allowStartStopRecording');
             let room_setting = (Object.keys(this.room['features']).includes('autoStartRecording') &&
                 JSON.parse(this.room['features']['autoStartRecording']) == true &&
+                Object.keys(this.config[this.room['driver']]).includes('allowStartStopRecording') &&
                 JSON.parse(this.config[this.room['driver']]['allowStartStopRecording']) == true)
             return config || room_setting;
         }
