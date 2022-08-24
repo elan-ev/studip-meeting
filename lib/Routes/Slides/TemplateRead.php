@@ -21,7 +21,7 @@ class TemplateRead extends MeetingsController
     public function __invoke(Request $request, Response $response, $args)
     {
         try {
-            $installed_templates = DefaultSlideHelper::getInstalledTemplates();
+            $installed_templates = DefaultSlideHelper::getInstance()->getInstalledTemplates();
             // Removing dirnames from the content (security measure)
             foreach ($installed_templates as $page => $template) {
                 if (isset($template['pdf']['dirname'])) {

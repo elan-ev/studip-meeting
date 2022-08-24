@@ -46,7 +46,7 @@ class SlidesShow extends MeetingsController
         try {
             $file_ref = \FileRef::find($silde_id);
             $meeting = new Meeting($meeting_id);
-
+            $file_name = $file_ref->name;
             //Token check
             if (!$meeting->meeting_token || !$meeting->meeting_token->is_valid($token)) {
                 return;
@@ -142,7 +142,7 @@ class SlidesShow extends MeetingsController
             }
             header("Cache-Control: post-check=0, pre-check=0", false);
             header("Content-Type: $content_type");
-            header("Content-Disposition: $content_disposition; " . encode_header_parameter('filename', $file_name));
+            header("Content-Disposition: inline; " . encode_header_parameter('filename', $file_name));
             readfile_chunked($path_file, $start, $end);
         } catch (Exception $e) {
             throw new Error($e->getMessage(), 404);

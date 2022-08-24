@@ -21,7 +21,7 @@ class FontRead extends MeetingsController
     public function __invoke(Request $request, Response $response, $args)
     {
         try {
-            $installed_font = DefaultSlideHelper::getInstalledFont();
+            $installed_font = DefaultSlideHelper::getInstance()->getInstalledFont();
             return $this->createResponse([
                 'font' => $installed_font,
             ], $response);

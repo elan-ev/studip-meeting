@@ -711,10 +711,11 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         $preupload_allowed = Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'preupload');
         if ($preupload_allowed) {
             $folder = \Folder::find($meeting->folder_id);
-            if ($folder) {
+            $folder_files = $folder ? $folder->getTypedFolder()->getFiles() : [];
+            if (!empty($folder_files)) {
                 // Reset the document to follow the default behavior of BBB, in which there is no default.pdf when custom slides are uploaded.
                 $documents = [];
-                foreach ($folder->getTypedFolder()->getFiles() as $file_ref) {
+                foreach ($folder_files as $file_ref) {
                     if ($file_ref->id && $file_ref->name) {
                         $document_url = \PluginEngine::getURL('meetingplugin', [], "api/slides/$meetingId/{$file_ref->id}/$token");
                         $document_url = strtok($document_url, '?');

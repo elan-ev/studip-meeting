@@ -27,7 +27,7 @@ class FontUpload extends MeetingsController
                 'type' => 'error',
                 'text' => _('Schriftart kann nicht hochgeladen werden')
             ];
-            if ($uploadedFiles && isset($uploadedFiles['font']) && DefaultSlideHelper::uploadFont($uploadedFiles['font'], $type)) {
+            if ($uploadedFiles && isset($uploadedFiles['font']) && DefaultSlideHelper::getInstance()->uploadFont($uploadedFiles['font'], $type)) {
                 $message = [
                     'type' => 'success',
                     'text' => _('Schriftart wurde erfolgreich hochgeladen')

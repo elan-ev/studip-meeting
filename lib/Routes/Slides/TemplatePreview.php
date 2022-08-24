@@ -26,7 +26,7 @@ class TemplatePreview extends MeetingsController
     {
         $page = filter_var($args['page'], FILTER_SANITIZE_NUMBER_INT);
         try {
-            $pdf = DefaultSlideHelper::generatePDFPreview($page);
+            $pdf = DefaultSlideHelper::getInstance()->generatePDFPreview($page);
             if (!$pdf) {
                 return;
             }
@@ -94,7 +94,7 @@ class TemplatePreview extends MeetingsController
             }
             header("Cache-Control: post-check=0, pre-check=0", false);
             header("Content-Type: $content_type");
-            header("Content-Disposition: $content_disposition; " . encode_header_parameter('filename', 'default.pdf'));
+            header("Content-Disposition: inline; " . encode_header_parameter('filename', 'default.pdf'));
             readfile_chunked($temp_file, $start, $end);
 
             unlink($temp_file);

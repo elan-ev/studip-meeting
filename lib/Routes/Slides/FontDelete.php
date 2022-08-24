@@ -26,7 +26,7 @@ class FontDelete extends MeetingsController
                 'type' => 'error',
                 'text' => _('Schriftart kann nicht gelöscht werden')
             ];
-            if ($font_type && DefaultSlideHelper::deleteFont($font_type)) {
+            if ($font_type && DefaultSlideHelper::getInstance()->deleteFont($font_type)) {
                 $message = [
                     'type' => 'success',
                     'text' => _('Schriftart wurde erfolgreich gelöscht')

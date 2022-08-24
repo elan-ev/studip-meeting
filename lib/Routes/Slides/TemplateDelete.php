@@ -27,7 +27,7 @@ class TemplateDelete extends MeetingsController
                 'type' => 'error',
                 'text' => _('Folie/Template kann nicht gelöscht werden')
             ];
-            if (DefaultSlideHelper::deleteTemplate($page, $what)) {
+            if (DefaultSlideHelper::getInstance()->deleteTemplate($page, $what)) {
                 $message = [
                     'type' => 'success',
                     'text' => _('Folie/Template wurde erfolgreich gelöscht')

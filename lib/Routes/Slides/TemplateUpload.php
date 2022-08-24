@@ -27,7 +27,10 @@ class TemplateUpload extends MeetingsController
                 'type' => 'error',
                 'text' => _('Folie/Template kann nicht hochgeladen werden')
             ];
-            if ($uploadedFiles && $page && (isset($uploadedFiles['php']) || isset($uploadedFiles['pdf'])) && DefaultSlideHelper::uploadTemplate($uploadedFiles, $page)) {
+            if ($uploadedFiles
+                && $page && (isset($uploadedFiles['php'])
+                || isset($uploadedFiles['pdf']))
+                && DefaultSlideHelper::getInstance()->uploadTemplate($uploadedFiles, $page)) {
                 $message = [
                     'type' => 'success',
                     'text' => _('Folie/Template wurde erfolgreich hochgeladen')
