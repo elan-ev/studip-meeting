@@ -166,6 +166,14 @@ class IndexController extends MeetingsController
         if (MeetingPlugin::isCoursePublic($this->cid)) {
             $this->is_public = true;
         }
+
+        $studip_version = \StudipVersion::getStudipVersion();
+        if (empty($studip_version)) {
+            $manifest = MeetingPlugin::getMeetingManifestInfo();
+            $studip_version = isset($manifest["studipMinVersion"]) ? $manifest["studipMinVersion"] : 4;
+        }
+
+        $this->studip_version = floatval($studip_version);
     }
 
     public function config_action()
