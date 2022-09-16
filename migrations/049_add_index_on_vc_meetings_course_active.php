@@ -12,7 +12,7 @@ class AddIndexOnVcMeetingsCourseActive extends Migration
      */
     public function description()
     {
-        return 'Adds an index on vc_meetings_course.active for perfomrance reasons';
+        return 'Adds an index on vc_meeting_course.active for perfomrance reasons';
     }
 
     /**
@@ -55,7 +55,7 @@ class AddIndexOnVcMeetingsCourseActive extends Migration
      */
     private function hasIndex(): bool
     {
-        $query = "SHOW INDEX FROM vc_meetings_course WHERE Key_name = 'active'";
+        $query = "SHOW INDEX FROM vc_meeting_course WHERE Key_name = 'active'";
         $result = DBManager::get()->query($query);
 
         return $result && $result->rowCount() > 0;
