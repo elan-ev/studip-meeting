@@ -317,6 +317,10 @@ export default {
 
     beforeDestroy () {
         clearInterval(this.interval)
-    }
+    },
+
+    updated () {
+        $('.meeting-search-widget').toggleClass('hide', (this.rooms_list?.length < 2));
+    },
 };
 </script>

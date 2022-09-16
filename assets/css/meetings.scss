@@ -40,6 +40,9 @@ div.vc_introduction {
 }
 
 .meeting-search-widget {
+    &.hide {
+        display: none;
+    }
     .meeting-sidebar-search {
         .clear-search {
             cursor: pointer;
