@@ -1,27 +1,29 @@
 <template>
     <div>
-        <MeetingDialog :title="$gettext('QR Code für Raum') + ' '  + room.name" @close="close($event)">
+        <MeetingDialog :title="$gettext('Persönlicher QR Code für') + ' '  + room.name" @close="close($event)">
             <template v-slot:content>
                 <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
                     {{ modal_message.text }}
                 </MessageBox>
                 <form class="default">
                     <fieldset>
-                        <label>
-                            <span v-translate>QR Code nur für persönlichen Gebrauch</span>
-                            <StudipTooltipIcon :text="$gettext('Verwenden Sie diesen QR-Code nur für Ihren privaten Gebrauch und teilen Sie ihn nicht mit anderen!')"></StudipTooltipIcon>
-                        </label>
-                        <span class="required" v-translate>QR-Code scannen</span>
-                        <StudipTooltipIcon :text="$gettext('Verwenden Sie Ihren QR-Code-Leser (z. B. Gerätekamera) und verwenden Sie die URL-Adresse, um auf dieses Meeting zuzugreifen')"></StudipTooltipIcon>
+                        <h5 v-translate>QR Code nur für persönlichen Gebrauch</h5>
+                        <p v-translate>Verwenden Sie diesen QR-Code nur für Ihren privaten Gebrauch und teilen Sie ihn nicht mit anderen!</p>
+                    </fieldset>
+                    <fieldset>
                         <label v-if="url">
+                            <span class="required" v-translate>QR-Code scannen</span>
+                            <StudipTooltipIcon :text="$gettext('Scannen Sie den QR-Code und verwenden Sie den Zugangscode, um mit einem anderen Gerät an dem Meeting teilzunehmen')"></StudipTooltipIcon>
                             <div style="text-align: center; margin: 20px 0;">
                                 <QrcodeVue :value="url" level="H" :size="200"></QrcodeVue>
                             </div>
                         </label>
                         <label v-if="token">
                             <span class="required" v-translate>Zugangscode</span>
-                            <StudipTooltipIcon :text="$gettext('Verwenden Sie den Code, um sich anzumelden')"></StudipTooltipIcon>
-                            <p><strong>{{token}}</strong></p>
+                            <StudipTooltipIcon :text="$gettext('Dieser Code wird benötigt, um sich in diesem Raum anzumelden')"></StudipTooltipIcon>
+                            <div style="text-align: center; margin: 20px 0;">
+                                <h2>{{token}}</h2>
+                            </div>
                         </label>
                     </fieldset>
                 </form>
@@ -31,7 +33,7 @@
                    <translate>QR-Code neu generieren</translate>
                 </StudipButton>
                 <StudipButton icon="cancel" type="button" v-on:click="close($event)">
-                    <translate>Dialog schließen</translate>
+                    <translate>Abbrechen</translate>
                 </StudipButton>
             </template>
         </MeetingDialog>
