@@ -26,14 +26,11 @@ const initialState = {
         'upload_speed': '',
     },
     network_types: {
-        'bluetooth': 'Bluetooth',
-        'cellular': 'Cellular',
-        'ethernet': 'Ethernet',
-        'wifi': 'Wifi',
-        'wimax': 'Wimax',
-        'other': 'Other',
-        'unknown': 'Unknown',
-        'none': 'None',
+        'cellular': 'Mobil',
+        'ethernet': 'LAN',
+        'wifi': 'WLAN',
+        'other': 'Sonstige',
+        'unknown': 'Unbekannt',
     }
 };
 
@@ -166,7 +163,7 @@ export const mutations = {
         http.send(myData);
 
         //network type
-        var type = (navigator && navigator.connection) ? navigator.connection.type : 'none';
+        var type = (navigator && navigator.connection) ? navigator.connection.type : 'other';
         if (type && Object.keys(state.network_types).includes(type)) {
             state.feedback.network_type = type;
         } else {

@@ -24,11 +24,13 @@
                         </legend>
                         <label class="col-3">
                             <span v-translate>Browser-Name</span>
-                            <input type="text" v-model.trim="feedback['browser_name']">
+                            <input type="text" v-model.trim="feedback['browser_name']"
+                                :disabled="feedback['browser_name'] != ''" :readonly="feedback['browser_name'] != ''">
                         </label>
                         <label class="col-3">
                             <span v-translate>Browser-Version</span>
-                            <input type="text" v-model.trim="feedback['browser_version']">
+                            <input type="text" v-model.trim="feedback['browser_version']"
+                                :disabled="feedback['browser_version'] != ''" :readonly="feedback['browser_version'] != ''">
                         </label>
                         <label class="col-3">
                             <span v-translate>Download-Geschw. (Mbps)</span>
@@ -43,13 +45,14 @@
                             <select id="network-type" v-model="feedback['network_type']">
                                 <option v-for="(nt_value, nt_name) in network_types" :key="nt_name"
                                         :value="nt_name">
-                                        {{ nt_value }}
+                                        <span v-translate>{{ nt_value }}</span>
                                 </option>
                             </select>
                         </label>
                         <label class="col-3">
                             <span v-translate>Betriebssystem (OS)</span>
-                            <input type="text" v-model.trim="feedback['os_name']">
+                            <input type="text" v-model.trim="feedback['os_name']"
+                                :disabled="feedback['os_name'] != ''" :readonly="feedback['os_name'] != ''">
                         </label>
                         <label class="col-3">
                             <span v-translate>Prozessortyp</span>
