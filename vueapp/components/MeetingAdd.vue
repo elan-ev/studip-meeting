@@ -554,9 +554,11 @@ export default {
 
         setDriver() {
             if (this.availableDrivers && Object.keys(this.availableDrivers).length == 1) {
-                this.$set(this.room, "driver" , Object.keys(this.availableDrivers)[0]);
-                this.handleServerDefaults();
-                return;
+                if (this.isAddRoom || this.room['driver'] !== Object.keys(this.availableDrivers)[0]) {
+                    this.$set(this.room, "driver" , Object.keys(this.availableDrivers)[0]);
+                    this.handleServerDefaults();
+                    return;
+                }
             }
 
             // check, if the selected server is still available for this room
