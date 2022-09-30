@@ -158,7 +158,7 @@
                                 && Object.keys(config[room['driver']]['features']).includes('create')
                                 && Object.keys(config[room['driver']]['features']['create']).includes('roomsize')
                                 && Object.keys(config[room['driver']]['features']['create']['roomsize']).length">
-                        <legend v-text="$gettext('Raumgröße und Leistung')"></legend>
+                        <legend v-text="$gettext('Raumgröße und Voreinstellungen')"></legend>
                         <template v-for="(feature, index) in config[room['driver']]['features']['create']['roomsize']">
                             <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature"
                                 :maxAllowedParticipants="maxAllowedParticipants"
