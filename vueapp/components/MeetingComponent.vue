@@ -7,9 +7,6 @@
         >
             <h1>
                 {{room.name}}
-                <StudipTooltipIcon v-if="room.details"
-                    :text="`${room.details['creator']}, ${room.details['date']}`">
-                </StudipTooltipIcon>
             </h1>
             <template v-if="show_recording_badge">
                 <StudipTooltipIcon v-show="opencast_webcam_record_enabled"
