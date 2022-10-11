@@ -1,6 +1,7 @@
 <form method="post" action="<?= $controller->url_for('room/qrcode/' . $qr_code_token->hex . "/$cid")?>" class="default">
+    <h1><?= $_('Teilnahme mit QR-Code') ?></h1>
     <label>
-        <span class="required"><?= $_('Bitte geben Sie den Zugangscode des Meetings')?></span>
+        <span class="required"><?= $_('Zugangscode')?></span>
         <input type="text" name="token" value="<?= ($last_token) ? $last_token : '' ?>" required>
     </label>
     <? if ($check_recording_privacy_agreement): ?>

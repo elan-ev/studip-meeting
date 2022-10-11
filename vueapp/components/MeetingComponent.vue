@@ -7,9 +7,6 @@
         >
             <h1>
                 {{room.name}}
-                <StudipTooltipIcon v-if="room.details"
-                    :text="`${room.details['creator']}, ${room.details['date']}`">
-                </StudipTooltipIcon>
             </h1>
             <template v-if="show_recording_badge">
                 <StudipTooltipIcon v-show="opencast_webcam_record_enabled"
@@ -144,17 +141,9 @@
             </article>
         </section>
         <footer>
-            <button v-if="room.enabled" class="button join"
-                @click="checkPreJoin"
-                v-translate
-            >
-                Teilnehmen
-            </button>
-
-            <button v-else class="button join"
-                disabled="disabled" v-translate
-            >
-                Teilnehmen nicht möglich
+            <button class="button join" :disabled="!room.enabled" @click="checkPreJoin">
+                <span v-show="room.enabled"><translate>Teilnehmen</translate></span>
+                <span  v-show="!room.enabled"><translate>Teilnehmen nicht möglich</translate></span>
             </button>
             <template v-if="course_config.display.editRoom && room.features">
                 <StudipButton v-if="room.features['invite_moderator'] && room.features['invite_moderator'] == 'true'"
@@ -395,6 +384,9 @@ export default {
         },
 
         checkPreJoin() {
+            if (!this.room.enabled) {
+                return;
+            }
             if (this.room.features && this.room.features.maxParticipants && this.info && this.info.participantCount &&
                 this.room.features.maxParticipants <= this.info.participantCount) {
                 this.showConfirmDialog = {

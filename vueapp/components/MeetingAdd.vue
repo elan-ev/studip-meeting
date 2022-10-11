@@ -52,7 +52,7 @@
                                 <option value="" disabled v-translate>
                                     Bitte wählen Sie ein Konferenzsystem aus
                                 </option>
-                                <option v-for="(driver_config, driver) in availableServers" :key="driver"
+                                <option v-for="(driver_config, driver) in availableDrivers" :key="driver"
                                         :value="driver"
                                         :disabled="Object.keys(config[driver]['servers']).length == 1
                                                     && ((config[driver]['server_course_type']
@@ -158,7 +158,7 @@
                                 && Object.keys(config[room['driver']]['features']).includes('create')
                                 && Object.keys(config[room['driver']]['features']['create']).includes('roomsize')
                                 && Object.keys(config[room['driver']]['features']['create']['roomsize']).length">
-                        <legend v-text="$gettext('Raumgröße und Leistung')"></legend>
+                        <legend v-text="$gettext('Raumgröße und Voreinstellungen')"></legend>
                         <template v-for="(feature, index) in config[room['driver']]['features']['create']['roomsize']">
                             <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature"
                                 :maxAllowedParticipants="maxAllowedParticipants"
@@ -477,16 +477,16 @@ export default {
             return this.room?.driver && (parseInt(this.config[this.room.driver]?.record) || parseInt(this.config[this.room.driver]?.opencast)) && this.config[this.room.driver]?.features?.record?.record_setting?.length;
         },
 
-        availableServers() {
-            let availableServers = {};
+        availableDrivers() {
+            let availableDrivers = {};
 
-            for (let server in this.config) {
-                if (this.config[server].enable) {
-                    availableServers[server] = this.config[server];
+            for (let driver in this.config) {
+                if (this.config[driver].enable) {
+                    availableDrivers[driver] = this.config[driver];
                 }
             }
 
-            return availableServers;
+            return availableDrivers;
         },
 
         maxAllowedParticipants() {
@@ -542,9 +542,9 @@ export default {
 
     mounted() {
         this.modal_message = {};
+        this.getCalledArea();
         this.setDriver();
         this.getFolders();
-        this.getCalledArea();
     },
 
     methods: {
@@ -553,9 +553,12 @@ export default {
         },
 
         setDriver() {
-            if (Object.keys(this.config).length == 1) {
-                this.$set(this.room, "driver" , Object.keys(this.config)[0]);
-                this.handleServerDefaults();
+            if (this.availableDrivers && Object.keys(this.availableDrivers).length == 1) {
+                if (this.isAddRoom || this.room['driver'] !== Object.keys(this.availableDrivers)[0]) {
+                    this.$set(this.room, "driver" , Object.keys(this.availableDrivers)[0]);
+                    this.handleServerDefaults();
+                    return;
+                }
             }
 
             // check, if the selected server is still available for this room
@@ -567,22 +570,35 @@ export default {
             }
         },
 
-        handleServerDefaults() {
-            //mandatory server selection when there is only one server
-            if (this.room['driver'] && Object.keys(this.config[this.room['driver']]['servers']).length == 1) {
-                this.$set(this.room, "server_index" , "0");
+        extractServers() {
+            if (!this.room || !this.room.driver) {
+                return [];
+            }
+            let current_servers = this.config[this.room['driver']]['servers'];
+            let server_course_types_validataion = [];
+            if (Object.keys(this.config[this.room['driver']]).includes('server_course_type')
+                && Object.keys(this.config[this.room['driver']]['server_course_type']).length > 1) {
+                    server_course_types_validataion = this.config[this.room['driver']]['server_course_type'].map((sct) => sct.valid == true);
             }
 
-            // auto-selecting server if there is only one avaialble for this course!
-            if (this.room['driver'] && Object.keys(this.config[this.room['driver']]).includes('server_course_type')
-                && Object.keys(this.config[this.room['driver']]['server_course_type']).length > 1) {
-                const server_course_types_validataion = this.config[this.room['driver']]['server_course_type'].map((sct) => sct.valid == true);
-                if (server_course_types_validataion.filter(Boolean).length == 1) {
-                    var server_index = server_course_types_validataion.findIndex((sct) => sct == true);
-                    if (server_index != -1) {
-                        this.$set(this.room, "server_index" , server_index.toString());
-                    }
+            let extracted_servers = [];
+            for (let i = 0; i < current_servers.length; i++) {
+                let server_state = current_servers[i];
+                if (server_state && server_course_types_validataion.length > 0 && server_course_types_validataion[i] !== undefined) {
+                    server_state = server_course_types_validataion[i];
                 }
+                extracted_servers.push(server_state);
+            }
+            return extracted_servers;
+        },
+
+        handleServerDefaults() {
+            let servers = this.extractServers();
+
+            // Mandatory server selection when there is only one server available!
+            let availalbe_servers = servers.filter((s) => s == true);
+            if (availalbe_servers.length == 1) {
+                this.$set(this.room, "server_index" , servers.findIndex((s) => s == true).toString());
             }
 
             //set default features

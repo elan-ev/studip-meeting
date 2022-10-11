@@ -269,15 +269,11 @@ export default {
             this.$store.dispatch(CONFIG_CREATE, {'config': this.config, 'general_config': this.general_config})
                 .then(({ data }) => {
                     this.message = data.message;
-                    this.$store.commit(CONFIG_SET, data.config);
-
-                    if (data.message.type == 'error') {
-                       this.$store.dispatch(CONFIG_LIST_READ)
-                            .then(() => {
-                                this.changes_made = false;
-                                this.createServerObject();
-                            });
-                    }
+                    this.$store.dispatch(CONFIG_LIST_READ)
+                        .then(() => {
+                            this.changes_made = false;
+                            this.createServerObject();
+                        });
                     this.changes_made = false;
                 });
         },
@@ -296,6 +292,8 @@ export default {
                 }
                 // Pre-define active param.
                 this.$set(this.server_object[driver_name], 'active', true);
+                // Pre-define roomsize-presets param.
+                this.$set(this.server_object[driver_name], 'roomsize-presets', {});
             }
         },
 
@@ -305,8 +303,6 @@ export default {
         },
 
         addEditServers(params) {
-            //this.changes_made = true;
-
             let driver_name   = params.driver_name;
             let server_object = params.server;
 

@@ -26,6 +26,7 @@
                             <input v-else-if="typeof value.value == 'boolean'" type="checkbox" style="cursor: pointer;"
                                 :true-value="true"
                                 :false-value="false"
+                                :checked="server[driver_name][value.name]"
                                 v-model="server[driver_name][value.name]">
                             <textarea v-else-if="value.name == 'description'" v-model="server[driver_name][value.name]"></textarea>
                             <template v-else-if="value.attr && value.attr == 'password'">
@@ -101,7 +102,9 @@ export default {
     },
 
     mounted() {
-        this.initDefaultValues();
+        if (this.visible) {
+            this.initDefaultValues();
+        }
     },
 
     methods: {
@@ -112,11 +115,14 @@ export default {
 
         edit() {
             if (this.validateForm()) {
-                this.dialogClose();
-                this.$emit('edit', {
-                    driver_name: this.driver_name,
-                    server     : this.server
+                this.$nextTick(() => {
+                    let params = {
+                        driver_name: JSON.parse(JSON.stringify(this.driver_name)),
+                        server : JSON.parse(JSON.stringify(this.server))
+                    }
+                    this.$emit('edit', params);
                 });
+                this.dialogClose();
             } else {
                 this.dialog_message = {
                     type: 'error',
@@ -172,8 +178,8 @@ export default {
                 for (var i = 0; i < this.driver.config.length; i++) {
                     let option = this.driver.config[i];
 
-                    if (!this.server[this.driver_name][option.name] && option.value) {
-                        this.server[this.driver_name][option.name] = option.value
+                    if (this.server[this.driver_name][option.name] === undefined && option.value) {
+                        this.server[this.driver_name][option.name] = option.value;
                     }
                 }
             }
