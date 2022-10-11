@@ -136,8 +136,8 @@ export default {
         deleteRecording(recording) {
             this.showConfirmDialog = false;
             this.showConfirmDialog = {
-                title: 'Aufzeichnung löschen'.toLocaleString(),
-                text: 'Sind Sie sicher, dass Sie diese Aufzeichnung löschen möchten?'.toLocaleString(),
+                title: this.$gettext('Aufzeichnung löschen'),
+                text: this.$gettext('Sind Sie sicher, dass Sie diese Aufzeichnung löschen möchten?'),
                 type: 'question', //info, warning, question
                 isConfirm: true,
                 callback: 'performDeleteRecording',

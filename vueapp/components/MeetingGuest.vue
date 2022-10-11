@@ -134,7 +134,7 @@ export default {
                     document.getSelection().removeAllRanges();
                     this.modal_message = {
                         type: 'success',
-                        text: 'Der Link wurde in die Zwischenablage kopiert.'.toLocaleString()
+                        text: this.$gettext('Der Link wurde in die Zwischenablage kopiert.')
                     }
                 } catch(e) {
                     console.log(e);

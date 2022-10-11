@@ -126,7 +126,7 @@ export default {
             } else {
                 this.dialog_message = {
                     type: 'error',
-                    text: `Bei der Eingabe ist ein Fehler aufgetreten.`.toLocaleString()
+                    text: this.$gettext('Bei der Eingabe ist ein Fehler aufgetreten.')
                 }
             }
         },

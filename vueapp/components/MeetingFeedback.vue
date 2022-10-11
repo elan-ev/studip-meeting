@@ -43,9 +43,9 @@
                         <label class="col-3">
                             <span v-translate>Netzwerk-Typ</span>
                             <select id="network-type" v-model="feedback['network_type']">
-                                <option v-for="(nt_value, nt_name) in network_types" :key="nt_name"
+                                <option v-for="(nt_value, nt_name) in network_types_complied" :key="nt_name"
                                         :value="nt_name">
-                                        <span v-translate>{{ nt_value }}</span>
+                                        <span>{{ nt_value }}</span>
                                 </option>
                             </select>
                         </label>
@@ -136,7 +136,15 @@ export default {
     computed: {
         ...mapGetters([
             'feedback', 'network_types'
-        ])
+        ]),
+
+        network_types_complied() {
+            let network_types_complied = {};
+            for (const key in this.network_types) {
+                network_types_complied[key] = this.$gettext(this.network_types[key]);
+            }
+            return network_types_complied;
+        }
     },
 
     mounted() {
@@ -171,7 +179,7 @@ export default {
                 });
             } else {
                 this.$set(this.modal_message, "type" , "error");
-                this.$set(this.modal_message, "text" , `Beschreibung darf nicht leer sein`.toLocaleString());
+                this.$set(this.modal_message, "text" , this.$gettext(`Beschreibung darf nicht leer sein`));
             }
 
         },

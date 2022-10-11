@@ -13,7 +13,7 @@
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend>
-            Einstellungen
+            <?= $_('Einstellungen') ?>
         </legend>
         <label>
             <?= $_('Reitername') ?>

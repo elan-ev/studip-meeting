@@ -46,8 +46,8 @@ export default {
             type: Object,
             required: true,
             /* default: { // Possible values
-                title: 'Bitte bestätigen Sie die Aktion'.toLocaleString(),
-                text: 'Sind Sie sicher, dass Sie das tun möchten?'.toLocaleString(),
+                title: this.$gettext('Bitte bestätigen Sie die Aktion'),
+                text: this.$gettext('Sind Sie sicher, dass Sie das tun möchten?'),
                 type: 'info', //info, warning, question
                 isConfirm: false,//optional: true/false
                 callback: null, //optional: null, name of the method to call if accepted,

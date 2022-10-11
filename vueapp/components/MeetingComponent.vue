@@ -245,11 +245,11 @@ export default {
             }
 
             if (maxParticipants && participantCount) {
-                return `${ participantCount }/${ maxParticipants } ` + 'Teilnehmende aktiv'.toLocaleString();
+                return `${ participantCount }/${ maxParticipants } ` + this.$gettext('Teilnehmende aktiv');
             } else if (!maxParticipants && participantCount) {
-                return `${ participantCount } ` + 'Teilnehmende aktiv'.toLocaleString();
+                return `${ participantCount } ` + this.$gettext('Teilnehmende aktiv');
             } else if (maxParticipants && !participantCount) {
-                return `Maximale Teilnehmerzahl: ${ maxParticipants }`.toLocaleString();
+                return this.$gettext('Maximale Teilnehmerzahl') + `: ${ maxParticipants }`;
             } else {
                 return false;
             }
@@ -357,8 +357,8 @@ export default {
             }
 
             this.showConfirmDialog = {
-                title: 'Raum löschen'.toLocaleString(),
-                text: 'Sind Sie sicher, dass Sie diesen Raum löschen möchten?'.toLocaleString(),
+                title: this.$gettext('Raum löschen'),
+                text: this.$gettext('Sind Sie sicher, dass Sie diesen Raum löschen möchten?'),
                 type: 'question', //info, warning, question
                 isConfirm: true,
                 callback: 'performDeleteRoom',
@@ -391,17 +391,17 @@ export default {
                 this.room.features.maxParticipants <= this.info.participantCount) {
                 this.showConfirmDialog = {
                     title: 'Information',
-                    text: "Ihr Zugang kann eingeschränkt sein, da die Teilnehmerzahl für diese Sitzung überschritten wird. Möchten Sie es versuchen?".toLocaleString(),
+                    text: this.$gettext("Ihr Zugang kann eingeschränkt sein, da die Teilnehmerzahl für diese Sitzung überschritten wird. Möchten Sie es versuchen?"),
                     type: 'question', //info, warning, question
                     isConfirm: true,
                     callback: 'performJoin',
                 }
             } else if (this.room?.features?.record == 'true' && this.course_general_config?.show_recording_privacy_text) {
                 this.showConfirmDialog = {
-                    title: 'Datenschutzerklärung'.toLocaleString(),
-                    text: 'Ich bin damit einverstanden, dass diese Sitzung aufgezeichnet wird. Die Aufzeichnung kann Sprach- und Videoaufnahmen von mir beinhalten.' +
+                    title: this.$gettext('Datenschutzerklärung'),
+                    text: this.$gettext('Ich bin damit einverstanden, dass diese Sitzung aufgezeichnet wird. Die Aufzeichnung kann Sprach- und Videoaufnahmen von mir beinhalten.' +
                         ' Bitte beachten Sie, dass die Aufnahme im Anschluss geteilt werden kann.' +
-                        ' Möchten Sie trotzdem teilnehmen?'.toLocaleString(),
+                        ' Möchten Sie trotzdem teilnehmen?'),
                     type: 'info', //info, warning, question
                     isConfirm: true,
                     callback: 'performJoin',

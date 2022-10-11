@@ -135,7 +135,7 @@ export default {
                 this.showConfirmDialog = false;
                 this.showConfirmDialog = {
                     title: 'Information',
-                    text: 'Durch das Generieren eines neuen Zugangscodes wären die vorherigen Links nicht mehr zugänglich. Möchten Sie wirklich einen neuen Zugangscode generieren?'.toLocaleString(),
+                    text: this.$gettext('Durch das Generieren eines neuen Zugangscodes wären die vorherigen Links nicht mehr zugänglich. Möchten Sie wirklich einen neuen Zugangscode generieren?'),
                     type: 'question', //info, warning, question
                     isConfirm: true,
                     callback: 'performGenerateModeratorGuestJoinLink',
@@ -145,9 +145,9 @@ export default {
             } else {
                 var err_message = '';
                 if (!this.moderator_password) {
-                    err_message = `Ein Zugangscode mit ${this.password_length} Zeichen ist erforderlich`.toLocaleString();
+                    err_message = this.$gettextInterpolate('Ein Zugangscode mit %{ password_length } Zeichen ist erforderlich', {password_length: this.password_length});
                 } else if (this.moderator_password && this.moderator_password.length != this.password_length) {
-                    err_message = `Der Zugangscode darf nur aus ${this.password_length} Zeichen bestehen`.toLocaleString();
+                    err_message = this.$gettextInterpolate('Der Zugangscode darf nur aus %{ password_length } Zeichen bestehen', {password_length: this.password_length});
                 }
 
                 this.modal_message.type = 'error';
@@ -216,7 +216,7 @@ export default {
                     document.getSelection().removeAllRanges();
                     this.modal_message = {
                         type: 'success',
-                        text: 'Der Link wurde in die Zwischenablage kopiert.'.toLocaleString()
+                        text: this.$gettext('Der Link wurde in die Zwischenablage kopiert.')
                     }
                 } catch(e) {
                     console.log(e);

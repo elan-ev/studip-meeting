@@ -677,13 +677,13 @@ export default {
                 && parseInt(this.room['features']['maxParticipants']) > parseInt(this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'])) {
                     this.$set(this.room['features'], 'maxParticipants', this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants']);
                     var maxAllowedParticipants = this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'];
-                    err_message = `Teilnehmerzahl darf ${maxAllowedParticipants} nicht überschreiten`.toLocaleString();
+                    err_message = this.$gettextInterpolate('Teilnehmerzahl darf %{ maxAllowedParticipants } nicht überschreiten', {maxAllowedParticipants: maxAllowedParticipants});
                     isValid = false;
                 }
 
                 if (parseInt(this.room['features']['maxParticipants']) < parseInt(this.minParticipants)) {
                     this.$set(this.room['features'], 'maxParticipants', parseInt(this.minParticipants));
-                    err_message = `Teilnehmerzahl soll ${this.minParticipants} nicht unterschreiten`.toLocaleString();
+                    err_message = this.$gettextInterpolate('Teilnehmerzahl soll %{ minParticipants } nicht unterschreiten', {minParticipants: this.minParticipants});
                     isValid = false;
                 }
             }
@@ -762,7 +762,7 @@ export default {
                 this.$set(this.modal_message, "text" , "");
                 this.$set(this.modal_message, "type" , "error");
                 setTimeout(() => {
-                    this.$set(this.modal_message, "text" , `Bitte beachten Sie die folgenden Felder (Eingaben auf Standard zurückgesetzt): (${invalid_inputs_str})`.toLocaleString());
+                    this.$set(this.modal_message, "text" , this.$gettextInterpolate('Bitte beachten Sie die folgenden Felder (Eingaben auf Standard zurückgesetzt): (%{ str })', {str: invalid_inputs_str}));
                 }, 150);
             }
             return isValid;
@@ -775,7 +775,7 @@ export default {
 
             if (this.maxDuration && this.room['driver'] && this.room['server_index'] && this.room['features'] && this.room['features']['duration']) {
                 if (this.room['features']['duration'] > this.maxDuration) {
-                    err_message = `Konferenzdauer darf ${this.maxDuration} Minuten nicht überschreiten`.toLocaleString();
+                    err_message = this.$gettextInterpolate('Konferenzdauer darf %{ maxDuration } Minuten nicht überschreiten', {maxDuration: this.maxDuration});
                     isValid = false;
                     this.$set(this.room['features'], 'duration', this.maxDuration);
                 }
@@ -832,7 +832,7 @@ export default {
             } else {
                 var empty_fields_str = empty_fields_arr.join('), (');
                 this.$set(this.modal_message, "type" , "error");
-                this.$set(this.modal_message, "text" , `Bitte füllen Sie folgende Felder aus: (${empty_fields_str})`.toLocaleString());
+                this.$set(this.modal_message, "text" , this.$gettextInterpolate('Bitte füllen Sie folgende Felder aus: (%{ str })', {str: empty_fields_str}));
             }
         },
 

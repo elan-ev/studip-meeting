@@ -193,13 +193,13 @@ export default {
         displayFontType(font_type) {
             switch (font_type) {
                 case 'regular':
-                    return 'Regulär'.toLocaleString();
+                    return this.$gettext('Regulär');
                 case 'bold':
-                    return 'Fett gedruckt'.toLocaleString();
+                    return this.$gettext('Fett gedruckt');
                 case 'italic':
-                    return 'Kursiv'.toLocaleString();
+                    return this.$gettext('Kursiv');
                 case 'bold_italic':
-                    return 'Fett Kursiv'.toLocaleString();
+                    return this.$gettext('Fett Kursiv');
             }
         },
 
@@ -225,8 +225,8 @@ export default {
                 return;
             }
             this.showConfirmDialog = {
-                title: 'Schriftart löschen'.toLocaleString(),
-                text: 'Sind Sie sicher, dass Sie diesen Schriftart löschen möchten?'.toLocaleString(),
+                title: this.$gettext('Schriftart löschen'),
+                text: this.$gettext('Sind Sie sicher, dass Sie diesen Schriftart löschen möchten?'),
                 type: 'question', //info, warning, question
                 isConfirm: true,
                 callback: 'performDeleteFont',
@@ -275,7 +275,7 @@ export default {
                 }, 100);
             } else {
                 this.$set(this.modal_message, 'type', 'error');
-                this.$set(this.modal_message, 'text', `Bitte laden Sie zuerst eine PDF-Datei für die ${next_index}. Vorlage hoch.`.toLocaleString());
+                this.$set(this.modal_message, 'text', this.$gettextInterpolate('Bitte laden Sie zuerst eine PDF-Datei für die %{ next_index }. Vorlage hoch.', {next_index, next_index}));
             }
         },
 
@@ -286,17 +286,17 @@ export default {
                 if (what == 'pdf') {
                     this.$delete(this.templates, page);
                     this.$set(this.modal_message, 'type', 'success');
-                    this.$set(this.modal_message, 'text', 'Folie/Template wurde erfolgreich gelöscht'.toLocaleString());
+                    this.$set(this.modal_message, 'text', this.$gettext('Folie/Template wurde erfolgreich gelöscht'));
                 }
                 return;
             } else {
-                var text = 'Es wird die gesamte Vorlage löschen! Sind Sie sicher, dass Sie diese Vorlage löschen möchten?'.toLocaleString();
+                var text = this.$gettext('Es wird die gesamte Vorlage löschen! Sind Sie sicher, dass Sie diese Vorlage löschen möchten?');
                 if (what == 'php') {
-                    text = 'Sind Sie sicher, dass Sie diese Template löschen möchten?'.toLocaleString();
+                    text = this.$gettext('Sind Sie sicher, dass Sie diese Template löschen möchten?');
                 }
                 this.showConfirmDialog = false;
                 this.showConfirmDialog = {
-                    title: 'Vorlage löschen'.toLocaleString(),
+                    title: this.$gettext('Vorlage löschen'),
                     text: text,
                     type: 'question', //info, warning, question
                     isConfirm: true,
@@ -318,7 +318,7 @@ export default {
 
         displayTemplateName(template, where) {
             var sub = (where == 'pdf') ? 'Folie' : 'Template';
-            var name = `Keine ${sub}`.toLocaleString();
+            var name = this.$gettextInterpolate('Keine %{ sub }', {sub: sub});
             if (template && template[where] && template[where].filename) {
                 name = template[where].filename;
             }
@@ -330,7 +330,7 @@ export default {
             if (what == 'php' && this.templates && this.templates[ref_index + 1] && this.templates[ref_index + 1].pdf && Object.keys(this.templates[ref_index + 1].pdf).length == 0) {
                 this.modal_message = {};
                 this.$set(this.modal_message, 'type', 'error');
-                this.$set(this.modal_message, 'text', `Bitte laden Sie zuerst eine PDF-Datei für die ${ref_index + 1}. Vorlage hoch.`.toLocaleString());
+                this.$set(this.modal_message, 'text', this.$gettextInterpolate('Bitte laden Sie zuerst eine PDF-Datei für die %{ ref }. Vorlage hoch.', {ref: ref_index + 1}));
                 return;
             }
             let file = null;

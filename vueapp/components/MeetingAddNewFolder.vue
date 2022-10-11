@@ -124,9 +124,9 @@ export default {
             }
             if (this.new_folder.name == '' ||
                     (this.folder.folder_types && this.folder.folder_types.length > 0 && this.new_folder.type == '')) {
-                var text = 'Der Name darf nicht leer sein.'.toLocaleString();
+                var text = this.$gettext('Der Name darf nicht leer sein.');
                 if (this.new_folder.name != '') {
-                    text = 'Bitte wählen Sie einen Ordner Typ aus'.toLocaleString();
+                    text = this.$gettext('Bitte wählen Sie einen Ordner Typ aus');
                 }
                 this.$set(this.modal_message, "type" , "error");
                 this.$set(this.modal_message, "text" , text);
