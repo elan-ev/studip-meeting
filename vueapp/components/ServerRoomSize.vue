@@ -6,7 +6,7 @@
                 <legend @click.prevent="accordion_handle($event)">{{ roomsize.display_name }}</legend>
                 <label v-for="(feature, rsfk) in roomsize.value" :key="rsfk" >
                     <template v-if="(feature['value'] === true || feature['value'] === false)">
-                        <input  type="checkbox" true-value="true" false-value="false" v-model="this_server[roomsize_object.name][roomsize.name][feature.name]">
+                        <input  type="checkbox" :true-value="true" :false-value="false" v-model="this_server[roomsize_object.name][roomsize.name][feature.name]">
                         {{ feature['display_name'] }}
                         <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"></StudipTooltipIcon>
                     </template>
@@ -47,12 +47,8 @@ export default {
         StudipTooltipIcon,
     },
     props: {
-        roomsize_object: {
-            type: [Array, Object],
-        },
-        this_server : {
-            type: Object
-        }
+        roomsize_object: [Array, Object],
+        this_server : [Object]
     },
     methods: {
         accordion_handle(e) {
@@ -62,14 +58,20 @@ export default {
             }
         },
         addPresetsToServer() {
-            if (!Object.keys(this.this_server).includes(this.roomsize_object.name) || (this.this_server[this.roomsize_object.name] == "")) {
-                this.this_server[this.roomsize_object.name] = new Object();
+            if (!Object.keys(this.this_server).includes(this.roomsize_object.name) || (this.this_server[this.roomsize_object.name] == "") ||
+                Array.isArray(this.this_server[this.roomsize_object.name])) {
+                this.this_server[this.roomsize_object.name] = {};
             }
+
             for (const [key, value] of Object.entries(this.roomsize_object.value)) {
-                if (!Object.keys(this.this_server[this.roomsize_object.name]).includes(value.name) || (this.this_server[this.roomsize_object.name][value.name] == "")) {
-                    this.this_server[this.roomsize_object.name][value.name] = new Object();
+                if (this.this_server[this.roomsize_object.name][value.name] == undefined || this.this_server[this.roomsize_object.name][value.name] == '') {
+                    this.this_server[this.roomsize_object.name][value.name] = {};
+                }
+                if (value.value) {                    
                     for (const [feature_key, feature_value] of Object.entries(value.value)) {
-                        this.this_server[this.roomsize_object.name][value.name][feature_key] = feature_value.value;
+                        if (this.this_server[this.roomsize_object.name][value.name][feature_key] == undefined) {
+                            this.this_server[this.roomsize_object.name][value.name][feature_key] = feature_value.value;
+                        }
                     }
                 }
             }
@@ -83,7 +85,7 @@ export default {
                     }
                 }
             }
-        }
+        },
     },
     beforeMount () {
         this.addPresetsToServer();
