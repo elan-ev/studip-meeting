@@ -92,7 +92,7 @@ class RoomsList extends MeetingsController
                 // Checking folder existence
                 RoomManager::checkAssignedFolder($meetingCourse->meeting);
                 if (!filter_var(Driver::getConfigValueByDriver($meetingCourse->meeting->driver, 'preupload'), FILTER_VALIDATE_BOOLEAN)) {
-                    $meeting['preupload_not_allowed'] = _('Das automatische Hochladen von Folien ist derzeit nicht möglich');
+                    $meeting['preupload_not_allowed'] = I18N::_('Das automatische Hochladen von Folien ist derzeit nicht möglich');
                 }
                 $meeting = array_merge($meetingCourse->toArray(), $meeting);
                 
@@ -129,7 +129,7 @@ class RoomsList extends MeetingsController
                             unset($meeting['features']['meta_opencast-dc-isPartOf']);
                         }
                         if (!empty($recording_capability['type'])) {
-                            $record_not_allowed = _($recording_capability['message'] ? $recording_capability['message'] : 'Sitzungsaufzeichnung derzeit deaktiviert.');
+                            $record_not_allowed = I18N::_($recording_capability['message'] ? $recording_capability['message'] : 'Sitzungsaufzeichnung derzeit deaktiviert.');
                         }
                     } else {
                         if ($recording_capability['type'] == 'opencast') {
@@ -155,7 +155,7 @@ class RoomsList extends MeetingsController
                 $meeting['name']= ltrim($meetingCourse->meeting->name);
 
                 $meeting['details'] = [
-                    'creator' => $creator ? $creator->getFullname() : 'unbekannt',
+                    'creator' => $creator ? $creator->getFullname() : I18N::_('unbekannt'),
                     'date'    => date('d.m.Y H:i', $meetingCourse->meeting->mkdate)
                 ];
 

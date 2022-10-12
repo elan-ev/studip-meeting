@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-11 14:54+0200\n"
+"POT-Creation-Date: 2022-10-12 10:59+0200\n"
 "PO-Revision-Date: 2022-03-04 10:09+0100\n"
 "Last-Translator: April Suddendorf, 2020\n"
 "Language-Team: English (https://www.transifex.com/uol-it/teams/52597/en/)\n"
@@ -74,10 +74,6 @@ msgstr ""
 msgid "{{ fvalue }}"
 msgstr "{{ fvalue }}"
 
-#: vueapp/views/Admin.vue:122 vueapp/views/Admin.vue:6
-msgid "{{ getCourseTypeName(server[value.name], driver_name) }}"
-msgstr "{{ getCourseTypeName(server[value.name], driver_name) }}"
-
 #: vueapp/components/MeetingAdd.vue:87 vueapp/components/MeetingAdd.vue:84
 msgid "%{ label }"
 msgstr "%{ label }"
@@ -114,12 +110,6 @@ msgstr ""
 "<img :src=\"loadingURL\">\n"
 "      You will join the meeting automatically as soon as it starts.\n"
 "    </img>"
-
-#: vueapp/views/Admin.vue:125 vueapp/views/Admin.vue:9
-msgid ""
-"<StudipIcon :icon=\"(server[value.name]) ? 'checkbox-checked' : 'checkbox-"
-"unchecked'\" role=\"clickable\" size=\"14\"/>"
-msgstr ""
 
 #: vueapp/components/MeetingAdd.vue:202 vueapp/components/MeetingAdd.vue:199
 msgid ""
@@ -293,6 +283,12 @@ msgstr ""
 "There are no meeting rooms for this course yet.\n"
 "\t\tPlease add a new room."
 
+#: vueapp/components/MeetingAdd.vue:351
+msgid ""
+"Bitte beachten Sie die folgenden Felder (Eingaben auf Standard "
+"zurückgesetzt): (%{ str })"
+msgstr "Please note the following fields (inputs reset to default): (%{ str })"
+
 #: vueapp/components/MeetingComponent.vue:81
 msgid "Bitte beachten Sie, dass dieser Raum aufgezeichnet wird!"
 msgstr "Please note that this room is being recorded!"
@@ -310,6 +306,10 @@ msgstr ""
 msgid "Bitte beschreiben Sie das aufgetretene Problem"
 msgstr "Please describe the problem"
 
+#: vueapp/components/MeetingAdd.vue:421
+msgid "Bitte füllen Sie folgende Felder aus: (%{ str })"
+msgstr "Please fill out the following fields: (%{ str })"
+
 #: vueapp/components/MeetingGuest.vue:78
 msgid "Bitte geben sie diesen Link dem Gast."
 msgstr "Please give this link to the guest."
@@ -317,6 +317,15 @@ msgstr "Please give this link to the guest."
 #: vueapp/components/MeetingModeratorGuest.vue:99
 msgid "Bitte geben sie diesen Link und Zugangscode dem Gast-Moderator."
 msgstr "Please give this link and access code to the guest-moderator."
+
+#: vueapp/components/DefaultSlideManagerDialog.vue:148
+msgid ""
+"Bitte laden Sie zuerst eine PDF-Datei für die %{ next_index }. Vorlage hoch."
+msgstr "Please upload a PDF file for the %{ next_index }. template first."
+
+#: vueapp/components/DefaultSlideManagerDialog.vue:203
+msgid "Bitte laden Sie zuerst eine PDF-Datei für die %{ ref }. Vorlage hoch."
+msgstr "Please upload a PDF file for the %{ ref }. template first."
 
 #: vueapp/components/MeetingAdd.vue:45 vueapp/components/MeetingAdd.vue:42
 msgid "Bitte wählen Sie ein Konferenzsystem aus"
@@ -366,13 +375,17 @@ msgid "Datum"
 msgstr "Date"
 
 #: vueapp/components/MeetingGuest.vue:94
-#: vueapp/components/MeetingModeratorGuest.vue:161
+#: vueapp/components/MeetingModeratorGuest.vue:163
 msgid "Der Link wurde in die Zwischenablage kopiert."
 msgstr "The link has been copied to the clipboard."
 
 #: vueapp/components/MeetingAddNewFolder.vue:68
 msgid "Der Name darf nicht leer sein."
 msgstr "The room name cannot be empty"
+
+#: vueapp/components/MeetingModeratorGuest.vue:94
+msgid "Der Zugangscode darf nur aus %{ password_length } Zeichen bestehen"
+msgstr "The access code can only consist of %{ password_length } characters"
 
 #: vueapp/components/MeetingMessageDialog.vue:99
 msgid "Dialog schließen"
@@ -419,7 +432,7 @@ msgstr "This room is currently being recorded!"
 msgid "Download-Geschw. (Mbps)"
 msgstr "Download speed (Mbps)"
 
-#: vueapp/components/MeetingModeratorGuest.vue:80
+#: vueapp/components/MeetingModeratorGuest.vue:82
 msgid ""
 "Durch das Generieren eines neuen Zugangscodes wären die vorherigen Links "
 "nicht mehr zugänglich. Möchten Sie wirklich einen neuen Zugangscode "
@@ -440,6 +453,10 @@ msgstr ""
 "widget booked rooms will be listed with a direct link the default room. If "
 "this room is marked as default an existing default room will be "
 "automatically unmarked."
+
+#: vueapp/components/MeetingModeratorGuest.vue:92
+msgid "Ein Zugangscode mit %{ password_length } Zeichen ist erforderlich"
+msgstr "An access code with %{ password_length } characters is required"
 
 #: vueapp/components/MeetingGuest.vue:29 vueapp/components/MeetingGuest.vue:5
 #: vueapp/components/MeetingModeratorGuest.vue:32
@@ -494,7 +511,7 @@ msgstr ""
 "A video conferencing system has not yet been configured yet.\n"
 "\t\tPlease contact a system administrator!"
 
-#: vueapp/components/DefaultSlideManagerDialog.vue:165
+#: vueapp/components/DefaultSlideManagerDialog.vue:163
 msgid ""
 "Es wird die gesamte Vorlage löschen! Sind Sie sicher, dass Sie diese Vorlage "
 "löschen möchten?"
@@ -510,11 +527,11 @@ msgstr "Feedback senders address"
 msgid "Feedback Support-Adresse"
 msgstr "Feedback support address"
 
-#: vueapp/components/DefaultSlideManagerDialog.vue:70
+#: vueapp/components/DefaultSlideManagerDialog.vue:68
 msgid "Fett gedruckt"
 msgstr "Bold"
 
-#: vueapp/components/DefaultSlideManagerDialog.vue:74
+#: vueapp/components/DefaultSlideManagerDialog.vue:72
 msgid "Fett Kursiv"
 msgstr "Bold Italic"
 
@@ -526,7 +543,7 @@ msgstr "Following servers are being used"
 msgid "Folie hochladen"
 msgstr "Upload slide"
 
-#: vueapp/components/DefaultSlideManagerDialog.vue:161
+#: vueapp/components/DefaultSlideManagerDialog.vue:159
 #: lib/Routes/Slides/TemplateDelete.php:33
 msgid "Folie/Template wurde erfolgreich gelöscht"
 msgstr "Slide/template was successfully deleted"
@@ -596,6 +613,10 @@ msgstr "Yes"
 msgid "Kein Ordner"
 msgstr "No folder"
 
+#: vueapp/components/DefaultSlideManagerDialog.vue:191
+msgid "Keine %{ sub }"
+msgstr "No %{ sub }"
+
 #: vueapp/components/MeetingRecordings.vue:8
 #: vueapp/components/MeetingRecordings.vue:5
 msgid "Keine Aufzeichnungen für Raum \"{{ room.name }}\" vorhanden"
@@ -609,12 +630,16 @@ msgstr "No group"
 msgid "Keine Schriftart"
 msgstr "No font"
 
+#: vueapp/components/MeetingAdd.vue:364
+msgid "Konferenzdauer darf %{ maxDuration } Minuten nicht überschreiten"
+msgstr "Conference duration must not exceed %{ maxDuration } minutes"
+
 #: vueapp/components/MeetingAdd.vue:35 vueapp/components/MeetingAdd.vue:40
 #: vueapp/components/MeetingAdd.vue:32 vueapp/components/MeetingAdd.vue:37
 msgid "Konferenzsystem"
 msgstr "Conference system"
 
-#: vueapp/components/DefaultSlideManagerDialog.vue:72
+#: vueapp/components/DefaultSlideManagerDialog.vue:70
 msgid "Kursiv"
 msgstr "Italic"
 
@@ -692,7 +717,7 @@ msgstr "New folder"
 msgid "Neues Zugangscode generieren"
 msgstr "Generate new access code"
 
-#: vueapp/views/Admin.vue:118 vueapp/views/Admin.vue:2
+#: vueapp/views/Admin.vue:120 vueapp/views/Admin.vue:4 vueapp/views/Admin.vue:1
 msgid "Ohne Grenze"
 msgstr "Without limit"
 
@@ -817,7 +842,7 @@ msgstr "Loading room list…"
 msgid "Raumname"
 msgstr "Room name"
 
-#: vueapp/components/DefaultSlideManagerDialog.vue:68
+#: vueapp/components/DefaultSlideManagerDialog.vue:66
 msgid "Regulär"
 msgstr "Regular"
 
@@ -840,7 +865,7 @@ msgstr "Close"
 msgid "Schriftart hochladen"
 msgstr "Upload font"
 
-#: vueapp/components/DefaultSlideManagerDialog.vue:100
+#: vueapp/components/DefaultSlideManagerDialog.vue:98
 #: vueapp/components/DefaultSlideManagerDialog.vue:149
 msgid "Schriftart löschen"
 msgstr "Delete font"
@@ -865,7 +890,7 @@ msgstr "Server configuration"
 msgid "Sind Sie sicher, dass Sie diese Aufzeichnung löschen möchten?"
 msgstr "Are you sure you want to delete this recording?"
 
-#: vueapp/components/DefaultSlideManagerDialog.vue:167
+#: vueapp/components/DefaultSlideManagerDialog.vue:165
 msgid "Sind Sie sicher, dass Sie diese Template löschen möchten?"
 msgstr "Are you sure you want to delete this template?"
 
@@ -873,7 +898,7 @@ msgstr "Are you sure you want to delete this template?"
 msgid "Sind Sie sicher, dass Sie diesen Raum löschen möchten?"
 msgstr "Are you sure you want to delete this room?"
 
-#: vueapp/components/DefaultSlideManagerDialog.vue:101
+#: vueapp/components/DefaultSlideManagerDialog.vue:99
 msgid "Sind Sie sicher, dass Sie diesen Schriftart löschen möchten?"
 msgstr "Are you sure you want to delete this font?"
 
@@ -941,6 +966,14 @@ msgstr "Give participants administration rights"
 msgid "Teilnehmenden nur eingeschränkte Rechte geben"
 msgstr "Give participants only limited rights"
 
+#: vueapp/components/MeetingAdd.vue:266
+msgid "Teilnehmerzahl darf %{ maxAllowedParticipants } nicht überschreiten"
+msgstr "Number of participants cannot exceed %{ maxAllowedParticipants }"
+
+#: vueapp/components/MeetingAdd.vue:272
+msgid "Teilnehmerzahl soll %{ minParticipants } nicht unterschreiten"
+msgstr "Number of participants should not be less than %{ minParticipants }"
+
 #: vueapp/components/MeetingFeedback.vue:47
 msgid "this"
 msgstr "this"
@@ -950,6 +983,10 @@ msgstr "this"
 #: vueapp/components/ServerDialog.vue:42 vueapp/components/ServerDialog.vue:1
 msgid "Übernehmen"
 msgstr "Apply"
+
+#: vueapp/views/Admin.vue:159
+msgid "Unbekannt"
+msgstr "Unknown"
 
 #: vueapp/components/MeetingFeedback.vue:35
 #: vueapp/components/MeetingFeedback.vue:32
@@ -991,7 +1028,7 @@ msgstr ""
 msgid "Vorlage hinzufügen"
 msgstr "Add template"
 
-#: vueapp/components/DefaultSlideManagerDialog.vue:171
+#: vueapp/components/DefaultSlideManagerDialog.vue:169
 #: vueapp/components/DefaultSlideManagerDialog.vue:231
 msgid "Vorlage löschen"
 msgstr "Delete template"
@@ -1100,7 +1137,7 @@ msgstr "Max. number of participants"
 
 #: Driver/BigBlueButton.php:436 Driver/DfnVc.php:404
 msgid "Veranstaltungstyp"
-msgstr "Coursetype"
+msgstr "Course type"
 
 #: Driver/BigBlueButton.php:436 Driver/DfnVc.php:404
 msgid "Nur in folgenden Veranstaltungskategorien nutzbar"
@@ -1755,6 +1792,10 @@ msgstr "Automatically upload of materials is currently not possible"
 msgid "Sitzungsaufzeichnung derzeit deaktiviert."
 msgstr "Session recording is not allowed."
 
+#: lib/Routes/Rooms/RoomsList.php:158
+msgid "unbekannt"
+msgstr "unknown"
+
 #: lib/Routes/Rooms/RoomAdd.php:63
 msgid "Es existiert bereits ein gleichnamiger Raum."
 msgstr "A room with the same name already exists."
@@ -1903,51 +1944,8 @@ msgstr "Configuration for the meetings plugin in JSON"
 msgid "Standardfolie"
 msgstr "Default slide"
 
-#: vueapp/components/DefaultSlideManagerDialog.vue:278
-msgid ""
-#"Bitte laden Sie zuerst eine PDF-Datei für die %{ next_index }. Vorlage "
-"hoch."
-msgstr "Please upload a PDF file for the %{ next_index }. template first."
-
-#: vueapp/components/DefaultSlideManagerDialog.vue:321
-msgid "Keine %{ sub }"
-msgstr "No %{ sub }"
-
-#: vueapp/components/DefaultSlideManagerDialog.vue:333
-msgid ""
-"Bitte laden Sie zuerst eine PDF-Datei für die %{ ref }. Vorlage hoch."
-msgstr "Please upload a PDF file for the %{ ref }. template first"
-
-#: vueapp/components/MeetingAdd.vue:680
-msgid "Teilnehmerzahl darf %{ maxAllowedParticipants } nicht überschreiten"
-msgstr "Number of participants must not exceed %{ maxAllowedParticipants }"
-
-#: vueapp/components/MeetingAdd.vue:686
-msgid "Teilnehmerzahl soll %{ minParticipants } nicht unterschreiten"
-msgstr "The number of participants should not be less than %{ minParticipants }"
-
-#: vueapp/components/MeetingAdd.vue:765
-msgid ""
-"Bitte beachten Sie die folgenden Felder (Eingaben auf Standard "
-"zurückgesetzt): (%{ str })"
-msgstr ""
-"Please note the following fields (inputs reset to default): (%{ str })"
-
-#: vueapp/components/MeetingAdd.vue:765
-msgid "Konferenzdauer darf %{ maxDuration } Minuten nicht überschreiten"
-msgstr "Conference duration must not exceed %{ maxDuration } minutes"
-
-#: vueapp/components/MeetingAdd.vue:835
-msgid "Bitte füllen Sie folgende Felder aus: (%{ str })"
-msgstr "Please fill out the following fields: (%{ str })"
-
-#: vueapp/components/MeetingModeratorGuest.vue:148
-msgid "Ein Zugangscode mit %{ password_length } Zeichen ist erforderlich"
-msgstr "An access code with %{ password_length } characters is required"
-
-#: vueapp/components/MeetingModeratorGuest.vue:150
-msgid "Der Zugangscode darf nur aus %{ password_length } Zeichen bestehen"
-msgstr "The access code can only consist of %{ password_length } characters"
+#~ msgid "{{ getCourseTypeName(server[value.name], driver_name) }}"
+#~ msgstr "{{ getCourseTypeName(server[value.name], driver_name) }}"
 
 #~ msgid "{{ nt_value }}"
 #~ msgstr "{{ nt_value }}"

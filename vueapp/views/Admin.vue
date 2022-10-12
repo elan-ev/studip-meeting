@@ -147,14 +147,13 @@
                                     >
                                         <template v-if="value.name == 'maxParticipants'
                                                 && (!(server[value.name]) || parseInt(server[value.name]) == 0)"
-                                            v-translate
                                         >
-                                            Ohne Grenze
+                                            <translate>Ohne Grenze</translate>
                                         </template>
-                                        <template v-else-if="value.name == 'course_types'" v-translate>
+                                        <template v-else-if="value.name == 'course_types'">
                                             {{ getCourseTypeName(server[value.name], driver_name) }}
                                         </template>
-                                        <template v-else-if="value.name == 'active'" v-translate>
+                                        <template v-else-if="value.name == 'active'">
                                             <StudipIcon :icon="(server[value.name]) ? 'checkbox-checked' : 'checkbox-unchecked'"
                                                 role="clickable" size="14"></StudipIcon>
                                         </template>
@@ -375,7 +374,7 @@ export default {
             if (config_course_types.value && config_course_types.value[class_id] && config_course_types.value[class_id]['subs'] && config_course_types.value[class_id]['subs'][type_id]) {
                 return config_course_types.value[class_id]['subs'][type_id];
             } else {
-                return 'Unbekannt';
+                return this.$gettext('Unbekannt');
             }
         }
     },

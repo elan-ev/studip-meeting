@@ -62,6 +62,8 @@ import StudipTooltipIcon from "@/components/StudipTooltipIcon";
 import MessageBox from "@/components/MessageBox";
 import MeetingMessageDialog from "@/components/MeetingMessageDialog";
 import { dialog } from '@/common/dialog.mixins'
+import {translate} from 'vue-gettext';
+const {gettext: $gettext, gettextInterpolate} = translate;
 
 import {
     ROOM_JOIN_MODERATOR,
@@ -145,9 +147,9 @@ export default {
             } else {
                 var err_message = '';
                 if (!this.moderator_password) {
-                    err_message = this.$gettextInterpolate('Ein Zugangscode mit %{ password_length } Zeichen ist erforderlich', {password_length: this.password_length});
+                    err_message = gettextInterpolate($gettext('Ein Zugangscode mit %{ password_length } Zeichen ist erforderlich'), {password_length: this.password_length});
                 } else if (this.moderator_password && this.moderator_password.length != this.password_length) {
-                    err_message = this.$gettextInterpolate('Der Zugangscode darf nur aus %{ password_length } Zeichen bestehen', {password_length: this.password_length});
+                    err_message = gettextInterpolate($gettext('Der Zugangscode darf nur aus %{ password_length } Zeichen bestehen'), {password_length: this.password_length});
                 }
 
                 this.modal_message.type = 'error';

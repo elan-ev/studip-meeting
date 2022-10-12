@@ -127,7 +127,6 @@
 
 <script>
 import { mapGetters } from "vuex";
-import store from "@/store";
 
 import {
     DEFAULT_SLIDE_FONT_READ,
@@ -139,9 +138,6 @@ import {
     DEFAULT_SLIDE_SAMPLE_TEMPLATE_DOWNLOAD
 } from "@/store/actions.type";
 
-import {
-    DEFAULT_SLIDE_FONT_CLEAR,
-} from "@/store/mutations.type";
 
 import StudipButton from "@/components/StudipButton";
 import StudipIcon from "@/components/StudipIcon";
@@ -151,6 +147,8 @@ import MeetingMessageDialog from "@/components/MeetingMessageDialog";
 import DefaultSlidePreviewDialog from "@/components/DefaultSlidePreviewDialog";
 
 import { dialog } from '@/common/dialog.mixins'
+import {translate} from 'vue-gettext';
+const {gettext: $gettext, gettextInterpolate} = translate;
 
 export default {
     name: "DefaultSlideManagerDialog",
@@ -275,7 +273,7 @@ export default {
                 }, 100);
             } else {
                 this.$set(this.modal_message, 'type', 'error');
-                this.$set(this.modal_message, 'text', this.$gettextInterpolate('Bitte laden Sie zuerst eine PDF-Datei für die %{ next_index }. Vorlage hoch.', {next_index, next_index}));
+                this.$set(this.modal_message, 'text', gettextInterpolate($gettext('Bitte laden Sie zuerst eine PDF-Datei für die %{ next_index }. Vorlage hoch.'), {next_index, next_index}));
             }
         },
 
@@ -318,7 +316,7 @@ export default {
 
         displayTemplateName(template, where) {
             var sub = (where == 'pdf') ? 'Folie' : 'Template';
-            var name = this.$gettextInterpolate('Keine %{ sub }', {sub: sub});
+            var name = gettextInterpolate($gettext('Keine %{ sub }'), {sub: sub});
             if (template && template[where] && template[where].filename) {
                 name = template[where].filename;
             }
@@ -330,7 +328,7 @@ export default {
             if (what == 'php' && this.templates && this.templates[ref_index + 1] && this.templates[ref_index + 1].pdf && Object.keys(this.templates[ref_index + 1].pdf).length == 0) {
                 this.modal_message = {};
                 this.$set(this.modal_message, 'type', 'error');
-                this.$set(this.modal_message, 'text', this.$gettextInterpolate('Bitte laden Sie zuerst eine PDF-Datei für die %{ ref }. Vorlage hoch.', {ref: ref_index + 1}));
+                this.$set(this.modal_message, 'text', gettextInterpolate($gettext('Bitte laden Sie zuerst eine PDF-Datei für die %{ ref }. Vorlage hoch.'), {ref: ref_index + 1}));
                 return;
             }
             let file = null;
