@@ -163,8 +163,6 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
      */
     public function getIconNavigation($courseId, $lastVisit, $userId = null)
     {
-        require_once __DIR__ . '/vendor/autoload.php';
-
         /** @var Seminar_Perm $perm */
         $perm = $GLOBALS['perm'];
 
@@ -209,8 +207,6 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
      */
     public function getTabNavigation($courseId)
     {
-        require_once __DIR__ . '/vendor/autoload.php';
-
         $courseConfig = CourseConfig::findByCourseId($courseId);
         $main = new Navigation($courseConfig->title);
         $main->setURL(PluginEngine::getURL($this, [], 'index'));
@@ -301,7 +297,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
 
         // Getting series id directly from database to make everything simpler.
         $series = DBManager::get()->fetchOne(
-            'SELECT series_id FROM oc_seminar_series 
+            'SELECT series_id FROM oc_seminar_series
                     WHERE seminar_id = :cid ORDER BY `mkdate` ASC',
             [':cid' => $cid]);
         if (empty($series)) {
@@ -370,8 +366,6 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
     */
     public function DeleteMeetingOnUserDelete($event, $user)
     {
-        require_once __DIR__ . '/vendor/autoload.php';
-
         if (!$user instanceof \Seminar_User) {
             $seminar_user = new \Seminar_User($user);
         }
@@ -394,8 +388,6 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
     */
     public function UpdateMeetingOnUserMigrate($event, $old_id, $new_id)
     {
-        require_once __DIR__ . '/vendor/autoload.php';
-
         if ($old_id && $new_id) {
             $user_meetings = Meeting::findBySQL('user_id = ?', [$old_id]);
             if ($user_meetings) {
@@ -510,8 +502,6 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
      */
     public function getPortalTemplate()
     {
-        require_once __DIR__ . '/vendor/autoload.php';
-
         // We need to use "nobody" rights for Upload Slides,
         // but in here we have to prevent that right,
         // in order to not to show the template in login page and so on.
@@ -521,7 +511,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
 
         $template_factory = new Flexi_TemplateFactory(__DIR__ . "/templates");
         $template = $template_factory->open("index.php");
-        
+
         $template->set_attribute('items', WidgetHelper::getMeetingsForWidget());
 
         $texts = [
