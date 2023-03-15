@@ -46,11 +46,11 @@ Vue.use(GetTextPlugin, {
 Vue.use(PortalVue);
 
 $(function() {
-    window.Vue = new Vue({
+    const VueInstance = new Vue({
         router,
         store,
         render: h => h(App)
     }).$mount('#app');
 
-    window.Vue.axios.defaults.baseURL = API_URL;
+    VueInstance.axios.defaults.baseURL = API_URL;
 });
