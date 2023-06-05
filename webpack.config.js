@@ -37,10 +37,10 @@ module.exports = {
 		}, {
             test: /\.css$/,
             use: [
-              'vue-style-loader',
-              'css-loader'
+                'vue-style-loader',
+                'css-loader'
             ]
-          }]
+        }]
     },
     plugins: [
         new CleanWebpackPlugin(),
@@ -90,7 +90,9 @@ module.exports = {
     resolve: {
         extensions: ['.vue', '.js'],
         alias: {
-            '@': path.resolve(__dirname, 'vueapp')
+            '@': path.resolve(__dirname, 'vueapp'),
+            '@studip': path.resolve(__dirname, 'vueapp/components/studip'),
+            '@meeting': path.resolve(__dirname, 'vueapp/components/meeting'),
         }
     }
 };
