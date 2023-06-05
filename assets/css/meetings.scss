@@ -504,14 +504,14 @@ table.meetings-default-slides-settings {
 /* End Default Slides Admin Tables */
 
 /* Action Menu */
-nav.action-menu, .action-menu-wrapper {
+.action-menu, .action-menu-wrapper {
     .action-menu-item {
         a {
             cursor: pointer !important;
         }
     }
 }
-nav.action-menu {
+.action-menu {
     .meeting-action-menu-content {
         padding: 4px 8px;
         top: 1px;
