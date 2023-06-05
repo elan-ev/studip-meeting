@@ -10,32 +10,13 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
-import store from "@/store";
 
-import StudipButton from "@/components/StudipButton";
-import StudipTooltipIcon from "@/components/StudipTooltipIcon";
-import StudipIcon from "@/components/StudipIcon";
-import MessageBox from "@/components/MessageBox";
-import ServerDialog from "@/components/ServerDialog";
-
-import {
-  CONFIG_LIST_READ,
-  CONFIG_CREATE, CONFIG_DELETE
-} from "@/store/actions.type";
-
-import {
-  CONFIG_SET,
-} from "@/store/mutations.type";
+import ServerDialog from "@/components/server/ServerDialog";
 
 export default {
   name: "Lobby",
 
   components: {
-    StudipButton,
-    StudipTooltipIcon,
-    MessageBox,
-    StudipIcon,
     ServerDialog
   },
 

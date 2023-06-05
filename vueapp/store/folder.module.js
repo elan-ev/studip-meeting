@@ -1,9 +1,9 @@
-import Vue from "vue";
 import ApiService from "@/common/api.service";
 
 import {
     FOLDER_READ,
     FOLDER_CREATE,
+    FOLDER_FILE_UPLOAD
 } from "./actions.type";
 
 import {
@@ -35,6 +35,9 @@ export const actions = {
         params.cid = CID;
         return ApiService.post('folders/new_folder' , params);
     },
+    async [FOLDER_FILE_UPLOAD](context, formData) {
+        return ApiService.upload('folders/upload_file', formData);
+    },
 };
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
@@ -47,8 +50,8 @@ export const mutations = {
 };
 
 export default {
-  state,
-  actions,
-  mutations,
-  getters
+    state,
+    actions,
+    mutations,
+    getters
 };

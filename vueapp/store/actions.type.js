@@ -32,6 +32,7 @@ export const FEEDBACK_SUBMIT    = "feedbackSubmit";
 
 export const FOLDER_READ        = "foldersRead";
 export const FOLDER_CREATE      = "foldersCreate";
+export const FOLDER_FILE_UPLOAD = "foldersUploadFile";
 
 export const ROOM_GENERATE_QR_CODE      = "roomGenerateQRCode";
 
@@ -43,3 +44,6 @@ export const DEFAULT_SLIDE_TEMPLATE_READ             = "defaultSlideTemplateRead
 export const DEFAULT_SLIDE_TEMPLATE_DELETE           = "defaultSlideTemplateDelete";
 export const DEFAULT_SLIDE_TEMPLATE_UPLOAD           = "defaultSlideTemplateUpload";
 export const DEFAULT_SLIDE_SAMPLE_TEMPLATE_DOWNLOAD  = "defaultSlideSampleTemplateDownload";
+
+export const MESSAGE_ADD        = "messageAdd";
+export const MESSAGES_CLEAR     = "messagesClear";

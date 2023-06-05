@@ -92,16 +92,27 @@
             @cancel="showQRCode = false"
         />
 
+        <MeetingFolderManager v-if="showFolderManager"
+            @done="showFolderManager = false"
+            @cancel="showFolderManager = false"
+        />
+
         <!-- Sidebar Contents -->
         <MountingPortal mountTo="#meeting-action-widget" name="sidebar-actions" v-if="generate_action_items.length">
             <StudipActionWidget
                 :items="generate_action_items"
                 @createNewRoom="createNewRoom"
+                @displayFolderManager="displayFolderManager"
             />
         </MountingPortal>
-        <MountingPortal mountTo="#meeting-search-widget" name="sidebar-search" v-if="generate_search_needles.length">
+        <MountingPortal mountTo="#meeting-folder-widget" name="sidebar-actions" v-if="generate_folder_widget_items.length">
+            <StudipFolderWidget
+                :items="generate_folder_widget_items"
+                @displayFolderManager="displayFolderManager"
+            />
+        </MountingPortal>
+        <MountingPortal mountTo="#meeting-search-widget" name="sidebar-search">
             <StudipSearchWidget
-                :needles="generate_search_needles"
                 @setRoomFilter="setRoomFilter"
                 @clearRoomFilter="clearRoomFilter"
             />
@@ -113,21 +124,23 @@
 import { mapGetters } from "vuex";
 import store from "@/store";
 
-import StudipButton from "@/components/StudipButton";
-import MessageBox from "@/components/MessageBox";
-import MeetingStatus from "@/components/MeetingStatus";
-import MeetingComponent from "@/components/MeetingComponent";
-import MeetingAdd from "@/components/MeetingAdd";
-import MeetingRecordings from "@/components/MeetingRecordings";
-import MeetingFeedback from "@/components/MeetingFeedback";
-import MeetingGuest from "@/components/MeetingGuest";
-import MeetingModeratorGuest from "@/components/MeetingModeratorGuest";
-import MeetingQRCodeDialog from "@/components/MeetingQRCodeDialog";
-import StudipActionWidget from '@/components/StudipActionWidget.vue';
-import StudipSearchWidget from '@/components/StudipSearchWidget.vue';
+import MeetingStatus from "@meeting/status/MeetingStatus";
+import MeetingComponent from "@meeting/MeetingComponent";
+import MeetingAdd from "@meeting/add/MeetingAdd";
+import MeetingRecordings from "@meeting/recordings/MeetingRecordings";
+import MeetingFeedback from "@meeting/feedback/MeetingFeedback";
+import MeetingGuest from "@meeting/guests/MeetingGuest";
+import MeetingModeratorGuest from "@meeting/guests/MeetingModeratorGuest";
+import MeetingQRCodeDialog from "@meeting/qr_code/MeetingQRCodeDialog";
+import MeetingFolderManager from "@meeting/folders/MeetingFolderManager";
+import StudipActionWidget from '@studip/StudipActionWidget.vue';
+import StudipSearchWidget from '@studip/StudipSearchWidget.vue';
+import StudipFolderWidget from '@studip/StudipFolderWidget.vue';
 
 import {
-    CONFIG_COURSE_READ, ROOM_LIST, ROOM_INFO,
+    CONFIG_COURSE_READ,
+    ROOM_LIST,
+    ROOM_INFO,
 } from "@/store/actions.type";
 
 import {
@@ -138,8 +151,6 @@ export default {
     name: "Course",
 
     components: {
-        StudipButton,
-        MessageBox,
         MeetingStatus,
         MeetingComponent,
         MeetingAdd,
@@ -148,8 +159,10 @@ export default {
         MeetingGuest,
         MeetingModeratorGuest,
         MeetingQRCodeDialog,
+        MeetingFolderManager,
         StudipActionWidget,
-        StudipSearchWidget
+        StudipSearchWidget,
+        StudipFolderWidget,
     },
 
     computed: {
@@ -172,27 +185,24 @@ export default {
         generate_action_items() {
             let actionItems = [];
             let id = 1;
-            if (this.config && this.course_config?.display?.addRoom) {
-                actionItems.push({id: id, label: this.$gettext('Raum hinzufügen'), icon: 'add', emit: 'createNewRoom'});
-                id++;
+            if (this.config) {
+                if (this.course_config?.display?.addRoom) {
+                    actionItems.push({id: id, label: this.$gettext('Raum hinzufügen'), icon: 'add', emit: 'createNewRoom'});
+                    id++;
+                }
             }
-
             return actionItems;
         },
-        generate_search_needles() {
-            let searchNeedles = [];
+        generate_folder_widget_items() {
+            let folderItems = [];
             let id = 1;
-            searchNeedles.push({
-                id: id,
-                label: this.$gettext('Räume filtern nach Name'),
-                emit: 'setRoomFilter',
-                withLabel: false,
-                value: JSON.parse(JSON.stringify(this.roomFilter)),
-                emitClear: 'clearRoomFilter'
-            });
-            id++;
-
-            return searchNeedles;
+            if (this.config) {
+                if (this.course_config?.display?.addFolder) {
+                    folderItems.push({id: id, label: this.$gettext('Ordnerverwaltung'), icon: 'folder-empty', emit: 'displayFolderManager'});
+                    id++;
+                }
+            }
+            return folderItems;
         }
     },
 
@@ -205,7 +215,8 @@ export default {
             showFeedback: false,
             showGuest: false,
             showModeratorGuest: false,
-            showQRCode: false
+            showQRCode: false,
+            showFolderManager: false
         }
     },
 
@@ -303,7 +314,11 @@ export default {
 
         clearRoomFilter() {
             this.roomFilter = '';
-        }
+        },
+
+        displayFolderManager() {
+            this.showFolderManager = true;
+        },
     },
 
     mounted() {

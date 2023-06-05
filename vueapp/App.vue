@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import Error from "@/components/Error";
+import Error from "@/components/misc/Error";
 
 export default {
     name: "App",

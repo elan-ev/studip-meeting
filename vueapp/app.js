@@ -6,7 +6,7 @@ import router from "./router";
 import store from "./store";
 import "./public-path";
 
-import { CHECK_AUTH, LOGOUT, ERROR_COMMIT } from "./store/actions.type";
+import { ERROR_COMMIT } from "./store/actions.type";
 import ApiService from "./common/api.service";
 import DateFilter from "./common/date.filter";
 import ErrorFilter from "./common/error.filter";
@@ -14,7 +14,15 @@ import ErrorFilter from "./common/error.filter";
 import GetTextPlugin from 'vue-gettext';
 import PortalVue from 'portal-vue';
 import translations from './i18n/translations.json';
-import MeetingDialog from '@/components/MeetingDialog.vue';
+// Common Studip Components.
+import StudipDialog from '@studip/StudipDialog.vue';
+import StudipIcon from '@studip/StudipIcon.vue';
+import StudipButton from '@studip/StudipButton.vue';
+import StudipTooltipIcon from "@studip/StudipTooltipIcon";
+
+// Miscellaneous.
+import MessageBox from '@/components/messages/MessageBox.vue';
+import MessageList from '@/components/messages/MessageList.vue';
 
 Vue.filter("date", DateFilter);
 Vue.filter("error", ErrorFilter);
@@ -32,7 +40,12 @@ Vue.axios.interceptors.response.use((response) => { // intercept the global erro
     }
 );
 
-Vue.component('MeetingDialog', MeetingDialog)
+Vue.component('StudipDialog', StudipDialog)
+Vue.component('StudipIcon', StudipIcon)
+Vue.component('StudipButton', StudipButton)
+Vue.component('StudipTooltipIcon', StudipTooltipIcon)
+Vue.component('MessageBox', MessageBox)
+Vue.component('MessageList', MessageList)
 
 Vue.use(GetTextPlugin, {
     availableLanguages: {

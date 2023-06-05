@@ -8,6 +8,7 @@ import recording_list from "./recording.module";
 import feedback from "./feedback.module";
 import folder from "./folder.module";
 import default_slide from "./default_slide.module";
+import messages from "./messages.module";
 
 
 Vue.use(Vuex);
@@ -20,6 +21,7 @@ export default new Vuex.Store({
     recording_list,
     feedback,
     folder,
-    default_slide
+    default_slide,
+    messages
   }
 });

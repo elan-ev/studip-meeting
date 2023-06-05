@@ -19,3 +19,6 @@ export const FOLDER_SET         = "folderSet";
 
 export const DEFAULT_SLIDE_FONT_SET     = "defaultSlideFontSet";
 export const DEFAULT_SLIDE_TEMPLATE_SET = "defaultSlideTemplatesSet";
+
+export const MESSAGES_SET          = "messagesSet";
+export const MESSAGES_RESET        = "messagesReset";

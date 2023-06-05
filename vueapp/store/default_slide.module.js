@@ -20,8 +20,7 @@ const initialState = {
     font: [
     ],
     templates: {
-        pdf: [],
-        php: []
+        1: {pdf: {}, php: {}}
     }
 };
 
