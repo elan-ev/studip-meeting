@@ -218,7 +218,7 @@ class IndexController extends MeetingsController
         $this->redirect('index/index');
     }
 
-    public function return_action() 
+    public function return_action()
     {
         PageLayout::addScript($this->plugin->getAssetsUrl() . '/js/meetings_return_helper.js');
         PageLayout::setTitle(self::getHeaderLine(Context::getId()));
@@ -324,6 +324,13 @@ class IndexController extends MeetingsController
                 $this->get_template_factory()->open('index/action_widget')
             );
             $sidebar->addWidget($actions)->addLayoutCSSClass('meeting-action-widget');
+
+            // Folder widget
+            $actions = new TemplateWidget(
+                _('Ordner'),
+                $this->get_template_factory()->open('index/folder_widget')
+            );
+            $sidebar->addWidget($actions)->addLayoutCSSClass('meeting-folder-widget');
         }
 
         $search = new \TemplateWidget(

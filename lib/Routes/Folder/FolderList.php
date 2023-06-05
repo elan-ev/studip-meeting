@@ -41,12 +41,15 @@ class FolderList extends MeetingsController
         try {
 
             $folder_obj = [];
-
+            $is_top_folder = false;
             if (strtolower($folder_id) == 'topfolder') {
+                $is_top_folder = true;
                 $folder = \Folder::findTopFolder($cid);
             } else {
                 $folder = \Folder::find($folder_id);
             }
+
+            $folder_obj['is_top_folder'] = $is_top_folder;
 
             if (!$folder) {
                 return $this->createResponse([

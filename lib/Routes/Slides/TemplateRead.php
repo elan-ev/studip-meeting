@@ -32,7 +32,7 @@ class TemplateRead extends MeetingsController
                 }
             }
             return $this->createResponse([
-                'templates' => $installed_templates,
+                'templates' => (object) $installed_templates,
             ], $response);
         } catch (Exception $e) {
             throw new Error($e->getMessage(), 404);

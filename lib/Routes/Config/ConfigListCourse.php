@@ -27,18 +27,19 @@ class ConfigListCourse extends MeetingsController
         $course_config = [];
         $cid = $args['cid'];
 
-
         $course_config = CourseConfig::findByCourseId($cid)->toArray();
         $displayAddRoom = false;
         $displayEditRoom = false;
         $displayDeleteRoom = false;
         $displayDeleteRecording = false;
+        $displayAddFolder = false;
 
         if ($perm->have_studip_perm('tutor', $cid)) {
             $displayAddRoom = true;
             $displayEditRoom = true;
             $displayDeleteRoom = true;
             $displayDeleteRecording = true;
+            $displayAddFolder = true;
         }
 
         $course_config['display'] = [
@@ -46,11 +47,19 @@ class ConfigListCourse extends MeetingsController
             'editRoom'        => $displayEditRoom,
             'deleteRoom'      => $displayDeleteRoom,
             'deleteRecording' => $displayDeleteRecording,
+            'addFolder'       => $displayAddFolder,
         ];
 
         $course_config['introduction'] = $course_config['introduction']
             ? formatReady($course_config['introduction'])
             : '';
+
+        $course_config['upload_type'] = \FileManager::getUploadTypeConfig(
+            $cid, $GLOBALS['user']->id
+        );
+        if (isset($course_config['upload_type']['file_size'])) {
+            $course_config['upload_type']['rel_file_size'] = relsize($course_config['upload_type']['file_size']);
+        }
 
         if (!empty($config)) {
             $config = $this->setDefaultServerProfiles($config, $cid);

@@ -78,6 +78,7 @@ class RouteMap
         //routes for folders
         $this->app->get('/folders/{cid}/{folder_id}', Routes\Folder\FolderList::class);
         $this->app->post('/folders/new_folder', Routes\Folder\FolderCreate::class);
+        $this->app->post('/folders/upload_file', Routes\Folder\FolderUploadFile::class);
     }
 
     public function adminRoutes()
@@ -102,7 +103,7 @@ class RouteMap
         $this->app->get('/default_slide/template/sample/{what}', Routes\Slides\TemplateSampleDownload::class);
     }
 
-    public function unauthenticatedRoutes() 
+    public function unauthenticatedRoutes()
     {
         $this->app->get('/slides/{meeting_id}/{slide_id}/{token}', Routes\Slides\SlidesShow::class);
         $this->app->get('/defaultSlide/{meeting_id}/{token}', Routes\Slides\DefaultSlideShow::class);

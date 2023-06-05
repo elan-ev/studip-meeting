@@ -118,6 +118,8 @@ class AdminController extends MeetingsController
         $this->getHelpbarContent('main');
 
         $this->drivers = Driver::discover();
+
+        $this->setSidebar();
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -136,5 +138,19 @@ class AdminController extends MeetingsController
                 $helpBar->addPlainText('', $helpText);
                 break;
         }
+    }
+
+    /**
+     * Adds the content to sidebar
+     */
+    protected function setSidebar()
+    {
+        $sidebar = Sidebar::get();
+
+        $views = new \TemplateWidget(
+            _('Ansichten'),
+            $this->get_template_factory()->open('admin/view_widget')
+        );
+        $sidebar->addWidget($views)->addLayoutCSSClass('meeting-admin-view-widget');
     }
 }
