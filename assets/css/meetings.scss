@@ -505,19 +505,26 @@ table.meetings-default-slides-settings {
 
 /* Action Menu */
 nav.action-menu, .action-menu-wrapper {
+    .action-menu-item {
+        a {
+            cursor: pointer !important;
+        }
+    }
+}
+nav.action-menu {
     .meeting-action-menu-content {
         padding: 4px 8px;
         top: 1px;
         right: 1px;
-        .action-menu-title {
-            font-weight: 700;
-            margin: .2em 0 .3em;
-        }
-        .action-menu-item {
-            a {
-                cursor: pointer !important;
-            }
-        }
+    }
+}
+/* StudIP 5.3 */
+.action-menu-wrapper {
+    .meeting-action-menu-content {
+        top: 0px;
+    }
+    .meeting-action-menu-icon {
+        display: unset;
     }
 }
 /* End Action Menu */
