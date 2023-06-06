@@ -31,8 +31,11 @@
                 @deleteRoom="deleteRoom"
             />
         </header>
-        <section>
-            <article id="details">
+        <section class="contents">
+            <article v-if="room.description" class="description">
+                <p v-html="nl2Br(room.description)"></p>
+            </article>
+            <article class="details">
                 <span v-if="showParticipantCount" class="participants" v-text="showParticipantCount"></span>
                 <div v-if="course_config.display.editRoom && room.is_default == 1">
                     <StudipIcon class="info-icon" icon="star"
@@ -413,6 +416,10 @@ export default {
 
         showQRCode() {
             this.$emit('displayQRCode', this.getNonReactiveRoom());
+        },
+
+        nl2Br(pureText) {
+            return pureText.replace(/(?:\r\n|\r|\n)/g, '<br>');
         }
     }
 }
