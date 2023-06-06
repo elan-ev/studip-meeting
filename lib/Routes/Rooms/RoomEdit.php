@@ -46,6 +46,7 @@ class RoomEdit extends MeetingsController
 
         $meetingCourse = new MeetingCourse([$room_id, $json['cid']]);
         $name = trim($json['name']);
+        $description = trim($json['description']);
         $allow_change_driver = (isset($json['driver']) && !empty($json['driver'])) || !isset($json['driver']);
         $allow_change_server_index = (isset($json['server_index']) && is_numeric($json['server_index'])) || !isset($json['server_index']);
         // Checking Course Type
@@ -81,6 +82,7 @@ class RoomEdit extends MeetingsController
 
             $meeting = $meetingCourse->meeting;
             $meeting->name = $name;
+            $meeting->description = $description;
             !isset($json['recordingUrl']) ?: $meeting->recording_url = utf8_decode($json['recording_url']);
             !isset($json['join_as_moderator']) ?: $meeting->join_as_moderator = $json['join_as_moderator'];
             !isset($json['driver']) ?: $meeting->driver = $json['driver'];
@@ -107,7 +109,7 @@ class RoomEdit extends MeetingsController
                 } catch (Exception $e) {
                     throw new Error($e->getMessage(), 404);
                 }
-                
+
                 if (!is_numeric($json['features']['duration'])) {
                     $json['features']['duration'] = "240";
                 }

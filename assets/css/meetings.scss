@@ -231,60 +231,69 @@ div.inline-feature-warning {
             }
         }
 
-        article#details {
-            position: relative;
-            div {
-                &:first-of-type {
-                    width: calc(100% - 185px);
-                }
-                img {
-                    position: relative;
-                    top: 12px;
-
-                    &.info-icon {
-                        top: 7px;
-                        margin-right: 7px;
-                    }
-                }
-
-                span {
-                    &.red {
-                        color: #D60000;
-                    }
-
-                    &.creator-date {
-                        color: #636971;
-                        font-size: 12px;
-                        float: right;
-                        font-style: italic;
-                        margin: 10px 0;
-                    }
-
-                    &.has-changed {
-                        animation: alert 1s;
-                    }
-
-                    @keyframes alert {
-                        0% {
-                            color: #D60000;
-                        }
-                        50% {
-                            color: darken(#D60000, 7%);
-                        }
-                        100% {
-                            color: inherit;
-                        }
-                    }
+        section.contents {
+            article.description {
+                overflow: hidden;
+                p {
+                    text-align: left;
                 }
             }
+            article.details {
+                position: relative;
+                div {
+                    &:first-of-type {
+                        width: calc(100% - 185px);
+                    }
+                    img {
+                        position: relative;
+                        top: 12px;
 
-            span.participants {
-                position: absolute;
-                right: 0;
-                top: 10px;
-                font-size: 14px;
-                font-weight: 200;
-                color: #636971;
+                        &.info-icon {
+                            top: 7px;
+                            margin-right: 7px;
+                        }
+                    }
+
+                    span {
+                        &.red {
+                            color: #D60000;
+                        }
+
+                        &.creator-date {
+                            color: #636971;
+                            font-size: 12px;
+                            float: right;
+                            font-style: italic;
+                            margin: 10px 0;
+                        }
+
+                        &.has-changed {
+                            animation: alert 1s;
+                        }
+
+                        @keyframes alert {
+                            0% {
+                                color: #D60000;
+                            }
+                            50% {
+                                color: darken(#D60000, 7%);
+                            }
+                            100% {
+                                color: inherit;
+                            }
+                        }
+                    }
+                }
+
+
+                span.participants {
+                    position: absolute;
+                    right: 0;
+                    top: 10px;
+                    font-size: 14px;
+                    font-weight: 200;
+                    color: #636971;
+                }
             }
         }
         > footer {

@@ -32,6 +32,15 @@
                             <input type="text" v-model.trim="room['name']" id="name">
                         </label>
                         <label>
+                            <span v-translate>
+                                Beschreibung
+                            </span>
+                            <textarea
+                                v-model="room['description']"
+                                maxlength="150"
+                            ></textarea>
+                        </label>
+                        <label>
                             <input type="checkbox"
                             id="default"
                             :true-value="1"
@@ -610,7 +619,8 @@ export default {
                                             //sanitize - html tags
                                             var value = this.room['features'][config_feature.name];
                                             var text = '';
-                                            if (config_feature.name == 'welcome') {
+                                            // We need both welcome and description to contain light html codes.
+                                            if (config_feature.name == 'welcome' && config_feature.name == 'description') {
                                                 text = value.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
                                             } else {
                                                 text = value.replace(/(<([^>]+)>)/gi, "");
