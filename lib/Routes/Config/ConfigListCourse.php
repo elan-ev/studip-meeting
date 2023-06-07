@@ -50,9 +50,16 @@ class ConfigListCourse extends MeetingsController
             'addFolder'       => $displayAddFolder,
         ];
 
-        $course_config['introduction'] = $course_config['introduction']
-            ? formatReady($course_config['introduction'])
-            : '';
+        if ($introductions = json_decode($course_config['introductions'])) {
+            $introductions = array_map(function ($introduction) {
+                $introduction->title = htmlReady($introduction->title);
+                $introduction->text = formatReady($introduction->text);
+                return $introduction;
+            }, $introductions);
+            $course_config['introductions'] = $introductions;
+        } else {
+            unset($course_config['introductions']);
+        }
 
         $course_config['upload_type'] = \FileManager::getUploadTypeConfig(
             $cid, $GLOBALS['user']->id
