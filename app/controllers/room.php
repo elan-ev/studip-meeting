@@ -51,16 +51,11 @@ class RoomController extends PluginController
      */
     public function __call($method, $arguments)
     {
-        $variables = $this->get_assigned_variables();
+        $variables = method_exists($this, 'get_assigned_variables') ? $this->get_assigned_variables() : get_object_vars($this);
         if (isset($variables[$method]) && is_callable($variables[$method])) {
             return call_user_func_array($variables[$method], $arguments);
         }
-
-        if (is_callable('parent::__call')) {
-            return parent::__call($method, $arguments);
-        }
-
-        throw new RuntimeException("Method {$method} does not exist");
+        return parent::__call($method, $arguments);
     }
 
     public function index_action($link_hex, $cid)
@@ -441,7 +436,7 @@ class RoomController extends PluginController
     * Replaces the names with Umlauts
     *
     * @param string $string the string to replace the umlauts
-    * @return string 
+    * @return string
     */
     private function sonderzeichen($string) {
         $string = str_replace("ä", "ae", $string);
