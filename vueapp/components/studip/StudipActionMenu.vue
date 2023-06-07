@@ -1,5 +1,5 @@
 <template>
-    <nav v-if="shouldCollapse" class="action-menu">
+    <nav v-if="shouldCollapse" class="action-menu" data-action-menu-reposition="false">
         <StudipActionMenuIcon />
         <div class="action-menu-content meeting-action-menu-content">
             <div class="action-menu-title">
