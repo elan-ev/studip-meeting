@@ -244,7 +244,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
             $app->group('/meetingplugin/public', new RouteMapPublic($app));
             $app->run();
         }else {
-            PageLayout::addStylesheet($this->getPluginUrl() . '/static/styles.css');
+            PageLayout::addStylesheet($this->getPluginUrl() . '/static/styles.css?v=' . self::getMeetingManifestInfo('version'));
 
             $trails_root = $this->getPluginPath() . '/app';
             $dispatcher  = new Trails_Dispatcher($trails_root,
@@ -346,14 +346,19 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
      *
      * get the plugin manifest from PluginManager getPluginManifest method
      *
-     * @return Array $metadata the manifest metadata of this plugin
+     * @param string $item a sinlge manifest item extract.
+     *
+     * @return array|string|bool $metadata the manifest metadata of this plugin, or a single item string if found, or false otherwise.
      */
-    public static function getMeetingManifestInfo()
+    public static function getMeetingManifestInfo($item = '')
     {
         $plugin_manager = \PluginManager::getInstance();
         $this_plugin = $plugin_manager->getPluginInfo(__CLASS__);
         $plugin_path = \get_config('PLUGINS_PATH') . '/' .$this_plugin['path'];
         $manifest = $plugin_manager->getPluginManifest($plugin_path);
+        if (!empty($item)) {
+            return (isset($manifest[$item]) ? $manifest[$item] : false);
+        }
         return $manifest;
     }
 
