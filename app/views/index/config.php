@@ -1,15 +1,4 @@
-<?php
-/** @var MeetingPlugin $plugin */
-/** @var Flexi_TemplateFactory $templateFactory */
-/** @var ElanEv\Model\CourseConfig $courseConfig */
-/** @var bool $saved */
-?>
-
-<? if ($saved): ?>
-    <?= $templateFactory->render('shared/message_box', array('class' => 'success', 'message' => $_('Die Änderungen wurden gespeichert.'))) ?>
-<? endif ?>
-
-<form action="<?= PluginEngine::getLink($plugin, array(), 'index/config') ?>" method="post" class="studip_form default">
+<form action="<?= PluginEngine::getLink($plugin, array(), 'index/config') ?>" method="post" class="default">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend>
@@ -20,11 +9,6 @@
             <input type="text" name="title" id="vc_config_title" value="<?= htmlReady($courseConfig->title) ?>" size="80" autofocus>
         </label>
 
-
-        <label>
-            <?= $_('Einleitungstext') ?>
-            <textarea name="introduction" id="vc_config_introduction" cols="80" rows="10" class="wysiwyg add_toolbar"><?= wysiwygReady($courseConfig->introduction) ?></textarea>
-        </label>
     </fieldset>
 
     <footer data-dialog-button>

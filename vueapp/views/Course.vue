@@ -31,14 +31,16 @@
                 <span v-text="$gettext('Leider konnte keinen Raum gefunden werden.')"></span>
             </MessageBox>
 
-            <section class="meeting-intro contentbox" v-if="course_config.introduction">
-                <header><h1 v-text="$gettext('Einleitung')"></h1></header>
-                <section>
-                    <article>
-                        <span v-html="course_config.introduction"></span>
-                    </article>
+            <template v-if="course_config.introductions">
+                <section v-for="(introduction, index) in course_config.introductions" :key="index" class="meeting-intro contentbox">
+                    <header><h1 v-text="introduction.title ? introduction.title : $gettext('Einleitung')"></h1></header>
+                    <section>
+                        <article>
+                            <span v-html="introduction.text"></span>
+                        </article>
+                    </section>
                 </section>
-            </section>
+            </template>
 
             <div class="conference-meeting" v-if="rooms_list_filtered.length">
                 <MeetingComponent v-for="(room, index) in rooms_list_filtered"
