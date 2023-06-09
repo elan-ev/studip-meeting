@@ -38,7 +38,7 @@
                     <td style="text-align: center">
                         <input type="checkbox" name="indices[]" value="<?= $index ?>">
                     </td>
-                    <td><?= $introduction->title ? htmlReady($tilte) : '<i>' . $_('Einleitung') . '</i>' ?></td>
+                    <td><?= $introduction->title ? htmlReady($introduction->title) : '<i>' . $_('Einleitung') . '</i>' ?></td>
                     <td><?= formatReady($introduction->text) ?></td>
                     <td class="actions">
                         <a href="<?= $controller->link_for("index/edit_intro/{$index}") ?>" data-dialog="size=auto">
