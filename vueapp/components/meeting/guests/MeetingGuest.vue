@@ -7,6 +7,8 @@
             :closeText="$gettext('Abbrechen')"
             closeClass="cancel"
             class="meeting-dialog"
+            height="480"
+            width="450"
             @close="cancelGuest"
             @confirm="callbackHub"
         >
@@ -23,7 +25,7 @@
                             <input type="text" v-model.trim="guest_name" id="guestname" @change="generateGuestJoin($event)">
                         </label>
 
-                        <label id="guest_link_label" v-if="guest_link">
+                        <label v-if="guest_link">
                             <span v-translate>Link</span>
                             <StudipTooltipIcon :text="$gettext('Bitte geben sie diesen Link dem Gast.')"
                                 :important="true"></StudipTooltipIcon>
@@ -66,7 +68,15 @@ export default {
             return this.guest_link != '' ? true : false;
         },
         dialog_confirm_text() {
-            return this.is_link_generated ? this.$gettext('In Zwischenablage kopieren') : this.$gettext('Einladungslink erstellen');
+            let text = this.$gettext('Einladungslink erstellen');
+            if (this.is_link_generated) {
+                text = this.$gettext('In Zwischenablage kopieren');
+                const html = document.querySelector('html');
+                if (html.classList.contains('responsive-display') && html.classList.contains('size-tiny')) {
+                    text = this.$gettext('Kopieren');
+                }
+            }
+            return text;
         },
         dialog_confirm_class() {
             return !this.is_link_generated ? 'accept' : '';

@@ -36,11 +36,16 @@
                 <p v-html="nl2Br(room.description)"></p>
             </article>
             <article class="details">
-                <span v-if="showParticipantCount" class="participants" v-text="showParticipantCount"></span>
+                <div v-if="showParticipantCount">
+                    <StudipIcon class="info-icon" icon="group4"
+                            role="info" size="24"></StudipIcon>
+                    <span class="all-sizes" v-text="showParticipantCount"></span>
+                </div>
                 <div v-if="course_config.display.editRoom && room.is_default == 1">
                     <StudipIcon class="info-icon" icon="star"
                             role="info" size="24"></StudipIcon>
                     <span v-text="$gettext('Dies ist der Standardraum')"></span>
+                    <span class="size-tiny" v-text="$gettext('Standardraum')"></span>
                 </div>
 
                 <div v-if="course_config.display.editRoom">
@@ -50,9 +55,15 @@
                         @click.prevent="editRights()">
                         <StudipIcon class="info-icon" :icon="room.join_as_moderator == 1 ? 'lock-unlocked' : 'lock-locked'" role="clickable" size="24"></StudipIcon>
                     </a>
-                    <span :id="'rights-info-text-' + room.id" class="">{{ room.join_as_moderator == 1 ?
+                    <span :class="'rights-info-text-' + room.id">
+                        {{ room.join_as_moderator == 1 ?
                                 $gettext('Teilnehmende haben Moderationsrechte')
                                 : $gettext('Teilnehmende haben eingeschränkte Rechte') }}
+                    </span>
+                    <span :class="'rights-info-text-' + room.id" class="size-tiny">
+                        {{ room.join_as_moderator == 1 ?
+                                $gettext('Moderationsrechte')
+                                : $gettext('Eingeschränkte Rechte') }}
                     </span>
                 </div>
 
@@ -65,21 +76,25 @@
                         <StudipIcon class="info-icon" :icon="room.active == 1 ? 'visibility-visible' : 'visibility-invisible'"
                             role="clickable" size="24"></StudipIcon>
                     </a>
-                    <span :id="'active-info-text-' + room.id" class="">{{ room.active == 1 ?
+                    <span :class="'active-info-text-' + room.id">
+                        {{ room.active == 1 ?
                         $gettext('Das Meeting ist für die Teilnehmenden sichtbar')
                         : $gettext('Das Meeting ist für die Teilnehmenden unsichtbar') }}
+                    </span>
+                    <span :class="'active-info-text-' + room.id" class="size-tiny">
+                        {{ room.active == 1 ?
+                        $gettext('Sichtbar')
+                        : $gettext('Unsichtbar') }}
                     </span>
                 </div>
 
                 <div v-if="course_config.display.editRoom && room.group_id">
                     <StudipIcon class="info-icon" icon="group2"
                             role="info" size="24"></StudipIcon>
-                    <span v-translate>
-                        Das Meeting gehört der Gruppe
-                    </span>
+                    <span>{{ $gettext('Das Meeting gehört der Gruppe') }}</span>
                     <span v-if="group_name" v-text="group_name"></span>
+                    <span class="size-tiny" v-text="$gettext('Gruppe:') + ' ' + group_name"></span>
                 </div>
-
                 <div v-if="course_config.display.editRoom && room.folder_id !== null && room.details && room.details.folder">
                     <template v-if="room.preupload_not_allowed">
                         <div>
@@ -87,16 +102,19 @@
                                 <StudipIcon class="info-icon" icon="exclaim-circle-full"
                                     role="status-red" size="24"></StudipIcon>
                             </a>
-                            <span v-translate v-text="room.preupload_not_allowed"></span>
+                            <span class="all-sizes" v-text="room.preupload_not_allowed"></span>
                         </div>
                     </template>
                     <template v-else>
                         <StudipIcon class="info-icon" icon="folder-empty"
                             role="info" size="24">
                         </StudipIcon>
-                        <translate>
-                            Ordner für automatische Uploads:
-                        </translate>
+                        <span>
+                            {{ $gettext('Ordner für automatische Uploads:') }}
+                        </span>
+                        <span class="size-tiny">
+                            {{ $gettext('Ordner:') }}
+                        </span>
                         <a :href="room.details.folder.link" target="_blank">
                             {{ room.details.folder.name }}
                         </a>
@@ -106,37 +124,32 @@
                 <div v-if="num_drivers > 1">
                     <StudipIcon class="info-icon" icon="video2"
                         role="info" size="24"></StudipIcon>
-
-                    {{ this.config[room.driver].display_name
-                        ? this.config[room.driver].display_name
-                        : room.driver }}
+                    <span class="all-sizes">
+                        {{ this.config[room.driver].display_name
+                            ? this.config[room.driver].display_name
+                            : room.driver }}
+                    </span>
                 </div>
 
                 <div v-if="display_room_recording_warning">
-                    <a>
-                        <StudipIcon class="info-icon" icon="exclaim-circle"
-                            role="status-yellow" size="24"></StudipIcon>
-                    </a>
-                    <span v-translate v-text="$gettext('Aufzeichnung kann früher beginnen')"></span>
+                    <StudipIcon class="info-icon" icon="exclaim-circle"
+                        role="status-yellow" size="24"></StudipIcon>
+                    <span class="all-sizes" v-text="$gettext('Aufzeichnung kann früher beginnen')"></span>
                     <StudipTooltipIcon :text="$gettext('Es ist bei Aufzeichnungen dringend empfohlen die Veranstaltung und somit die Aufzeichnungen erst zu beginnen,' +
                         ' wenn Lehrende die Videokonferenz betreten.')">
                     </StudipTooltipIcon>
                 </div>
 
                 <div v-if="course_config.display.editRoom && room.features && room.features.record && room.features.record == 'true' && room.record_not_allowed">
-                    <a>
-                        <StudipIcon class="info-icon" icon="exclaim-circle-full"
-                            role="status-red" size="24"></StudipIcon>
-                    </a>
-                    <span v-translate v-text="room.record_not_allowed"></span>
+                    <StudipIcon class="info-icon" icon="exclaim-circle-full"
+                        role="status-red" size="24"></StudipIcon>
+                    <span class="all-sizes" v-text="room.record_not_allowed"></span>
                 </div>
 
                 <div v-if="!room.enabled">
-                    <a>
-                        <StudipIcon class="info-icon" icon="exclaim-circle-full"
-                            role="status-red" size="24"></StudipIcon>
-                    </a>
-                    <span v-translate>
+                    <StudipIcon class="info-icon" icon="exclaim-circle-full"
+                        role="status-red" size="24"></StudipIcon>
+                    <span class="all-sizes">
                         Dieser Raum ist deaktiviert, da der Treiber {{ room.driver }}
                         nicht aktiviert oder falsch konfiguriert ist.
                     </span>
@@ -319,7 +332,7 @@ export default {
         },
 
         editRights() {
-            $(`#rights-info-text-${this.room.id}`).removeClass('has-changed');
+            $(`.rights-info-text-${this.room.id}`).removeClass('has-changed');
             this.room.join_as_moderator = this.room.join_as_moderator == 1 ? 0 : 1;
             this.$store.dispatch(ROOM_UPDATE, this.room)
             .then(({ data }) => {
@@ -327,7 +340,7 @@ export default {
                     this.room.join_as_moderator = !this.room.join_as_moderator;
                     this.$emit('setMessage', data.message);
                 } else {
-                    $(`#rights-info-text-${this.room.id}`).addClass('has-changed');
+                    $(`.rights-info-text-${this.room.id}`).addClass('has-changed');
                 }
             }).catch (({error}) => {
                 this.room.join_as_moderator = !this.room.join_as_moderator;
@@ -335,7 +348,7 @@ export default {
         },
 
         editVisibility() {
-            $(`#active-info-text-${this.room.id}`).removeClass('has-changed');
+            $(`.active-info-text-${this.room.id}`).removeClass('has-changed');
             this.room.active = this.room.active == 1 ? 0 : 1;
             this.$store.dispatch(ROOM_UPDATE, this.room)
             .then(({ data }) => {
@@ -343,7 +356,7 @@ export default {
                     this.room.active = !this.room.active;
                     this.$emit('setMessage', data.message);
                 } else {
-                    $(`#active-info-text-${this.room.id}`).addClass('has-changed');
+                    $(`.active-info-text-${this.room.id}`).addClass('has-changed');
                 }
             }).catch (({error}) => {
                 this.room.active = !this.room.active;

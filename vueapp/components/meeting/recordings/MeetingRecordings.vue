@@ -134,6 +134,7 @@ export default {
             this.showConfirmDialog = {
                 title: this.$gettext('Aufzeichnung löschen'),
                 question: this.$gettext('Sind Sie sicher, dass Sie diese Aufzeichnung löschen möchten?'),
+                height: '200',
                 confirm_callback: 'performDeleteRecording',
                 confirm_callback_data: {recording},
             }

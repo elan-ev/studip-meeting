@@ -7,8 +7,8 @@
             :closeText="$gettext('Abbrechen')"
             closeClass="cancel"
             class="meeting-dialog"
-            width="450"
-            height="380"
+            width="480"
+            height="530"
             @close="cancelModeratorGuest"
             @confirm="callbackHub"
         >
@@ -100,7 +100,15 @@ export default {
             return this.moderator_access_link != '' ? true : false;
         },
         dialog_confirm_text() {
-            return this.is_link_generated ? this.$gettext('In Zwischenablage kopieren') : this.$gettext('Einladungslink erstellen');
+            let text = this.$gettext('Einladungslink erstellen');
+            if (this.is_link_generated) {
+                text = this.$gettext('In Zwischenablage kopieren');
+                const html = document.querySelector('html');
+                if (html.classList.contains('responsive-display') && html.classList.contains('size-tiny')) {
+                    text = this.$gettext('Kopieren');
+                }
+            }
+            return text;
         },
         dialog_confirm_class() {
             return !this.is_link_generated ? 'accept' : '';
@@ -155,7 +163,7 @@ export default {
                     close_callback: 'getModeratorGuestLink',
                     height: '220'
                 }
-                
+
             } else {
                 var err_message = '';
                 if (!this.moderator_password) {

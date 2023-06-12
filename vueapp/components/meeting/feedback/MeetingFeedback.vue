@@ -7,7 +7,8 @@
             :closeText="$gettext('Abbrechen')"
             closeClass="cancel"
             class="meeting-dialog"
-            :autoScale="true"
+            width="500"
+            :height="dialog_height"
             @close="cancelFeedback"
             @confirm="sumbitFeedback"
         >
@@ -121,6 +122,10 @@ export default {
                 network_types_complied[key] = this.$gettext(this.network_types[key]);
             }
             return network_types_complied;
+        },
+
+        dialog_height() {
+            return (window.innerHeight * 0.8).toString();
         }
     },
 

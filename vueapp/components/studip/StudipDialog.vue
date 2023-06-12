@@ -138,11 +138,7 @@ export default {
         closeClass: String,
         question: String,
         alert: String,
-        message: String,
-        autoScale: {
-            type: Boolean,
-            default: false
-        }
+        message: String
     },
     data() {
         const dialogId = uuid++;
@@ -240,10 +236,6 @@ export default {
         initSize() {
             this.currentWidth = parseInt(this.width, 10);
             this.currentHeight = parseInt(this.height, 10);
-            if (this.autoScale) {
-                this.currentWidth = window.innerWidth * 0.5;
-                this.currentHeight = window.innerHeight * 0.8;
-            }
             if (window.innerWidth > this.currentWidth) {
                 this.left = (window.innerWidth - this.currentWidth) / 2;
             } else {

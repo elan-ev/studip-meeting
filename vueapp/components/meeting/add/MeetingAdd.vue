@@ -7,7 +7,8 @@
             :closeText="$gettext('Abbrechen')"
             closeClass="cancel"
             class="meeting-dialog"
-            :autoScale="true"
+            width="500"
+            :height="dialog_height"
             @close="cancelAddRoom"
             @confirm="handleConfirm"
         >
@@ -406,6 +407,10 @@ export default {
                 Object.keys(this.config[this.room['driver']]).includes('allowStartStopRecording') &&
                 JSON.parse(this.config[this.room['driver']]['allowStartStopRecording']) == true)
             return config || room_setting;
+        },
+
+        dialog_height() {
+            return (window.innerHeight * 0.8).toString();
         }
     },
 

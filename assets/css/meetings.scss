@@ -4,7 +4,6 @@ $gap: 15px;
 $workspace-max-width: calc(calc(calc(270px * 2) + $gap) * 2);
 $content-full-max-width: $workspace-max-width;
 $content-half-max-width: calc(calc($workspace-max-width / 2) - calc($gap / 2) - 2px);
-$content-min-width: 520px;
 
 /* End definitions */
 
@@ -20,7 +19,6 @@ div.vc_introduction {
 
 .meeting-intro.contentbox {
     max-width: $workspace-max-width;
-    min-width: $content-min-width;
     margin-bottom: $gap;
 }
 
@@ -206,11 +204,11 @@ div.inline-feature-warning {
     justify-content: space-between;
     gap: $gap;
     section.meetingcomponent {
+        display: flex;
+        flex-direction: column;
         position: relative;
         margin: 0;
-        padding-bottom: 58px;
         max-width: $content-full-max-width;
-        min-width: $content-min-width;
         width: 100%;
         .meeting-item-header {
             padding: 4px 5px 4px 10px !important;
@@ -241,9 +239,6 @@ div.inline-feature-warning {
             article.details {
                 position: relative;
                 div {
-                    &:first-of-type {
-                        width: calc(100% - 185px);
-                    }
                     img {
                         position: relative;
                         top: 12px;
@@ -255,6 +250,9 @@ div.inline-feature-warning {
                     }
 
                     span {
+                        &.size-tiny {
+                            display: none;
+                        }
                         &.red {
                             color: #D60000;
                         }
@@ -284,16 +282,6 @@ div.inline-feature-warning {
                         }
                     }
                 }
-
-
-                span.participants {
-                    position: absolute;
-                    right: 0;
-                    top: 10px;
-                    font-size: 14px;
-                    font-weight: 200;
-                    color: #636971;
-                }
             }
         }
         > footer {
@@ -301,9 +289,7 @@ div.inline-feature-warning {
                 display:inline-block;
                 margin-bottom: 0;
             }
-            position: absolute;
-            left: 0;
-            bottom: 0;
+            margin-top: auto;
             border-top-style: none;
             text-align: left;
             padding: 0 $gap $gap $gap;
@@ -342,10 +328,10 @@ div.inline-feature-warning {
         }
         tbody {
             display: block;
-            max-height: 130px;
             overflow: auto;
+            max-height: 130px;
             &.large{
-                max-height: 350px;
+                max-height: 310px;
             }
             tr {
                 display: table;
@@ -560,3 +546,23 @@ table.meetings-default-slides-settings {
     }
 }
 /* End Drag and Drop file upload */
+
+
+/* Responsive styles */
+.responsive-display {
+    &.size-tiny {
+        .meetingcomponent .contents .details {
+            div {
+                width: 100% !important;
+                span {
+                    white-space: normal;
+                    display: none;
+                    &.size-tiny, &.all-sizes {
+                        display: inline;
+                    }
+                }
+            }
+        }
+    }
+}
+/* End Responsive Styles */

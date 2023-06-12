@@ -5,8 +5,8 @@
             :closeText="$gettext('Schließen')"
             closeClass="cancel"
             class="meeting-dialog"
-            :height="dialog_height"
-            :width="dialog_width"
+            width="600"
+            height="600"
             @close="$emit('cancel')"
         >
             <template v-slot:dialogContent>
@@ -92,14 +92,6 @@ export default {
 
     computed: {
         ...mapGetters(['folder']),
-        dialog_height() {
-            let optimalHeight = window.innerHeight * 0.5;
-            return optimalHeight.toString();
-        },
-        dialog_width() {
-            let optimalWidth = window.innerWidth * 0.6;
-            return optimalWidth.toString();
-        },
         new_folder_title() {
             return gettextInterpolate($gettext('Neuer Ordner unter (%{ current }) erstellen.'),{current: this.folder.name});
         },
