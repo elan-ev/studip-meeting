@@ -1,6 +1,17 @@
 <template>
     <div v-if="visible">
-        <StudipDialog :title="$gettext('Serverkonfiguration')" @close="close">
+        <studip-dialog
+            :title="$gettext('Serverkonfiguration')"
+            :confirmText="$gettext('Übernehmen')"
+            confirmClass="accept"
+            :closeText="$gettext('Abbrechen')"
+            closeClass="cancel"
+            class="meeting-dialog"
+            width="500"
+            :height="dialog_height"
+            @close="close"
+            @confirm="edit"
+        >
             <template v-slot:dialogContent>
                 <MessageBox v-if="dialog_message.text" :type="dialog_message.type" @hide="dialog_message.text = ''">
                     {{ dialog_message.text }}
@@ -44,31 +55,11 @@
                     </div>
                 </form>
             </template>
-
-
-            <template v-slot:dialogButtons>
-                <StudipButton
-                    icon="accept" @click="edit"
-                    v-translate
-                >
-                    Übernehmen
-                </StudipButton>
-
-                <StudipButton
-                    icon="cancel" @click="close"
-                    v-translate
-                >
-                    Abbrechen
-                </StudipButton>
-            </template>
-        </StudipDialog>
+        </studip-dialog>
     </div>
 </template>
 <script>
-
 import ServerRoomSize from "@/components/server/ServerRoomSize";
-
-
 
 export default {
     name: 'ServerDialog',
@@ -82,6 +73,12 @@ export default {
 
     components: {
         ServerRoomSize,
+    },
+
+    computed: {
+        dialog_height() {
+            return (window.innerHeight * 0.8).toString();
+        }
     },
 
     data() {
@@ -100,7 +97,6 @@ export default {
 
     methods: {
         close() {
-            this.dialogClose();
             this.$emit('close');
         },
 
@@ -113,7 +109,6 @@ export default {
                     }
                     this.$emit('edit', params);
                 });
-                this.dialogClose();
             } else {
                 this.dialog_message = {
                     type: 'error',
@@ -137,11 +132,11 @@ export default {
                 for (const [index, element] of  Object.entries(cmp.$el.children)) {
                     var inputs = $(element).find('input[type="number"]');
                     if (inputs.length) {
-                       for (const [indx, input_element] of  Object.entries(inputs)) {
-                           if (input_element.tagName == "INPUT" && !input_element.checkValidity()) {
-                               validity = false;
-                           }
-                       }
+                        for (const [indx, input_element] of  Object.entries(inputs)) {
+                            if (input_element.tagName == "INPUT" && !input_element.checkValidity()) {
+                                validity = false;
+                            }
+                        }
                     }
                 }
             }
