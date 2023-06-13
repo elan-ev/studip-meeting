@@ -144,8 +144,8 @@ export default {
         },
         reduceMins() {
             if (this.server[this.driver_name]['maxParticipants'] &&
-                 parseInt(this.server[this.driver_name]['maxParticipants']) > 0 &&
-                 this.server[this.driver_name]['roomsize-presets']) {
+                parseInt(this.server[this.driver_name]['maxParticipants']) > 0 &&
+                this.server[this.driver_name]['roomsize-presets']) {
                 if (parseInt(this.server[this.driver_name]['maxParticipants']) > 0 && parseInt(this.server[this.driver_name]['maxParticipants']) < 3) {
                     this.$set(this.server_object[this.driver_name], "maxParticipants" , "3");
 
