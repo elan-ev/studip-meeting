@@ -132,7 +132,7 @@ class IndexController extends MeetingsController
         }
 
         $this->courseConfig = CourseConfig::findByCourseId(Context::getId());
-        $this->introductions = json_decode($this->courseConfig->introductions);
+        $this->introductions = (array) json_decode($this->courseConfig->introductions);
 
         libxml_use_internal_errors(true);
 
@@ -310,7 +310,7 @@ class IndexController extends MeetingsController
         if (!$this->perm->have_studip_perm('tutor', $cid)) {
             throw new AccessDeniedException(I18N::_('Unzureichende Berechtigungen zum Ausführen dieser Aktion'));
         }
-        if (empty($index)) {
+        if (!is_int(intval($index))) {
             PageLayout::postError(I18N::_('Keinen Eintrag wurde ausgewählt.'));
             $this->redirect('index/intros');
             return;
