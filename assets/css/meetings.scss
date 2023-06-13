@@ -568,6 +568,15 @@ table.meetings-default-slides-settings {
         }
     }
 }
+.fullscreen-mode {
+    .meeting-intro.contentbox {
+        max-width: none;
+    }
+    .conference-meeting {
+        justify-content: flex-start;
+        max-width: none;
+    }
+}
 /* End Responsive Styles */
 
 /* Button Styles */
