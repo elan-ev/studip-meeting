@@ -1,33 +1,21 @@
 <template>
-  <div>
+  <div class="meeting-lobby">
     <h1 v-translate>Das Meeting hat noch nicht begonnen </h1>
 
-    <p v-translate><img :src="loadingURL">
-      Sie treten dem Meeting automatisch bei, sobald es begonnen hat.
-    </p>
+    <div class="waiting-info-container">
+      <img :src="loadingURL" width="24" height="24"/>
+      <p v-translate>
+        Sie treten dem Meeting automatisch bei, sobald es begonnen hat.
+      </p>
+    </div>
 
   </div>
 </template>
 
 <script>
 
-import ServerDialog from "@/components/server/ServerDialog";
-
 export default {
   name: "Lobby",
-
-  components: {
-    ServerDialog
-  },
-
-  data() {
-    return {
-      message: null,
-      server_object: {},
-      serverDialogVisible: false,
-      changes_made: false
-    }
-  },
   computed: {
     loadingURL() {
       return LOADING_ICON_URL;

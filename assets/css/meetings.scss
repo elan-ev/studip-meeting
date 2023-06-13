@@ -596,3 +596,12 @@ button.as-link {
     }
 }
 /* End Button Styles */
+
+/* Lobby Styles */
+.meeting-lobby {
+    .waiting-info-container {
+        display: flex;
+        gap: 10px;
+    }
+}
+/* End Lobby Styles */
