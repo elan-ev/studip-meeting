@@ -15,14 +15,14 @@
             <tr>
                 <th>
                     <? if (!empty($introductions)): ?>
-                        <input type="checkbox" name="all" value="1"
+                        <input type="checkbox" name="all" value="1" title="<?= $_('Alle auswählen') ?>"
                             data-proxyfor=":checkbox[name='indices[]']"
                             data-activates=".meeting-introductions button[name=bulk_delete]">
                     <? endif; ?>
                 </th>
-                <th><?= $_('Titel') ?></th>
-                <th><?= $_('Text') ?></th>
-                <th><?= $_('Aktionen') ?></th>
+                <th scope="col"><?= $_('Titel') ?></th>
+                <th scope="col"><?= $_('Text') ?></th>
+                <th scope="col"><?= $_('Aktionen') ?></th>
             </tr>
         </thead>
         <tbody>
@@ -42,12 +42,12 @@
                     <td><?= formatReady($introduction->text) ?></td>
                     <td class="actions">
                         <a href="<?= $controller->link_for("index/edit_intro/{$index}") ?>" data-dialog="size=auto">
-                            <?= Icon::create('edit')->asImg(['title' => _('Einleitung bearbeiten')]) ?>
+                            <?= Icon::create('edit')->asImg(['title' => $_('Einleitung bearbeiten')]) ?>
                         </a>
                         <a href="<?= $controller->link_for("index/delete_intro/{$index}") ?>">
                             <?= Icon::create('trash')->asImg([
-                                'title'        => _('Einleitung löschen'),
-                                'data-confirm' => _('Soll diese Einleitung wirklich gelöscht werden?'),
+                                'title'        => $_('Einleitung löschen'),
+                                'data-confirm' => $_('Soll diese Einleitung wirklich gelöscht werden?'),
                             ]) ?>
                         </a>
                     </td>
@@ -58,9 +58,10 @@
             <tr>
                 <td colspan="4">
                     <?= _('Markierte Einträge') ?>
-                    <?= Studip\Button::create(_('Löschen'), 'bulk_delete', [
+                    <?= Studip\Button::create($_('Löschen'), 'bulk_delete', [
                         'data-confirm' => $_('Sollen die Einleitungen wirklich gelöscht werden?'),
-                        'disabled' => empty($introductions)
+                        'disabled' => empty($introductions),
+                        'title' => $_('Alle markierte Einträge löschen'),
                     ]) ?>
                 </td>
             </tr>

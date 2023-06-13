@@ -49,18 +49,19 @@
                 </div>
 
                 <div v-if="course_config.display.editRoom">
-                    <a style="cursor: pointer;" :title=" room.join_as_moderator == 1 ?
-                        $gettext('Teilnehmenden nur eingeschränkte Rechte geben')
-                        : $gettext('Teilnehmenden Administrationsrechte geben')"
-                        @click.prevent="editRights()">
+                    <button tabindex="0" role="button" class="as-link" :aria-pressed="room.join_as_moderator == 1"
+                        :title=" room.join_as_moderator == 1 ?
+                            $gettext('Teilnehmenden nur eingeschränkte Rechte geben')
+                            : $gettext('Teilnehmenden Administrationsrechte geben')"
+                            @click.prevent="editRights()">
                         <StudipIcon class="info-icon" :icon="room.join_as_moderator == 1 ? 'lock-unlocked' : 'lock-locked'" role="clickable" size="24"></StudipIcon>
-                    </a>
-                    <span :class="'rights-info-text-' + room.id">
+                    </button>
+                    <span aria-live="polite" :class="'rights-info-text-' + room.id">
                         {{ room.join_as_moderator == 1 ?
                                 $gettext('Teilnehmende haben Moderationsrechte')
                                 : $gettext('Teilnehmende haben eingeschränkte Rechte') }}
                     </span>
-                    <span :class="'rights-info-text-' + room.id" class="size-tiny">
+                    <span aria-live="polite" :class="'rights-info-text-' + room.id" class="size-tiny">
                         {{ room.join_as_moderator == 1 ?
                                 $gettext('Moderationsrechte')
                                 : $gettext('Eingeschränkte Rechte') }}
@@ -68,20 +69,20 @@
                 </div>
 
                 <div v-if="course_config.display.editRoom">
-                    <a  style="cursor: pointer;"
+                    <button tabindex="0" role="button" class="as-link" :aria-pressed="room.active == 1"
                         :title="room.active == 1 ?
                             $gettext('Meeting für Teilnehmende unsichtbar schalten')
                             : $gettext('Meeting für Teilnehmende sichtbar schalten') "
                         @click.prevent="editVisibility()">
                         <StudipIcon class="info-icon" :icon="room.active == 1 ? 'visibility-visible' : 'visibility-invisible'"
                             role="clickable" size="24"></StudipIcon>
-                    </a>
-                    <span :class="'active-info-text-' + room.id">
+                    </button>
+                    <span aria-live="polite" :class="'active-info-text-' + room.id">
                         {{ room.active == 1 ?
                         $gettext('Das Meeting ist für die Teilnehmenden sichtbar')
                         : $gettext('Das Meeting ist für die Teilnehmenden unsichtbar') }}
                     </span>
-                    <span :class="'active-info-text-' + room.id" class="size-tiny">
+                    <span aria-live="polite" :class="'active-info-text-' + room.id" class="size-tiny">
                         {{ room.active == 1 ?
                         $gettext('Sichtbar')
                         : $gettext('Unsichtbar') }}
@@ -97,13 +98,9 @@
                 </div>
                 <div v-if="course_config.display.editRoom && room.folder_id !== null && room.details && room.details.folder">
                     <template v-if="room.preupload_not_allowed">
-                        <div>
-                            <a>
-                                <StudipIcon class="info-icon" icon="exclaim-circle-full"
-                                    role="status-red" size="24"></StudipIcon>
-                            </a>
-                            <span class="all-sizes" v-text="room.preupload_not_allowed"></span>
-                        </div>
+                        <StudipIcon class="info-icon" icon="exclaim-circle-full"
+                            role="status-red" size="24"></StudipIcon>
+                        <span class="all-sizes" v-text="room.preupload_not_allowed"></span>
                     </template>
                     <template v-else>
                         <StudipIcon class="info-icon" icon="folder-empty"
@@ -115,7 +112,11 @@
                         <span class="size-tiny">
                             {{ $gettext('Ordner:') }}
                         </span>
-                        <a :href="room.details.folder.link" target="_blank">
+                        <a :href="room.details.folder.link"
+                            tabindex="0"
+                            :aria-label="$gettext('Weiterleitung zum ausgewählten Ordner auf einer neuen Seite')"
+                            :title="$gettext('Ausgewählter Ordner')"
+                            target="_blank">
                             {{ room.details.folder.name }}
                         </a>
                     </template>

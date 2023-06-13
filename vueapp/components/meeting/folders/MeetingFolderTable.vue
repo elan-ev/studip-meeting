@@ -2,8 +2,8 @@
     <div class="course-folder-container">
         <table class="default documents">
                 <caption>
-                <div class="caption-container meetings-caption">
-                    <a :title="$gettext('Zum Hauptordner - Ordnerauswahl aufheben')"
+                <div class="caption-container meetings-caption" role="navigation" :aria-lable="$gettext('Navigation in der Ordnertabelle')">
+                    <a :title="$gettext('Zum Hauptordner - Ordnerauswahl aufheben')" href="#"
                         @click.prevent="folderHandler('topFolder')">
                         <StudipIcon class="folder-icon" icon="folder-home-full"
                             role="clickable" size="20"></StudipIcon>
@@ -11,7 +11,7 @@
                     <template v-if="Object.keys(folder).includes('breadcrumbs')">
                         <template v-for="(bcname, bcid) in folder.breadcrumbs">
                             &nbsp;/&nbsp;
-                            <a  :key="bcid"
+                            <a :key="bcid" :title="$gettext('Zum Ordner: ') + bcname" href="#"
                                 @click.prevent="folderHandler(bcid)">
                                 {{bcname}}
                             </a>
@@ -21,7 +21,7 @@
                 </caption>
             <thead>
                 <tr>
-                    <th v-translate>Name</th>
+                    <th scope="col" v-translate>Name</th>
                 </tr>
             </thead>
             <template v-if="folder_has_content">
@@ -29,11 +29,11 @@
                     <template v-if="Object.keys(folder['subfolders']).length > 0">
                         <tr v-for="(sfinfo, sfid) in folder.subfolders" :key="sfid" :id="'row_folder_' + sfid">
                             <td>
-                                <a :title="$gettext('Als aktueller Ordner auswählen')"
+                                <a :title="$gettext('Als aktueller Ordner auswählen')" href="#" :id="'link-' + sfid"
                                     @click.prevent="folderHandler(sfid)">
                                     <StudipIcon v-if="sfinfo.icon" :icon="sfinfo.icon"
                                         role="clickable" size="16"></StudipIcon>
-                                    <span>{{sfinfo.name}}</span>
+                                    <span :id="'name-' + sfid">{{sfinfo.name}}</span>
                                 </a>
                             </td>
                         </tr>
@@ -86,7 +86,7 @@
                         <div class="footer-container">
                             <slot name="footerButtons"></slot>
                             <template v-if="Object.keys(folder).includes('files') && Object.keys(folder['files']).length > numFileInFolderLimit">
-                                <a @click.prevent="showFilesInFolder = !showFilesInFolder" class="right">
+                                <a @click.prevent="showFilesInFolder = !showFilesInFolder" class="right" href="#">
                                     <StudipIcon :icon="(showFilesInFolder) ? 'checkbox-checked' : 'checkbox-unchecked'"
                                         role="clickable" size="14" />
                                     {{ $gettext('Alle Dateien anzeigen') }}

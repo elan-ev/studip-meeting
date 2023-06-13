@@ -3,9 +3,7 @@
     <fieldset>
         <label>
             <?= $_('Einleitungstitle') ?>
-            <? $params = tooltip2($_('Wenn leer, wird der standardmäßige "Einleitung" als Titel angezeigt.')); ?>
-            <? $params['style'] = 'cursor: pointer'; ?>
-            <?= Icon::create('info-circle', 'inactive')->asImg($params) ?>
+            <?= tooltipIcon($_('Wenn leer, wird der standardmäßige Einleitung als Titel angezeigt.')) ?>
             <input type="text" name="title" value="<?= $title ? htmlReady($title) : null ?>" placeholder="<?= !$title ? $_('Einleitung') : '' ?>" maxlength="254" size="80" autofocus>
         </label>
 

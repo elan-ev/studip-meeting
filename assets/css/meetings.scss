@@ -239,6 +239,9 @@ div.inline-feature-warning {
             article.details {
                 position: relative;
                 div {
+                    a {
+                        cursor: pointer;
+                    }
                     img {
                         position: relative;
                         top: 12px;
@@ -566,3 +569,21 @@ table.meetings-default-slides-settings {
     }
 }
 /* End Responsive Styles */
+
+/* Button Styles */
+/* as-link is introduced in 5.3, but we want it here for backwards compatibility as well */
+button.styleless {
+    background-color: unset;
+    border: 0;
+}
+button.as-link {
+    border: none;
+    padding: 0px;
+    margin: 0px;
+    cursor: pointer;
+    background-color: transparent;
+    &:hover {
+        background-color: transparent;
+    }
+}
+/* End Button Styles */

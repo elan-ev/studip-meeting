@@ -2,8 +2,16 @@
     <div>
         <h3>{{ roomsize_object.display_name }}</h3>
         <form class="default collapsable" style="position: relative">
-            <fieldset v-for="(roomsize, rsk) in roomsize_object.value" :key="rsk" :class="((rsk > 0) ? 'collapsed ' : '') + 'accordion-collapse'">
-                <legend @click.prevent="accordion_handle($event)">{{ roomsize.display_name }}</legend>
+            <fieldset v-for="(roomsize, rsk) in roomsize_object.value" :key="rsk" :class="{collapsed: (rsk > 0)}">
+                <legend
+                    tabindex="0"
+                    role="button"
+                    :aria-label="roomsize.display_name"
+                    aria-expanded="true"
+                    v-on="fieldsetHandlers"
+                >
+                    {{ roomsize.display_name }}
+                </legend>
                 <label v-for="(feature, rsfk) in roomsize.value" :key="rsfk" >
                     <template v-if="(feature['value'] === true || feature['value'] === false)">
                         <input  type="checkbox" :true-value="true" :false-value="false" v-model="this_server[roomsize_object.name][roomsize.name][feature.name]">
@@ -16,17 +24,17 @@
                         <input v-model="this_server[roomsize_object.name][roomsize.name][feature.name]" :type="(feature['name'] == 'minParticipants') ? 'number' : 'text'"
                             :min="(
                                 (roomsize.name == 'large') ?
-                                 ( (parseInt(this_server[roomsize_object.name]['medium']['minParticipants'])) ? parseInt(this_server[roomsize_object.name]['medium']['minParticipants']) + 1 : 0 )
-                                 : ((roomsize.name == 'medium') ?
-                                 ( (parseInt(this_server[roomsize_object.name]['small']['minParticipants']) >= 0) ? parseInt(this_server[roomsize_object.name]['small']['minParticipants']) + 1 : 0 )
-                                 : 0)
+                                    ( (parseInt(this_server[roomsize_object.name]['medium']['minParticipants'])) ? parseInt(this_server[roomsize_object.name]['medium']['minParticipants']) + 1 : 0 )
+                                    : ((roomsize.name == 'medium') ?
+                                    ( (parseInt(this_server[roomsize_object.name]['small']['minParticipants']) >= 0) ? parseInt(this_server[roomsize_object.name]['small']['minParticipants']) + 1 : 0 )
+                                    : 0)
                             )"
                             :max="(
                                 (roomsize.name == 'small') ?
                                 ( (parseInt(this_server[roomsize_object.name]['medium']['minParticipants'])) ? parseInt(this_server[roomsize_object.name]['medium']['minParticipants']) - 1 : '' )
-                                 : ((roomsize.name == 'medium') ?
-                                 ( (parseInt(this_server[roomsize_object.name]['large']['minParticipants'])) ? parseInt(this_server[roomsize_object.name]['large']['minParticipants']) - 1 : '' )
-                                 : ((this_server['maxParticipants'] && parseInt(this_server['maxParticipants']) > 0) ? parseInt(this_server['maxParticipants']) : ''))
+                                    : ((roomsize.name == 'medium') ?
+                                    ( (parseInt(this_server[roomsize_object.name]['large']['minParticipants'])) ? parseInt(this_server[roomsize_object.name]['large']['minParticipants']) - 1 : '' )
+                                    : ((this_server['maxParticipants'] && parseInt(this_server['maxParticipants']) > 0) ? parseInt(this_server['maxParticipants']) : ''))
                             )"
                             @change="(feature['name'] == 'minParticipants') ? limitMinMax() : ''"
                             @keyup="(feature['name'] == 'minParticipants') ? limitMinMax() : ''"
@@ -39,20 +47,15 @@
 </template>
 
 <script>
-
+import { a11y } from '@/common/a11y.mixins'
 export default {
     name: 'ServerRoomSize',
+    mixins: [a11y],
     props: {
         roomsize_object: [Array, Object],
         this_server : [Object]
     },
     methods: {
-        accordion_handle(e) {
-            if ($(e.target).parent().hasClass('collapsed')) {
-                $('.accordion-collapse').addClass('collapsed');
-                $(this).removeClass('collapsed');
-            }
-        },
         addPresetsToServer() {
             if (!Object.keys(this.this_server).includes(this.roomsize_object.name) || (this.this_server[this.roomsize_object.name] == "") ||
                 Array.isArray(this.this_server[this.roomsize_object.name])) {
@@ -63,7 +66,7 @@ export default {
                 if (this.this_server[this.roomsize_object.name][value.name] == undefined || this.this_server[this.roomsize_object.name][value.name] == '') {
                     this.this_server[this.roomsize_object.name][value.name] = {};
                 }
-                if (value.value) {                    
+                if (value.value) {
                     for (const [feature_key, feature_value] of Object.entries(value.value)) {
                         if (this.this_server[this.roomsize_object.name][value.name][feature_key] == undefined) {
                             this.this_server[this.roomsize_object.name][value.name][feature_key] = feature_value.value;

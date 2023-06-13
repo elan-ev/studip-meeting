@@ -9,6 +9,7 @@
                     @keypress.enter="sendSearchTerm"
                 />
                 <a v-if="searchTerm && showClear" @click.prevent="clearSearchTerm"
+                    href="#" :title="$gettext('Zurücksetzen')"
                     class="reset-search meeting-reset-search">
                     <StudipIcon icon="decline" size="20"/>
                 </a>
@@ -25,7 +26,7 @@
         </template>
         <template v-else>
             <div class="clear-search" v-if="searchTerm && showClear" style="text-align: right;">
-                <a @click.prevent="clearSearchTerm">
+                <a @click.prevent="clearSearchTerm" href="#" :title="$gettext('Zurücksetzen')">
                     <StudipIcon icon="search+decline" role="clickable" size="16"></StudipIcon>
                     {{ $gettext('Zurücksetzen') }}
                 </a>

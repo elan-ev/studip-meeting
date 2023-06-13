@@ -1,10 +1,10 @@
 <template>
     <ul class="widget-list widget-links meeting-widget-links">
         <li v-for="(item, index) in items" :key="index">
-            <a v-on="linkEvents(item)" href="#">
+            <button v-on="linkEvents(item)">
                 <StudipIcon :title="item.label" :icon="item.icon" role="clickable" />
                 {{ item.label }}
-            </a>
+            </button>
         </li>
     </ul>
 </template>

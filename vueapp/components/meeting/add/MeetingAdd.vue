@@ -16,9 +16,8 @@
                 <MessageBox v-if="modal_message.text" :type="modal_message.type" @hide="modal_message.text = ''">
                     {{ modal_message.text }}
                 </MessageBox>
-                <MessageBox v-else-if="room['driver'] && !Object.keys(config[room['driver']]['servers']).length"
-                        type="error" v-translate>
-                    Es gibt keine Server für dieses Konferenzsystem, bitte wählen Sie ein anderes Konferenzsystem
+                <MessageBox v-else-if="room['driver'] && !Object.keys(config[room['driver']]['servers']).length" type="error">
+                    {{ $gettext('Es gibt keine Server für dieses Konferenzsystem, bitte wählen Sie ein anderes Konferenzsystem') }}
                 </MessageBox>
 
                 <form class="default" @keyup="roomFormSubmit($event)" style="position: relative">
@@ -47,9 +46,9 @@
                             :true-value="1"
                             :false-value="0"
                             v-model="room['is_default']">
-                            <translate>
-                                Als Standardraum markieren
-                            </translate>
+                            <span>
+                                {{ $gettext('Als Standardraum markieren') }}
+                            </span>
                             <StudipTooltipIcon
                                 :text="$gettext('Ein Standardraum wird immer als erster Raum in der Raumliste angezeigt.' +
                                 ' Auf dem Startseitenwidget werden die gebuchten Termine dieser Veranstaltung gelistet und ein Direktlink zum Standardraum angeboten.' +
@@ -58,9 +57,15 @@
                         </label>
                     </fieldset>
 
-                    <fieldset id="server_settings_section" class="collapsable" :class="{collapsed: !isAddRoom}" v-if="show_server_settings_section">
-                        <legend v-translate>
-                            Konferenzsystem
+                    <fieldset id="server_settings_section"  class="collapsable" :class="{collapsed: !isAddRoom}"
+                        v-if="show_server_settings_section">
+                        <legend
+                            tabindex="0"
+                            role="button"
+                            :aria-label="$gettext('Konferenzsystem Sektion')"
+                            :aria-expanded="isAddRoom"
+                            v-on="fieldsetHandlers">
+                            {{ $gettext('Konferenzsystem') }}
                         </legend>
 
                         <label v-if="Object.keys(config).length > 1">
@@ -178,7 +183,14 @@
                                 && Object.keys(config[room['driver']]['features']).includes('create')
                                 && Object.keys(config[room['driver']]['features']['create']).includes('roomsize')
                                 && Object.keys(config[room['driver']]['features']['create']['roomsize']).length">
-                        <legend v-text="$gettext('Raumgröße und Voreinstellungen')"></legend>
+                        <legend
+                            tabindex="0"
+                            role="button"
+                            :aria-label="$gettext('Raumgröße und Voreinstellungen Sektion')"
+                            aria-expanded="true"
+                            v-on="fieldsetHandlers"
+                            v-text="$gettext('Raumgröße und Voreinstellungen')">
+                        </legend>
                         <template v-for="(feature, index) in config[room['driver']]['features']['create']['roomsize']">
                             <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature"
                                 :maxAllowedParticipants="maxAllowedParticipants"
@@ -189,7 +201,14 @@
                     </fieldset>
 
                     <fieldset id="recording_settings_section" class="collapsable collapsed" v-if="show_recording_settings_section">
-                        <legend v-text="$gettext('Aufzeichnung')"></legend>
+                        <legend
+                            tabindex="0"
+                            role="button"
+                            :aria-label="$gettext('Aufzeichnung Sektion')"
+                            aria-expanded="false"
+                            v-on="fieldsetHandlers"
+                            v-text="$gettext('Aufzeichnung')">
+                        </legend>
                         <template v-for="(feature, index) in config[room['driver']]['features']['record']['record_setting']">
                             <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :maxDuration="maxDuration"
                                 @labelClicked="labelClickHandler"
@@ -200,7 +219,14 @@
                     </fieldset>
 
                     <fieldset v-if="room['driver']" id="privacy_settings_section" class="collapsable collapsed">
-                        <legend v-text="$gettext('Berechtigungen')"></legend>
+                        <legend
+                            tabindex="0"
+                            role="button"
+                            :aria-label="$gettext('Berechtigungen Sektion')"
+                            aria-expanded="false"
+                            v-on="fieldsetHandlers"
+                            v-text="$gettext('Berechtigungen')">
+                        </legend>
                         <label>
                             <input type="checkbox"
                                 id="join_as_moderator"
@@ -236,7 +262,14 @@
                     </fieldset>
 
                     <fieldset id="group_settings_section" class="collapsable collapsed" v-if="room['driver'] && Object.keys(course_groups).length">
-                        <legend v-text="$gettext('Gruppenraum')"></legend>
+                        <legend
+                            tabindex="0"
+                            role="button"
+                            :aria-label="$gettext('Gruppenraum Sektion')"
+                            aria-expanded="false"
+                            v-on="fieldsetHandlers"
+                            v-text="$gettext('Gruppenraum')">
+                        </legend>
 
                         <label>
                             <translate>Wählen sie eine zugehörige Gruppe aus</translate>
@@ -258,14 +291,29 @@
                                 && Object.keys(config[room['driver']]['features']).includes('create')
                                 && Object.keys(config[room['driver']]['features']['create']).includes('extended_setting')
                                 && Object.keys(config[room['driver']]['features']['create']['extended_setting']).length">
-                        <legend v-text="$gettext('Erweiterte Einstellungen')"></legend>
+                        <legend
+                            tabindex="0"
+                            role="button"
+                            :aria-label="$gettext('Erweiterte Einstellungen Sektion')"
+                            aria-expanded="false"
+                            v-on="fieldsetHandlers"
+                            v-text="$gettext('Erweiterte Einstellungen')">
+                        </legend>
                         <template v-for="(feature, index) in config[room['driver']]['features']['create']['extended_setting']">
                             <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :key="index" />
                         </template>
                     </fieldset>
 
-                    <fieldset id="presentation_sildes_section" class="collapsable collapsed" v-if="hasPresentationSetting != false">
-                        <legend v-text="$gettext('Präsentationsfolien')"></legend>
+                    <fieldset id="presentation_sildes_section" class="collapsable collapsed"
+                        v-if="hasPresentationSetting != false">
+                        <legend
+                            tabindex="0"
+                            role="button"
+                            :aria-label="$gettext('Präsentationsfolien Sektion')"
+                            aria-expanded="false"
+                            v-on="fieldsetHandlers"
+                            v-text="$gettext('Präsentationsfolien')">
+                        </legend>
                         <template v-if="hasPresentationSetting == 'all' || hasPresentationSetting == 'setting'">
                             <template v-for="(feature, index) in config[room['driver']]['features']['create']['presentation_sildes']">
                                 <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :key="index" />
@@ -306,7 +354,7 @@
 <script>
 import { mapGetters } from "vuex";
 import store from "@/store";
-
+import { a11y } from '@/common/a11y.mixins'
 import MeetingAddLabelItem from "@meeting/add/MeetingAddLabelItem";
 import MeetingFolderTable from "@meeting/folders/MeetingFolderTable";
 
@@ -325,6 +373,8 @@ export default {
     name: "MeetingAdd",
 
     props: ['room'],
+
+    mixins: [a11y],
 
     components: {
         MeetingAddLabelItem,

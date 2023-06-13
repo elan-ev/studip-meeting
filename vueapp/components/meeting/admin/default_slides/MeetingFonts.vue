@@ -1,15 +1,21 @@
 <template>
     <fieldset class="collapsable">
-        <legend v-translate>
-            Fonts
+        <legend
+            tabindex="0"
+            role="button"
+            :aria-label="$gettext('Schriftarten')"
+            aria-expanded="true"
+            v-on="fieldsetHandlers"
+            v-translate>
+            Schriftarten
         </legend>
         <table v-if="font" class="default collapsable meetings-default-slides-settings">
             <thead>
                 <tr>
-                    <th v-translate>Typ</th>
-                    <th v-translate>Name</th>
-                    <th v-translate>Installiert</th>
-                    <th v-translate>Aktionen</th>
+                    <th scope="col" v-translate>Typ</th>
+                    <th scope="col" v-translate>Name</th>
+                    <th scope="col" v-translate>Installiert</th>
+                    <th scope="col" v-translate>Aktionen</th>
                 </tr>
             </thead>
             <tbody>
@@ -25,11 +31,11 @@
                         <StudipIcon v-else icon="decline" role="status-red" />
                     </td>
                     <td class="actions">
-                        <a  class="upload">
-                            <input type="file" :title="$gettext('Schriftart hochladen')" ref="font" accept=".ttf" v-on:change="handleFileUpload('font', index)"/>
+                        <a class="upload">
+                            <input type="file" tabindex="0" :title="$gettext('Schriftart hochladen')" ref="font" accept=".ttf" v-on:change="handleFileUpload('font', index)"/>
                             <StudipIcon icon="upload" role="clickable" />
                         </a>
-                        <a @click.prevent="deleteFont(font_item.type)" :title="$gettext('Schriftart löschen')">
+                        <a href="#" @click.prevent="deleteFont(font_item.type)" :title="$gettext('Schriftart löschen')">
                             <StudipIcon icon="trash" role="clickable" />
                         </a>
                     </td>
@@ -65,6 +71,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { a11y } from '@/common/a11y.mixins'
 
 import {
     DEFAULT_SLIDE_FONT_READ,
@@ -76,6 +83,7 @@ import {
 
 export default {
     name: 'meeting-fonts',
+    mixins: [a11y],
     data() {
         return {
             showDeleteConfirmDialog: false,

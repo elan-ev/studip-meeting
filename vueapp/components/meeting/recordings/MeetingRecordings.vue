@@ -34,9 +34,9 @@
                             <table class="default">
                                 <thead>
                                     <tr>
-                                        <th v-translate>Aufzeichnungen</th>
-                                        <th v-translate>Datum</th>
-                                        <th v-translate>Aktionen</th>
+                                        <th scope="col" v-translate>Aufzeichnungen</th>
+                                        <th scope="col" v-translate>Datum</th>
+                                        <th scope="col" v-translate>Aktionen</th>
                                     </tr>
                                 </thead>
                                 <tbody>

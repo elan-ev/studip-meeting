@@ -2,7 +2,13 @@
     <div>
         <fieldset v-for="(template, page) in templates" ref="template" :key="parseInt(page, 10)" class="collapsable"
             :class="{collapsed: !isLastTemplate(page)}">
-            <legend v-translate="{
+            <legend
+                tabindex="0"
+                role="button"
+                :aria-label="$gettext('Vorlage') + ` ${ page }`"
+                :aria-expanded="isLastTemplate(page)"
+                v-on="fieldsetHandlers"
+                v-translate="{
                     page: page
                 }">
                 %{ page }. Vorlage
@@ -10,11 +16,11 @@
             <table class="default collapsable meetings-default-slides-settings">
                 <thead>
                     <tr>
-                        <th v-translate>Typ</th>
-                        <th v-translate>Name</th>
-                        <th v-translate>Installiert</th>
-                        <th v-translate>Extension</th>
-                        <th v-translate>Aktionen</th>
+                        <th scope="col" v-translate>Typ</th>
+                        <th scope="col" v-translate>Name</th>
+                        <th scope="col" v-translate>Installiert</th>
+                        <th scope="col" v-translate>Extension</th>
+                        <th scope="col" v-translate>Aktionen</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,15 +34,15 @@
                         <td><span v-translate><b>*.pdf</b> ist erlaubt!</span></td>
                         <td class="actions">
                             <a class="upload">
-                                <input type="file" :title="$gettext('Folie hochladen')" ref="pdf" :name="'pdf_' + page"
+                                <input type="file" tabindex="0" :title="$gettext('Folie hochladen')" ref="pdf" :name="'pdf_' + page"
                                     accept=".pdf" v-on:change="handleFileUpload('pdf', parseInt(page, 10))">
                                 <StudipIcon icon="upload" role="clickable" />
                             </a>
-                            <a v-if="template.pdf && template.pdf.preview" :title="$gettext('Vorschau')"
+                            <a href="#" v-if="template.pdf && template.pdf.preview" :title="$gettext('Vorschau')"
                                 @click.prevent="showPreview(template.pdf.preview)">
                                 <StudipIcon icon="file-pdf" role="clickable"></StudipIcon>
                             </a>
-                            <a @click.prevent="deleteTemplate('pdf', page)" :title="$gettext('Vorlage löschen')">
+                            <a href="#" @click.prevent="deleteTemplate('pdf', page)" :title="$gettext('Vorlage löschen')">
                                 <StudipIcon icon="trash" role="clickable"></StudipIcon>
                             </a>
                         </td>
@@ -51,11 +57,11 @@
                         <td><span v-translate><b>*.php</b> ist erlaubt!</span></td>
                         <td class="actions">
                             <a class="upload">
-                                <input type="file" :title="$gettext('PHP Template hochladen')" ref="php" :name="'php_' + page"
+                                <input type="file" tabindex="0" :title="$gettext('PHP Template hochladen')" ref="php" :name="'php_' + page"
                                     accept=".php" v-on:change="handleFileUpload('php', parseInt(page, 10))">
                                 <StudipIcon icon="upload" role="clickable" />
                             </a>
-                            <a @click.prevent="deleteTemplate('php', page)" :title="$gettext('PHP Template löschen')">
+                            <a href="#" @click.prevent="deleteTemplate('php', page)" :title="$gettext('PHP Template löschen')">
                                 <StudipIcon icon="trash"  role="clickable"></StudipIcon>
                             </a>
                         </td>
@@ -88,6 +94,7 @@
 <script>
 import {translate} from 'vue-gettext';
 const {gettext: $gettext, gettextInterpolate} = translate;
+import { a11y } from '@/common/a11y.mixins'
 
 import {
     DEFAULT_SLIDE_TEMPLATE_READ,
@@ -100,6 +107,7 @@ import {
 import DefaultSlidePreviewDialog from "@meeting/admin/default_slides/DefaultSlidePreviewDialog";
 export default {
     name: 'meeting-templates',
+    mixins: [a11y],
     components: {
         DefaultSlidePreviewDialog,
     },

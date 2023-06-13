@@ -41,7 +41,7 @@
                 </div>
                 <label class="file drag-and-drop meeting-fileupload-dnd" @drop.prevent="getDroppedFile">
                     {{ $gettext('Neue Datei zum Hinzufügen per Drag & Drop in diesen Bereich ziehen.') }}
-                    <input type="file" name="file" :title="tooltip_title_text" ref="meeting_upload_file" @change="getSelecedUploadFile">
+                    <input type="file" name="file" tabeindex="0" :title="tooltip_title_text" ref="meeting_upload_file" @change="getSelecedUploadFile">
                     <div v-if="filename">
                         <span>{{ filename }}</span>
                     </div>

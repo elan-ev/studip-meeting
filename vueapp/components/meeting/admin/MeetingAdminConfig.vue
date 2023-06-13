@@ -22,11 +22,11 @@
                 <label>
                     <translate>Feedback Absenderadresse</translate>
                     <br>
-                    <input type="radio"
+                    <input type="radio" name="feedback-contact-address"
                         value="standard_mail"
                         v-model="general_config['feedback_sender_address']">
                     <translate>Standard-Mail</translate>
-                    <input type="radio"
+                    <input type="radio" name="feedback-contact-address"
                         value="user_mail"
                         v-model="general_config['feedback_sender_address']">
                     <translate>User-Mail</translate>
@@ -35,11 +35,11 @@
                 <label>
                     <translate>Müssen die Teilnehmende einem Datenschutztext zustimmen, bevor sie einem Meeting mit Aufzeichnung beitreten können?</translate>
                     <br>
-                    <input type="radio"
+                    <input type="radio" name="show-recording-privacy-text"
                         :value="true"
                         v-model="general_config['show_recording_privacy_text']">
                     <translate>Ja</translate>
-                    <input type="radio"
+                    <input type="radio" name="show-recording-privacy-text"
                         :value="false"
                         v-model="general_config['show_recording_privacy_text']">
                     <translate>Nein</translate>
@@ -48,11 +48,11 @@
                 <label>
                     <translate>Stud.IP für Standardfolien verwenden</translate>
                     <br>
-                    <input type="radio"
+                    <input type="radio" name="read-default-slides-from"
                         value="studip"
                         v-model="general_config['read_default_slides_from']">
                     <translate>Ja</translate>
-                    <input type="radio"
+                    <input type="radio" name="read-default-slides-from"
                         value="server"
                         v-model="general_config['read_default_slides_from']">
                     <translate>Nein</translate>
@@ -119,15 +119,15 @@
                     <table class="default collapsable tablesorter conference-meetings">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th scope="col">#</th>
                                 <template v-for="(value, key) in driver.config">
-                                    <th v-if="value.name != 'roomsize-presets' && value.name != 'description' && (!value.attr || value.attr != 'password')" :key="key"
+                                    <th scope="col" v-if="value.name != 'roomsize-presets' && value.name != 'description' && (!value.attr || value.attr != 'password')" :key="key"
                                     :class="{td_center:value.name == 'active'}"
                                     :title="value.display_name">
                                         {{ value.display_name }}
                                     </th>
                                 </template>
-                                <th v-translate>Aktionen</th>
+                                <th scope="col" v-translate>Aktionen</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -157,10 +157,10 @@
                                     </td>
                                 </template>
                                 <td>
-                                    <a style="cursor: pointer;" @click.prevent="prepareEditServer(driver_name, index)">
+                                    <a href="#" :title="$gettext('Server bearbeiten')" style="cursor: pointer;" @click.prevent="prepareEditServer(driver_name, index)">
                                         <StudipIcon icon="edit" role="clickable" ></StudipIcon>
                                     </a>
-                                    <a style="cursor: pointer;" @click.prevent="deleteServer(driver_name, index)">
+                                    <a href="#" :title="$gettext('Server löschen')" style="cursor: pointer;" @click.prevent="deleteServer(driver_name, index)">
                                         <StudipIcon icon="trash" role="clickable"></StudipIcon>
                                     </a>
                                 </td>
