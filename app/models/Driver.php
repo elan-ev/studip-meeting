@@ -32,6 +32,7 @@ class Driver
             $config_options = [];
             $recording_options = [];
             $preupload_option = [];
+            $roomsize_preset_options = [];
             if (in_array('ElanEv\Driver\DriverInterface', class_implements($class)) !== false) {
                 $title          = substr(basename($filename), 0, -4);
                 $config_options = $class::getConfigOptions();
@@ -61,6 +62,10 @@ class Driver
                 $preupload_option['preupload'] = new \ElanEv\Driver\ConfigOption('preupload', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Automatisches Hochladen von Folien zulassen'), true); // Translation: Allow automatic upload of slides;
             }
 
+            if (in_array('ElanEv\Driver\ServerRoomsizePresetInterface', class_implements($class)) !== false) {
+                $roomsize_preset_options = $class::getRoomSizePresets();
+            }
+
             if ($title && $config_options) {
                 $drivers[$title] = array(
                     'title'        => $title,
@@ -70,6 +75,7 @@ class Driver
 
                 !$recording_options ?:  $drivers[$title]['recording'] = $toArray ? self::convertDriverConfigToArray($recording_options) : $recording_options;
                 !$preupload_option ?:  $drivers[$title]['preupload'] = $toArray ? self::convertDriverConfigToArray($preupload_option) : $preupload_option;
+                !$roomsize_preset_options ?:  $drivers[$title]['roomsize-presets'] = $toArray ? self::convertDriverConfigToArray($roomsize_preset_options) : $roomsize_preset_options;
             }
         }
 

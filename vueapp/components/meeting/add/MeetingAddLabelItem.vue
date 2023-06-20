@@ -101,6 +101,12 @@
 export default {
     name: "MeetingAddLabelItem",
 
+    computed: {
+        itemValue() {
+            return this.room.features[this.feature.name];
+        }
+    },
+
     props: {
         room: {
             type: Object,
@@ -129,6 +135,10 @@ export default {
         badge: {
             type: Object,
             required: false
+        },
+        isPreset: {
+            type: Boolean,
+            default: false
         }
     },
 
@@ -191,6 +201,14 @@ export default {
                     return disabled;
                 default:
                     return false;
+            }
+        }
+    },
+
+    watch: {
+        itemValue(newValue, oldValue) {
+            if (this.isPreset) {
+                this.$emit('adjustPresets');
             }
         }
     },

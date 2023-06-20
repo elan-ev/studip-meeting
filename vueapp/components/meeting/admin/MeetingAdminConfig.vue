@@ -149,18 +149,25 @@
                                         </template>
                                         <template v-else-if="value.name == 'active'">
                                             <StudipIcon :icon="(server[value.name]) ? 'checkbox-checked' : 'checkbox-unchecked'"
-                                                role="clickable" size="14"></StudipIcon>
+                                                :role="(server[value.name]) ? 'status-green' : 'status-red'" size="14"></StudipIcon>
                                         </template>
                                         <template v-else>
-                                            {{ server[value.name] }}
+                                            {{ server[value.name] ? server[value.name] : '-' }}
                                         </template>
                                     </td>
                                 </template>
                                 <td>
-                                    <a href="#" :title="$gettext('Server bearbeiten')" style="cursor: pointer;" @click.prevent="prepareEditServer(driver_name, index)">
+                                    <a href="#" :title="$gettext('Server bearbeiten')"
+                                        @click.prevent="prepareEditServer(driver_name, index)">
                                         <StudipIcon icon="edit" role="clickable" ></StudipIcon>
                                     </a>
-                                    <a href="#" :title="$gettext('Server löschen')" style="cursor: pointer;" @click.prevent="deleteServer(driver_name, index)">
+                                    <a v-if="Object.keys(driver).includes('roomsize-presets')"
+                                        href="#" :title="$gettext('Servervoreinstellungen')"
+                                        @click.prevent="prepareEditServer(driver_name, index, true)">
+                                        <StudipIcon icon="doit" role="clickable" ></StudipIcon>
+                                    </a>
+                                    <a href="#" :title="$gettext('Server löschen')"
+                                        @click.prevent="deleteServer(driver_name, index)">
                                         <StudipIcon icon="trash" role="clickable"></StudipIcon>
                                     </a>
                                 </td>
@@ -185,6 +192,15 @@
                     @edit="addEditServers"
                 />
 
+                <ServerRoomsizePresetsDialog
+                    v-if="server_object[driver_name]"
+                    :DialogVisible="presetDialogVisible == driver_name"
+                    :server_object="server_object"
+                    :driver_name="driver_name"
+                    :driver="driver"
+                    @close="presetDialogVisible = false"
+                    @done="savePresets"
+                />
             </fieldset>
 
             <MessageList />
@@ -205,15 +221,32 @@
                     <translate>Einstellungen speichern</translate>
                 </StudipButton>
             </footer>
+
         </form>
+        <!-- Generic gialogs -->
+        <studip-dialog
+            v-if="showConfirmDialog"
+            :title="showConfirmDialog.title"
+            :question="showConfirmDialog.question"
+            :alert="showConfirmDialog.alert"
+            :message="showConfirmDialog.message"
+            confirmClass="accept"
+            closeClass="cancel"
+            :height="showConfirmDialog.height !== undefined ? showConfirmDialog.height.toString() :  '180'"
+            @confirm="performDialogConfirm(showConfirmDialog.confirm_callback, showConfirmDialog.confirm_callback_data)"
+            @close="performDialogClose(showConfirmDialog.close_callback, showConfirmDialog.close_callback_data)"
+        >
+        </studip-dialog>
     </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import store from "@/store";
+import { confirm_dialog } from '@/common/confirm_dialog.mixins'
 
-import ServerDialog from "@/components/server/ServerDialog";
+import ServerDialog from "@meeting/admin/server/ServerDialog";
+import ServerRoomsizePresetsDialog from "@meeting/admin/server/ServerRoomsizePresetsDialog";
 
 import {
     CONFIG_LIST_READ,
@@ -227,13 +260,18 @@ export default {
 
     components: {
         ServerDialog,
+        ServerRoomsizePresetsDialog
     },
+
+    mixins: [confirm_dialog],
 
     data() {
         return {
             server_object: {},
             serverDialogVisible: false,
+            presetDialogVisible: false,
             changes_made: false,
+            showConfirmDialog: false,
         }
     },
 
@@ -259,6 +297,15 @@ export default {
         },
 
         deleteServer(driver_name, index) {
+            this.showConfirmDialog = {
+                title: this.$gettext('Server löschen'),
+                question: this.$gettext('Sind Sie sicher, dass Sie diesen Server löschen möchten?'),
+                confirm_callback: 'performDeleteServer',
+                confirm_callback_data: {driver_name, index},
+            }
+        },
+
+        performDeleteServer({driver_name, index}) {
             this.$delete(this.config[driver_name]['servers'], index);
         },
 
@@ -314,14 +361,33 @@ export default {
             this.serverDialogVisible = false;
         },
 
-        prepareEditServer(driver_name, index) {
+        prepareEditServer(driver_name, index, is_preset = false) {
             var current_obj = this.config[driver_name]['servers'][index];
             for (var key in current_obj) {
                 this.server_object[driver_name][key] = current_obj[key];
             }
             this.server_object[driver_name]['index'] = index;
 
-            this.serverDialogVisible = driver_name;
+            this.serverDialogVisible = false;
+            this.presetDialogVisible = false;
+            if (!is_preset) {
+                this.serverDialogVisible = driver_name;
+            } else {
+                this.presetDialogVisible = driver_name;
+            }
+        },
+
+        savePresets(params) {
+            if (this.config?.[params.driver_name]?.servers?.[params.server_index]) {
+                this.$set(this.config[params.driver_name]['servers'][params.server_index], 'roomsize-presets' , params.server_presets);
+            } else {
+                this.$store.dispatch(MESSAGES_CLEAR);
+                this.$store.dispatch(MESSAGE_ADD, {
+                    type: 'error',
+                    text: this.$gettext('Beim Speichern der Servervoreinstellungen ist ein Fehler aufgetreten.')
+                });
+            }
+            this.presetDialogVisible = false;
         },
 
         createServerObject() {

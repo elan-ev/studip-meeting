@@ -18,7 +18,7 @@ use Meetings\Models\I18N;
  * @author Christian Flothmann <christian.flothmann@uos.de>
  * @author Till Glöggler <tgloeggl@uos.de>
  */
-class BigBlueButton implements DriverInterface, RecordingInterface, FolderManagementInterface
+class BigBlueButton implements DriverInterface, RecordingInterface, FolderManagementInterface, ServerRoomsizePresetInterface
 {
     /**
      * @var \GuzzleHttp\ClientInterface The HTTP client
@@ -435,19 +435,13 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             new ConfigOption('maxParticipants', I18N::_('Max. Zahl von Teilnehmenden')),
             new ConfigOption('course_types', I18N::_('Veranstaltungstyp'), MeetingPlugin::getSemClasses(), I18N::_('Nur in folgenden Veranstaltungskategorien nutzbar')),
             new ConfigOption('description', I18N::_('Beschreibung'), '', I18N::_('Der Beschreibungstext wird Lehrenden angezeigt wenn dieser Server ausgewählt wird.')),
-            new ConfigOption('roomsize-presets', I18N::_('Raumgrößenvoreinstellungen'), self::getRoomSizePresets()),
         );
     }
 
-    private static function getRoomSizePresets() {
-        return array(
-            new ConfigOption('small', I18N::_('Kleiner Raum'), self::getRoomSizeFeature(0)),
-            new ConfigOption('medium', I18N::_('Mittlerer Raum'), self::getRoomSizeFeature(50)),
-            new ConfigOption('large', I18N::_('Großer Raum'), self::getRoomSizeFeature(150)),
-        );
-    }
-
-    private static function getRoomSizeFeature($minParticipants = 0) {
+    /**
+     * {@inheritdoc}
+     */
+    public static function getRoomSizePresets() {
         $roomsize_features = array_filter(self::getCreateFeatures(), function ($configOption) {
             return in_array($configOption->getName(),
                             [
@@ -458,7 +452,10 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                                 'muteOnStart',
                             ]);
         });
-        $roomsize_features['minParticipants'] = new ConfigOption('minParticipants', I18N::_('Min. Teilnehmerzahl'), $minParticipants);
+        $roomsize_features['minParticipants'] = new ConfigOption('minParticipants', I18N::_('Min. Teilnehmerzahl'), 0);
+        $roomsize_features['roomsizeSensitive'] = new ConfigOption('roomsizeSensitive', I18N::_('Automatisch Teilnehmendenanzahl berücksichtigen'), true,
+            I18N::_('Wenn diese Option aktiviert ist, werden die entsprechenden Konfigurationen basierend auf der maximalen Teilnehmerzahl des Meetings angewendet.'));
+        $roomsize_features['presetName'] = new ConfigOption('presetName', I18N::_('Name'), '');
         return array_reverse($roomsize_features);
     }
 
