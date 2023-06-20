@@ -51,7 +51,6 @@
                                 v-model="server[driver_name][value.name]"
                                 :placeholder="value.value">
                         </label>
-                        <ServerRoomSize v-else-if="value.name == 'roomsize-presets'" :roomsize_object="value" :this_server="server[driver_name]"/>
                     </div>
                 </form>
             </template>
@@ -59,8 +58,6 @@
     </div>
 </template>
 <script>
-import ServerRoomSize from "@/components/server/ServerRoomSize";
-
 export default {
     name: 'ServerDialog',
 
@@ -69,10 +66,6 @@ export default {
         server_object: Object,
         driver_name: String,
         driver: Object
-    },
-
-    components: {
-        ServerRoomSize,
     },
 
     computed: {

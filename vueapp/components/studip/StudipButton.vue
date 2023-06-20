@@ -1,5 +1,5 @@
 <template>
-    <button class="button" :class="[icon]" :type="type" :name="name" @click="onClick">
+    <button class="button" :class="[icon]" :type="type" :name="name" v-bind="$attrs" v-on="$listeners">
         <slot>ButtonLabel</slot>
     </button>
 </template>
@@ -14,7 +14,7 @@ export default {
         icon: {
             type: String,
             validator(value) {
-                return ['', 'accept', 'cancel', 'edit', 'move-up', 'move-down', 'add', 'download', 'search'].includes(value)
+                return ['', 'accept', 'cancel', 'edit', 'move-up', 'move-down', 'add', 'download', 'search', 'trash'].includes(value)
             },
             default: ''
         },
@@ -22,11 +22,6 @@ export default {
             type: String,
             required: false,
             default: "submit"
-        }
-    },
-    methods: {
-        onClick() {
-            this.$emit('click');
         }
     }
 }

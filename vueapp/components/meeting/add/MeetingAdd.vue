@@ -191,11 +191,26 @@
                             v-on="fieldsetHandlers"
                             v-text="$gettext('Raumgröße und Voreinstellungen')">
                         </legend>
+                        <template v-if="has_server_presets">
+                            <label>
+                                <span id="preset_template_span">{{ $gettext('Voreinstellung Vorlage') }}</span>
+                                <select aria-labelledby="preset_template_span" :value="presetTemplate" @change.prevent="handlePresetTemplate">
+                                    <option value="">
+                                        {{ $gettext('-- Keine Vorlage --') }}
+                                    </option>
+                                    <option v-for="(poption, pindex) in server_presets" :key="pindex" :value="pindex">
+                                        {{ $gettext(poption.presetName) }}
+                                    </option>
+                                </select>
+                            </label>
+                        </template>
                         <template v-for="(feature, index) in config[room['driver']]['features']['create']['roomsize']">
                             <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature"
                                 :maxAllowedParticipants="maxAllowedParticipants"
                                 :minParticipants="minParticipants"
+                                :isPreset="true"
                                 @checkPresets="checkPresets"
+                                @adjustPresets="selectPresetTemplate"
                                 :key="index"/>
                         </template>
                     </fieldset>
@@ -389,6 +404,7 @@ export default {
             minParticipants: 20,
             maxDuration: 1440,
             isAddRoom: true,
+            presetTemplate: '',
         }
     },
 
@@ -461,6 +477,18 @@ export default {
 
         dialog_height() {
             return (window.innerHeight * 0.8).toString();
+        },
+
+        has_server_presets() {
+            return this.room?.driver && this.room?.server_index && this.config?.[this.room.driver]?.server_presets?.[this.room.server_index];
+        },
+
+        server_presets() {
+            let server_presets = [];
+            if (this.has_server_presets) {
+                return this.config[this.room.driver].server_presets[this.room.server_index];
+            }
+            return server_presets;
         }
     },
 
@@ -469,6 +497,7 @@ export default {
         this.getCalledArea();
         this.setDriver();
         this.getFolders();
+        this.selectPresetTemplate();
     },
 
     methods: {
@@ -583,18 +612,14 @@ export default {
         },
 
         checkPresets() {
-            if (this.room['driver'] && this.room['server_index']
-                && Object.keys(this.config[this.room['driver']]).includes('server_presets')
-                && Object.keys(this.config[this.room['driver']]['server_presets']).includes(this.room['server_index'])) {
-                for (const [size, featues] of  Object.entries(this.config[this.room['driver']]['server_presets'][this.room['server_index']])) {
-                    if (this.room['features'] && this.room['features']['maxParticipants'] && parseInt(this.room['features']['maxParticipants']) >= parseInt(featues['minParticipants'])) {
-                        for (const [feature_name, featues_value] of Object.entries(featues)) {
-                            if (feature_name != 'minParticipants') {
-                                this.$set(this.room['features'], feature_name, featues_value);
-                            }
+            if (this.has_server_presets) {
+                this.config[this.room.driver].server_presets[this.room.server_index].forEach((options, pindex) => {
+                    if (options?.roomsizeSensitive == true && this.room?.features?.maxParticipants) {
+                        if (parseInt(this.room.features.maxParticipants, 10) >= parseInt(options.minParticipants, 10)) {
+                            this.applyPreset(pindex, ['minParticipants']);
                         }
                     }
-                }
+                });
             }
         },
 
@@ -884,6 +909,86 @@ export default {
                 $(`#${id}`).toggle();
             }
         },
-    }
+
+        applyPreset(pindex, skip = []) {
+            if (this.has_server_presets && this.server_presets?.[pindex]) {
+                var skip_default_params = ['presetName', 'roomsizeSensitive'];
+                let preset = this.server_presets[pindex];
+                for (const [feature_name, feature_value] of Object.entries(preset)) {
+                    if (!skip_default_params.includes(feature_name) && !skip.includes(feature_name)) {
+                        if (feature_name == 'minParticipants') {
+                            this.$set(this.room.features, 'maxParticipants', feature_value);
+                        } else {
+                            this.$set(this.room.features, feature_name, feature_value);
+                        }
+                    }
+                }
+            }
+        },
+
+        handlePresetTemplate(event, skip = []) {
+            let value = event.target.value;
+            this.presetTemplate = value;
+            this.applyPreset(value, skip);
+        },
+
+        selectPresetTemplate() {
+            let matched_presets = [];
+            var skip_default_params = ['presetName', 'roomsizeSensitive'];
+            if (this.has_server_presets) {
+                for (const pindex in this.config[this.room.driver].server_presets[this.room.server_index]) {
+                    let matched = true;
+                    let options = this.config[this.room.driver].server_presets[this.room.server_index][pindex];
+                    let is_sensitive = options?.roomsizeSensitive;
+                    for (const [option_name, option_value] of Object.entries(options)) {
+                        let feature_name = (option_name === 'minParticipants' ? 'maxParticipants' : option_name);
+                        let feature_value = option_value;
+                        if (!skip_default_params.includes(feature_name)) {
+                            if (feature_name === 'maxParticipants') {
+                                if (is_sensitive) {
+                                    if (parseInt(this.room.features.maxParticipants, 10) < parseInt(feature_value, 10)) {
+                                        matched = false;
+                                    }
+                                } else if (parseInt(this.room.features.maxParticipants, 10) != parseInt(feature_value, 10)) {
+                                    matched = false;
+                                }
+                            } else {
+                                if (String(this.room?.features?.[feature_name]) != String(feature_value)) {
+                                    matched = false;
+                                }
+                            }
+                        }
+                    }
+                    if (matched) {
+                        let matched_obj = {
+                            index: pindex,
+                            roomsizeSensitive: is_sensitive,
+                            minParticipants: parseInt(options.minParticipants, 10)
+                        };
+                        matched_presets.push(matched_obj);
+                    }
+                }
+                // Selecting the index closest to the minParticipants.
+                let closest_template_index = '';
+                if (matched_presets.length > 0) {
+                    closest_template_index = matched_presets[matched_presets.length - 1].index;
+                    let last_min = 0
+                    let room_max = parseInt(this.room.features.maxParticipants, 10);
+                    for (const i in matched_presets) {
+                        let pobj = matched_presets[i];
+                        if (pobj.minParticipants === room_max) {
+                            closest_template_index = pobj.index;
+                            break;
+                        }
+                        if (pobj.roomsizeSensitive && (room_max - last_min) > (room_max - pobj.minParticipants)) {
+                            last_min = pobj.minParticipants;
+                            closest_template_index = pobj.index;
+                        }
+                    }
+                }
+                this.presetTemplate = closest_template_index;
+            }
+        }
+    },
 }
 </script>
