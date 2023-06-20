@@ -577,7 +577,9 @@ export default {
                             if (typeof feature.value === 'object' && !Array.isArray(feature.value)) {
                                 this.room['features'][feature['name']] = Object.keys(feature['value'])[0];
                             } else {
-                                this.$set(this.room['features'], feature.name , feature.value);
+                                // skip entring the default server value to the room welcome message here.
+                                let feature_value = feature.name == 'welcome' ? '' : feature.value;
+                                this.$set(this.room['features'], feature.name , feature_value);
                             }
                         });
                     });

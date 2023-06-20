@@ -28,6 +28,15 @@
                 </a>
             </span>
         </template>
+        <template v-if="feature['name'] == 'welcome'">
+            {{ feature['display_name'] }}
+            <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"
+                :badge="(badge && badge.show == true) ? true : false">
+                {{ (badge && badge.text) ? badge.text : ''}}
+            </StudipTooltipIcon>
+            <br>
+            <textarea v-model.trim="room['features'][feature['name']]" :placeholder="feature.value"></textarea>
+        </template>
         <template v-else-if="(feature['value'] === true || feature['value'] === false)">
             <input type="checkbox"
                 true-value="true"

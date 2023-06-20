@@ -135,7 +135,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             // Handel Auto Start/Stop Recordings.
             $features = self::handelAutoStartStopRecording($features);
 
-            if (!isset($features['welcome'])) {
+            if (!isset($features['welcome']) || empty($features['welcome'])) {
                 $features['welcome'] = Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'welcome');
             }
 
