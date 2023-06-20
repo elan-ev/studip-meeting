@@ -36,7 +36,7 @@
             <? foreach ($introductions as $index => $introduction): ?>
                 <tr>
                     <td style="text-align: center">
-                        <input type="checkbox" name="indices[]" value="<?= $index ?>">
+                        <input type="checkbox" data-proxiedby=":checkbox[name='all']" name="indices[]" value="<?= $index ?>">
                     </td>
                     <td><?= $introduction->title ? htmlReady($introduction->title) : '<i>' . $_('Einleitung') . '</i>' ?></td>
                     <td><?= formatReady($introduction->text) ?></td>
