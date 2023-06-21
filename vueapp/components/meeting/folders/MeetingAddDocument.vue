@@ -124,7 +124,7 @@ export default {
             } else {
                 this.modal_message = {
                     type: 'error',
-                    text: $gettext('Beim Drag & Drop fehler geschlagen!')
+                    text: $gettext('Beim Drag & Drop Fehler geschlagen!')
                 }
             }
         },
@@ -136,7 +136,7 @@ export default {
             } else {
                 this.modal_message = {
                     type: 'error',
-                    text: $gettext('Beim Auswahl der Datei fehler geschlagen!')
+                    text: $gettext('Beim Auswahl der Datei Fehler geschlagen!')
                 }
             }
         },

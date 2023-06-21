@@ -320,7 +320,7 @@ class IndexController extends MeetingsController
             unset($this->introductions[intval($index)]);
             $this->courseConfig->introductions = json_encode($this->introductions);
             $this->courseConfig->store();
-            PageLayout::postSuccess(I18N::_('Die Einleitung wurde gelöcht.'));
+            PageLayout::postSuccess(I18N::_('Die Einleitung wurde gelöscht.'));
         } else {
             PageLayout::postError(I18N::_('Es trat ein Fehler beim Löschen der Einleitung auf!'));
         }
@@ -365,7 +365,7 @@ class IndexController extends MeetingsController
                 }
                 PageLayout::postError($message);
             } else {
-                PageLayout::postSuccess(I18N::_('Einleitung(en) wurde(n) gelöcht.'));
+                PageLayout::postSuccess(I18N::_('Einleitung(en) wurde(n) gelöscht.'));
             }
         }
         $this->redirect('index/intros');

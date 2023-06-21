@@ -2,7 +2,7 @@
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <label>
-            <?= $_('Einleitungstitle') ?>
+            <?= $_('Einleitungstitel') ?>
             <?= tooltipIcon($_('Wenn leer, wird der standardmäßige Einleitung als Titel angezeigt.')) ?>
             <input type="text" name="title" value="<?= $title ? htmlReady($title) : null ?>" placeholder="<?= !$title ? $_('Einleitung') : '' ?>" maxlength="254" size="80" autofocus>
         </label>

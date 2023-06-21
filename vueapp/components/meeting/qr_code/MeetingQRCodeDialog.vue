@@ -19,7 +19,7 @@
                 <form class="default">
                     <fieldset>
                         <h5 v-translate>QR Code nur für persönlichen Gebrauch</h5>
-                        <p v-translate>1Verwenden Sie diesen QR-Code nur für Ihren privaten Gebrauch und teilen Sie ihn nicht mit anderen!</p>
+                        <p v-translate>Verwenden Sie diesen QR-Code nur für Ihren privaten Gebrauch und teilen Sie ihn nicht mit anderen!</p>
                     </fieldset>
                     <fieldset>
                         <label v-if="url">

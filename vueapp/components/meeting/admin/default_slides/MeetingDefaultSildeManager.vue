@@ -3,7 +3,7 @@
         <h1>{{ $gettext('Meetings Standard-Folie') }}</h1>
 
         <MessageBox v-if="general_config['read_default_slides_from'] == 'server'" type="info">
-            {{ $gettext('Um die folgenden Standard-Folieneinstellungen verwenden zu können, Stud.IP für Standardfolien verwendet sollte.') }}
+            {{ $gettext('Um die folgenden Standard-Folieneinstellungen verwenden zu können, Stud.IP für Standardfolien verwenden sollte.') }}
         </MessageBox>
 
         <MessageList />
