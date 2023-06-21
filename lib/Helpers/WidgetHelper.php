@@ -25,18 +25,15 @@ class WidgetHelper
     {
         global $user, $perm;
 
-        // Handle Admin users.
-        if ($perm->have_perm('admin') || $perm->have_perm('root')) {
-            $courses = Course::findBySQL(
-                'INNER JOIN vc_meeting_course AS mc ON seminar_id = mc.course_id
-                 WHERE mc.is_default = 1 AND mc.active = 1'
-            );
-        } else {
+        $courses = [];
+        // To avoid performance issue, this feature is permanently out for the administrators.
+        // Anyone except admin or root!
+        if (!$perm->have_perm('admin') && !$perm->have_perm('root')) {
             $courses = Course::findBySQL(
                 'INNER JOIN seminar_user AS su USING(Seminar_id)
-                 INNER JOIN vc_meeting_course AS mc ON seminar_id = mc.course_id
-                 WHERE su.user_id = ? AND mc.is_default = 1 AND mc.active = 1 ORDER BY mkdate ASC',
-                 [$user->id]
+                    INNER JOIN vc_meeting_course AS mc ON seminar_id = mc.course_id
+                    WHERE su.user_id = ? AND mc.is_default = 1 AND mc.active = 1 ORDER BY mkdate ASC',
+                [$user->id]
             );
         }
 
@@ -66,7 +63,7 @@ class WidgetHelper
 
         foreach ($courses as $course) {
             $currentSessionDate = CourseDate::findOneBySQL($whereCurrent,
-                [   
+                [
                     $course->seminar_id,
                     $now,
                     $now,
@@ -80,8 +77,8 @@ class WidgetHelper
                 continue;
             }
 
-            $upcomingSessionDate = CourseDate::findOneBySQL($whereUpcoming, 
-                [   
+            $upcomingSessionDate = CourseDate::findOneBySQL($whereUpcoming,
+                [
                     $course->seminar_id,
                     $now,
                     $tonight,

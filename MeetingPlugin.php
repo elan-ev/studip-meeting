@@ -507,6 +507,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
      */
     public function getPortalTemplate()
     {
+        global $perm;
         // We need to use "nobody" rights for Upload Slides,
         // but in here we have to prevent that right,
         // in order to not to show the template in login page and so on.
@@ -519,8 +520,12 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
 
         $template->set_attribute('items', WidgetHelper::getMeetingsForWidget());
 
+        $empty_text = $this->_('Derzeit finden keine Meetings in den gebuchten Kursen statt.');
+        if ($perm->have_perm('admin') || $perm->have_perm('root')) {
+            $empty_text = $this->_('Um Leistungsprobleme zu vermeiden, ist diese Funktion für Administratoren dauerhaft deaktiviert.');
+        }
         $texts = [
-            'empty' => $this->_('Derzeit finden keine Meetings in den gebuchten Kursen statt.'),
+            'empty' => $empty_text,
             'current' => $this->_('Derzeitige Meetings'),
             'upcoming' => $this->_('Kommende Meetings'),
             'to_course' => $this->_('Zur Meeting-Liste'),
