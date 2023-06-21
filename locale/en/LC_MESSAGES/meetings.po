@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-21 14:24+0200\n"
+"POT-Creation-Date: 2023-06-21 14:37+0200\n"
 "PO-Revision-Date: 2022-03-04 10:09+0100\n"
 "Last-Translator: April Suddendorf, 2020\n"
 "Language-Team: English (https://www.transifex.com/uol-it/teams/52597/en/)\n"
@@ -890,7 +890,7 @@ msgstr "Folder:"
 #: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:9
 #: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:6
 msgid "Ordnereigenschaften"
-msgstr "Foldersettings"
+msgstr "Folder settings"
 
 #: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:22
 #: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:19
