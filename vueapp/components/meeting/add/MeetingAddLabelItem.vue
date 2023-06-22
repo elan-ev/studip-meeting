@@ -28,7 +28,7 @@
                 </a>
             </span>
         </template>
-        <template v-if="feature['name'] == 'welcome'">
+        <template v-else-if="feature['name'] == 'welcome'">
             {{ feature['display_name'] }}
             <StudipTooltipIcon v-if="Object.keys(feature).includes('info')" :text="feature['info']"
                 :badge="(badge && badge.show == true) ? true : false">
