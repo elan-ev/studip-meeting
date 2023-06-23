@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-21 14:37+0200\n"
+"POT-Creation-Date: 2023-06-23 13:15+0200\n"
 "PO-Revision-Date: 2022-03-04 10:09+0100\n"
 "Last-Translator: April Suddendorf, 2020\n"
 "Language-Team: English (https://www.transifex.com/uol-it/teams/52597/en/)\n"
@@ -258,7 +258,6 @@ msgid "Beim Auswahl der Datei Fehler geschlagen!"
 msgstr "Error occurred when selecting the file!"
 
 #: vueapp/components/meeting/folders/MeetingAddDocument.vue:73
-#, fuzzy
 msgid "Beim Drag & Drop Fehler geschlagen!"
 msgstr "Error occurred during Drag & Drop"
 
@@ -531,12 +530,12 @@ msgid "Einstellungen speichern"
 msgstr "Save settings"
 
 #: vueapp/components/meeting/folders/MeetingAddDocument.vue:46
-msgid "Erlaubte Dateigröße: "
-msgstr "Allowed file size: "
+msgid "Erlaubte Dateigröße:"
+msgstr "Allowed file size:"
 
 #: vueapp/components/meeting/folders/MeetingAddDocument.vue:71
-msgid "Erlaubte Dateitypen: "
-msgstr "Allowed file type: "
+msgid "Erlaubte Dateitypen:"
+msgstr "Allowed file type:"
 
 #: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:41
 msgid "Erstellen"
@@ -862,8 +861,8 @@ msgid "Neues Zugangscode generieren"
 msgstr "Generate new access code"
 
 #: vueapp/components/meeting/folders/MeetingAddDocument.vue:76
-msgid "Nicht erlaubte Dateitypen: "
-msgstr "Not allowed file types: "
+msgid "Nicht erlaubte Dateitypen:"
+msgstr "Not allowed file types:"
 
 #: vueapp/components/meeting/admin/MeetingAdminConfig.vue:115
 #: vueapp/components/meeting/admin/MeetingAdminConfig.vue:4
@@ -1213,7 +1212,6 @@ msgid "Übernehmen"
 msgstr "Apply"
 
 #: vueapp/components/meeting/admin/default_slides/MeetingDefaultSildeManager.vue:18
-#, fuzzy
 msgid ""
 "Um die folgenden Standard-Folieneinstellungen verwenden zu können, Stud.IP "
 "für Standardfolien verwenden sollte."

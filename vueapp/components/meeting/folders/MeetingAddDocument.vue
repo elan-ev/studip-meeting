@@ -19,7 +19,7 @@
                 <div class="meeting-fileupload-info-panel">
                     <div v-if="has_upload_filesize">
                         <span>
-                            {{ $gettext('Erlaubte Dateigröße: ') }} <b>{{ course_config.upload_type.rel_file_size }}</b>
+                            {{ $gettext('Erlaubte Dateigröße:') }} <b>{{ course_config.upload_type.rel_file_size }}</b>
                         </span>
                         <template v-if="filesize !== null">
                             <StudipIcon v-if="is_filesize_valid" icon="accept" role="status-green" />
@@ -28,10 +28,10 @@
                     </div>
                     <div v-if="has_allowed_file_types || has_denied_file_types">
                         <span v-if="has_allowed_file_types">
-                            {{ $gettext('Erlaubte Dateitypen: ') }} <b>{{ course_config.upload_type.file_types.join(', ') }}</b>
+                            {{ $gettext('Erlaubte Dateitypen:') }} <b>{{ course_config.upload_type.file_types.join(', ') }}</b>
                         </span>
                         <span v-else-if="has_denied_file_types">
-                            {{ $gettext('Nicht erlaubte Dateitypen: ') }} <b>{{ course_config.upload_type.file_types.join(', ') }}</b>
+                            {{ $gettext('Nicht erlaubte Dateitypen:') }} <b>{{ course_config.upload_type.file_types.join(', ') }}</b>
                         </span>
                         <template v-if="filetype !== null">
                             <StudipIcon v-if="is_filetype_valid" icon="accept" role="status-green" />
