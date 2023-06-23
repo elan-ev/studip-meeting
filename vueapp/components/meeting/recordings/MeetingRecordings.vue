@@ -36,7 +36,7 @@
                                     <tr>
                                         <th scope="col" v-translate>Aufzeichnungen</th>
                                         <th scope="col" v-translate>Datum</th>
-                                        <th scope="col" v-translate>Aktionen</th>
+                                        <th v-if="course_config.display.deleteRecording" scope="col" v-translate>Aktionen</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -61,8 +61,8 @@
                                             </ul>
                                         </td>
                                         <td style="width: 35%">{{ recording['startTime'] }}</td>
-                                        <td style="width: 5%">
-                                            <div v-if="course_config.display.deleteRecording" style="text-align: right;">
+                                        <td v-if="course_config.display.deleteRecording" style="width: 5%">
+                                            <div style="text-align: right;">
                                                 <a href="#" :title="$gettext('Aufzeichnung löschen')" style="cursor: pointer;"
                                                     @click.prevent="deleteRecording(recording)">
                                                     <StudipIcon icon="trash" role="clickable"></StudipIcon>
