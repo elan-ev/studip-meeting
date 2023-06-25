@@ -16,6 +16,7 @@ namespace ElanEv\Model;
 use MeetingPlugin;
 use ElanEv\Driver\DriverFactory;
 use ElanEv\Model\Meeting;
+use Meetings\Models\I18N;
 
 class Driver
 {
@@ -41,7 +42,7 @@ class Driver
             if (in_array('ElanEv\Driver\RecordingInterface', class_implements($class)) !== false) {
                 //If there is RecordingInterface then the field 'record' is considered as a must later on in the logic
                 //that means, if admin set record to true then every other setting like opencast can be used
-                $recording_options['record'] = new \ElanEv\Driver\ConfigOption('record', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Normale Aufzeichnungen zulassen'), false);
+                $recording_options['record'] = new \ElanEv\Driver\ConfigOption('record', I18N::_('Normale Aufzeichnungen zulassen'), false);
                 if ($oc_config = $class::useOpenCastForRecording()) {
                     $recording_options['opencast'] = $oc_config;
                 }
@@ -59,7 +60,7 @@ class Driver
             }
 
             if (in_array('ElanEv\Driver\FolderManagementInterface', class_implements($class)) !== false) {
-                $preupload_option['preupload'] = new \ElanEv\Driver\ConfigOption('preupload', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Automatisches Hochladen von Folien zulassen'), true); // Translation: Allow automatic upload of slides;
+                $preupload_option['preupload'] = new \ElanEv\Driver\ConfigOption('preupload', I18N::_('Automatisches Hochladen von Folien zulassen'), true); // Translation: Allow automatic upload of slides;
             }
 
             if (in_array('ElanEv\Driver\ServerRoomsizePresetInterface', class_implements($class)) !== false) {

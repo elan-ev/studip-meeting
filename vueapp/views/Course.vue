@@ -5,18 +5,12 @@
         </MessageBox>
 
         <MessageBox v-if="config && Object.keys(config).length === 0" type="error">
-            <translate>
-                Es ist bisher kein Meetingsserver konfiguriert. Bitte wenden
-                Sie sich an eine/n Systemadministrator/in!
-            </translate>
+            {{ $gettext('Es ist bisher kein Meetingsserver konfiguriert. Bitte wenden Sie sich an eine/n Systemadministrator/in!') }}
         </MessageBox>
 
         <template v-else>
             <MessageBox v-if="rooms_checked && !rooms_list.length && config && course_config.display.addRoom" type="info">
-                <translate>
-                    Bisher existieren keine Meeting-Räume für diese Veranstaltung.
-                    Bitte fügen Sie einen neuen Raum hinzu.
-                </translate>
+                {{ $gettext('Bisher existieren keine Meeting-Räume für diese Veranstaltung. Bitte fügen Sie einen neuen Raum hinzu.') }}
             </MessageBox>
 
             <MessageBox v-if="!rooms_checked" type="warning">

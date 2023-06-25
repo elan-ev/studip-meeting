@@ -18,22 +18,22 @@
                 </MessageBox>
                 <form class="default" @submit.prevent="addNewFolder">
                     <fieldset>
-                        <legend v-translate>
-                            Ordnereigenschaften
+                        <legend>
+                            {{ $gettext('Ordnereigenschaften') }}
                         </legend>
                         <label>
-                            <span class="required" v-translate>Name</span>
+                            <span class="required">{{ $gettext('Name') }}</span>
                             <input id="edit_folder_name" type="text" name="name" :placeholder="$gettext('Name')" v-model.trim="new_folder.name">
                         </label>
                         <label>
-                            <translate>Beschreibung</translate>
+                            {{ $gettext('Beschreibung') }}
                             <textarea name="description" :placeholder="$gettext('Optionale Beschreibung')" v-model.trim="new_folder.desc"></textarea>
                         </label>
                     </fieldset>
                     <fieldset v-if="Object.keys(parent).includes('folder_types') && Object.keys(parent['folder_types']).length > 0"
                         class="select_terms_of_use">
-                        <legend v-translate>
-                            Ordnertyp auswählen
+                        <legend>
+                            {{ $gettext('Ordnertyp auswählen') }}
                         </legend>
                         <template v-for="(folder_type, ik) in parent.folder_types">
                             <input :key="ik" type="radio" name="folder_type"

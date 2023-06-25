@@ -8,30 +8,28 @@
                 :aria-label="$gettext('Vorlage') + ` ${ page }`"
                 :aria-expanded="isLastTemplate(page)"
                 v-on="fieldsetHandlers"
-                v-translate="{
-                    page: page
-                }">
-                %{ page }. Vorlage
+            >
+                {{ $gettext('%{ page }. Vorlage') | gettextinterpolate({page}) }}
             </legend>
             <table class="default collapsable meetings-default-slides-settings">
                 <thead>
                     <tr>
-                        <th scope="col" v-translate>Typ</th>
-                        <th scope="col" v-translate>Name</th>
-                        <th scope="col" v-translate>Installiert</th>
-                        <th scope="col" v-translate>Extension</th>
-                        <th scope="col" v-translate>Aktionen</th>
+                        <th scope="col">{{ $gettext('Typ') }}</th>
+                        <th scope="col">{{ $gettext('Name') }}</th>
+                        <th scope="col">{{ $gettext('Installiert') }}</th>
+                        <th scope="col">{{ $gettext('Extension') }}</th>
+                        <th scope="col">{{ $gettext('Aktionen') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><span class="required" v-translate>PDF Folie</span></td>
+                        <td><span class="required">{{ $gettext('PDF Folie') }}</span></td>
                         <td>{{ displayTemplateName(template, 'pdf') }}</td>
                         <td>
                             <StudipIcon v-if="template.pdf && template.pdf.filename" icon="accept" role="status-green" />
                             <StudipIcon v-else icon="decline" role="status-red" />
                         </td>
-                        <td><span v-translate><b>*.pdf</b> ist erlaubt!</span></td>
+                        <td><span><b>*.pdf</b> {{ $gettext('ist erlaubt!') }}</span></td>
                         <td class="actions">
                             <a class="upload">
                                 <input type="file" tabindex="0" :title="$gettext('Folie hochladen')" ref="pdf" :name="'pdf_' + page"
@@ -48,13 +46,13 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><span v-translate>PHP (HTML) Template</span></td>
+                        <td><span>{{ $gettext('PHP (HTML) Template') }}</span></td>
                         <td>{{ displayTemplateName(template, 'php') }}</td>
                         <td>
                             <StudipIcon v-if="template.php && template.php.filename" icon="accept" role="status-green" />
                             <StudipIcon v-else icon="decline" role="status-red" />
                         </td>
-                        <td><span v-translate><b>*.php</b> ist erlaubt!</span></td>
+                        <td><span><b>*.php</b> {{ $gettext('ist erlaubt!') }}</span></td>
                         <td class="actions">
                             <a class="upload">
                                 <input type="file" tabindex="0" :title="$gettext('PHP Template hochladen')" ref="php" :name="'php_' + page"

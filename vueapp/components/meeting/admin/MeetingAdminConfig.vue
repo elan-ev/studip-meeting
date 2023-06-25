@@ -1,61 +1,59 @@
 <template>
     <div>
-        <h1 v-translate>Meetings konfigurieren</h1>
+        <h1>{{ $gettext('Meetings konfigurieren') }}</h1>
 
         <MessageList />
 
         <MessageBox v-if="changes_made" type="warning">
-            <translate>
-                Ihre Änderungen sind noch nicht gespeichert!
-            </translate>
+            {{ $gettext('Ihre Änderungen sind noch nicht gespeichert!') }}
         </MessageBox>
 
         <form class="default" v-if="drivers" @submit.prevent>
             <fieldset>
-                <legend v-translate>
-                    Allgemeine Konfiguration
+                <legend>
+                    {{ $gettext('Allgemeine Konfiguration') }}
                 </legend>
                 <label>
-                    <translate>Feedback Support-Adresse</translate>
+                    {{ $gettext('Feedback Support-Adresse') }}
                     <input type="text" v-model.trim="general_config['feedback_contact_address']">
                 </label>
                 <label>
-                    <translate>Feedback Absenderadresse</translate>
+                    {{ $gettext('Feedback Absenderadresse') }}
                     <br>
                     <input type="radio" name="feedback-contact-address"
                         value="standard_mail"
                         v-model="general_config['feedback_sender_address']">
-                    <translate>Standard-Mail</translate>
+                    {{ $gettext('Standard-Mail') }}
                     <input type="radio" name="feedback-contact-address"
                         value="user_mail"
                         v-model="general_config['feedback_sender_address']">
-                    <translate>User-Mail</translate>
+                    {{ $gettext('User-Mail') }}
                 </label>
 
                 <label>
-                    <translate>Müssen die Teilnehmende einem Datenschutztext zustimmen, bevor sie einem Meeting mit Aufzeichnung beitreten können?</translate>
+                    {{ $gettext('Müssen die Teilnehmende einem Datenschutztext zustimmen, bevor sie einem Meeting mit Aufzeichnung beitreten können?') }}
                     <br>
                     <input type="radio" name="show-recording-privacy-text"
                         :value="true"
                         v-model="general_config['show_recording_privacy_text']">
-                    <translate>Ja</translate>
+                    {{ $gettext('Ja') }}
                     <input type="radio" name="show-recording-privacy-text"
                         :value="false"
                         v-model="general_config['show_recording_privacy_text']">
-                    <translate>Nein</translate>
+                    {{ $gettext('Nein') }}
                 </label>
 
                 <label>
-                    <translate>Stud.IP für Standardfolien verwenden</translate>
+                    {{ $gettext('Stud.IP für Standardfolien verwenden') }}
                     <br>
                     <input type="radio" name="read-default-slides-from"
                         value="studip"
                         v-model="general_config['read_default_slides_from']">
-                    <translate>Ja</translate>
+                    {{ $gettext('Ja') }}
                     <input type="radio" name="read-default-slides-from"
                         value="server"
                         v-model="general_config['read_default_slides_from']">
-                    <translate>Nein</translate>
+                    {{ $gettext('Nein') }}
                 </label>
             </fieldset>
 
@@ -68,11 +66,11 @@
                         true-value="1"
                         false-value="0"
                         v-model="config[driver_name]['enable']">
-                        <translate>Verwenden dieses Treibers zulassen</translate>
+                        {{ $gettext('Verwenden dieses Treibers zulassen') }}
                 </label>
 
                 <label v-if="Object.keys(config[driver_name]).includes('display_name')">
-                    <translate>Anzeigename</translate>
+                    {{ $gettext('Anzeigename') }}
                     <input type="text" v-model.trim="config[driver_name]['display_name']">
                 </label>
 
@@ -108,13 +106,13 @@
                 </div>
 
                 <label v-if="Object.keys(config[driver_name]).includes('welcome')">
-                    <translate>Willkommensnachricht</translate>
+                    {{ $gettext('Willkommensnachricht') }}
                     <textarea v-model="config[driver_name]['welcome']" cols="30" rows="5"></textarea>
                 </label>
 
                 <div v-if="config[driver_name].servers && Object.keys(config[driver_name].servers).length && server_object[driver_name]">
-                    <h3 v-translate>
-                        Folgende Server werden verwendet
+                    <h3>
+                        {{ $gettext('Folgende Server werden verwendet') }}
                     </h3>
                     <table class="default collapsable tablesorter conference-meetings">
                         <thead>
@@ -127,7 +125,7 @@
                                         {{ value.display_name }}
                                     </th>
                                 </template>
-                                <th scope="col" v-translate>Aktionen</th>
+                                <th scope="col">{{ $gettext('Aktionen') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -142,7 +140,7 @@
                                         <template v-if="value.name == 'maxParticipants'
                                                 && (!(server[value.name]) || parseInt(server[value.name]) == 0)"
                                         >
-                                            <translate>Ohne Grenze</translate>
+                                            {{ $gettext('Ohne Grenze') }}
                                         </template>
                                         <template v-else-if="value.name == 'course_types'">
                                             {{ getCourseTypeName(server[value.name], driver_name) }}
@@ -179,7 +177,7 @@
                 <StudipButton
                     icon="add"
                     @click="addServerDialog(driver_name)">
-                    <translate>Server hinzufügen</translate>
+                    {{ $gettext('Server hinzufügen') }}
                 </StudipButton>
 
                 <ServerDialog
@@ -206,9 +204,7 @@
             <MessageList />
 
             <MessageBox v-if="changes_made" type="warning">
-                <translate>
-                    Ihre Änderungen sind noch nicht gespeichert!
-                </translate>
+                {{ $gettext('Ihre Änderungen sind noch nicht gespeichert!') }}
             </MessageBox>
 
             <footer>
@@ -218,7 +214,7 @@
                     }"
                     @click="storeConfig"
                 >
-                    <translate>Einstellungen speichern</translate>
+                    {{ $gettext('Einstellungen speichern') }}
                 </StudipButton>
             </footer>
 

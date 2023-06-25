@@ -21,38 +21,38 @@
                     style="max-width: 50em;"
                 >
                     <fieldset>
-                        <legend v-translate>
-                            Beschreibung
+                        <legend>
+                            {{ $gettext('Beschreibung') }}
                         </legend>
                             <label class="col-6">
-                            <span v-translate>Bitte beschreiben Sie das aufgetretene Problem</span>
+                            <span>{{ $gettext('Bitte beschreiben Sie das aufgetretene Problem') }}</span>
                             <textarea ref="feedbackDescription" v-model="feedback['description']" cols="30" rows="5"></textarea>
                         </label>
                     </fieldset>
                     <fieldset>
-                        <legend v-translate>
-                            Technische Informationen
+                        <legend>
+                            {{ $gettext('Technische Informationen') }}
                         </legend>
                         <label class="col-3">
-                            <span v-translate>Browser-Name</span>
+                            <span>{{ $gettext('Browser-Name') }}</span>
                             <input type="text" v-model.trim="feedback['browser_name']"
                                 :disabled="feedback['browser_name'] != ''" :readonly="feedback['browser_name'] != ''">
                         </label>
                         <label class="col-3">
-                            <span v-translate>Browser-Version</span>
+                            <span>{{ $gettext('Browser-Version') }}</span>
                             <input type="text" v-model.trim="feedback['browser_version']"
                                 :disabled="feedback['browser_version'] != ''" :readonly="feedback['browser_version'] != ''">
                         </label>
                         <label class="col-3">
-                            <span v-translate>Download-Geschw. (Mbps)</span>
+                            <span>{{ $gettext('Download-Geschw. (Mbps)') }}'</span>
                             <input type="number" min="1" v-model.trim="feedback['download_speed']">
                         </label>
                         <label class="col-3">
-                            <span v-translate>Upload-Geschw. (Mbps)</span>
+                            <span>{{ $gettext('Upload-Geschw. (Mbps)') }}</span>
                             <input type="number" min="1" v-model.trim="feedback['upload_speed']">
                         </label>
                         <label class="col-3">
-                            <span v-translate>Netzwerk-Typ</span>
+                            <span>{{ $gettext('Netzwerk-Typ') }}</span>
                             <select id="network-type" v-model="feedback['network_type']">
                                 <option v-for="(nt_value, nt_name) in network_types_complied" :key="nt_name"
                                         :value="nt_name">
@@ -61,24 +61,24 @@
                             </select>
                         </label>
                         <label class="col-3">
-                            <span v-translate>Betriebssystem (OS)</span>
+                            <span>{{ $gettext('Betriebssystem (OS)') }}</span>
                             <input type="text" v-model.trim="feedback['os_name']"
                                 :disabled="feedback['os_name'] != ''" :readonly="feedback['os_name'] != ''">
                         </label>
                         <label class="col-3">
-                            <span v-translate>Prozessortyp</span>
+                            <span>{{ $gettext('Prozessortyp') }}</span>
                             <input type="text" v-model.trim="feedback['cpu_type']">
                         </label>
                         <label class="col-3">
-                            <span v-translate>Alter des Rechners</span>
+                            <span>{{ $gettext('Alter des Rechners') }}</span>
                             <input type="text" v-model.number="feedback['cpu_old']">
                         </label>
                         <label class="col-3">
-                            <span v-translate>Anzahl der CPU-Kerne</span>
+                            <span>{{ $gettext('Anzahl der CPU-Kerne') }}</span>
                             <input type="number" min="1" max="1000" v-model.number="feedback['cpu_num']">
                         </label>
                         <label class="col-3">
-                            <span v-translate>RAM (Hauptspeicher) GB</span>
+                            <span>{{ $gettext('RAM (Hauptspeicher) GB') }}</span>
                             <input type="number"  min="1" max="1000" v-model.number="feedback['ram']">
                         </label>
                     </fieldset>

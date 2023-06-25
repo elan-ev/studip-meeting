@@ -6,16 +6,16 @@
             :aria-label="$gettext('Schriftarten')"
             aria-expanded="true"
             v-on="fieldsetHandlers"
-            v-translate>
-            Schriftarten
+        >
+            {{ $gettext('Schriftarten') }}
         </legend>
         <table v-if="font" class="default collapsable meetings-default-slides-settings">
             <thead>
                 <tr>
-                    <th scope="col" v-translate>Typ</th>
-                    <th scope="col" v-translate>Name</th>
-                    <th scope="col" v-translate>Installiert</th>
-                    <th scope="col" v-translate>Aktionen</th>
+                    <th scope="col">{{ $gettext('Typ') }}</th>
+                    <th scope="col">{{ $gettext('Name') }}</th>
+                    <th scope="col">{{ $gettext('Installiert') }}</th>
+                    <th scope="col">{{ $gettext('Aktionen') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,8 +45,8 @@
                 <tr>
                     <td colspan="4" class="legend">
                         <p>
-                            <small v-translate>
-                                <b>*.ttf</b> ist erlaubt!
+                            <small>
+                                <b>*.ttf</b> {{ $gettext('ist erlaubt!') }}
                             </small>
                         </p>
                     </td>

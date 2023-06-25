@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-23 13:15+0200\n"
+"POT-Creation-Date: 2023-06-25 18:26+0200\n"
 "PO-Revision-Date: 2022-03-04 10:09+0100\n"
 "Last-Translator: April Suddendorf, 2020\n"
 "Language-Team: English (https://www.transifex.com/uol-it/teams/52597/en/)\n"
@@ -18,119 +18,64 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:72
-#: vueapp/components/meeting/add/MeetingAdd.vue:113
-#: vueapp/components/meeting/add/MeetingAdd.vue:69
-#: vueapp/components/meeting/add/MeetingAdd.vue:110
-#: vueapp/components/meeting/add/MeetingAdd.vue:13
+#: vueapp/components/meeting/add/MeetingAdd.vue:222
+#: vueapp/components/meeting/add/MeetingAdd.vue:269
 msgid "- nicht verfügbar"
 msgstr "- not available"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:430
+#: vueapp/components/meeting/add/MeetingAdd.vue:313
 msgid "-- Keine Vorlage --"
 msgstr "-- No template --"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:60
-#: vueapp/components/meeting/add/MeetingAdd.vue:57
-#: vueapp/components/meeting/add/MeetingAdd.vue:1
-msgid "(%{ label })"
-msgstr "(%{ label })"
-
-#: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:11
-#: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:8
+#: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:49
 msgid "(%{ length } Zeichen)"
 msgstr "(%{ length } characters)"
 
-#: vueapp/components/meeting/add/MeetingAddLabelItem.vue:73
-#: vueapp/components/meeting/add/MeetingAddLabelItem.vue:21
+#: vueapp/components/meeting/add/MeetingAddLabelItem.vue:221
 msgid "(0 = unbegrenzt)"
 msgstr "(0 = unlimited)"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:66
-#: vueapp/components/meeting/add/MeetingAdd.vue:107
-#: vueapp/components/meeting/add/MeetingAdd.vue:63
-#: vueapp/components/meeting/add/MeetingAdd.vue:104
-#: vueapp/components/meeting/add/MeetingAdd.vue:7
+#: vueapp/components/meeting/add/MeetingAdd.vue:218
+#: vueapp/components/meeting/add/MeetingAdd.vue:265
 msgid "(für %{ name })"
 msgstr "(for %{ name })"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:101
-#: vueapp/components/meeting/add/MeetingAdd.vue:98
+#: vueapp/components/meeting/add/MeetingAdd.vue:261
 msgid "(max. %{ count } Teilnehmende)"
 msgstr "(max. %{ count } participants)"
 
-#: vueapp/components/meeting/add/MeetingAddLabelItem.vue:54
-#: vueapp/components/meeting/add/MeetingAddLabelItem.vue:2
+#: vueapp/components/meeting/add/MeetingAddLabelItem.vue:186
 msgid "(Max. Limit: %{ count })"
 msgstr "(max. limit: %{ count })"
 
-#: vueapp/components/meeting/add/MeetingAddLabelItem.vue:59
-#: vueapp/components/meeting/add/MeetingAddLabelItem.vue:7
+#: vueapp/components/meeting/add/MeetingAddLabelItem.vue:189
 msgid "(Max. Limit: %{ maxDuration } Minuten)"
 msgstr "(max. limit: %{ maxDuration } minutes)"
-
-#: vueapp/components/meeting/add/MeetingAddLabelItem.vue:47
-#: vueapp/components/meeting/add/MeetingAddLabelItem.vue:5
-msgid "{{ fvalue }}"
-msgstr "{{ fvalue }}"
 
 #: vueapp/components/meeting/folders/MeetingAddDocument.vue:28
 msgid "%{ filename } ist bereits ausgewählt."
 msgstr "%{ filename } is already selected."
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:93
-#: vueapp/components/meeting/add/MeetingAdd.vue:90
-msgid "%{ label }"
-msgstr "%{ label }"
-
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:3
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:41
 msgid "%{ page }. Vorlage"
 msgstr "%{ page }. Template"
 
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:26
-msgid "<b>*.pdf</b> ist erlaubt!"
-msgstr "<b>*.pdf</b> is allowed!"
-
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:47
-msgid "<b>*.php</b> ist erlaubt!"
-msgstr "<b>*.php</b> is allowed!"
-
-#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:41
-msgid "<b>*.ttf</b> ist erlaubt!"
-msgstr "<b>*.ttf</b> is allowed!"
-
-#: vueapp/components/meeting/add/MeetingAdd.vue:227
-#: vueapp/components/meeting/add/MeetingAdd.vue:224
-msgid ""
-"<translate>\n"
-"                                    Automatisches hochladen von Materialien\n"
-"                                </translate>\n"
-"                                <StudipTooltipIcon :"
-"text=\"$gettext('Verknüpfen Sie einen Ordner mit diesem Raum. '\n"
-"                                    + 'Es werden alle Dateien in diesem "
-"Ordner automatisch zu Beginn des Meetings hochgeladen. '\n"
-"                                    + 'Sie können im Meeting zwischen den "
-"Dateien wechseln.')\">\n"
-"                                </StudipTooltipIcon>"
-msgstr ""
-
-#: vueapp/components/meeting/add/MeetingAdd.vue:171
+#: vueapp/components/meeting/add/MeetingAdd.vue:98
 #: vueapp/components/meeting/admin/default_slides/DefaultSlidePreviewDialog.vue:14
-#: vueapp/components/meeting/admin/server/ServerDialog.vue:35
+#: vueapp/components/meeting/admin/server/ServerDialog.vue:30
 #: vueapp/components/meeting/admin/server/ServerRoomsizePresetsDialog.vue:21
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:81
-#: vueapp/components/meeting/guests/MeetingGuest.vue:25
-#: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:36
-#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:39
+#: vueapp/components/meeting/feedback/MeetingFeedback.vue:28
+#: vueapp/components/meeting/guests/MeetingGuest.vue:16
+#: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:21
+#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:22
 #: app/views/index/config.php:16 app/views/index/intro_edit.php:21
 msgid "Abbrechen"
 msgstr "Cancel"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:105
-#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:11
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:15
-#: vueapp/components/meeting/recordings/MeetingRecordings.vue:27
-#: vueapp/components/meeting/recordings/MeetingRecordings.vue:24
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:254
+#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:41
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:49
+#: vueapp/components/meeting/recordings/MeetingRecordings.vue:92
 #: vueapp/components/studip/StudipActionMenu.vue:27
 #: vueapp/components/studip/breakchanges/StudipActionMenuIcon.vue:27
 #: vueapp/components/studip/breakchanges/StudipActionMenuIcon.vue:33
@@ -142,110 +87,95 @@ msgstr "Actions"
 msgid "Aktionsmenü"
 msgstr "Action menu"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:238
-#: vueapp/components/meeting/add/MeetingAdd.vue:235
+#: vueapp/components/meeting/add/MeetingAdd.vue:515
+#: vueapp/components/meeting/folders/MeetingFolderManager.vue:41
 msgid "Aktuell ausgewählter Ordner:"
 msgstr "Currently selected folder:"
 
-#: vueapp/components/meeting/folders/MeetingFolderManager.vue:41
-msgid "Aktuell ausgewählter Ordner: "
-msgstr "Currently selected folder: "
-
-#: vueapp/components/meeting/admin/server/ServerDialog.vue:14
-#: vueapp/components/meeting/admin/server/ServerDialog.vue:11
+#: vueapp/components/meeting/admin/server/ServerDialog.vue:73
 #: MeetingPlugin.php:419
 msgid "Alle"
 msgstr "All"
 
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:185
+#: vueapp/components/meeting/folders/MeetingFolderTable.vue:147
 msgid "Alle Dateien anzeigen"
 msgstr "Show all files"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:169
-#: vueapp/components/meeting/add/MeetingAdd.vue:166
+#: vueapp/components/meeting/add/MeetingAdd.vue:384
 msgid "Alle Teilnehmenden haben Moderationsrechte"
 msgstr "All participants have moderation rights"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:14
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:56
 msgid "Allgemeine Konfiguration"
 msgstr "General configuration"
 
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:104
+#: vueapp/components/meeting/folders/MeetingFolderTable.vue:79
 msgid "Als aktueller Ordner auswählen"
 msgstr "Select folder"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:249
+#: vueapp/components/meeting/add/MeetingAdd.vue:170
 msgid "Als Standardraum markieren"
 msgstr "Mark as default room"
 
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:55
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:52
+#: vueapp/components/meeting/feedback/MeetingFeedback.vue:181
 msgid "Alter des Rechners"
 msgstr "Age of computer"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:169
+#: vueapp/components/meeting/add/MeetingAdd.vue:96
 msgid "Änderungen speichern"
 msgstr "Save changes"
 
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:59
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:56
+#: vueapp/components/meeting/feedback/MeetingFeedback.vue:195
 msgid "Anzahl der CPU-Kerne"
 msgstr "Number of CPU cores"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:59
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:154
 msgid "Anzeigename"
 msgstr "Display name"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:464
+#: vueapp/components/meeting/add/MeetingAdd.vue:347
 msgid "Aufzeichnung"
 msgstr "Recording"
 
-#: vueapp/components/meeting/recordings/MeetingRecordings.vue:37
-#: vueapp/components/meeting/recordings/MeetingRecordings.vue:43
-#: vueapp/components/meeting/recordings/MeetingRecordings.vue:34
-#: vueapp/components/meeting/recordings/MeetingRecordings.vue:40
-#: vueapp/components/meeting/recordings/MeetingRecordings.vue:3
+#: vueapp/components/meeting/recordings/MeetingRecordings.vue:108
+#: vueapp/components/meeting/recordings/MeetingRecordings.vue:116
 msgid "Aufzeichnung ansehen"
 msgstr "View recording"
 
-#: vueapp/components/meeting/add/MeetingAddLabelItem.vue:10
-#: vueapp/components/meeting/add/MeetingAddLabelItem.vue:8
+#: vueapp/components/meeting/add/MeetingAddLabelItem.vue:59
 msgid "Aufzeichnung automatisch starten und beenden"
 msgstr "Start and end recording automatically"
 
-#: vueapp/components/meeting/MeetingComponent.vue:299
+#: vueapp/components/meeting/MeetingComponent.vue:296
 msgid "Aufzeichnung kann früher beginnen"
 msgstr "Recording can start earlier"
 
 #: vueapp/components/meeting/recordings/MeetingRecordings.vue:37
-#: vueapp/components/meeting/recordings/MeetingRecordings.vue:167
+#: vueapp/components/meeting/recordings/MeetingRecordings.vue:126
 msgid "Aufzeichnung löschen"
 msgstr "Delete Recording"
 
-#: vueapp/components/meeting/add/MeetingAddLabelItem.vue:14
-#: vueapp/components/meeting/add/MeetingAddLabelItem.vue:12
+#: vueapp/components/meeting/add/MeetingAddLabelItem.vue:70
 msgid "Aufzeichnung manuell starten und beenden"
 msgstr "Start and end recording manually"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:461
+#: vueapp/components/meeting/add/MeetingAdd.vue:344
 msgid "Aufzeichnung Sektion"
 msgstr "Recordings section"
 
-#: vueapp/components/meeting/recordings/MeetingRecordings.vue:25
-#: vueapp/components/meeting/recordings/MeetingRecordings.vue:22
+#: vueapp/components/meeting/recordings/MeetingRecordings.vue:89
 msgid "Aufzeichnungen"
 msgstr "Recordings"
 
-#: vueapp/components/meeting/recordings/MeetingRecordings.vue:58
+#: vueapp/components/meeting/recordings/MeetingRecordings.vue:38
 msgid "Aufzeichnungen für Raum"
 msgstr "Recordings for room"
 
-#: vueapp/components/meeting/MeetingComponent.vue:270
+#: vueapp/components/meeting/MeetingComponent.vue:267
 msgid "Ausgewählter Ordner"
 msgstr "Selected folder"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:228
-#: vueapp/components/meeting/add/MeetingAdd.vue:225
+#: vueapp/components/meeting/add/MeetingAdd.vue:507
 msgid "Automatisches hochladen von Materialien"
 msgstr "Automatically upload materials"
 
@@ -265,21 +195,18 @@ msgstr "Error occurred during Drag & Drop"
 msgid "Beim Speichern der Servervoreinstellungen ist ein Fehler aufgetreten."
 msgstr "An error occurred while saving server presets."
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:489
+#: vueapp/components/meeting/add/MeetingAdd.vue:372
 msgid "Berechtigungen"
 msgstr "Permissions"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:486
+#: vueapp/components/meeting/add/MeetingAdd.vue:369
 msgid "Berechtigungen Sektion"
 msgstr "Permissions section"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:23
-#: vueapp/components/meeting/add/MeetingAdd.vue:20
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:10
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:7
-#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:17
-#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:14
-#: Driver/BigBlueButton.php:437 Driver/DfnVc.php:405
+#: vueapp/components/meeting/add/MeetingAdd.vue:152
+#: vueapp/components/meeting/feedback/MeetingFeedback.vue:55
+#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:73
+#: Driver/BigBlueButton.php:437 Driver/DfnVc.php:406
 msgid "Beschreibung"
 msgstr "Description"
 
@@ -287,22 +214,19 @@ msgstr "Description"
 msgid "Beschreibung darf nicht leer sein"
 msgstr "Description cannot be empty"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:475
+#: vueapp/components/meeting/add/MeetingAdd.vue:358
 msgid "beta"
 msgstr "beta"
 
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:47
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:44
+#: vueapp/components/meeting/feedback/MeetingFeedback.vue:151
 msgid "Betriebssystem (OS)"
 msgstr "Operating system (OS)"
 
-#: vueapp/views/Course.vue:15 vueapp/views/Course.vue:2
+#: vueapp/views/Course.vue:58
 msgid ""
-"Bisher existieren keine Meeting-Räume für diese Veranstaltung.\n"
-"                    Bitte fügen Sie einen neuen Raum hinzu."
-msgstr ""
-"There are no meeting rooms for this course yet.\n"
-"\t\tPlease add a new room."
+"Bisher existieren keine Meeting-Räume für diese Veranstaltung. Bitte fügen "
+"Sie einen neuen Raum hinzu."
+msgstr "There are no meeting rooms for this course yet. Please add a new room."
 
 #: vueapp/components/meeting/add/MeetingAdd.vue:355
 msgid ""
@@ -310,11 +234,11 @@ msgid ""
 "zurückgesetzt): (%{ str })"
 msgstr "Please note the following fields (inputs reset to default): (%{ str })"
 
-#: vueapp/components/meeting/MeetingComponent.vue:84
+#: vueapp/components/meeting/MeetingComponent.vue:81
 msgid "Bitte beachten Sie, dass dieser Raum aufgezeichnet wird!"
 msgstr "Please note that this room is being recorded!"
 
-#: vueapp/components/meeting/MeetingComponent.vue:63
+#: vueapp/components/meeting/MeetingComponent.vue:60
 msgid ""
 "Bitte beachten Sie, dass dieser Raum aufgezeichnet wird! Die Webcams der "
 "Teilnehmenden könnten auch aufgezeichnet werden!"
@@ -322,8 +246,7 @@ msgstr ""
 "Please note that this room is being recorded! The participants webcams could "
 "also be recorded!"
 
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:14
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:11
+#: vueapp/components/meeting/feedback/MeetingFeedback.vue:57
 msgid "Bitte beschreiben Sie das aufgetretene Problem"
 msgstr "Please describe the problem"
 
@@ -335,11 +258,11 @@ msgstr "Please confirm the action"
 msgid "Bitte füllen Sie folgende Felder aus: (%{ str })"
 msgstr "Please fill out the following fields: (%{ str })"
 
-#: vueapp/components/meeting/guests/MeetingGuest.vue:78
+#: vueapp/components/meeting/guests/MeetingGuest.vue:65
 msgid "Bitte geben sie diesen Link dem Gast."
 msgstr "Please give this link to the guest."
 
-#: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:103
+#: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:75
 msgid "Bitte geben sie diesen Link und Zugangscode dem Gast-Moderator."
 msgstr "Please give this link and access code to the guest-moderator."
 
@@ -352,8 +275,7 @@ msgstr "Please upload a PDF file for the %{ next_index }. template first."
 msgid "Bitte laden Sie zuerst eine PDF-Datei für die %{ ref }. Vorlage hoch."
 msgstr "Please upload a PDF file for the %{ ref }. template first."
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:51
-#: vueapp/components/meeting/add/MeetingAdd.vue:48
+#: vueapp/components/meeting/add/MeetingAdd.vue:199
 msgid "Bitte wählen Sie ein Konferenzsystem aus"
 msgstr "Please select a meeting system"
 
@@ -361,34 +283,31 @@ msgstr "Please select a meeting system"
 msgid "Bitte wählen Sie einen Ordner Typ aus"
 msgstr "Please select a folder type"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:88
-#: vueapp/components/meeting/add/MeetingAdd.vue:85
+#: vueapp/components/meeting/add/MeetingAdd.vue:243
 msgid "Bitte wählen Sie einen Server aus"
 msgstr "Please select a server"
 
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:23
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:20
+#: vueapp/components/meeting/feedback/MeetingFeedback.vue:71
 msgid "Browser-Name"
 msgstr "Browser name"
 
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:27
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:24
+#: vueapp/components/meeting/feedback/MeetingFeedback.vue:87
 msgid "Browser-Version"
 msgstr "Browser version"
 
-#: vueapp/components/meeting/MeetingComponent.vue:229
+#: vueapp/components/meeting/MeetingComponent.vue:226
 msgid "Das Meeting gehört der Gruppe"
 msgstr "The meeting belongs to the group"
 
-#: vueapp/views/Lobby.vue:2
+#: vueapp/views/Lobby.vue:9
 msgid "Das Meeting hat noch nicht begonnen"
 msgstr "The meeting has not yet started"
 
-#: vueapp/components/meeting/MeetingComponent.vue:211
+#: vueapp/components/meeting/MeetingComponent.vue:208
 msgid "Das Meeting ist für die Teilnehmenden sichtbar"
 msgstr "The meeting is visible for the participants"
 
-#: vueapp/components/meeting/MeetingComponent.vue:212
+#: vueapp/components/meeting/MeetingComponent.vue:209
 msgid "Das Meeting ist für die Teilnehmenden unsichtbar"
 msgstr "The meeting is not visible for the participants"
 
@@ -408,8 +327,7 @@ msgstr "File size exceeds!"
 msgid "Datenschutzerklärung"
 msgstr "Data protection"
 
-#: vueapp/components/meeting/recordings/MeetingRecordings.vue:26
-#: vueapp/components/meeting/recordings/MeetingRecordings.vue:23
+#: vueapp/components/meeting/recordings/MeetingRecordings.vue:90
 msgid "Datum"
 msgstr "Date"
 
@@ -434,8 +352,7 @@ msgstr "The preset was added."
 msgid "Die vorhandenen Aufzeichnungen"
 msgstr "The existing recordings"
 
-#: vueapp/components/meeting/recordings/MeetingRecordings.vue:15
-#: vueapp/components/meeting/recordings/MeetingRecordings.vue:12
+#: vueapp/components/meeting/recordings/MeetingRecordings.vue:79
 msgid "Die vorhandenen Aufzeichnungen auf Opencast"
 msgstr "The existing recording on Opencast"
 
@@ -443,7 +360,7 @@ msgstr "The existing recording on Opencast"
 msgid "Die Zahl wurde in anderen sensiblen Voreinstellungen verwendet."
 msgstr "The number was used in other sensitive presets."
 
-#: vueapp/components/meeting/MeetingComponent.vue:147
+#: vueapp/components/meeting/MeetingComponent.vue:144
 msgid "Dies ist der Standardraum"
 msgstr "This is the default room"
 
@@ -451,19 +368,16 @@ msgstr "This is the default room"
 msgid "Diesen Dialog schließen"
 msgstr "Close this dialog"
 
-#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:93
+#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:68
 msgid "Dieser Code wird benötigt, um sich in diesem Raum anzumelden"
 msgstr "This code is required to log into this room"
 
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:56
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:67
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:33
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:11
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:3
+#: vueapp/components/meeting/folders/MeetingFolderTable.vue:123
+#: vueapp/components/meeting/folders/MeetingFolderTable.vue:128
 msgid "Dieser Ordner ist leer"
 msgstr "This folder is empty"
 
-#: vueapp/components/meeting/status/MeetingStatus.vue:3
+#: vueapp/components/meeting/status/MeetingStatus.vue:16
 msgid "Dieser Raum wird momentan aufgezeichnet!"
 msgstr "This room is currently being recorded!"
 
@@ -476,8 +390,7 @@ msgstr "Add document"
 msgid "Dokumente in (%{ current }) hinzufügen."
 msgstr "Add documents in (%{ current })."
 
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:31
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:28
+#: vueapp/components/meeting/feedback/MeetingFeedback.vue:103
 msgid "Download-Geschw. (Mbps)"
 msgstr "Download speed (Mbps)"
 
@@ -490,7 +403,7 @@ msgstr ""
 "Generating a new access code would make the previous links inaccessible. Do "
 "you really want to generate a new access code?"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:251
+#: vueapp/components/meeting/add/MeetingAdd.vue:172
 msgid ""
 "Ein Standardraum wird immer als erster Raum in der Raumliste angezeigt. Auf "
 "dem Startseitenwidget werden die gebuchten Termine dieser Veranstaltung "
@@ -507,7 +420,7 @@ msgstr ""
 msgid "Ein Zugangscode mit %{ password_length } Zeichen ist erforderlich"
 msgstr "An access code with %{ password_length } characters is required"
 
-#: vueapp/components/meeting/MeetingComponent.vue:185
+#: vueapp/components/meeting/MeetingComponent.vue:182
 msgid "Eingeschränkte Rechte"
 msgstr "Restricted rights"
 
@@ -516,16 +429,16 @@ msgstr "Restricted rights"
 msgid "Einladungslink erstellen"
 msgstr "Create invitation link"
 
-#: vueapp/views/Course.vue:123 app/views/index/intros.php:41
+#: vueapp/views/Course.vue:110 app/views/index/intros.php:41
 #: app/views/index/intro_edit.php:7
 msgid "Einleitung"
 msgstr "Introductory text"
 
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:79
+#: vueapp/components/meeting/feedback/MeetingFeedback.vue:26
 msgid "Einsenden"
 msgstr "Submit"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:165
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:390
 msgid "Einstellungen speichern"
 msgstr "Save settings"
 
@@ -537,19 +450,19 @@ msgstr "Allowed file size:"
 msgid "Erlaubte Dateitypen:"
 msgstr "Allowed file type:"
 
-#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:41
+#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:26
 msgid "Erstellen"
 msgstr "Create"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:599
+#: vueapp/components/meeting/add/MeetingAdd.vue:470
 msgid "Erweiterte Einstellungen"
 msgstr "Advanced settings"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:596
+#: vueapp/components/meeting/add/MeetingAdd.vue:467
 msgid "Erweiterte Einstellungen Sektion"
 msgstr "Advanced settings section"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:197
+#: vueapp/components/meeting/add/MeetingAdd.vue:124
 msgid ""
 "Es gibt keine Server für dieses Konferenzsystem, bitte wählen Sie ein "
 "anderes Konferenzsystem"
@@ -557,8 +470,8 @@ msgstr ""
 "There are no servers for this meeting system, please choose another meeting "
 "system"
 
-#: vueapp/components/meeting/MeetingComponent.vue:302
-#: vueapp/components/meeting/add/MeetingAdd.vue:534
+#: vueapp/components/meeting/MeetingComponent.vue:299
+#: vueapp/components/meeting/add/MeetingAdd.vue:412
 msgid ""
 "Es ist bei Aufzeichnungen dringend empfohlen die Veranstaltung und somit die "
 "Aufzeichnungen erst zu beginnen, wenn Lehrende die Videokonferenz betreten."
@@ -566,13 +479,13 @@ msgstr ""
 "It is strongly recommend to start the meeting and therefore the recording "
 "not until lecturers have joined."
 
-#: vueapp/views/Course.vue:7
+#: vueapp/views/Course.vue:47
 msgid ""
-"Es ist bisher kein Meetingsserver konfiguriert. Bitte wenden\n"
-"                Sie sich an eine/n Systemadministrator/in!"
+"Es ist bisher kein Meetingsserver konfiguriert. Bitte wenden Sie sich an "
+"eine/n Systemadministrator/in!"
 msgstr ""
-"A video conferencing system has not yet been configured yet.\n"
-"\t\tPlease contact a system administrator!"
+"A video conferencing system has not yet been configured yet. Please contact "
+"a system administrator!"
 
 #: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:94
 msgid ""
@@ -582,15 +495,15 @@ msgstr ""
 "It will delete the entire template! Are you sure you want to delete this "
 "template?"
 
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:14
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:48
 msgid "Extension"
 msgstr "Extension"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:22
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:72
 msgid "Feedback Absenderadresse"
 msgstr "Feedback senders address"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:18
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:58
 msgid "Feedback Support-Adresse"
 msgstr "Feedback support address"
 
@@ -602,11 +515,11 @@ msgstr "Bold"
 msgid "Fett Kursiv"
 msgstr "Bold Italic"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:93
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:237
 msgid "Folgende Server werden verwendet"
 msgstr "Following servers are being used"
 
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:140
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:82
 msgid "Folie hochladen"
 msgstr "Upload slide"
 
@@ -615,15 +528,15 @@ msgstr "Upload slide"
 msgid "Folie/Template wurde erfolgreich gelöscht"
 msgstr "Slide/template was successfully deleted"
 
-#: vueapp/components/meeting/MeetingComponent.vue:238
+#: vueapp/components/meeting/MeetingComponent.vue:235
 msgid "Gruppe:"
 msgstr "Groups:"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:555
+#: vueapp/components/meeting/add/MeetingAdd.vue:433
 msgid "Gruppenraum"
 msgstr "Group room"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:552
+#: vueapp/components/meeting/add/MeetingAdd.vue:430
 msgid "Gruppenraum Sektion"
 msgstr "Groups section"
 
@@ -654,28 +567,18 @@ msgstr ""
 "Your access may be restricted as the number of participants for this session "
 "has been exceeded. Would you like to try?"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:7
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:156
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:44
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:376
 msgid "Ihre Änderungen sind noch nicht gespeichert!"
 msgstr "Your changes have not been saved yet!"
 
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:48
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:25
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:3
+#: vueapp/components/meeting/folders/MeetingFolderTable.vue:122
 msgid ""
-"In diesem Ordner befinden sich %{ count } Dateien <br>\n"
-"                                    die aus Gründen der Übersichtlichkeit "
-"ausgeblendet wurden. <br>\n"
-"                                    Wählen sie \"Alle Dateien anzeigen\" um "
-"diese Dateien aufzulisten\n"
-"                                </br></br>"
+"In diesem Ordner befinden sich %{ count } Dateien. Wählen sie \"Alle Dateien "
+"anzeigen\" um diese Dateien aufzulisten"
 msgstr ""
-"There are %{ count } files in this folder. <br>\n"
-"                                                            They are hidden "
-"to remove clutter. <br>\n"
-"                                                            Check \"Show all "
-"files\" to list them\n"
-"                                                        </br></br>"
+"There are %{ count } files in this folder. Check \"Show all files\" to list "
+"them"
 
 #: vueapp/components/meeting/guests/MeetingGuest.vue:31
 #: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:41
@@ -686,21 +589,26 @@ msgstr "Copy to clipboard"
 msgid "Information"
 msgstr "Information"
 
-#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:10
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:13
+#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:40
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:47
 msgid "Installiert"
 msgstr "Installed"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:34
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:43
-#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:151
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:241
+#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:102
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:74
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:140
+msgid "ist erlaubt!"
+msgstr "is allowed!"
+
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:104
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:126
+#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:116
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:182
 #: vueapp/components/studip/StudipDialog.vue:66
 msgid "Ja"
 msgstr "Yes"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:243
-#: vueapp/components/meeting/add/MeetingAdd.vue:240
+#: vueapp/components/meeting/add/MeetingAdd.vue:518
 msgid "Kein Ordner"
 msgstr "No folder"
 
@@ -708,17 +616,15 @@ msgstr "No folder"
 msgid "Keine %{ sub }"
 msgstr "No %{ sub }"
 
-#: vueapp/components/meeting/recordings/MeetingRecordings.vue:8
-#: vueapp/components/meeting/recordings/MeetingRecordings.vue:5
-msgid "Keine Aufzeichnungen für Raum \"{{ room.name }}\" vorhanden"
-msgstr "No recordings available for room \"{{ room.name }}"
+#: vueapp/components/meeting/recordings/MeetingRecordings.vue:65
+msgid "Keine Aufzeichnungen für Raum %{ name } vorhanden"
+msgstr "No recordings available for room %{ name }"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:194
-#: vueapp/components/meeting/add/MeetingAdd.vue:191
+#: vueapp/components/meeting/add/MeetingAdd.vue:441
 msgid "Keine Gruppe"
 msgstr "No group"
 
-#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:88
+#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:52
 msgid "Keine Schriftart"
 msgstr "No font"
 
@@ -730,13 +636,12 @@ msgstr "No preset available"
 msgid "Konferenzdauer darf %{ maxDuration } Minuten nicht überschreiten"
 msgstr "Conference duration must not exceed %{ maxDuration } minutes"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:46
-#: vueapp/components/meeting/add/MeetingAdd.vue:43
-#: vueapp/components/meeting/add/MeetingAdd.vue:268
+#: vueapp/components/meeting/add/MeetingAdd.vue:189
+#: vueapp/components/meeting/add/MeetingAdd.vue:192
 msgid "Konferenzsystem"
 msgstr "Conference system"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:266
+#: vueapp/components/meeting/add/MeetingAdd.vue:187
 msgid "Konferenzsystem Sektion"
 msgstr "Conference system section"
 
@@ -753,14 +658,12 @@ msgstr "Copy"
 msgid "Kursiv"
 msgstr "Italic"
 
-#: vueapp/views/Course.vue:109
+#: vueapp/views/Course.vue:96
 msgid "Leider konnte keinen Raum gefunden werden."
 msgstr "No room could be found."
 
-#: vueapp/components/meeting/guests/MeetingGuest.vue:17
-#: vueapp/components/meeting/guests/MeetingGuest.vue:14
-#: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:20
-#: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:17
+#: vueapp/components/meeting/guests/MeetingGuest.vue:63
+#: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:73
 msgid "Link"
 msgstr "Link"
 
@@ -769,15 +672,15 @@ msgstr "Link"
 msgid "Maximale Teilnehmerzahl"
 msgstr "Maximum number of participants"
 
-#: vueapp/components/meeting/MeetingComponent.vue:197
+#: vueapp/components/meeting/MeetingComponent.vue:194
 msgid "Meeting für Teilnehmende sichtbar schalten"
 msgstr "Make meeting visible for participants"
 
-#: vueapp/components/meeting/MeetingComponent.vue:196
+#: vueapp/components/meeting/MeetingComponent.vue:193
 msgid "Meeting für Teilnehmende unsichtbar schalten"
 msgstr "Hide meeting for participants"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:2
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:36
 #: MeetingPlugin.php:52
 msgid "Meetings konfigurieren"
 msgstr "Configure Meetings"
@@ -790,16 +693,16 @@ msgstr "Meetings default slide"
 msgid "Melden Sie ein Problem"
 msgstr "Report a problem"
 
-#: vueapp/components/meeting/MeetingComponent.vue:184
+#: vueapp/components/meeting/MeetingComponent.vue:181
 msgid "Moderationsrechte"
 msgstr "Moderation rights"
 
-#: vueapp/components/meeting/MeetingComponent.vue:372
-#: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:33
+#: vueapp/components/meeting/MeetingComponent.vue:355
+#: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:18
 msgid "Moderierende einladen"
 msgstr "Invite moderators"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:31
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:94
 msgid ""
 "Müssen die Teilnehmende einem Datenschutztext zustimmen, bevor sie einem "
 "Meeting mit Aufzeichnung beitreten können?"
@@ -807,12 +710,11 @@ msgstr ""
 "Do participants have to agree to the privacy text, before joining a meeting "
 "with recording feature?"
 
-#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:9
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:12
-#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:13
-#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:10
-#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:80
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:20
+#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:39
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:46
+#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:56
+#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:61
+#: vueapp/components/meeting/folders/MeetingFolderTable.vue:63
 #: Driver/BigBlueButton.php:458
 msgid "Name"
 msgstr "Name"
@@ -821,20 +723,19 @@ msgstr "Name"
 msgid "Name konnte nicht leer sein."
 msgstr "Name could not be empty."
 
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:55
+#: vueapp/components/meeting/folders/MeetingFolderTable.vue:32
 msgid "Navigation in der Ordnertabelle"
 msgstr "Navigation in the folder table"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:36
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:45
-#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:152
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:242
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:113
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:135
+#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:117
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:183
 #: vueapp/components/studip/StudipDialog.vue:87
 msgid "Nein"
 msgstr "No"
 
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:39
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:36
+#: vueapp/components/meeting/feedback/MeetingFeedback.vue:133
 msgid "Netzwerk-Typ"
 msgstr "Network type"
 
@@ -846,7 +747,7 @@ msgstr "Drag and drop a new file to add to this area."
 msgid "Neue Datei zum Hochladen auswählen."
 msgstr "Select new file to upload."
 
-#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:40
+#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:25
 #: vueapp/components/meeting/folders/MeetingFolderManager.vue:60
 msgid "Neuer Ordner"
 msgstr "New folder"
@@ -855,8 +756,7 @@ msgstr "New folder"
 msgid "Neuer Ordner unter (%{ current }) erstellen."
 msgstr "Create new folder under (%{ current })."
 
-#: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:16
-#: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:13
+#: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:66
 msgid "Neues Zugangscode generieren"
 msgstr "Generate new access code"
 
@@ -864,9 +764,7 @@ msgstr "Generate new access code"
 msgid "Nicht erlaubte Dateitypen:"
 msgstr "Not allowed file types:"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:115
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:4
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:1
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:275
 msgid "Ohne Grenze"
 msgstr "Without limit"
 
@@ -874,25 +772,23 @@ msgstr "Without limit"
 msgid "Ok"
 msgstr "Ok"
 
-#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:100
+#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:76
 msgid "Optionale Beschreibung"
 msgstr "Optional description"
 
-#: vueapp/components/meeting/MeetingComponent.vue:264
+#: vueapp/components/meeting/MeetingComponent.vue:261
 msgid "Ordner für automatische Uploads:"
 msgstr "Folder for automatic uploads:"
 
-#: vueapp/components/meeting/MeetingComponent.vue:265
+#: vueapp/components/meeting/MeetingComponent.vue:262
 msgid "Ordner:"
 msgstr "Folder:"
 
-#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:9
-#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:6
+#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:54
 msgid "Ordnereigenschaften"
 msgstr "Folder settings"
 
-#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:22
-#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:19
+#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:90
 msgid "Ordnertyp auswählen"
 msgstr "Choose folder type"
 
@@ -901,7 +797,7 @@ msgstr "Choose folder type"
 msgid "Ordnerverwaltung"
 msgstr "Folder management"
 
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:20
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:55
 msgid "PDF Folie"
 msgstr "PDF slide"
 
@@ -909,11 +805,11 @@ msgstr "PDF slide"
 msgid "Persönlichen QR-Code anzeigen"
 msgstr "Show personal QR code"
 
-#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:36
+#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:19
 msgid "Persönlicher QR Code für"
 msgstr "Personal QR code for"
 
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:41
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:121
 msgid "PHP (HTML) Template"
 msgstr "PHP (HTML) template"
 
@@ -921,55 +817,47 @@ msgstr "PHP (HTML) template"
 msgid "PHP Mustervorlage herunterladen"
 msgstr "Download PHP Sample Template"
 
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:207
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:148
 msgid "PHP Template hochladen"
 msgstr "Upload PHP template"
 
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:222
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:163
 msgid "PHP Template löschen"
 msgstr "Delete PHP template"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:435
-msgid "poption"
-msgstr ""
-
-#: vueapp/components/meeting/add/MeetingAdd.vue:620
+#: vueapp/components/meeting/add/MeetingAdd.vue:491
 msgid "Präsentationsfolien"
 msgstr "Slides"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:617
+#: vueapp/components/meeting/add/MeetingAdd.vue:488
 msgid "Präsentationsfolien Sektion"
 msgstr "Presentation slides section"
 
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:78
+#: vueapp/components/meeting/feedback/MeetingFeedback.vue:25
 msgid "Problemmeldung für Raum"
 msgstr "Report a problem for room"
 
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:51
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:48
+#: vueapp/components/meeting/feedback/MeetingFeedback.vue:167
 msgid "Prozessortyp"
 msgstr "Processor type"
 
-#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:9
-#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:6
+#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:45
 msgid "QR Code nur für persönlichen Gebrauch"
 msgstr "QR Code for personal use only"
 
-#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:37
+#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:20
 msgid "QR-Code neu generieren"
 msgstr "Generate QR code"
 
-#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:14
-#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:11
+#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:51
 msgid "QR-Code scannen"
 msgstr "Scan QR code"
 
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:63
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:60
+#: vueapp/components/meeting/feedback/MeetingFeedback.vue:211
 msgid "RAM (Hauptspeicher) GB"
 msgstr "RAM (main storage) GB"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:169
+#: vueapp/components/meeting/add/MeetingAdd.vue:96
 msgid "Raum erstellen"
 msgstr "Create room"
 
@@ -987,8 +875,7 @@ msgstr "Delete room"
 msgid "Räume filtern nach Name"
 msgstr "Filter rooms by name"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:13
-#: vueapp/components/meeting/add/MeetingAdd.vue:10
+#: vueapp/components/meeting/add/MeetingAdd.vue:135
 msgid "Raumeinstellung"
 msgstr "Room setting"
 
@@ -996,24 +883,23 @@ msgstr "Room setting"
 msgid "Raumeinstellungen"
 msgstr "Room settings"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:420
+#: vueapp/components/meeting/add/MeetingAdd.vue:303
 msgid "Raumgröße und Voreinstellungen"
 msgstr "Room size and presets"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:417
+#: vueapp/components/meeting/add/MeetingAdd.vue:300
 msgid "Raumgröße und Voreinstellungen Sektion"
 msgstr "Room size and presets section"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:168
+#: vueapp/components/meeting/add/MeetingAdd.vue:95
 msgid "Raumkonfiguration"
 msgstr "Room configuration"
 
-#: vueapp/views/Course.vue:83
+#: vueapp/views/Course.vue:70
 msgid "Raumliste wird geladen..."
 msgstr "Loading room list…"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:17
-#: vueapp/components/meeting/add/MeetingAdd.vue:14
+#: vueapp/components/meeting/add/MeetingAdd.vue:137
 msgid "Raumname"
 msgstr "Room name"
 
@@ -1021,7 +907,7 @@ msgstr "Room name"
 msgid "Regulär"
 msgstr "Regular"
 
-#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:76
+#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:53
 msgid ""
 "Scannen Sie den QR-Code und verwenden Sie den Zugangscode, um mit einem "
 "anderen Gerät an dem Meeting teilzunehmen"
@@ -1030,64 +916,62 @@ msgstr ""
 "device"
 
 #: vueapp/components/meeting/folders/MeetingAddDocument.vue:19
-#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:42
+#: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:27
 #: vueapp/components/meeting/folders/MeetingFolderManager.vue:16
-#: vueapp/components/meeting/recordings/MeetingRecordings.vue:59
+#: vueapp/components/meeting/recordings/MeetingRecordings.vue:39
 #: vueapp/components/studip/StudipDialog.vue:85
 msgid "Schließen"
 msgstr "Close"
 
-#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:107
+#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:71
 msgid "Schriftart hochladen"
 msgstr "Upload font"
 
-#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:121
-#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:149
+#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:85
+#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:114
 msgid "Schriftart löschen"
 msgstr "Delete font"
 
-#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:2
-#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:57
+#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:31
+#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:33
 msgid "Schriftarten"
 msgstr "Fonts"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:100
-#: vueapp/components/meeting/add/MeetingAdd.vue:97
-msgid "Server {{ (server_index + 1) }}"
-msgstr "Server {{ (server_index + 1) }}"
+#: vueapp/components/meeting/add/MeetingAdd.vue:258
+msgid "Server"
+msgstr "Server"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:415
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:298
 msgid "Server bearbeiten"
 msgstr "Edit server"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:145
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:341
 msgid "Server hinzufügen"
 msgstr "Add server"
 
 #: vueapp/components/meeting/admin/MeetingAdminConfig.vue:58
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:438
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:321
 msgid "Server löschen"
 msgstr "Delete server"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:124
-#: vueapp/components/meeting/add/MeetingAdd.vue:121
+#: vueapp/components/meeting/add/MeetingAdd.vue:283
 msgid "Serverbeschreibung"
 msgstr "Server description"
 
-#: vueapp/components/meeting/admin/server/ServerDialog.vue:32
+#: vueapp/components/meeting/admin/server/ServerDialog.vue:27
 msgid "Serverkonfiguration"
 msgstr "Server configuration"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:427
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:310
 #: vueapp/components/meeting/admin/server/ServerRoomsizePresetsDialog.vue:18
 msgid "Servervoreinstellungen"
 msgstr "Server presets"
 
-#: vueapp/components/meeting/MeetingComponent.vue:217
+#: vueapp/components/meeting/MeetingComponent.vue:214
 msgid "Sichtbar"
 msgstr "Visible"
 
-#: vueapp/views/Lobby.vue:6
+#: vueapp/views/Lobby.vue:16
 msgid "Sie treten dem Meeting automatisch bei, sobald es begonnen hat."
 msgstr "You automatically join the meeting once it has started."
 
@@ -1107,7 +991,7 @@ msgstr "Are you sure you want to delete this preset?"
 msgid "Sind Sie sicher, dass Sie diesen Raum löschen möchten?"
 msgstr "Are you sure you want to delete this room?"
 
-#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:150
+#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:115
 msgid "Sind Sie sicher, dass Sie diesen Schriftart löschen möchten?"
 msgstr "Are you sure you want to delete this font?"
 
@@ -1115,7 +999,7 @@ msgstr "Are you sure you want to delete this font?"
 msgid "Sind Sie sicher, dass Sie diesen Server löschen möchten?"
 msgstr "Are you sure you want to delete this server?"
 
-#: vueapp/components/meeting/guests/MeetingGuest.vue:56
+#: vueapp/components/meeting/guests/MeetingGuest.vue:45
 msgid ""
 "Sofern der Gast keinen Namen eingibt, wird dieser standardmäßig verwendet."
 msgstr "This name will be used if the guest does not state one."
@@ -1129,20 +1013,19 @@ msgstr "Save"
 msgid "Standard-Folie Verwaltung"
 msgstr "Manage default slide"
 
-#: vueapp/components/meeting/guests/MeetingGuest.vue:10
-#: vueapp/components/meeting/guests/MeetingGuest.vue:7
+#: vueapp/components/meeting/guests/MeetingGuest.vue:43
 msgid "Standard-Gästename"
 msgstr "Default guestname"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:25
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:82
 msgid "Standard-Mail"
 msgstr "Default mail"
 
-#: vueapp/components/meeting/MeetingComponent.vue:151
+#: vueapp/components/meeting/MeetingComponent.vue:148
 msgid "Standardraum"
 msgstr "Standard room"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:40
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:116
 msgid "Stud.IP für Standardfolien verwenden"
 msgstr "Use Stud.IP for default slides"
 
@@ -1151,16 +1034,15 @@ msgstr "Use Stud.IP for default slides"
 msgid "Suchen"
 msgstr "Search"
 
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:19
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:16
+#: vueapp/components/meeting/feedback/MeetingFeedback.vue:69
 msgid "Technische Informationen"
 msgstr "Technical information"
 
-#: vueapp/components/meeting/MeetingComponent.vue:128
+#: vueapp/components/meeting/MeetingComponent.vue:337
 msgid "Teilnehmen"
 msgstr "Participate"
 
-#: vueapp/components/meeting/MeetingComponent.vue:129
+#: vueapp/components/meeting/MeetingComponent.vue:340
 msgid "Teilnehmen nicht möglich"
 msgstr "Participation not possible"
 
@@ -1169,24 +1051,24 @@ msgstr "Participation not possible"
 msgid "Teilnehmende aktiv"
 msgstr "active participants"
 
-#: vueapp/components/meeting/MeetingComponent.vue:387
-#: vueapp/components/meeting/guests/MeetingGuest.vue:22
+#: vueapp/components/meeting/MeetingComponent.vue:370
+#: vueapp/components/meeting/guests/MeetingGuest.vue:13
 msgid "Teilnehmende einladen"
 msgstr "Invite participants"
 
-#: vueapp/components/meeting/MeetingComponent.vue:179
+#: vueapp/components/meeting/MeetingComponent.vue:176
 msgid "Teilnehmende haben eingeschränkte Rechte"
 msgstr "Participants have restricted rights"
 
-#: vueapp/components/meeting/MeetingComponent.vue:178
+#: vueapp/components/meeting/MeetingComponent.vue:175
 msgid "Teilnehmende haben Moderationsrechte"
 msgstr "All participants have moderation rights"
 
-#: vueapp/components/meeting/MeetingComponent.vue:164
+#: vueapp/components/meeting/MeetingComponent.vue:161
 msgid "Teilnehmenden Administrationsrechte geben"
 msgstr "Give participants administration rights"
 
-#: vueapp/components/meeting/MeetingComponent.vue:163
+#: vueapp/components/meeting/MeetingComponent.vue:160
 msgid "Teilnehmenden nur eingeschränkte Rechte geben"
 msgstr "Give participants only limited rights"
 
@@ -1202,12 +1084,12 @@ msgstr "Number of participants should not be less than %{ minParticipants }"
 msgid "this"
 msgstr "this"
 
-#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:8
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:11
+#: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:38
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:45
 msgid "Typ"
 msgstr "Type"
 
-#: vueapp/components/meeting/admin/server/ServerDialog.vue:33
+#: vueapp/components/meeting/admin/server/ServerDialog.vue:28
 msgid "Übernehmen"
 msgstr "Apply"
 
@@ -1227,25 +1109,23 @@ msgstr "Unknown"
 msgid "Ungültiger Dateityp!"
 msgstr "Invalid file type!"
 
-#: vueapp/components/meeting/MeetingComponent.vue:218
+#: vueapp/components/meeting/MeetingComponent.vue:215
 msgid "Unsichtbar"
 msgstr "Invisible"
 
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:35
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:32
+#: vueapp/components/meeting/feedback/MeetingFeedback.vue:118
 msgid "Upload-Geschw. (Mbps)"
 msgstr "Upload speed (Mbps)"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:27
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:91
 msgid "User-Mail"
 msgstr "User mail"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:83
-#: vueapp/components/meeting/add/MeetingAdd.vue:80
+#: vueapp/components/meeting/add/MeetingAdd.vue:236
 msgid "Verfügbare Server"
 msgstr "Available servers"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:643
+#: vueapp/components/meeting/add/MeetingAdd.vue:509
 msgid ""
 "Verknüpfen Sie einen Ordner mit diesem Raum. Es werden alle Dateien in "
 "diesem Ordner automatisch zu Beginn des Meetings hochgeladen. Sie können im "
@@ -1255,12 +1135,11 @@ msgstr ""
 "automatically when the meeting starts. You can switch between files in the "
 "meeting."
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:55
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:150
 msgid "Verwenden dieses Treibers zulassen"
 msgstr "Allow this driver to be used"
 
-#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:10
-#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:7
+#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:46
 msgid ""
 "Verwenden Sie diesen QR-Code nur für Ihren privaten Gebrauch und teilen Sie "
 "ihn nicht mit anderen!"
@@ -1280,7 +1159,7 @@ msgstr "Add preset"
 msgid "Voreinstellung löschen"
 msgstr "Delete preset"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:424
+#: vueapp/components/meeting/add/MeetingAdd.vue:307
 msgid "Voreinstellung Vorlage"
 msgstr "Preset template"
 
@@ -1288,7 +1167,7 @@ msgstr "Preset template"
 msgid "Voreinstellung wurde gelöscht."
 msgstr "Preset has been deleted."
 
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:82
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:39
 msgid "Vorlage"
 msgstr "Template"
 
@@ -1296,8 +1175,8 @@ msgstr "Template"
 msgid "Vorlage hinzufügen"
 msgstr "Add template"
 
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:168
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:239
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:110
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:180
 msgid "Vorlage löschen"
 msgstr "Delete template"
 
@@ -1305,46 +1184,43 @@ msgstr "Delete template"
 msgid "Vorlagenvorschau"
 msgstr "Preview of template"
 
-#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:156
+#: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:98
 msgid "Vorschau"
 msgstr "Preview"
 
-#: vueapp/components/meeting/add/MeetingAdd.vue:192
-#: vueapp/components/meeting/add/MeetingAdd.vue:189
+#: vueapp/components/meeting/add/MeetingAdd.vue:436
 msgid "Wählen sie eine zugehörige Gruppe aus"
 msgstr "Select a corresponding group"
 
-#: vueapp/components/meeting/MeetingComponent.vue:269
+#: vueapp/components/meeting/MeetingComponent.vue:266
 msgid "Weiterleitung zum ausgewählten Ordner auf einer neuen Seite"
 msgstr "Redirect to the selected folder on a new page"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:88
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:225
 #: Driver/BigBlueButton.php:467
 msgid "Willkommensnachricht"
 msgstr "Welcome message"
 
-#: vueapp/views/Course.vue:96
+#: vueapp/views/Course.vue:83
 msgid ""
 "Wir empfehlen Ihnen, einen Raum als Standardraum zu definieren (in den "
 "Einstellung eines Raums)."
 msgstr ""
 "We recommend to set a default room for this course in the room-settings."
 
-#: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:10
-#: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:7
-#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:21
-#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:18
+#: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:48
+#: vueapp/components/meeting/qr_code/MeetingQRCodeDialog.vue:66
 #: app/views/room/qrcode.php:4
 msgid "Zugangscode"
 msgstr "Access code"
 
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:58
+#: vueapp/components/meeting/folders/MeetingFolderTable.vue:35
 msgid "Zum Hauptordner - Ordnerauswahl aufheben"
 msgstr "Back to main folder - revoke selected folder"
 
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:75
-msgid "Zum Ordner: "
-msgstr "To the folder: "
+#: vueapp/components/meeting/folders/MeetingFolderTable.vue:52
+msgid "Zum Ordner:"
+msgstr "To the folder:"
 
 #: vueapp/components/studip/breakchanges/StudipSearchWidgetNeedle.vue:39
 #: vueapp/components/studip/breakchanges/StudipSearchWidgetNeedle.vue:67
@@ -1364,31 +1240,31 @@ msgstr ""
 msgid "Microsoft Graph URL"
 msgstr "Microsoft Graph URL"
 
-#: Driver/MicrosoftTeams.php:407
+#: Driver/MicrosoftTeams.php:406
 msgid "Anwendungs-ID (Client)"
 msgstr "Application (client) ID"
 
-#: Driver/MicrosoftTeams.php:410
+#: Driver/MicrosoftTeams.php:409
 msgid "Verzeichnis-ID (Mandant)"
 msgstr "Directory (tenant) ID"
 
-#: Driver/MicrosoftTeams.php:413
+#: Driver/MicrosoftTeams.php:412
 msgid "Geheimer Clientschlüssel (Wert)"
 msgstr "Secret ID (value)"
 
-#: Driver/BigBlueButton.php:389 Driver/DfnVc.php:236
+#: Driver/BigBlueButton.php:389 Driver/DfnVc.php:237
 msgid "Internal Error"
 msgstr "Internal Error"
 
-#: Driver/BigBlueButton.php:390 Driver/DfnVc.php:237
+#: Driver/BigBlueButton.php:390 Driver/DfnVc.php:238
 msgid "Please contact a system administrator!"
 msgstr "Please contact a system administrator!"
 
-#: Driver/BigBlueButton.php:428 Driver/DfnVc.php:399
+#: Driver/BigBlueButton.php:428 Driver/DfnVc.php:400
 msgid "Aktiv?"
 msgstr "Active?"
 
-#: Driver/BigBlueButton.php:429 Driver/DfnVc.php:400
+#: Driver/BigBlueButton.php:429 Driver/DfnVc.php:401
 msgid "Label"
 msgstr "Label"
 
@@ -1416,15 +1292,15 @@ msgstr "Request Timeout (e.g. 3.4)"
 msgid "Max. Zahl von Teilnehmenden"
 msgstr "Max. number of participants"
 
-#: Driver/BigBlueButton.php:436 Driver/DfnVc.php:404
+#: Driver/BigBlueButton.php:436 Driver/DfnVc.php:405
 msgid "Veranstaltungstyp"
 msgstr "Course type"
 
-#: Driver/BigBlueButton.php:436 Driver/DfnVc.php:404
+#: Driver/BigBlueButton.php:436 Driver/DfnVc.php:405
 msgid "Nur in folgenden Veranstaltungskategorien nutzbar"
 msgstr "Only usable in the following course categories"
 
-#: Driver/BigBlueButton.php:437 Driver/DfnVc.php:405
+#: Driver/BigBlueButton.php:437 Driver/DfnVc.php:406
 msgid ""
 "Der Beschreibungstext wird Lehrenden angezeigt wenn dieser Server ausgewählt "
 "wird."
@@ -1656,15 +1532,15 @@ msgid ""
 msgstr ""
 "Default value for the meeting room setting 'Start recording automatically'."
 
-#: Driver/DfnVc.php:401
+#: Driver/DfnVc.php:402
 msgid "API-Endpoint"
 msgstr "API endpoint"
 
-#: Driver/DfnVc.php:402
+#: Driver/DfnVc.php:403
 msgid "Funktionskennung"
 msgstr "Function ID"
 
-#: Driver/DfnVc.php:403
+#: Driver/DfnVc.php:404
 msgid "Passwort"
 msgstr "Password"
 
@@ -1755,11 +1631,11 @@ msgstr "Meeting list"
 msgid "Direkt zum Meeting"
 msgstr "Directly to the meeting"
 
-#: app/models/Driver.php:44
+#: app/models/Driver.php:45
 msgid "Normale Aufzeichnungen zulassen"
 msgstr "Allow standard recordings"
 
-#: app/models/Driver.php:62
+#: app/models/Driver.php:63
 msgid "Automatisches Hochladen von Folien zulassen"
 msgstr "Allow automatically upload of materials"
 
@@ -2359,243 +2235,3 @@ msgstr "Configuration for the meetings plugin in JSON"
 #: templates/default_slide.php:5
 msgid "Standardfolie"
 msgstr "Default slide"
-
-#~ msgid "_ctx"
-#~ msgstr "_ctx"
-
-#~ msgid ""
-#~ "Dieser Raum ist deaktiviert, da der Treiber {{ room.driver }}\n"
-#~ "                        nicht aktiviert oder falsch konfiguriert ist."
-#~ msgstr ""
-#~ "This room is disabled because the driver {{ room.driver }}\n"
-#~ "\t\t\tis not active or has an incorrect configuration."
-
-#~ msgid "Font"
-#~ msgstr "Font"
-
-#~ msgid "Standard-Folienmanager"
-#~ msgstr "Default slide manager"
-
-#~ msgid "Kleiner Raum"
-#~ msgstr "Small room"
-
-#~ msgid "Mittlerer Raum"
-#~ msgstr "Medium room"
-
-#~ msgid "Großer Raum"
-#~ msgstr "Large room"
-
-#~ msgid "{{ getCourseTypeName(server[value.name], driver_name) }}"
-#~ msgstr "{{ getCourseTypeName(server[value.name], driver_name) }}"
-
-#~ msgid "{{ nt_value }}"
-#~ msgstr "{{ nt_value }}"
-
-#~ msgid "Raumgröße und Leistung"
-#~ msgstr "Room size and performance"
-
-#~ msgid "Verwenden Sie den Code, um sich anzumelden"
-#~ msgstr "Use the QR code to access the meeting"
-
-#~ msgid ""
-#~ "Verwenden Sie Ihren QR-Code-Leser (z. B. Gerätekamera) und verwenden Sie "
-#~ "die URL-Adresse, um auf dieses Meeting zuzugreifen"
-#~ msgstr ""
-#~ "Use a QR code scanner (eg. your smarphone's camera) and use the URL to "
-#~ "access this meeting"
-
-#~ msgid "Bitte geben Sie den Zugangscode des Meetings"
-#~ msgstr "Please enter the access code of the meeting"
-
-#~ msgid "Gast einladen"
-#~ msgstr "Invite guest"
-
-#~ msgid "Minuten Konferenzdauer"
-#~ msgstr "Minutes duration of meeting"
-
-#~ msgid "Sitzungen können aufgezeichnet werden."
-#~ msgstr "Meeting can be recorded."
-
-#~ msgid "QR Code"
-#~ msgstr "QR code"
-
-#~ msgid "Schreiben Sie ein Feedback"
-#~ msgstr "Write feedback"
-
-#~ msgid "Neuer Raum"
-#~ msgstr "New room"
-
-#~ msgid "Raumgröße"
-#~ msgstr "Room size"
-
-#~ msgid ""
-#~ "Das Meeting gehört der Gruppe\n"
-#~ "                        {{ group_name }}"
-#~ msgstr "This meetings belongs to the group {{ group_name }}"
-
-#~ msgid "Teilnehmende haben Administrations-Rechte"
-#~ msgstr "Participants have administration rights"
-
-#~ msgid "Zusätzliche Funktionen"
-#~ msgstr "Additional functions"
-
-#~ msgid "Nicht gestattet"
-#~ msgstr "Not permitted"
-
-#~ msgid "Gestattet"
-#~ msgstr "Permitted"
-
-#~ msgid "Opencast Series id kann nicht gefunden werden!"
-#~ msgstr "Opencast series ID cannot be found!"
-
-#~ msgid "Seminar ID: %s"
-#~ msgstr "Seminar ID: %s"
-
-#~ msgid "Meetings ID: %s"
-#~ msgstr "Meetings ID: %s"
-
-#~ msgid "User ID: %s"
-#~ msgstr "User ID: %s"
-
-#~ msgid "Details:"
-#~ msgstr "Details:"
-
-#~ msgid "Browser-Name: %s"
-#~ msgstr "Browser name: %s"
-
-#~ msgid "Browser-Version: %s"
-#~ msgstr "Browser-Version: %s"
-
-#~ msgid "Download-Geschw. (Mbps): %s"
-#~ msgstr "Download speed (Mbps): %s"
-
-#~ msgid "Upload-Geschw. (Mbps): %s"
-#~ msgstr "Upload speed (Mbps): %s"
-
-#~ msgid "Netzwerk-Typ: %s"
-#~ msgstr "Network type: %s"
-
-#~ msgid "Betriebssystem (OS): %s"
-#~ msgstr "Operating system (OS): %s"
-
-#~ msgid "Prozessortyp: %s"
-#~ msgstr "Processor type: %s"
-
-#~ msgid "Alter des Rechners: %s"
-#~ msgstr "Age of computer: %s"
-
-#~ msgid "Anzahl der CPU-Kerne: %s"
-#~ msgstr "Number of CPU cores: %s"
-
-#~ msgid "RAM (Hauptspeicher) GB: %s"
-#~ msgstr "RAM (main storage) GB: %s"
-
-#~ msgid "Beschreibung:"
-#~ msgstr "Description:"
-
-#~ msgid "Der Gast bekommt diesen Namen in der Besprechung zugewiesen."
-#~ msgstr "The guest is assigned this name in the meeting."
-
-#~ msgid "Die maximale Länge (in Minuten) für das Meeting. Nach Ablauf de"
-#~ msgstr ""
-#~ "The maximum length (in minutes) for the meeting. After the set duration ha"
-
-#~ msgid ""
-#~ "Erlaubt es Moderierende, die Medien und Ereignisse in der Sitzung für di"
-#~ msgstr ""
-#~ "Allows moderators to record the media and events in the session for late"
-
-#~ msgid ""
-#~ "Durchführung und Verwaltung von Live-Online-Treffen, Veranstaltungen un"
-#~ msgstr ""
-#~ "Plug-in for holding and managing live online meetings, seminars and vide"
-
-#~ msgid "Anzeige nach Semester"
-#~ msgstr "View by semester"
-
-#~ msgid "Sie brauchen Administrationsrechte."
-#~ msgstr "You need administration rights."
-
-#~ msgid "Alle Meetings"
-#~ msgstr "All meetings"
-
-#~ msgid "Navigation"
-#~ msgstr "Navigation"
-
-#~ msgid "Wollen Sie wirklich das Meeting \"%s\" löschen?"
-#~ msgstr "Are you sure you want to delete the meeting \"%s\"?"
-
-#~ msgid "JA!"
-#~ msgstr "Yes"
-
-#~ msgid "NEIN!"
-#~ msgstr "No"
-
-#~ msgid "oder"
-#~ msgstr "or"
-
-#~ msgid "zu verlinkendes Meeting auswählen"
-#~ msgstr "Select meeting for link"
-
-#~ msgid "Meeting verlinken"
-#~ msgstr "Link meeting"
-
-#~ msgid "Heimat-Einrichtung"
-#~ msgstr "Home faculty"
-
-#~ msgid "Treiber"
-#~ msgstr "Driver"
-
-#~ msgid "Zuletzt betreten"
-#~ msgstr "Last accessed"
-
-#~ msgid "Freigeben"
-#~ msgstr "Share"
-
-#~ msgid "Dieser Meetingraum wird in "
-#~ msgstr "This meeting room"
-
-#~ msgid " LV verwendet."
-#~ msgstr "is used in a course"
-
-#~ msgid "LV"
-#~ msgstr "course"
-
-#~ msgid "Änderungen verwerfen"
-#~ msgstr "Discard changes"
-
-#~ msgid "zur Aufzeichnung vom %s"
-#~ msgstr "Show recording from %s"
-
-#~ msgid "um"
-#~ msgstr "at"
-
-#~ msgid "Uhr"
-#~ msgstr "h"
-
-#~ msgid "Teilnehmende haben VeranstalterInnen-Rechte (wie Anlegende/r)."
-#~ msgstr ""
-#~ "Participants have organizer rights (same rights as meeting creator)."
-
-#~ msgid "Teilnehmende haben eingeschränkte Teilnehmenden-Rechte."
-#~ msgstr "Participants have restricted rights."
-
-#~ msgid "Eine Person hat das Meeting in den letzten 24 Stunden betreten"
-#~ msgstr "One person joined the meeting in the last 24 hours."
-
-#~ msgid "Personen haben das Meeting in den letzten 24 Stunden betreten"
-#~ msgstr "people joined the meeting in the last 24 hours."
-
-#~ msgid "Eine Person hat das Meeting insgesamt betreten"
-#~ msgstr "One person has joined the meeting in total."
-
-#~ msgid "Personen haben das Meeting insgesamt betreten"
-#~ msgstr "people have joined the meeting in total."
-
-#~ msgid ""
-#~ "Es sind keine Meetings vorhanden. Meetings können nur innerhalb einer "
-#~ "Veranstaltung über das \"+\"-Icon aktiviert und anschließend über den "
-#~ "Reiter \"Meetings\" verwaltet werden."
-#~ msgstr ""
-#~ "There are no meetings available. Meetings can only be activated within a "
-#~ "course via the \"+\" icon and managed via the \"Meetings\" tab."

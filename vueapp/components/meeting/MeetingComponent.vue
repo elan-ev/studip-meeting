@@ -159,8 +159,8 @@
         </section>
         <footer>
             <button class="button join" :disabled="!room.enabled" @click="checkPreJoin">
-                <span v-show="room.enabled"><translate>Teilnehmen</translate></span>
-                <span  v-show="!room.enabled"><translate>Teilnehmen nicht möglich</translate></span>
+                <span v-show="room.enabled">{{ $gettext('Teilnehmen') }}</span>
+                <span  v-show="!room.enabled">{{ $gettext('Teilnehmen nicht möglich') }}</span>
             </button>
             <template v-if="course_config.display.editRoom && room.features">
                 <StudipButton v-if="room.features['invite_moderator'] && room.features['invite_moderator'] == 'true'"

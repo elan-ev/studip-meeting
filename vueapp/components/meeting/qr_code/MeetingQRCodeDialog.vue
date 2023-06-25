@@ -18,19 +18,19 @@
                 </MessageBox>
                 <form class="default">
                     <fieldset>
-                        <h5 v-translate>QR Code nur für persönlichen Gebrauch</h5>
-                        <p v-translate>Verwenden Sie diesen QR-Code nur für Ihren privaten Gebrauch und teilen Sie ihn nicht mit anderen!</p>
+                        <h5>{{ $gettext('QR Code nur für persönlichen Gebrauch') }}</h5>
+                        <p>{{ $gettext('Verwenden Sie diesen QR-Code nur für Ihren privaten Gebrauch und teilen Sie ihn nicht mit anderen!') }}</p>
                     </fieldset>
                     <fieldset>
                         <label v-if="url">
-                            <span class="required" v-translate>QR-Code scannen</span>
+                            <span class="required">{{ $gettext('QR-Code scannen') }}</span>
                             <StudipTooltipIcon :text="$gettext('Scannen Sie den QR-Code und verwenden Sie den Zugangscode, um mit einem anderen Gerät an dem Meeting teilzunehmen')"></StudipTooltipIcon>
                             <div style="text-align: center; margin: 20px 0;">
                                 <QrcodeVue :value="url" level="H" :size="200"></QrcodeVue>
                             </div>
                         </label>
                         <label v-if="token">
-                            <span class="required" v-translate>Zugangscode</span>
+                            <span class="required">{{ $gettext('Zugangscode') }}</span>
                             <StudipTooltipIcon :text="$gettext('Dieser Code wird benötigt, um sich in diesem Raum anzumelden')"></StudipTooltipIcon>
                             <div style="text-align: center; margin: 20px 0;">
                                 <h2>{{token}}</h2>

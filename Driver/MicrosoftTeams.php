@@ -399,18 +399,17 @@ class MicrosoftTeams implements DriverInterface
 
         return array(
             new ConfigOption('url',
-                dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Microsoft Graph URL'),
+                I18N::_('Microsoft Graph URL'),
                 'https://graph.microsoft.com'
             ),
             new ConfigOption('client_id',
-                dgettext(MeetingPlugin::GETTEXT_DOMAIN,
-                'Anwendungs-ID (Client)')
+                I18N::_('Anwendungs-ID (Client)')
             ),
             new ConfigOption('tenant_id',
-                dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Verzeichnis-ID (Mandant)')
+                I18N::_('Verzeichnis-ID (Mandant)')
             ),
             new ConfigOption('client_secret',
-                dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Geheimer Clientschlüssel (Wert)') , null, null, 'password'
+                I18N::_('Geheimer Clientschlüssel (Wert)') , null, null, 'password'
             )
         );
     }

@@ -10,6 +10,7 @@ import { ERROR_COMMIT } from "./store/actions.type";
 import ApiService from "./common/api.service";
 import DateFilter from "./common/date.filter";
 import ErrorFilter from "./common/error.filter";
+import {gettextinterpolate} from "./common/gettextinterpolate.filter";
 
 import GetTextPlugin from 'vue-gettext';
 import PortalVue from 'portal-vue';
@@ -26,6 +27,11 @@ import MessageList from '@/components/messages/MessageList.vue';
 
 Vue.filter("date", DateFilter);
 Vue.filter("error", ErrorFilter);
+Vue.filter("gettextinterpolate", gettextinterpolate);
+/*
+# Example of using this filter:
+{{ $gettext('%{ page }. Vorlage') | gettextinterpolate({page}) }}
+*/
 
 ApiService.init();
 
@@ -49,6 +55,7 @@ Vue.component('MessageList', MessageList)
 
 Vue.use(GetTextPlugin, {
     availableLanguages: {
+        de_DE: 'Deutsch',
         en_GB: 'British English',
     },
     defaultLanguage: String.locale.replace('-', '_'),

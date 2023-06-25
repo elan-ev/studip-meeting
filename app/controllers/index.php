@@ -422,9 +422,9 @@ class IndexController extends MeetingsController
     private static function getHeaderLine($course_id)
     {
         if (function_exists('getHeaderLine')) {
-            return getHeaderLine($course_id) .' - '. dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Meetings');
+            return getHeaderLine($course_id) .' - '. I18N::_('Meetings');
         } else {
-            return Context::getHeaderLine() .' - '. dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Meetings');
+            return Context::getHeaderLine() .' - '. I18N::_('Meetings');
         }
     }
 

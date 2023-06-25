@@ -11,7 +11,7 @@
                     <template v-if="Object.keys(folder).includes('breadcrumbs')">
                         <template v-for="(bcname, bcid) in folder.breadcrumbs">
                             &nbsp;/&nbsp;
-                            <a :key="bcid" :title="$gettext('Zum Ordner: ') + bcname" href="#"
+                            <a :key="bcid" :title="$gettext('Zum Ordner:') + bcname" href="#"
                                 @click.prevent="folderHandler(bcid)">
                                 {{bcname}}
                             </a>
@@ -21,7 +21,7 @@
                 </caption>
             <thead>
                 <tr>
-                    <th scope="col" v-translate>Name</th>
+                    <th scope="col">{{ $gettext('Name') }}</th>
                 </tr>
             </thead>
             <template v-if="folder_has_content">
@@ -54,16 +54,11 @@
                             <td>
                                 <span v-if="Object.keys(folder).includes('files')
                                     && Object.keys(folder['files']).length > numFileInFolderLimit"
-                                    v-translate="{
-                                        count: Object.keys(folder['files']).length
-                                    }"
                                 >
-                                    In diesem Ordner befinden sich %{ count } Dateien <br>
-                                    die aus Gründen der Übersichtlichkeit ausgeblendet wurden. <br>
-                                    Wählen sie "Alle Dateien anzeigen" um diese Dateien aufzulisten
+                                    {{ $gettext('In diesem Ordner befinden sich %{ count } Dateien. Wählen sie "Alle Dateien anzeigen" um diese Dateien aufzulisten') | gettextinterpolate({count: Object.keys(folder['files']).length}) }}
                                 </span>
-                                <span v-else v-translate>
-                                    Dieser Ordner ist leer
+                                <span v-else>
+                                    {{ $gettext('Dieser Ordner ist leer') }}
                                 </span>
                             </td>
                         </tr>
@@ -73,9 +68,7 @@
             <template v-else>
                 <tbody>
                     <tr class="empty">
-                        <translate>
-                            Dieser Ordner ist leer
-                        </translate>
+                        {{ $gettext('Dieser Ordner ist leer') }}
                     </tr>
                 </tbody>
             </template>

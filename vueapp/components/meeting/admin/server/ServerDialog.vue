@@ -23,8 +23,8 @@
                             {{ value.display_name }}
                             <StudipTooltipIcon v-if="Object.keys(value).includes('info')" :text="value['info']"></StudipTooltipIcon>
                             <select v-if="value.value && typeof value.value == 'object' && value.name == 'course_types'" :id="value.name" v-model.trim="server[driver_name][value.name]">
-                                <option value="" v-translate>
-                                    Alle
+                                <option value="">
+                                    {{ $gettext('Alle') }}
                                 </option>
                                 <template v-for="(cvalue, cindex) in value.value">
                                     <optgroup style="font-weight:bold;" :label="cvalue.name" :key="cindex">

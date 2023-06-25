@@ -16,7 +16,7 @@
                 <MessageBox type="info"
                     v-if="Object.keys(recording_list).length == 0"
                 >
-                    <translate>Keine Aufzeichnungen für Raum "{{ room.name }}" vorhanden</translate>
+                    {{ $gettext('Keine Aufzeichnungen für Raum %{ name } vorhanden') | gettextinterpolate({name: room.name}) }}
                 </MessageBox>
 
                 <form class="default" method="post">
@@ -24,8 +24,8 @@
                         <legend>Opencast</legend>
                         <label>
                             <a class="meeting-recording-url" target="_blank"
-                            :href="recording_list['opencast']" v-translate>
-                                Die vorhandenen Aufzeichnungen auf Opencast
+                            :href="recording_list['opencast']">
+                                {{ $gettext('Die vorhandenen Aufzeichnungen auf Opencast') }}
                             </a>
                         </label>
                     </fieldset>
@@ -34,9 +34,9 @@
                             <table class="default">
                                 <thead>
                                     <tr>
-                                        <th scope="col" v-translate>Aufzeichnungen</th>
-                                        <th scope="col" v-translate>Datum</th>
-                                        <th v-if="course_config.display.deleteRecording" scope="col" v-translate>Aktionen</th>
+                                        <th scope="col">{{ $gettext('Aufzeichnungen') }}</th>
+                                        <th scope="col">{{ $gettext('Datum') }}</th>
+                                        <th v-if="course_config.display.deleteRecording" scope="col">{{ $gettext('Aktionen') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -47,15 +47,15 @@
                                                     <li v-for="(format, index) in recording['playback']['format']" :key="index">
                                                         <a class="meeting-recording-url" target="_blank"
                                                             :href="format['url']">
-                                                            <translate>Aufzeichnung ansehen</translate>
+                                                            {{ $gettext('Aufzeichnung ansehen') }}
                                                             {{ `(${format['type']})` }}
                                                         </a>
                                                     </li>
                                                 </template>
                                                 <li v-else>
                                                     <a class="meeting-recording-url" target="_blank"
-                                                        :href="recording['playback']['format']['url']" v-translate>
-                                                        Aufzeichnung ansehen
+                                                        :href="recording['playback']['format']['url']">
+                                                            {{ $gettext('Aufzeichnung ansehen') }}
                                                     </a>
                                                 </li>
                                             </ul>

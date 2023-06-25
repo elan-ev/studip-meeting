@@ -19,22 +19,19 @@
                 <form class="default" @submit.prevent="generateModeratorGuestJoin">
                     <fieldset>
                         <label>
-                            <span class="required" v-translate>Zugangscode</span>
-                            <span
-                                v-translate="{
-                                    length: password_length
-                                }"
-                            >(%{ length } Zeichen)</span>
+                            <span class="required">{{ $gettext('Zugangscode') }}</span>
+                            <span>{{ $gettext('(%{ length } Zeichen)') | gettextinterpolate({length: password_length}) }}
+                            </span>
                             <input type="text" :maxlength="password_length" :minlength="password_length"
                                 :value="moderator_password" id="moderatorpassword" readonly
                                 @keyup="passwordInputHandler($event)"
                                 @change.once="generateModeratorGuestJoin($event)">
                             <StudipButton id="generate_code_btn" type="button" v-on:click="generateRandomCode($event)">
-                                <translate>Neues Zugangscode generieren</translate>
+                                {{ $gettext('Neues Zugangscode generieren') }}
                             </StudipButton>
                         </label>
                         <label id="guest_link_label" v-if="moderator_access_link">
-                            <span v-translate>Link</span>
+                            <span>{{ $gettext('Link') }}</span>
                             <StudipTooltipIcon :text="$gettext('Bitte geben sie diesen Link und Zugangscode dem Gast-Moderator.')"
                                 :important="true"></StudipTooltipIcon>
                             <textarea ref="guestModeratorLinkArea" v-model="moderator_access_link" cols="30" rows="5"></textarea>

@@ -8,6 +8,7 @@ use GuzzleHttp\ClientInterface;
 use Throwable;
 use GuzzleHttp\Exception\BadResponseException;
 use Meetings\Errors\Error;
+use Meetings\Models\I18N;
 
 /**
  * DFN video conference driver implementation.
@@ -396,13 +397,13 @@ class DfnVc implements DriverInterface
     public static function getConfigOptions()
     {
         return array(
-            new ConfigOption('active', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Aktiv?'), true),
-            new ConfigOption('label', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Label'), 'Server #'),
-            new ConfigOption('url', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'API-Endpoint'), 'https://connect.vc.dfn.de'),
-            new ConfigOption('login', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Funktionskennung')),
-            new ConfigOption('password', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Passwort'), null, null, 'password'),
-            new ConfigOption('course_types', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Veranstaltungstyp'), MeetingPlugin::getSemClasses(), _('Nur in folgenden Veranstaltungskategorien nutzbar')),
-            new ConfigOption('description', dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Beschreibung'), '', _('Der Beschreibungstext wird Lehrenden angezeigt wenn dieser Server ausgewählt wird.'))
+            new ConfigOption('active', I18N::_('Aktiv?'), true),
+            new ConfigOption('label', I18N::_('Label'), 'Server #'),
+            new ConfigOption('url', I18N::_('API-Endpoint'), 'https://connect.vc.dfn.de'),
+            new ConfigOption('login', I18N::_('Funktionskennung')),
+            new ConfigOption('password', I18N::_('Passwort'), null, null, 'password'),
+            new ConfigOption('course_types', I18N::_('Veranstaltungstyp'), MeetingPlugin::getSemClasses(), I18N::_('Nur in folgenden Veranstaltungskategorien nutzbar')),
+            new ConfigOption('description', I18N::_('Beschreibung'), '', I18N::_('Der Beschreibungstext wird Lehrenden angezeigt wenn dieser Server ausgewählt wird.'))
         );
     }
 

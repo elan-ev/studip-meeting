@@ -12,14 +12,14 @@
                     :disabled="checkDisabled()"
                     value="true"
                     v-model="room['features'][feature['name']]">
-                <translate>Aufzeichnung automatisch starten und beenden</translate>
+                {{ $gettext('Aufzeichnung automatisch starten und beenden') }}
             </label>
             <label class="radio-label">
                 <input type="radio"
                     :disabled="checkDisabled()"
                     value="false"
                     v-model="room['features'][feature['name']]">
-                <translate>Aufzeichnung manuell starten und beenden</translate>
+                {{ $gettext('Aufzeichnung manuell starten und beenden') }}
             </label>
             <span class="inline-feature-warning-icon" v-if="inlineFeatureWarningIcon && inlineFeatureWarningIcon.messagebox_id">
                 <a href="#" @click.prevent="toggleInlineFeatureWarning(inlineFeatureWarningIcon['messagebox_id'])">
@@ -61,26 +61,18 @@
 
             <select :id="feature['name']" v-model.trim="room['features'][feature['name']]" :disabled="checkDisabled()">
                 <option v-for="(fvalue, findex) in feature['value']" :key="findex"
-                        :value="findex" v-translate>
+                        :value="findex">
                         {{ fvalue }}
                 </option>
             </select>
         </template>
         <template v-else>
             {{ feature['display_name'] }}
-            <span v-if="feature['name'] == 'maxParticipants' && maxAllowedParticipants != 0"
-                v-translate="{
-                    count: maxAllowedParticipants
-                }"
-            >
-                (Max. Limit: %{ count })
+            <span v-if="feature['name'] == 'maxParticipants' && maxAllowedParticipants != 0">
+                {{ $gettext('(Max. Limit: %{ count })') | gettextinterpolate({count: maxAllowedParticipants}) }}
             </span>
-            <span v-if="feature['name'] == 'duration' && maxDuration"
-                v-translate="{
-                    maxDuration
-                }"
-            >
-                    (Max. Limit: %{ maxDuration } Minuten)
+            <span v-if="feature['name'] == 'duration' && maxDuration">
+                {{ $gettext('(Max. Limit: %{ maxDuration } Minuten)') | gettextinterpolate({maxDuration: maxDuration}) }}
             </span>
             <StudipTooltipIcon v-if="Object.keys(feature).includes('info')"
                 :text="feature['info']">
@@ -98,8 +90,8 @@
                     v-model.trim="room['features'][feature['name']]"
                     :placeholder="feature['value'] ? feature['value'] : ''"
                     :id="feature['name']">
-                <span v-if="feature['name'] == 'maxParticipants'" v-translate>
-                    (0 = unbegrenzt)
+                <span v-if="feature['name'] == 'maxParticipants'">
+                    {{ $gettext('(0 = unbegrenzt)') }}
                 </span>
             </div>
         </template>

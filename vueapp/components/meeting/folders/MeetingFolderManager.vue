@@ -16,7 +16,7 @@
 
                 <form class="default" @submit.prevent="">
                     <div>
-                        {{ $gettext('Aktuell ausgewählter Ordner: ') }}
+                        {{ $gettext('Aktuell ausgewählter Ordner:') }}
 
                         <span>
                             {{ folder.name }}

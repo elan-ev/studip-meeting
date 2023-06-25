@@ -22,18 +22,18 @@
 
                 <form class="default" @keyup="roomFormSubmit($event)" style="position: relative">
                     <fieldset id="room_settings_section">
-                        <legend v-translate>
-                            Raumeinstellung
+                        <legend>
+                            {{ $gettext('Raumeinstellung') }}
                         </legend>
                         <label>
-                            <span class="required" v-translate>
-                                Raumname
+                            <span class="required">
+                                {{ $gettext('Raumname') }}
                             </span>
                             <input type="text" v-model.trim="room['name']" id="name">
                         </label>
                         <label>
-                            <span v-translate>
-                                Beschreibung
+                            <span>
+                                {{ $gettext('Beschreibung') }}
                             </span>
                             <textarea
                                 v-model="room['description']"
@@ -69,13 +69,13 @@
                         </legend>
 
                         <label v-if="Object.keys(config).length > 1">
-                            <span class="required" v-translate>
-                                Konferenzsystem
+                            <span class="required">
+                                {{ $gettext('Konferenzsystem') }}
                             </span>
 
                             <select id="driver" v-model="room['driver']" @change.prevent="handleServerDefaults" :disabled="Object.keys(config).length == 1">
-                                <option value="" disabled v-translate>
-                                    Bitte wählen Sie ein Konferenzsystem aus
+                                <option value="" disabled>
+                                    {{ $gettext('Bitte wählen Sie ein Konferenzsystem aus') }}
                                 </option>
                                 <option v-for="(driver_config, driver) in availableDrivers" :key="driver"
                                         :value="driver"
@@ -87,25 +87,18 @@
                                         <template v-if="Object.keys(config[driver]['servers']).length == 1">
                                             <span v-if="config[driver]['server_details'] && config[driver]['server_details'][0]
                                                 && config[driver]['server_details'][0]['label'] && config[driver]['server_details'][0]['label'] != ''"
-                                                v-translate="{
-                                                    label: config[driver]['server_details'][0]['label']
-                                                }"
                                             >
-                                                (%{ label })
+                                                {{ '(' + config[driver]['server_details'][0]['label'] + ')' }}
                                             </span>
                                             <span v-if="config[driver]['server_course_type'] && config[driver]['server_course_type'][0] &&
                                                     config[driver]['server_course_type'][0]['name']"
-                                                v-translate="{
-                                                    name: config[driver]['server_course_type'][0]['name']
-                                                }"
                                             >
-                                                (für %{ name })
+                                                {{$gettext('(für %{ name })') | gettextinterpolate({name: config[driver]['server_course_type'][0]['name']}) }}
                                             </span>
-                                            <span v-translate
-                                                v-if="!config[driver]['servers'][0] || (config[driver]['server_course_type'] && config[driver]['server_course_type'][0] &&
+                                            <span v-if="!config[driver]['servers'][0] || (config[driver]['server_course_type'] && config[driver]['server_course_type'][0] &&
                                                         !config[driver]['server_course_type'][0]['valid'])"
                                             >
-                                            - nicht verfügbar
+                                            {{ $gettext('- nicht verfügbar') }}
                                             </span>
                                         </template>
                                 </option>
@@ -115,14 +108,14 @@
                         <label v-if="room['driver']
                                 && Object.keys(config[room['driver']]['servers']).length > 1"
                         >
-                            <span class="required" v-translate>
-                                Verfügbare Server
+                            <span class="required">
+                                {{ $gettext('Verfügbare Server') }}
                             </span>
 
                             <select id="server_index" v-model="room['server_index']" @change.prevent="handleServerDefaults"
                                 :disabled="Object.keys(config[room['driver']]['servers']).length == 1">
-                                <option value="" disabled v-translate>
-                                    Bitte wählen Sie einen Server aus
+                                <option value="" disabled>
+                                    {{ $gettext('Bitte wählen Sie einen Server aus') }}
                                 </option>
                                 <option v-for="(server_config, server_index) in config[room['driver']]['servers']" :key="server_index"
                                         :value="'' + server_index"
@@ -132,34 +125,23 @@
                                         <span v-if="config[room['driver']]['server_details'] && config[room['driver']]['server_details'][server_index]
                                             && config[room['driver']]['server_details'][server_index]['label']
                                             && config[room['driver']]['server_details'][server_index]['label'] != ''"
-                                            v-translate="{
-                                                label: config[room['driver']]['server_details'][server_index]['label']
-                                            }"
-                                        >
-                                            %{ label }
-                                        </span>
-                                        <translate v-else>Server {{ (server_index + 1) }}</translate>
+                                            v-text="config[room['driver']]['server_details'][server_index]['label']"
+                                        ></span>
+                                        <span v-else>{{ $gettext('Server') + ' ' + (server_index + 1) }}</span>
                                         <span v-if="config[room['driver']]['server_defaults'] && config[room['driver']]['server_defaults'][server_index]
-                                                    &&  config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants']"
-                                            v-translate="{
-                                                count: config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants']
-                                            }"
+                                                &&  config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants']"
                                         >
-                                            (max. %{ count } Teilnehmende)
+                                            {{ $gettext('(max. %{ count } Teilnehmende)') | gettextinterpolate({count: config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants']}) }}
                                         </span>
                                         <span v-if="config[room['driver']]['server_course_type'] && config[room['driver']]['server_course_type'][server_index] &&
                                                     config[room['driver']]['server_course_type'][server_index]['name']"
-                                            v-translate="{
-                                                name: config[room['driver']]['server_course_type'][server_index]['name']
-                                            }"
                                         >
-                                            (für %{ name })
+                                            {{ $gettext('(für %{ name })') | gettextinterpolate({name: config[room['driver']]['server_course_type'][server_index]['name']}) }}
                                         </span>
-                                        <span v-translate
-                                            v-if="!server_config || (config[room['driver']]['server_course_type'] && config[room['driver']]['server_course_type'][server_index] &&
+                                        <span v-if="!server_config || (config[room['driver']]['server_course_type'] && config[room['driver']]['server_course_type'][server_index] &&
                                                     !config[room['driver']]['server_course_type'][server_index]['valid'])"
                                         >
-                                            - nicht verfügbar
+                                            {{ $gettext('- nicht verfügbar') }}
                                         </span>
                                 </option>
                             </select>
@@ -169,10 +151,10 @@
                                 && config[room['driver']]['server_details'][room['server_index']]['description']
                                 && config[room['driver']]['server_details'][room['server_index']]['description'] != ''"
                         >
-                            <strong v-translate>
-                                Serverbeschreibung
+                            <strong>
+                                {{ $gettext('Serverbeschreibung') }}
                             </strong>
-                            <div v-translate style="word-break: break-word !important;"
+                            <div style="word-break: break-word !important;"
                                 v-text="config[room['driver']]['server_details'][room['server_index']]['description']"
                             ></div>
                         </label>
@@ -199,7 +181,7 @@
                                         {{ $gettext('-- Keine Vorlage --') }}
                                     </option>
                                     <option v-for="(poption, pindex) in server_presets" :key="pindex" :value="pindex">
-                                        {{ $gettext(poption.presetName) }}
+                                        {{ poption.presetName }}
                                     </option>
                                 </select>
                             </label>
@@ -248,9 +230,7 @@
                                 true-value="1"
                                 false-value="0"
                                 v-model="room['join_as_moderator']">
-                                <translate>
-                                    Alle Teilnehmenden haben Moderationsrechte
-                                </translate>
+                                {{ $gettext('Alle Teilnehmenden haben Moderationsrechte') }}
                         </label>
                         <span v-if="Object.keys(config[room['driver']]).includes('features')
                             && Object.keys(config[room['driver']]['features']).includes('create')
@@ -287,10 +267,10 @@
                         </legend>
 
                         <label>
-                            <translate>Wählen sie eine zugehörige Gruppe aus</translate>
+                            {{ $gettext('Wählen sie eine zugehörige Gruppe aus') }}
                             <select id="gruppen" v-model.trim="room.group_id">
-                                <option value="" v-translate>
-                                    Keine Gruppe
+                                <option value="">
+                                    {{ $gettext('Keine Gruppe') }}
                                 </option>
 
                                 <option v-for="(gname, gid) in course_groups" :key="gid"
@@ -337,10 +317,8 @@
 
 
                         <label v-if="hasPresentationSetting == 'all' || hasPresentationSetting == 'preupload'">
-                            <h3 v-translate>
-                                <translate>
-                                    Automatisches hochladen von Materialien
-                                </translate>
+                            <h3>
+                                {{ $gettext('Automatisches hochladen von Materialien') }}
                                 <StudipTooltipIcon :text="$gettext('Verknüpfen Sie einen Ordner mit diesem Raum. '
                                     + 'Es werden alle Dateien in diesem Ordner automatisch zu Beginn des Meetings hochgeladen. '
                                     + 'Sie können im Meeting zwischen den Dateien wechseln.')">
@@ -348,13 +326,13 @@
                             </h3>
 
                             <div>
-                                <translate>Aktuell ausgewählter Ordner: </translate>
+                                {{ $gettext('Aktuell ausgewählter Ordner:') }}
 
                                 <span v-if="room.folder_id && room.folder_id == folder.id && folder.name != ''">
                                     {{ folder.name }}
                                 </span>
-                                <span v-else v-translate>
-                                    Kein Ordner
+                                <span v-else>
+                                    {{ $gettext('Kein Ordner') }}
                                 </span>
                             </div>
                             <MeetingFolderTable :folder="folder" :currentFolderId="room.folder_id ? room.folder_id : ''" @switchFolder="folderHandler"/>

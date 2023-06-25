@@ -19,14 +19,14 @@
                 <form class="default" @submit.prevent="generateGuestJoin">
                     <fieldset>
                         <label>
-                            <span class="required" v-translate>Standard-Gästename</span>
+                            <span class="required">{{ $gettext('Standard-Gästename') }}</span>
                             <StudipTooltipIcon :text="$gettext('Sofern der Gast keinen Namen eingibt, wird dieser standardmäßig verwendet.')">
                             </StudipTooltipIcon>
                             <input type="text" v-model.trim="guest_name" id="guestname" @change="generateGuestJoin($event)">
                         </label>
 
                         <label v-if="guest_link">
-                            <span v-translate>Link</span>
+                            <span>{{ $gettext('Link') }}</span>
                             <StudipTooltipIcon :text="$gettext('Bitte geben sie diesen Link dem Gast.')"
                                 :important="true"></StudipTooltipIcon>
                             <textarea ref="guestLinkArea" v-model="guest_link" cols="30" rows="5"></textarea>

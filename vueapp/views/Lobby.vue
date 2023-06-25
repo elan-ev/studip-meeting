@@ -1,11 +1,11 @@
 <template>
   <div class="meeting-lobby">
-    <h1 v-translate>Das Meeting hat noch nicht begonnen </h1>
+    <h1>{{ $gettext('Das Meeting hat noch nicht begonnen') }}</h1>
 
     <div class="waiting-info-container">
       <img :src="loadingURL" width="24" height="24"/>
-      <p v-translate>
-        Sie treten dem Meeting automatisch bei, sobald es begonnen hat.
+      <p>
+        {{ $gettext('Sie treten dem Meeting automatisch bei, sobald es begonnen hat.') }}
       </p>
     </div>
 
