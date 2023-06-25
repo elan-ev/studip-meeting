@@ -39,7 +39,7 @@ class RoomEdit extends MeetingsController
         global $perm;
         $json = $this->getRequestData($request);
         if (!$perm->have_studip_perm('tutor', $json['cid'])) {
-            throw new Error(_('Access Denied'), 403);
+            throw new Error('Access Denied', 403);
         }
 
         $room_id = $args['room_id'];

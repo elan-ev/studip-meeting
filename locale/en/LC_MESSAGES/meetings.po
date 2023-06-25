@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-25 18:26+0200\n"
+"POT-Creation-Date: 2023-06-25 19:03+0200\n"
 "PO-Revision-Date: 2022-03-04 10:09+0100\n"
 "Last-Translator: April Suddendorf, 2020\n"
 "Language-Team: English (https://www.transifex.com/uol-it/teams/52597/en/)\n"
@@ -1080,10 +1080,6 @@ msgstr "Number of participants cannot exceed %{ maxAllowedParticipants }"
 msgid "Teilnehmerzahl soll %{ minParticipants } nicht unterschreiten"
 msgstr "Number of participants should not be less than %{ minParticipants }"
 
-#: vueapp/components/meeting/feedback/MeetingFeedback.vue:31
-msgid "this"
-msgstr "this"
-
 #: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:38
 #: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:45
 msgid "Typ"
@@ -1237,7 +1233,7 @@ msgstr ""
 "takes 1-2 minutes. Please try again later!"
 
 #: Driver/MicrosoftTeams.php:402
-msgid "Microsoft Graph URL"
+msgid "Microsoft Graph-URL"
 msgstr "Microsoft Graph URL"
 
 #: Driver/MicrosoftTeams.php:406
@@ -1253,11 +1249,11 @@ msgid "Geheimer Clientschlüssel (Wert)"
 msgstr "Secret ID (value)"
 
 #: Driver/BigBlueButton.php:389 Driver/DfnVc.php:237
-msgid "Internal Error"
+msgid "Interner Fehler"
 msgstr "Internal Error"
 
 #: Driver/BigBlueButton.php:390 Driver/DfnVc.php:238
-msgid "Please contact a system administrator!"
+msgid "Bitte wenden Sie sich an einen Systemadministrator!"
 msgstr "Please contact a system administrator!"
 
 #: Driver/BigBlueButton.php:428 Driver/DfnVc.php:400
@@ -1281,11 +1277,11 @@ msgid "Zugriff über Proxy"
 msgstr "Access via Proxy"
 
 #: Driver/BigBlueButton.php:433
-msgid "Connection Timeout (e.g. 0.5)"
+msgid "Verbindungs-Timeout (e.g. 0.5)"
 msgstr "Connection Timeout (e.g. 0.5)"
 
 #: Driver/BigBlueButton.php:434
-msgid "Request Timeout (e.g. 3.4)"
+msgid "Request-Timeout (e.g. 3.4)"
 msgstr "Request Timeout (e.g. 3.4)"
 
 #: Driver/BigBlueButton.php:435
@@ -1471,10 +1467,10 @@ msgid ""
 "Meeting verlassen haben, oder ein Moderator das Meeting aktiv beendet wird "
 "der Raum ebenfalls geschlossen."
 msgstr ""
-"The maximum length (in minutes) for this meeting. After the configured "
-"duration the meeting (room) will be closed automatically. If all "
-"participants left before the the time runs out or a moderator actively "
-"finishes the meeting the room will be closed as well."
+"The maximum length (in minutes) for the meeting. After the set duration has "
+"expired, the meeting is automatically ended, i.e. the room is closed. If all "
+"participants have left the meeting before the time expires or if a moderator "
+"actively ends the meeting, the room will also be closed."
 
 #: Driver/BigBlueButton.php:610
 msgid ""
@@ -1544,20 +1540,10 @@ msgstr "Function ID"
 msgid "Passwort"
 msgstr "Password"
 
-#: MeetingPlugin.php:154 MeetingPlugin.php:321 MeetingPlugin.php:322
-#: app/controllers/index.php:425 app/controllers/index.php:427
-msgid "Meetings"
-msgstr "Meetings"
-
 #: MeetingPlugin.php:188
 #, php-format
 msgid "%d Meeting(s), %d neue"
 msgstr "%d Meeting(s), %d new"
-
-#: MeetingPlugin.php:192
-#, php-format
-msgid "%d Meeting(s)"
-msgstr "%d Meeting(s)"
 
 #: MeetingPlugin.php:221
 msgid "Seite Anpassen"
@@ -1754,12 +1740,6 @@ msgstr "Introductory text"
 msgid "Neue Einleitung hinzufügen"
 msgstr "Add new introduction"
 
-#: app/controllers/room.php:63 app/controllers/room.php:114
-#: app/controllers/room.php:232 app/controllers/room.php:330
-#: app/controllers/room.php:421
-msgid "Stud.IP Meeting"
-msgstr "Stud.IP Meeting"
-
 #: app/controllers/room.php:67 app/controllers/room.php:118
 #: app/controllers/room.php:179 app/controllers/room.php:186
 #: app/controllers/room.php:210 app/controllers/room.php:305
@@ -1940,21 +1920,6 @@ msgstr "Add"
 #: lib/Models/Config.php:86
 msgid "Es wurde kein Servicetyp angegeben."
 msgstr "No service type was specified."
-
-#: lib/Errors/ExceptionHandler.php:49
-msgid " - Slim Application Internal Error"
-msgstr " - Slim Application Internal Error"
-
-#: lib/Routes/Recordings/RecordingDelete.php:37
-#: lib/Routes/Recordings/RecordingShow.php:39 lib/Routes/Rooms/RoomAdd.php:46
-#: lib/Routes/Rooms/RoomInvitationLink.php:35
-#: lib/Routes/Rooms/RoomDelete.php:39
-#: lib/Routes/Rooms/RoomModeratorInvitationLinkCreate.php:47
-#: lib/Routes/Rooms/RoomJoinGuest.php:46
-#: lib/Routes/Rooms/RoomModeratorInvitationLinkGet.php:35
-#: lib/Routes/Rooms/RoomEdit.php:42
-msgid "Access Denied"
-msgstr "Access Denied"
 
 #: lib/Routes/Recordings/RecordingDelete.php:48
 msgid "Aufzeichnung wurde gelöscht."
@@ -2163,16 +2128,16 @@ msgid "Die Bearbeitung wurde erfolgreich abgeschlossen."
 msgstr "The editing was successfully completed."
 
 #: lib/Helpers/RoomManager.php:76
-msgid "Validation failed!"
+msgid "Überprüfung fehlgeschlagen!"
 msgstr "Validation failed!"
 
 #: lib/Helpers/RoomManager.php:96
-msgid "Unable to check Assigned Folder"
-msgstr "Unable to check Assigned Folder"
+msgid "Der zugewiesene Ordner kann nicht überprüft werden"
+msgstr "Unable to check the assigned folder"
 
 #: lib/Helpers/RoomManager.php:158
-msgid "Unable to check Assigned Group"
-msgstr "Unable to check Assigned Group"
+msgid "Die zugewiesene Gruppe kann nicht überprüft werden"
+msgstr "Unable to check the assigned group"
 
 #: lib/Helpers/MeetingsHelper.php:173 lib/Helpers/MeetingsHelper.php:316
 msgid ""

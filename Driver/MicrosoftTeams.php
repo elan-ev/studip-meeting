@@ -399,7 +399,7 @@ class MicrosoftTeams implements DriverInterface
 
         return array(
             new ConfigOption('url',
-                I18N::_('Microsoft Graph URL'),
+                I18N::_('Microsoft Graph-URL'),
                 'https://graph.microsoft.com'
             ),
             new ConfigOption('client_id',

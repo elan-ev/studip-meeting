@@ -36,7 +36,7 @@ class RecordingShow extends MeetingsController
         $room_id = $args['room_id'];
         $cid = $args['cid'];
         if (!$perm->have_studip_perm('tutor', $cid)) {
-            throw new Error(_('Access Denied'), 403);
+            throw new Error('Access Denied', 403);
         }
 
         //TODO:  get json for this room what exactly this route supposed to do?

@@ -60,7 +60,7 @@ class RoomController extends PluginController
 
     public function index_action($link_hex, $cid)
     {
-        PageLayout::setTitle($this->_('Stud.IP Meeting'));
+        PageLayout::setTitle('Stud.IP Meeting');
 
         $this->invitations_link = InvitationsLink::findOneBySQL('hex = ?', [$link_hex]);
         if (!$this->invitations_link || !$this->invitations_link->meeting) {
@@ -111,7 +111,7 @@ class RoomController extends PluginController
 
     public function moderator_action($link_hex, $cid)
     {
-        PageLayout::setTitle($this->_('Stud.IP Meeting'));
+        PageLayout::setTitle('Stud.IP Meeting');
 
         $this->moderator_invitations_link = ModeratorInvitationsLink::findOneBySQL('hex = ?', [$link_hex]);
         if (!$this->moderator_invitations_link || !$this->moderator_invitations_link->meeting) {
@@ -229,7 +229,7 @@ class RoomController extends PluginController
 
     public function qrcode_action($link_hex, $cid)
     {
-        PageLayout::setTitle($this->_('Stud.IP Meeting'));
+        PageLayout::setTitle('Stud.IP Meeting');
 
         $this->qr_code_token = QRCodeToken::findOneBySQL('hex = ?', [$link_hex]);
         if (!$this->qr_code_token || !$this->qr_code_token->meeting) {
@@ -327,7 +327,7 @@ class RoomController extends PluginController
     {
         $room_id = filter_var($room_id, FILTER_SANITIZE_NUMBER_INT);
         $cid = htmlspecialchars($cid);
-        PageLayout::setTitle($this->_('Stud.IP Meeting'));
+        PageLayout::setTitle('Stud.IP Meeting');
 
         $is_public = MeetingPlugin::isCoursePublic($cid);
 
@@ -418,7 +418,7 @@ class RoomController extends PluginController
     }
 
     public function display_message_action() {
-        PageLayout::setTitle($this->_('Stud.IP Meeting'));
+        PageLayout::setTitle('Stud.IP Meeting');
         if ($err = Request::get('err')) {
             if ($err == 'server-inactive') {
                 PageLayout::postError(_('Der ausgewählte Server ist deaktiviert.'));

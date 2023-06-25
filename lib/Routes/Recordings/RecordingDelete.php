@@ -34,7 +34,7 @@ class RecordingDelete extends MeetingsController
         global $perm;
         $cid = $args['cid'];
         if (!$perm->have_studip_perm('tutor', $cid)) {
-            throw new Error(_('Access Denied'), 403);
+            throw new Error('Access Denied', 403);
         }
         try {
             $recordings_id = $args['recordings_id'];

@@ -36,7 +36,7 @@ class RoomDelete extends MeetingsController
         $cid = $args['cid'];
 
         if (!$perm->have_studip_perm('tutor', $cid)) {
-            throw new Error(_('Access Denied'), 403);
+            throw new Error('Access Denied', 403);
         }
         try {
             $driver_factory = new DriverFactory(Driver::getConfig());

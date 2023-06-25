@@ -44,7 +44,7 @@ class RoomModeratorInvitationLinkCreate extends MeetingsController
         $cid = $args['cid'];
 
         if (!$GLOBALS['perm']->have_studip_perm('tutor', $cid)) {
-            throw new Error(_('Access Denied'), 403);
+            throw new Error('Access Denied', 403);
         }
 
         $meeting = Meeting::find($room_id);

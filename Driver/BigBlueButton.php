@@ -386,8 +386,8 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             $response = $e->getResponse()->getBody(true);
             $xml = new \SimpleXMLElement($response);
             $status_code = 500;
-            $error = I18N::_('Internal Error');
-            $message = I18N::_('Please contact a system administrator!');
+            $error = I18N::_('Interner Fehler');
+            $message = I18N::_('Bitte wenden Sie sich an einen Systemadministrator!');
             if ($xml instanceof \SimpleXMLElement) {
                 $message = (string) $xml->message ? (string) $xml->message : $message;
                 $error = (string) $xml->error ? (string) $xml->error : $error;
@@ -430,8 +430,8 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             new ConfigOption('url',     I18N::_('URL des BBB-Servers')),
             new ConfigOption('api-key', I18N::_('Api-Key (Salt)'), null, null, 'password'),
             new ConfigOption('proxy', I18N::_('Zugriff über Proxy')),
-            new ConfigOption('connection_timeout', I18N::_('Connection Timeout (e.g. 0.5)')),
-            new ConfigOption('request_timeout', I18N::_('Request Timeout (e.g. 3.4)')),
+            new ConfigOption('connection_timeout', I18N::_('Verbindungs-Timeout (e.g. 0.5)')),
+            new ConfigOption('request_timeout', I18N::_('Request-Timeout (e.g. 3.4)')),
             new ConfigOption('maxParticipants', I18N::_('Max. Zahl von Teilnehmenden')),
             new ConfigOption('course_types', I18N::_('Veranstaltungstyp'), MeetingPlugin::getSemClasses(), I18N::_('Nur in folgenden Veranstaltungskategorien nutzbar')),
             new ConfigOption('description', I18N::_('Beschreibung'), '', I18N::_('Der Beschreibungstext wird Lehrenden angezeigt wenn dieser Server ausgewählt wird.')),

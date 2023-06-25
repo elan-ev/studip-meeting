@@ -151,7 +151,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
 
     public function getPluginName()
     {
-        return $this->_('Meetings');
+        return 'Meetings';
     }
 
     public function getInfoTemplate($course_id) {
@@ -189,7 +189,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
             ));
         } else {
             $navigation->setImage(self::getIcon('chat', 'gray'), array(
-                'title' => sprintf($this->_('%d Meeting(s)'), count($courses)),
+                'title' => sprintf('%d Meeting(s)', count($courses)),
             ));
         }
 
@@ -318,8 +318,8 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
     {
         $metadata = parent::getMetadata();
 
-        $metadata['pluginname']  = $this->_("Meetings");
-        $metadata['displayname'] = $this->_("Meetings");
+        $metadata['pluginname']  = $this->getPluginName();
+        $metadata['displayname'] = $this->getPluginName();
 
         $metadata['descriptionlong'] = $this->_("Virtueller Raum, mit dem Live-Online-Treffen, Veranstaltungen "
             . "und Videokonferenzen durchgeführt werden können. Die Teilnehmenden können sich während "

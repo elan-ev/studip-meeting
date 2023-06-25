@@ -73,7 +73,7 @@ class RoomManager
             }
             return $is_valid ? $features : false;
         } catch (Throwable $e) {
-            throw new Error(_('Validation failed!'), 404);
+            throw new Error(_('Überprüfung fehlgeschlagen!'), 404);
         }
     }
 
@@ -93,7 +93,7 @@ class RoomManager
                     $meeting->store();
                 }
             } catch (Throwable $e) {
-                throw new Error(_('Unable to check Assigned Folder'), 404);
+                throw new Error(_('Der zugewiesene Ordner kann nicht überprüft werden'), 404);
             }
         }
     }
@@ -155,7 +155,7 @@ class RoomManager
                     $meetingCourse->store();
                 }
             } catch (Throwable $e) {
-                throw new Error(_('Unable to check Assigned Group'), 404);
+                throw new Error(_('Die zugewiesene Gruppe kann nicht überprüft werden'), 404);
             }
         }
         return $meetingCourse;
@@ -274,13 +274,13 @@ class RoomManager
 
     /**
      * Generates the meeting plugin url with dynamic controller and params.
-     * 
+     *
      * @param string $controller where to land in terms of controller
      * @param array $params the url query string params
-     * 
+     *
      * @return string
      */
-    public static function generateMeetingBaseURL($controller, $params = []) 
+    public static function generateMeetingBaseURL($controller, $params = [])
     {
         $studip_absolute_url = rtrim($GLOBALS['ABSOLUTE_URI_STUDIP'], '/');
 

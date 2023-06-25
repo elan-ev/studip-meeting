@@ -234,14 +234,14 @@ class DfnVc implements DriverInterface
             $response = $e->getResponse()->getBody(true);
             $xml = @new \SimpleXMLElement($response);
             $status_code = 500;
-            $error = _('Internal Error');
-            $message = _('Please contact a system administrator!');
+            $error = I18N::_('Interner Fehler');
+            $message = I18N::_('Bitte wenden Sie sich an einen Systemadministrator!');
             if ($xml instanceof \SimpleXMLElement) {
                 $message = (string) $xml->message ? (string) $xml->message : $message;
                 $error = (string) $xml->error ? (string) $xml->error : $error;
                 $status_code = (string) $xml->status ? (string) $xml->status : $status_code;
             }
-            throw new Error(_($error) . ': ' . _($message), $status_code);
+            throw new Error($error . ': ' . $message, $status_code);
         }
     }
 

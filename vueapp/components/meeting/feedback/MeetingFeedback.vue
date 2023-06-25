@@ -119,7 +119,7 @@ export default {
         network_types_complied() {
             let network_types_complied = {};
             for (const key in this.network_types) {
-                network_types_complied[key] = this.$gettext(this.network_types[key]);
+                network_types_complied[key] = this.network_types[key];
             }
             return network_types_complied;
         },

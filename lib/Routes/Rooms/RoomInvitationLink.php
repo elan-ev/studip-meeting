@@ -32,7 +32,7 @@ class RoomInvitationLink extends MeetingsController
         $cid = $args['cid'];
 
         if (!$GLOBALS['perm']->have_studip_perm('tutor', $cid)) {
-            throw new Error(_('Access Denied'), 403);
+            throw new Error('Access Denied', 403);
         }
 
         $invitations_link = InvitationsLink::findOneBySQL('meeting_id = ?', [$room_id]);

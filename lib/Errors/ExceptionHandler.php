@@ -45,10 +45,10 @@ class ExceptionHandler extends ErrorHandler
             $httpCode = 500;
 
             $plugin_name = $this->getPluginName();
-    
-            $message = _($plugin_name . ' - Slim Application Internal Error') . ': ' . $exception->getMessage();
+
+            $message = $plugin_name . ' - Slim Application Internal Error' . ': ' . $exception->getMessage();
             $details = (string) $exception;
-            
+
             $meetingError = new Error($message, $httpCode, $details);
         }
 
