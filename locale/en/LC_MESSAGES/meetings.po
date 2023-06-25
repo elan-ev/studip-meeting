@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-25 19:03+0200\n"
+"POT-Creation-Date: 2023-06-25 19:14+0200\n"
 "PO-Revision-Date: 2022-03-04 10:09+0100\n"
 "Last-Translator: April Suddendorf, 2020\n"
 "Language-Team: English (https://www.transifex.com/uol-it/teams/52597/en/)\n"
@@ -189,7 +189,7 @@ msgstr "Error occurred when selecting the file!"
 
 #: vueapp/components/meeting/folders/MeetingAddDocument.vue:73
 msgid "Beim Drag & Drop Fehler geschlagen!"
-msgstr "Error occurred during Drag & Drop"
+msgstr "Error occurred during Drag & Drop!"
 
 #: vueapp/components/meeting/admin/MeetingAdminConfig.vue:144
 msgid "Beim Speichern der Servervoreinstellungen ist ein Fehler aufgetreten."
@@ -317,7 +317,7 @@ msgstr "File could not be found!"
 
 #: vueapp/components/meeting/folders/MeetingAddDocument.vue:96
 msgid "Datei konnte nicht gefunden werden."
-msgstr "File could not be found"
+msgstr "File could not be found."
 
 #: vueapp/components/meeting/folders/MeetingAddDocument.vue:60
 msgid "Dateigröße überschreitet!"
@@ -338,7 +338,7 @@ msgstr "The link has been copied to the clipboard."
 
 #: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:25
 msgid "Der Name darf nicht leer sein."
-msgstr "The room name cannot be empty"
+msgstr "The room name cannot be empty."
 
 #: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:108
 msgid "Der Zugangscode darf nur aus %{ password_length } Zeichen bestehen"
