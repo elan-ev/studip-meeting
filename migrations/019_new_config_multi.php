@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/../bootstrap.php';
 
 /**
  * Remove old config options and add a new one, holding all config data
@@ -31,7 +31,7 @@ class NewConfigMulti extends Migration {
 
                 $current_config = \Config::get()->getValue('VC_CONFIG');
                 $current_config = json_decode($current_config, true);
-                
+
 
                 $config_bigbluebutton_options = [];
                 $config_dfnvc_options = [];
@@ -92,7 +92,7 @@ class NewConfigMulti extends Migration {
                 foreach ($value['servers'][0] as $key => $value) {
                     $cnf[$key] = $value;
                 }
-            } 
+            }
             $old_config[$driver_name] = $cnf;
         }
         \Config::get()->store('VC_CONFIG', json_encode($old_config));

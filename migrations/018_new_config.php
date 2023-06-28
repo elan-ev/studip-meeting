@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/../bootstrap.php';
 
 /**
  * Remove old config options and add a new one, holding all config data
@@ -25,7 +25,7 @@ class NewConfig extends Migration {
     {
         try {
             Config::get()->create('VC_CONFIG', array(
-                'value' => '', 
+                'value' => '',
                 'type' => 'string',
                 'range' => 'global',
                 'section' => 'meetings',
@@ -50,7 +50,7 @@ class NewConfig extends Migration {
             //migrate current settings
             if (Config::get()->VC_DRIVER) {
                 $current_driver = Config::get()->getValue('VC_DRIVER');
-                
+
                 $config['BigBlueButton']['enable'] = (trim(strtolower($current_driver)) == 'bigbluebutton') ? 1 : 0;
                 $config['BigBlueButton']['url'] = (Config::get()->BBB_URL) ? Config::get()->getValue('BBB_URL') : '';
                 $config['BigBlueButton']['api-key'] = (Config::get()->BBB_SALT) ? Config::get()->getValue('BBB_SALT') : '';

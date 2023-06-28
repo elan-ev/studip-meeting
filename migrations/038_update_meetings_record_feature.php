@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/../bootstrap.php';
 
 /**
  * Update/remove series-id record feature of meeting based on driver config

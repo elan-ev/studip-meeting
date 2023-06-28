@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/../bootstrap.php';
 
 class NewConfigBBBWelcome extends Migration
 {
@@ -48,7 +48,7 @@ class NewConfigBBBWelcome extends Migration
                     Config::get()->store('VC_CONFIG', json_encode($current_config));
                 }
             }
-            
+
         }
     }
 }

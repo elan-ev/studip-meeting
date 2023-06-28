@@ -1,4 +1,6 @@
 <?php
+require __DIR__.'/../bootstrap.php';
+
 /**
  * Migrate to definable server roomsizes
  *

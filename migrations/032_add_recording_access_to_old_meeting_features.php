@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/../bootstrap.php';
 
 /**
  * Adding giveAccessToRecordings params to meeting features.
@@ -26,7 +26,7 @@ class AddRecordingAccessToOldMeetingFeatures extends Migration
      */
     public function up()
     {
-        $meetingCourses = MeetingCourse::findAll();
+        $meetingCourses = \ElanEv\Model\MeetingCourse::findAll();
         foreach ($meetingCourses as $meetingCourse) {
             $features = json_decode($meetingCourse->meeting->features, true);
             if (!isset($features['giveAccessToRecordings'])) {

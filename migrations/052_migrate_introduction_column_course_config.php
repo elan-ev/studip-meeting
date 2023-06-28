@@ -40,7 +40,7 @@ class MigrateIntroductionColumnCourseConfig extends Migration
         }
 
         // Rename introduction to introductions.
-        $db->exec("ALTER TABLE vc_course_config RENAME COLUMN introduction TO introductions");
+        $db->exec("ALTER TABLE vc_course_config CHANGE COLUMN `introduction` `introductions` TEXT DEFAULT NULL");
 
         SimpleORMap::expireTableScheme();
     }
@@ -70,7 +70,7 @@ class MigrateIntroductionColumnCourseConfig extends Migration
         }
 
         // Rename introductions to introduction.
-        $db->exec("ALTER TABLE vc_course_config RENAME COLUMN introductions TO introduction");
+        $db->exec("ALTER TABLE vc_course_config CHANGE COLUMN `introductions` `introduction` TEXT DEFAULT NULL");
 
         SimpleORMap::expireTableScheme();
     }

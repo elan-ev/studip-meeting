@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/../bootstrap.php';
 
 /**
  * Adding new config for general values used in Meeting Plugin
@@ -24,7 +24,7 @@ class NewGeneralConfig extends Migration {
     public function up()
     {
         Config::get()->create('VC_GENERAL_CONFIG', array(
-            'value' => '', 
+            'value' => '',
             'type' => 'string',
             'range' => 'global',
             'section' => 'meetings',
