@@ -5,7 +5,7 @@
             <?= $_('Einstellungen') ?>
         </legend>
         <label>
-            <?= $_('Reitername') ?>
+            <?= $_('Name des Werkzeugs') ?>
             <input type="text" name="title" id="vc_config_title" value="<?= htmlReady($courseConfig->title) ?>" size="80" autofocus>
         </label>
 

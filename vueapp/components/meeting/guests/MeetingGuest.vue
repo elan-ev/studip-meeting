@@ -27,8 +27,7 @@
 
                         <label v-if="guest_link">
                             <span>{{ $gettext('Link') }}</span>
-                            <StudipTooltipIcon :text="$gettext('Bitte geben sie diesen Link dem Gast.')"
-                                :important="true"></StudipTooltipIcon>
+                            <StudipTooltipIcon :text="$gettext('Bitte geben sie diesen Link dem Gast.')"/>
                             <textarea ref="guestLinkArea" v-model="guest_link" cols="30" rows="5"></textarea>
                         </label>
                     </fieldset>

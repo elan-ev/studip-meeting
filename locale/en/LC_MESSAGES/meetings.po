@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-25 19:14+0200\n"
+"POT-Creation-Date: 2023-06-30 13:44+0200\n"
 "PO-Revision-Date: 2022-03-04 10:09+0100\n"
 "Last-Translator: April Suddendorf, 2020\n"
 "Language-Team: English (https://www.transifex.com/uol-it/teams/52597/en/)\n"
@@ -97,7 +97,7 @@ msgstr "Currently selected folder:"
 msgid "Alle"
 msgstr "All"
 
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:147
+#: vueapp/components/meeting/folders/MeetingFolderTable.vue:146
 msgid "Alle Dateien anzeigen"
 msgstr "Show all files"
 
@@ -109,7 +109,7 @@ msgstr "All participants have moderation rights"
 msgid "Allgemeine Konfiguration"
 msgstr "General configuration"
 
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:79
+#: vueapp/components/meeting/folders/MeetingFolderTable.vue:78
 msgid "Als aktueller Ordner auswählen"
 msgstr "Select folder"
 
@@ -146,7 +146,7 @@ msgstr "View recording"
 msgid "Aufzeichnung automatisch starten und beenden"
 msgstr "Start and end recording automatically"
 
-#: vueapp/components/meeting/MeetingComponent.vue:296
+#: vueapp/components/meeting/MeetingComponent.vue:290
 msgid "Aufzeichnung kann früher beginnen"
 msgstr "Recording can start earlier"
 
@@ -171,13 +171,18 @@ msgstr "Recordings"
 msgid "Aufzeichnungen für Raum"
 msgstr "Recordings for room"
 
-#: vueapp/components/meeting/MeetingComponent.vue:267
+#: vueapp/components/meeting/MeetingComponent.vue:261
 msgid "Ausgewählter Ordner"
 msgstr "Selected folder"
 
 #: vueapp/components/meeting/add/MeetingAdd.vue:507
 msgid "Automatisches hochladen von Materialien"
 msgstr "Automatically upload materials"
+
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:225
+#: Driver/BigBlueButton.php:467
+msgid "Begrüßungstext"
+msgstr "Welcome message"
 
 #: vueapp/components/meeting/admin/server/ServerDialog.vue:48
 msgid "Bei der Eingabe ist ein Fehler aufgetreten."
@@ -234,11 +239,11 @@ msgid ""
 "zurückgesetzt): (%{ str })"
 msgstr "Please note the following fields (inputs reset to default): (%{ str })"
 
-#: vueapp/components/meeting/MeetingComponent.vue:81
+#: vueapp/components/meeting/MeetingComponent.vue:77
 msgid "Bitte beachten Sie, dass dieser Raum aufgezeichnet wird!"
 msgstr "Please note that this room is being recorded!"
 
-#: vueapp/components/meeting/MeetingComponent.vue:60
+#: vueapp/components/meeting/MeetingComponent.vue:58
 msgid ""
 "Bitte beachten Sie, dass dieser Raum aufgezeichnet wird! Die Webcams der "
 "Teilnehmenden könnten auch aufgezeichnet werden!"
@@ -295,7 +300,7 @@ msgstr "Browser name"
 msgid "Browser-Version"
 msgstr "Browser version"
 
-#: vueapp/components/meeting/MeetingComponent.vue:226
+#: vueapp/components/meeting/MeetingComponent.vue:220
 msgid "Das Meeting gehört der Gruppe"
 msgstr "The meeting belongs to the group"
 
@@ -303,11 +308,11 @@ msgstr "The meeting belongs to the group"
 msgid "Das Meeting hat noch nicht begonnen"
 msgstr "The meeting has not yet started"
 
-#: vueapp/components/meeting/MeetingComponent.vue:208
+#: vueapp/components/meeting/MeetingComponent.vue:202
 msgid "Das Meeting ist für die Teilnehmenden sichtbar"
 msgstr "The meeting is visible for the participants"
 
-#: vueapp/components/meeting/MeetingComponent.vue:209
+#: vueapp/components/meeting/MeetingComponent.vue:203
 msgid "Das Meeting ist für die Teilnehmenden unsichtbar"
 msgstr "The meeting is not visible for the participants"
 
@@ -360,7 +365,7 @@ msgstr "The existing recording on Opencast"
 msgid "Die Zahl wurde in anderen sensiblen Voreinstellungen verwendet."
 msgstr "The number was used in other sensitive presets."
 
-#: vueapp/components/meeting/MeetingComponent.vue:144
+#: vueapp/components/meeting/MeetingComponent.vue:138
 msgid "Dies ist der Standardraum"
 msgstr "This is the default room"
 
@@ -372,8 +377,8 @@ msgstr "Close this dialog"
 msgid "Dieser Code wird benötigt, um sich in diesem Raum anzumelden"
 msgstr "This code is required to log into this room"
 
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:123
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:128
+#: vueapp/components/meeting/folders/MeetingFolderTable.vue:122
+#: vueapp/components/meeting/folders/MeetingFolderTable.vue:127
 msgid "Dieser Ordner ist leer"
 msgstr "This folder is empty"
 
@@ -420,7 +425,7 @@ msgstr ""
 msgid "Ein Zugangscode mit %{ password_length } Zeichen ist erforderlich"
 msgstr "An access code with %{ password_length } characters is required"
 
-#: vueapp/components/meeting/MeetingComponent.vue:182
+#: vueapp/components/meeting/MeetingComponent.vue:176
 msgid "Eingeschränkte Rechte"
 msgstr "Restricted rights"
 
@@ -470,7 +475,7 @@ msgstr ""
 "There are no servers for this meeting system, please choose another meeting "
 "system"
 
-#: vueapp/components/meeting/MeetingComponent.vue:299
+#: vueapp/components/meeting/MeetingComponent.vue:293
 #: vueapp/components/meeting/add/MeetingAdd.vue:412
 msgid ""
 "Es ist bei Aufzeichnungen dringend empfohlen die Veranstaltung und somit die "
@@ -528,7 +533,7 @@ msgstr "Upload slide"
 msgid "Folie/Template wurde erfolgreich gelöscht"
 msgstr "Slide/template was successfully deleted"
 
-#: vueapp/components/meeting/MeetingComponent.vue:235
+#: vueapp/components/meeting/MeetingComponent.vue:229
 msgid "Gruppe:"
 msgstr "Groups:"
 
@@ -572,7 +577,7 @@ msgstr ""
 msgid "Ihre Änderungen sind noch nicht gespeichert!"
 msgstr "Your changes have not been saved yet!"
 
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:122
+#: vueapp/components/meeting/folders/MeetingFolderTable.vue:121
 msgid ""
 "In diesem Ordner befinden sich %{ count } Dateien. Wählen sie \"Alle Dateien "
 "anzeigen\" um diese Dateien aufzulisten"
@@ -672,11 +677,11 @@ msgstr "Link"
 msgid "Maximale Teilnehmerzahl"
 msgstr "Maximum number of participants"
 
-#: vueapp/components/meeting/MeetingComponent.vue:194
+#: vueapp/components/meeting/MeetingComponent.vue:188
 msgid "Meeting für Teilnehmende sichtbar schalten"
 msgstr "Make meeting visible for participants"
 
-#: vueapp/components/meeting/MeetingComponent.vue:193
+#: vueapp/components/meeting/MeetingComponent.vue:187
 msgid "Meeting für Teilnehmende unsichtbar schalten"
 msgstr "Hide meeting for participants"
 
@@ -693,19 +698,19 @@ msgstr "Meetings default slide"
 msgid "Melden Sie ein Problem"
 msgstr "Report a problem"
 
-#: vueapp/components/meeting/MeetingComponent.vue:181
+#: vueapp/components/meeting/MeetingComponent.vue:175
 msgid "Moderationsrechte"
 msgstr "Moderation rights"
 
-#: vueapp/components/meeting/MeetingComponent.vue:355
+#: vueapp/components/meeting/MeetingComponent.vue:349
 #: vueapp/components/meeting/guests/MeetingModeratorGuest.vue:18
 msgid "Moderierende einladen"
 msgstr "Invite moderators"
 
 #: vueapp/components/meeting/admin/MeetingAdminConfig.vue:94
 msgid ""
-"Müssen die Teilnehmende einem Datenschutztext zustimmen, bevor sie einem "
-"Meeting mit Aufzeichnung beitreten können?"
+"Müssen Teilnehmenden einer Datenschutzerklärung zustimmen, bevor sie an "
+"einer Besprechung mit Aufzeichnungsfunktion teilnehmen?"
 msgstr ""
 "Do participants have to agree to the privacy text, before joining a meeting "
 "with recording feature?"
@@ -714,7 +719,7 @@ msgstr ""
 #: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:46
 #: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:56
 #: vueapp/components/meeting/folders/MeetingAddNewFolder.vue:61
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:63
+#: vueapp/components/meeting/folders/MeetingFolderTable.vue:62
 #: Driver/BigBlueButton.php:458
 msgid "Name"
 msgstr "Name"
@@ -723,7 +728,7 @@ msgstr "Name"
 msgid "Name konnte nicht leer sein."
 msgstr "Name could not be empty."
 
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:32
+#: vueapp/components/meeting/folders/MeetingFolderTable.vue:31
 msgid "Navigation in der Ordnertabelle"
 msgstr "Navigation in the folder table"
 
@@ -764,6 +769,10 @@ msgstr "Generate new access code"
 msgid "Nicht erlaubte Dateitypen:"
 msgstr "Not allowed file types:"
 
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:91
+msgid "Nutzer-E-Mail"
+msgstr "User email"
+
 #: vueapp/components/meeting/admin/MeetingAdminConfig.vue:275
 msgid "Ohne Grenze"
 msgstr "Without limit"
@@ -776,11 +785,11 @@ msgstr "Ok"
 msgid "Optionale Beschreibung"
 msgstr "Optional description"
 
-#: vueapp/components/meeting/MeetingComponent.vue:261
+#: vueapp/components/meeting/MeetingComponent.vue:255
 msgid "Ordner für automatische Uploads:"
 msgstr "Folder for automatic uploads:"
 
-#: vueapp/components/meeting/MeetingComponent.vue:262
+#: vueapp/components/meeting/MeetingComponent.vue:256
 msgid "Ordner:"
 msgstr "Folder:"
 
@@ -967,7 +976,7 @@ msgstr "Server configuration"
 msgid "Servervoreinstellungen"
 msgstr "Server presets"
 
-#: vueapp/components/meeting/MeetingComponent.vue:214
+#: vueapp/components/meeting/MeetingComponent.vue:208
 msgid "Sichtbar"
 msgstr "Visible"
 
@@ -1009,6 +1018,10 @@ msgstr "This name will be used if the guest does not state one."
 msgid "Speichern"
 msgstr "Save"
 
+#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:82
+msgid "Standard-E-Mail"
+msgstr "Default email"
+
 #: vueapp/views/Admin.vue:28
 msgid "Standard-Folie Verwaltung"
 msgstr "Manage default slide"
@@ -1017,11 +1030,7 @@ msgstr "Manage default slide"
 msgid "Standard-Gästename"
 msgstr "Default guestname"
 
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:82
-msgid "Standard-Mail"
-msgstr "Default mail"
-
-#: vueapp/components/meeting/MeetingComponent.vue:148
+#: vueapp/components/meeting/MeetingComponent.vue:142
 msgid "Standardraum"
 msgstr "Standard room"
 
@@ -1038,11 +1047,11 @@ msgstr "Search"
 msgid "Technische Informationen"
 msgstr "Technical information"
 
-#: vueapp/components/meeting/MeetingComponent.vue:337
+#: vueapp/components/meeting/MeetingComponent.vue:331
 msgid "Teilnehmen"
 msgstr "Participate"
 
-#: vueapp/components/meeting/MeetingComponent.vue:340
+#: vueapp/components/meeting/MeetingComponent.vue:334
 msgid "Teilnehmen nicht möglich"
 msgstr "Participation not possible"
 
@@ -1051,24 +1060,24 @@ msgstr "Participation not possible"
 msgid "Teilnehmende aktiv"
 msgstr "active participants"
 
-#: vueapp/components/meeting/MeetingComponent.vue:370
+#: vueapp/components/meeting/MeetingComponent.vue:364
 #: vueapp/components/meeting/guests/MeetingGuest.vue:13
 msgid "Teilnehmende einladen"
 msgstr "Invite participants"
 
-#: vueapp/components/meeting/MeetingComponent.vue:176
+#: vueapp/components/meeting/MeetingComponent.vue:170
 msgid "Teilnehmende haben eingeschränkte Rechte"
 msgstr "Participants have restricted rights"
 
-#: vueapp/components/meeting/MeetingComponent.vue:175
+#: vueapp/components/meeting/MeetingComponent.vue:169
 msgid "Teilnehmende haben Moderationsrechte"
 msgstr "All participants have moderation rights"
 
-#: vueapp/components/meeting/MeetingComponent.vue:161
+#: vueapp/components/meeting/MeetingComponent.vue:155
 msgid "Teilnehmenden Administrationsrechte geben"
 msgstr "Give participants administration rights"
 
-#: vueapp/components/meeting/MeetingComponent.vue:160
+#: vueapp/components/meeting/MeetingComponent.vue:154
 msgid "Teilnehmenden nur eingeschränkte Rechte geben"
 msgstr "Give participants only limited rights"
 
@@ -1105,17 +1114,13 @@ msgstr "Unknown"
 msgid "Ungültiger Dateityp!"
 msgstr "Invalid file type!"
 
-#: vueapp/components/meeting/MeetingComponent.vue:215
+#: vueapp/components/meeting/MeetingComponent.vue:209
 msgid "Unsichtbar"
 msgstr "Invisible"
 
 #: vueapp/components/meeting/feedback/MeetingFeedback.vue:118
 msgid "Upload-Geschw. (Mbps)"
 msgstr "Upload speed (Mbps)"
-
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:91
-msgid "User-Mail"
-msgstr "User mail"
 
 #: vueapp/components/meeting/add/MeetingAdd.vue:236
 msgid "Verfügbare Server"
@@ -1188,14 +1193,9 @@ msgstr "Preview"
 msgid "Wählen sie eine zugehörige Gruppe aus"
 msgstr "Select a corresponding group"
 
-#: vueapp/components/meeting/MeetingComponent.vue:266
+#: vueapp/components/meeting/MeetingComponent.vue:260
 msgid "Weiterleitung zum ausgewählten Ordner auf einer neuen Seite"
 msgstr "Redirect to the selected folder on a new page"
-
-#: vueapp/components/meeting/admin/MeetingAdminConfig.vue:225
-#: Driver/BigBlueButton.php:467
-msgid "Willkommensnachricht"
-msgstr "Welcome message"
 
 #: vueapp/views/Course.vue:83
 msgid ""
@@ -1210,11 +1210,11 @@ msgstr ""
 msgid "Zugangscode"
 msgstr "Access code"
 
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:35
+#: vueapp/components/meeting/folders/MeetingFolderTable.vue:34
 msgid "Zum Hauptordner - Ordnerauswahl aufheben"
 msgstr "Back to main folder - revoke selected folder"
 
-#: vueapp/components/meeting/folders/MeetingFolderTable.vue:52
+#: vueapp/components/meeting/folders/MeetingFolderTable.vue:51
 msgid "Zum Ordner:"
 msgstr "To the folder:"
 
@@ -1257,11 +1257,11 @@ msgid "Bitte wenden Sie sich an einen Systemadministrator!"
 msgstr "Please contact a system administrator!"
 
 #: Driver/BigBlueButton.php:428 Driver/DfnVc.php:400
-msgid "Aktiv?"
-msgstr "Active?"
+msgid "Aktiv"
+msgstr "Active"
 
 #: Driver/BigBlueButton.php:429 Driver/DfnVc.php:401
-msgid "Label"
+msgid "Bezeichnung"
 msgstr "Label"
 
 #: Driver/BigBlueButton.php:430
@@ -1281,12 +1281,12 @@ msgid "Verbindungs-Timeout (e.g. 0.5)"
 msgstr "Connection Timeout (e.g. 0.5)"
 
 #: Driver/BigBlueButton.php:434
-msgid "Request-Timeout (e.g. 3.4)"
+msgid "Anfrage-Timeout (e.g. 3.4)"
 msgstr "Request Timeout (e.g. 3.4)"
 
 #: Driver/BigBlueButton.php:435
-msgid "Max. Zahl von Teilnehmenden"
-msgstr "Max. number of participants"
+msgid "Maximale Anzahl von Teilnehmenden"
+msgstr "Maximum number of participants"
 
 #: Driver/BigBlueButton.php:436 Driver/DfnVc.php:405
 msgid "Veranstaltungstyp"
@@ -1303,7 +1303,7 @@ msgid ""
 msgstr "This description will be shown lecturers if this server is selected."
 
 #: Driver/BigBlueButton.php:455
-msgid "Min. Teilnehmerzahl"
+msgid "Mindestanzahl von Teilnehmenden"
 msgstr "Minimum number of participants"
 
 #: Driver/BigBlueButton.php:456
@@ -1497,7 +1497,7 @@ msgstr ""
 "moderator has to approve every join."
 
 #: Driver/BigBlueButton.php:770
-msgid "Ankündigungen aus dem Kurs auf leerer Begrüßungsfolie"
+msgid "Ankündigungen aus der Veranstaltung auf leerer Begrüßungsfolie"
 msgstr "News of the course on an empty introductory slide"
 
 #: Driver/BigBlueButton.php:772
@@ -1649,7 +1649,7 @@ msgid "Unzureichende Berechtigungen zum Ausführen dieser Aktion"
 msgstr "Insufficient permissions to perform this action"
 
 #: app/controllers/index.php:241 app/controllers/index.php:286
-msgid "Einleitungstext muss nicht leer sein!"
+msgid "Informationstext muss nicht leer sein!"
 msgstr "Introductory text does not have to be empty!"
 
 #: app/controllers/index.php:252
@@ -1685,7 +1685,7 @@ msgid "Keine Einträge wurden ausgewählt."
 msgstr "No entries were selected."
 
 #: app/controllers/index.php:362
-msgid "Es trat ein Fehler beim Löschen der Einleitungen auf!"
+msgid "Es trat ein Fehler beim Löschen der Informationstexte auf!"
 msgstr "An error occurred while deleting the introductions!"
 
 #: app/controllers/index.php:364
@@ -1733,11 +1733,11 @@ msgid "Einstellungen"
 msgstr "Settings"
 
 #: app/controllers/index.php:494 app/views/index/intros.php:6
-msgid "Einleitungen"
+msgid "Informationstexte"
 msgstr "Introductory text"
 
 #: app/controllers/index.php:507
-msgid "Neue Einleitung hinzufügen"
+msgid "Informationstext hinzufügen"
 msgstr "Add new introduction"
 
 #: app/controllers/room.php:67 app/controllers/room.php:118
@@ -1858,14 +1858,14 @@ msgid "Vorgang läuft. Bitte warten Sie einen Moment"
 msgstr "Processing. Please wait"
 
 #: app/views/index/config.php:8
-msgid "Reitername"
-msgstr "Tab name"
+msgid "Name des Werkzeugs"
+msgstr "Tool name"
 
 #: app/views/index/intros.php:18
 msgid "Alle auswählen"
 msgstr "Select all"
 
-#: app/views/index/intros.php:23
+#: app/views/index/intros.php:23 app/views/index/intro_edit.php:5
 msgid "Titel"
 msgstr "Title"
 
@@ -1894,24 +1894,20 @@ msgid "Löschen"
 msgstr "Delete"
 
 #: app/views/index/intros.php:62
-msgid "Sollen die Einleitungen wirklich gelöscht werden?"
+msgid "Sollen die Informationstexte wirklich gelöscht werden?"
 msgstr "Should the introductions really be deleted?"
 
 #: app/views/index/intros.php:64
 msgid "Alle markierte Einträge löschen"
 msgstr "Delete all selected entries"
 
-#: app/views/index/intro_edit.php:5
-msgid "Einleitungstitel"
-msgstr "Introduction title"
-
 #: app/views/index/intro_edit.php:6
 msgid "Wenn leer, wird der standardmäßige Einleitung als Titel angezeigt."
 msgstr "If empty, the default introduction is displayed as the title."
 
 #: app/views/index/intro_edit.php:11
-msgid "Einleitungstext"
-msgstr "Introductory text"
+msgid "Informationstext"
+msgstr "Information text"
 
 #: app/views/index/intro_edit.php:17
 msgid "Hinzufügen"
@@ -2200,3 +2196,6 @@ msgstr "Configuration for the meetings plugin in JSON"
 #: templates/default_slide.php:5
 msgid "Standardfolie"
 msgstr "Default slide"
+
+#~ msgid "Einleitungstext"
+#~ msgstr "Introductory text"

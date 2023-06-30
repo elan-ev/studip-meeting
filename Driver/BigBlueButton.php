@@ -425,14 +425,14 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     public static function getConfigOptions()
     {
         return array(
-            new ConfigOption('active', I18N::_('Aktiv?'), true),
-            new ConfigOption('label', I18N::_('Label'), 'Server #'),
+            new ConfigOption('active', I18N::_('Aktiv'), true),
+            new ConfigOption('label', I18N::_('Bezeichnung'), 'Server #'),
             new ConfigOption('url',     I18N::_('URL des BBB-Servers')),
             new ConfigOption('api-key', I18N::_('Api-Key (Salt)'), null, null, 'password'),
             new ConfigOption('proxy', I18N::_('Zugriff über Proxy')),
             new ConfigOption('connection_timeout', I18N::_('Verbindungs-Timeout (e.g. 0.5)')),
-            new ConfigOption('request_timeout', I18N::_('Request-Timeout (e.g. 3.4)')),
-            new ConfigOption('maxParticipants', I18N::_('Max. Zahl von Teilnehmenden')),
+            new ConfigOption('request_timeout', I18N::_('Anfrage-Timeout (e.g. 3.4)')),
+            new ConfigOption('maxParticipants', I18N::_('Maximale Anzahl von Teilnehmenden')),
             new ConfigOption('course_types', I18N::_('Veranstaltungstyp'), MeetingPlugin::getSemClasses(), I18N::_('Nur in folgenden Veranstaltungskategorien nutzbar')),
             new ConfigOption('description', I18N::_('Beschreibung'), '', I18N::_('Der Beschreibungstext wird Lehrenden angezeigt wenn dieser Server ausgewählt wird.')),
         );
@@ -452,7 +452,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                                 'muteOnStart',
                             ]);
         });
-        $roomsize_features['minParticipants'] = new ConfigOption('minParticipants', I18N::_('Min. Teilnehmerzahl'), 0);
+        $roomsize_features['minParticipants'] = new ConfigOption('minParticipants', I18N::_('Mindestanzahl von Teilnehmenden'), 0);
         $roomsize_features['roomsizeSensitive'] = new ConfigOption('roomsizeSensitive', I18N::_('Automatisch Teilnehmendenanzahl berücksichtigen'), true,
             I18N::_('Wenn diese Option aktiviert ist, werden die entsprechenden Konfigurationen basierend auf der maximalen Teilnehmerzahl des Meetings angewendet.'));
         $roomsize_features['presetName'] = new ConfigOption('presetName', I18N::_('Name'), '');
@@ -464,7 +464,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
      */
     public static function getCreateFeatures()
     {
-        $res['welcome'] = new ConfigOption('welcome', I18N::_('Willkommensnachricht'),
+        $res['welcome'] = new ConfigOption('welcome', I18N::_('Begrüßungstext'),
                     Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'welcome'),
                     self::getFeatureInfo('welcome'));
 
@@ -767,7 +767,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         $defaults_from = Driver::getGeneralConfigValue('read_default_slides_from');
         // Settings that depend on admin config to upload slides.
         if ($defaults_from == 'studip') {
-            $res['default_slide_course_news'] = new ConfigOption('default_slide_course_news', I18N::_('Ankündigungen aus dem Kurs auf leerer Begrüßungsfolie'),
+            $res['default_slide_course_news'] = new ConfigOption('default_slide_course_news', I18N::_('Ankündigungen aus der Veranstaltung auf leerer Begrüßungsfolie'),
                 false, '');
             $res['default_slide_studip_news'] = new ConfigOption('default_slide_studip_news', I18N::_('Ankündigungen aus Stud.IP auf leerer Begrüßungsfolie'),
                 false, '');

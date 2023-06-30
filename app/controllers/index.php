@@ -238,7 +238,7 @@ class IndexController extends MeetingsController
             $title = trim(Request::get('title') ?? '');
             $text = trim(Request::get('text') ?? '');
             if (empty($text)) {
-                PageLayout::postError(I18N::_('Einleitungstext muss nicht leer sein!'));
+                PageLayout::postError(I18N::_('Informationstext muss nicht leer sein!'));
                 $this->redirect('index/intros');
                 return;
             }
@@ -283,7 +283,7 @@ class IndexController extends MeetingsController
             $title = trim(Request::get('title') ?? '');
             $text = trim(Request::get('text') ?? '');
             if (empty($text)) {
-                PageLayout::postError(I18N::_('Einleitungstext muss nicht leer sein!'));
+                PageLayout::postError(I18N::_('Informationstext muss nicht leer sein!'));
                 $this->redirect('index/intros');
                 return;
             }
@@ -359,7 +359,7 @@ class IndexController extends MeetingsController
             $this->courseConfig->store();
 
             if ($num_errors > 0) {
-                $message = I18N::_('Es trat ein Fehler beim Löschen der Einleitungen auf!');
+                $message = I18N::_('Es trat ein Fehler beim Löschen der Informationstexte auf!');
                 if ($num_errors < count($indices)) {
                     $message = sprintf(I18N::_('%d Einleitung(en) konnte(n) nicht gelöscht werden.'), $num_errors);
                 }
@@ -491,7 +491,7 @@ class IndexController extends MeetingsController
             'config'
         )->setActive($current_view == 'config');
         $views->addLink(
-            I18N::_('Einleitungen'),
+            I18N::_('Informationstexte'),
             $this->url_for('index/intros', ['view' => 'intros']),
             null,
             [],
@@ -504,7 +504,7 @@ class IndexController extends MeetingsController
         $actions = new ActionsWidget();
         if ($current_view == 'intros') {
             $actions->addLink(
-                I18N::_('Neue Einleitung hinzufügen'),
+                I18N::_('Informationstext hinzufügen'),
                 $this->url_for('index/add_intro'),
                 Icon::create('add')
             )->asDialog('size=auto');

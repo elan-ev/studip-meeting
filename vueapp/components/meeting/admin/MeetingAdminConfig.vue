@@ -23,15 +23,15 @@
                     <input type="radio" name="feedback-contact-address"
                         value="standard_mail"
                         v-model="general_config['feedback_sender_address']">
-                    {{ $gettext('Standard-Mail') }}
+                    {{ $gettext('Standard-E-Mail') }}
                     <input type="radio" name="feedback-contact-address"
                         value="user_mail"
                         v-model="general_config['feedback_sender_address']">
-                    {{ $gettext('User-Mail') }}
+                    {{ $gettext('Nutzer-E-Mail') }}
                 </label>
 
                 <label>
-                    {{ $gettext('Müssen die Teilnehmende einem Datenschutztext zustimmen, bevor sie einem Meeting mit Aufzeichnung beitreten können?') }}
+                    {{ $gettext('Müssen Teilnehmenden einer Datenschutzerklärung zustimmen, bevor sie an einer Besprechung mit Aufzeichnungsfunktion teilnehmen?') }}
                     <br>
                     <input type="radio" name="show-recording-privacy-text"
                         :value="true"
@@ -106,7 +106,7 @@
                 </div>
 
                 <label v-if="Object.keys(config[driver_name]).includes('welcome')">
-                    {{ $gettext('Willkommensnachricht') }}
+                    {{ $gettext('Begrüßungstext') }}
                     <textarea v-model="config[driver_name]['welcome']" cols="30" rows="5"></textarea>
                 </label>
 
@@ -162,7 +162,7 @@
                                     <a v-if="Object.keys(driver).includes('roomsize-presets')"
                                         href="#" :title="$gettext('Servervoreinstellungen')"
                                         @click.prevent="prepareEditServer(driver_name, index, true)">
-                                        <StudipIcon icon="doit" role="clickable" ></StudipIcon>
+                                        <StudipIcon icon="settings" role="clickable" ></StudipIcon>
                                     </a>
                                     <a href="#" :title="$gettext('Server löschen')"
                                         @click.prevent="deleteServer(driver_name, index)">

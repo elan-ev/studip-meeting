@@ -397,8 +397,8 @@ class DfnVc implements DriverInterface
     public static function getConfigOptions()
     {
         return array(
-            new ConfigOption('active', I18N::_('Aktiv?'), true),
-            new ConfigOption('label', I18N::_('Label'), 'Server #'),
+            new ConfigOption('active', I18N::_('Aktiv'), true),
+            new ConfigOption('label', I18N::_('Bezeichnung'), 'Server #'),
             new ConfigOption('url', I18N::_('API-Endpoint'), 'https://connect.vc.dfn.de'),
             new ConfigOption('login', I18N::_('Funktionskennung')),
             new ConfigOption('password', I18N::_('Passwort'), null, null, 'password'),

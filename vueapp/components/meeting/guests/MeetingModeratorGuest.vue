@@ -32,8 +32,7 @@
                         </label>
                         <label id="guest_link_label" v-if="moderator_access_link">
                             <span>{{ $gettext('Link') }}</span>
-                            <StudipTooltipIcon :text="$gettext('Bitte geben sie diesen Link und Zugangscode dem Gast-Moderator.')"
-                                :important="true"></StudipTooltipIcon>
+                            <StudipTooltipIcon :text="$gettext('Bitte geben sie diesen Link und Zugangscode dem Gast-Moderator.')"/>
                             <textarea ref="guestModeratorLinkArea" v-model="moderator_access_link" cols="30" rows="5"></textarea>
                         </label>
                     </fieldset>

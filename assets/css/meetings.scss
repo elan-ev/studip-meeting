@@ -239,6 +239,10 @@ div.inline-feature-warning {
             article.details {
                 position: relative;
                 div {
+                    display: flex;
+                    align-items: baseline;
+                    justify-content: left;
+                    gap: 5px;
                     a {
                         cursor: pointer;
                     }
@@ -248,7 +252,6 @@ div.inline-feature-warning {
 
                         &.info-icon {
                             top: 7px;
-                            margin-right: 7px;
                         }
                     }
 

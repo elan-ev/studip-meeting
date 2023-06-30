@@ -3,7 +3,7 @@
     <?= CSRFProtection::tokenTag() ?>
     <table class="default meeting-introductions">
         <caption>
-            <?= $_('Einleitungen') ?>
+            <?= $_('Informationstexte') ?>
         </caption>
         <colgroup>
             <col width="1%">
@@ -59,7 +59,7 @@
                 <td colspan="4">
                     <?= _('Markierte Einträge') ?>
                     <?= Studip\Button::create($_('Löschen'), 'bulk_delete', [
-                        'data-confirm' => $_('Sollen die Einleitungen wirklich gelöscht werden?'),
+                        'data-confirm' => $_('Sollen die Informationstexte wirklich gelöscht werden?'),
                         'disabled' => empty($introductions),
                         'title' => $_('Alle markierte Einträge löschen'),
                     ]) ?>
