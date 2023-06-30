@@ -8,7 +8,7 @@
         </label>
 
         <label>
-            <span class="required"><?= $_('Informationstext') ?></span>
+            <span class="required"><?= $_('Text') ?></span>
             <textarea name="text" cols="80" rows="10" class="studip_wysiwyg wysiwyg"><?= $text ? wysiwygReady($text) : null ?></textarea>
         </label>
     </fieldset>

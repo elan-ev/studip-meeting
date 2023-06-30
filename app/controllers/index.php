@@ -225,7 +225,7 @@ class IndexController extends MeetingsController
      */
     public function add_intro_action()
     {
-        PageLayout::setTitle(I18N::_('Einleitung hinzufügen'));
+        PageLayout::setTitle(I18N::_('Informationstext hinzufügen'));
         $cid = Context::getId();
         $this->is_new = true;
         if (Request::submitted('store')) {

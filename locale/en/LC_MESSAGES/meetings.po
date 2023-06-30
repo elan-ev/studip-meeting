@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-30 13:44+0200\n"
+"POT-Creation-Date: 2023-06-30 16:39+0200\n"
 "PO-Revision-Date: 2022-03-04 10:09+0100\n"
 "Last-Translator: April Suddendorf, 2020\n"
 "Language-Team: English (https://www.transifex.com/uol-it/teams/52597/en/)\n"
@@ -1639,9 +1639,9 @@ msgstr "The selected server is no available for this course type."
 msgid "Die Änderungen wurden gespeichert."
 msgstr "The changes have been saved."
 
-#: app/controllers/index.php:228
-msgid "Einleitung hinzufügen"
-msgstr "Add introduction"
+#: app/controllers/index.php:228 app/controllers/index.php:507
+msgid "Informationstext hinzufügen"
+msgstr "Add new introduction"
 
 #: app/controllers/index.php:234 app/controllers/index.php:271
 #: app/controllers/index.php:311 app/controllers/index.php:338
@@ -1734,11 +1734,7 @@ msgstr "Settings"
 
 #: app/controllers/index.php:494 app/views/index/intros.php:6
 msgid "Informationstexte"
-msgstr "Introductory text"
-
-#: app/controllers/index.php:507
-msgid "Informationstext hinzufügen"
-msgstr "Add new introduction"
+msgstr "Introductory texts"
 
 #: app/controllers/room.php:67 app/controllers/room.php:118
 #: app/controllers/room.php:179 app/controllers/room.php:186
@@ -1869,7 +1865,7 @@ msgstr "Select all"
 msgid "Titel"
 msgstr "Title"
 
-#: app/views/index/intros.php:24
+#: app/views/index/intros.php:24 app/views/index/intro_edit.php:11
 msgid "Text"
 msgstr "Text"
 
@@ -1904,10 +1900,6 @@ msgstr "Delete all selected entries"
 #: app/views/index/intro_edit.php:6
 msgid "Wenn leer, wird der standardmäßige Einleitung als Titel angezeigt."
 msgstr "If empty, the default introduction is displayed as the title."
-
-#: app/views/index/intro_edit.php:11
-msgid "Informationstext"
-msgstr "Information text"
 
 #: app/views/index/intro_edit.php:17
 msgid "Hinzufügen"
@@ -2196,6 +2188,3 @@ msgstr "Configuration for the meetings plugin in JSON"
 #: templates/default_slide.php:5
 msgid "Standardfolie"
 msgstr "Default slide"
-
-#~ msgid "Einleitungstext"
-#~ msgstr "Introductory text"
