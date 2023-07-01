@@ -3,7 +3,6 @@
 namespace Meetings\Helpers;
 
 use ElanEv\Model\MeetingCourse;
-// use CourseMember;
 use CourseDate;
 use Course;
 use PluginEngine;

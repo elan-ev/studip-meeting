@@ -10,7 +10,7 @@ screenshot=images/screenshots/Der_Reiter_Meeting.png
 screenshot=images/screenshots/Der_Meeting-Raum_mit_BBB.png
 screenshot=images/screenshots/Der_Meeting-Raum_mit_Adobe_Connect.png
 
-icon=../../../assets/images/icons/black/chat.svg
+icon=/assets/images/icons/black/meetings.svg
 
 category=Kommunikation und Zusammenarbeit
 displayname=Meetings

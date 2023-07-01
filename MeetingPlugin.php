@@ -50,7 +50,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
 
         if ($perm->have_perm('root')) {
             $item = new Navigation($this->_('Meetings konfigurieren'), PluginEngine::getLink($this, array(), 'admin#/admin'));
-            $item->setImage(self::getIcon('chat', 'white'));
+            $item->setImage($this->getIcon('meetings', 'white'));
             if (Navigation::hasItem('/admin/config') && !Navigation::hasItem('/admin/config/meetings')) {
                 Navigation::addItem('/admin/config/meetings', $item);
             }
@@ -132,21 +132,22 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
         return $result;
     }
 
-    public static function getIcon($name, $color)
+    public function getIcon($name, $color, $attributes = [])
     {
-        if (StudipVersion::newerThan('3.3')) {
-            $type = 'info';
-            switch ($color) {
-                case 'white': $type = 'info_alt'; break;
-                case 'grey':  $type = 'inactive'; break;
-                case 'blue':  $type = 'clickable';break;
-                case 'red':   $type = 'new';      break;
-                case 'gray':  $type = 'inactive'; break;
-            }
-            return Icon::create($name, $type);
-        } else {
-            return 'icons/16/' . $color .'/' . $name;
+        $meetingIconUrl = $this->getAssetsUrl() . "/images/icons/$color/meetings.svg";
+        $role = Icon::ROLE_INFO;
+        switch ($color) {
+            case 'white':   $role = Icon::ROLE_INFO_ALT;         break;
+            case 'gray':    $role = Icon::ROLE_INACTIVE;         break;
+            case 'blue':    $role = Icon::ROLE_CLICKABLE;        break;
+            case 'red':     $role = Icon::ROLE_NEW;              break;
+            case 'green':   $role = Icon::ROLE_STATUS_GREEN;     break;
+            case 'yellow':  $role = Icon::ROLE_STATUS_YELLOW;    break;
         }
+        if ($name === 'meetings' || $name === 'meeting') {
+            $name = $meetingIconUrl;
+        }
+        return Icon::create($name, $role, $attributes);
     }
 
     public function getPluginName()
@@ -184,11 +185,11 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
         $navigation = new Navigation($courseConfig->title, PluginEngine::getLink($this, array(), 'index'));
 
         if ($recentMeetings > 0) {
-            $navigation->setImage(self::getIcon('chat', 'red'), array(
+            $navigation->setImage($this->getIcon('meetings', 'red'), array(
                 'title' => sprintf($this->_('%d Meeting(s), %d neue'), count($courses), $recentMeetings),
             ));
         } else {
-            $navigation->setImage(self::getIcon('chat', 'gray'), array(
+            $navigation->setImage($this->getIcon('meetings', 'gray'), array(
                 'title' => sprintf('%d Meeting(s)', count($courses)),
             ));
         }
@@ -519,6 +520,17 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
         $template = $template_factory->open("index.php");
 
         $template->set_attribute('items', WidgetHelper::getMeetingsForWidget());
+        $template->set_attribute('meeting_icons', [
+            'black' =>          $this->getIcon('meetings', 'black'),
+            'black-header' =>   $this->getIcon('meetings', 'black', ['style' => 'margin-top:0;']),
+            'white' =>          $this->getIcon('meetings', 'white'),
+            'red' =>            $this->getIcon('meetings', 'red'),
+            'blue' =>           $this->getIcon('meetings', 'blue'),
+            'gray' =>           $this->getIcon('meetings', 'gray'),
+            'gray-header' =>    $this->getIcon('meetings', 'gray', ['style' => 'margin-top:0;']),
+            'green' =>          $this->getIcon('meetings', 'green'),
+            'yellow' =>         $this->getIcon('meetings', 'yellow'),
+        ]);
 
         $empty_text = $this->_('Derzeit finden keine Meetings in den gebuchten Kursen statt.');
         if ($perm->have_perm('admin') || $perm->have_perm('root')) {

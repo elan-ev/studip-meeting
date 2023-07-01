@@ -13,12 +13,12 @@
                     <article class="studip toggle">
                         <header>
                             <h1 onclick="window.open('<?= $item['meeting_join_url'] ?>', '_self');return false;">
-                                <?= Icon::create('chat', 'inactive')->asImg(['class' => 'text-bottom']) ?>
+                                <?= $meeting_icons['black-header']->asImg() ?>
                                 <?= htmlReady($item['item_title']) ?>
                             </h1>
                             <nav>
                                 <a href="<?= $item['meeting_join_url'] ?>" title="<?= htmlReady($texts['to_meeting']) ?>" target="_blank">
-                                    <?= Icon::create('chat', 'clickable')->asImg(['class' => 'text-bottom']) ?>
+                                    <?= $meeting_icons['blue']->asImg(['class' => 'text-bottom']) ?>
                                 </a>
                                 <a href="<?= $item['meeting_course_url'] ?>" title="<?= htmlReady($texts['to_course']) ?>">
                                     <?= Icon::create('seminar', 'clickable')->asImg(['class' => 'text-bottom']) ?>
@@ -42,12 +42,12 @@
                     <article class="studip toggle">
                         <header>
                             <h1 onclick="window.open('<?= $item['meeting_join_url'] ?>', '_self');return false;">
-                                <?= Icon::create('chat', 'inactive')->asImg(['class' => 'text-bottom']) ?>
+                                <?= $meeting_icons['black-header']->asImg() ?>
                                 <?= htmlReady($item['item_title']) ?>
                             </h1>
                             <nav>
                                 <a href="<?= $item['meeting_join_url'] ?>" target="_blank">
-                                    <?= Icon::create('chat', 'clickable')->asImg(['class' => 'text-bottom']) ?>
+                                    <?= $meeting_icons['blue']->asImg(['class' => 'text-bottom']) ?>
                                 </a>
                                 <a href="<?= $item['meeting_course_url'] ?>">
                                     <?= Icon::create('seminar', 'clickable')->asImg(['class' => 'text-bottom']) ?>

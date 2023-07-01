@@ -126,7 +126,7 @@ class IndexController extends MeetingsController
             Navigation::activateItem('course/'.MeetingPlugin::NAVIGATION_ITEM_NAME .'/meetings');
             /** @var Navigation $navItem */
             $navItem = Navigation::getItem('course/'.MeetingPlugin::NAVIGATION_ITEM_NAME);
-            $navItem->setImage(MeetingPlugin::getIcon('chat', 'black'));
+            $navItem->setImage($this->plugin->getIcon('meetings', 'black'));
         } elseif ($action === 'my' && Navigation::hasItem('/meetings')) {
             Navigation::activateItem('/meetings');
         }
