@@ -3,6 +3,7 @@
 namespace Meetings\Helpers;
 
 use ElanEv\Model\MeetingCourse;
+use ElanEv\Model\Driver;
 use CourseDate;
 use Course;
 use PluginEngine;
@@ -108,7 +109,9 @@ class WidgetHelper
     * @return array
     */
     private function prepareWidgetItems(Course $course, CourseDate $courseDate) {
+        global $perm;
         $meetingCourse = MeetingCourse::findOneBySQL('course_id = ? AND is_default = 1', [$course->seminar_id]);
+        $features = json_decode($meetingCourse->meeting->features, true);
         $widgetItem = [
             'item_title' => $course->name . ': ' . _('Heute') . date(", H:i", $courseDate->date) . " - " . date("H:i", $courseDate->end_time),
             'course_id' => $course->seminar_id,
@@ -122,6 +125,13 @@ class WidgetHelper
             'meeting_course_url' => PluginEngine::getURL('meetingplugin', ['cid' => $course->id], 'index', true),
             'meeting_join_url' => PluginEngine::getURL('meetingplugin', [], "api/rooms/join/{$course->id}/{$meetingCourse->meeting->id}")
         ];
+
+        // Display Privacy Agreement.
+        $showRecordingPrivacyText = Driver::getGeneralConfigValue('show_recording_privacy_text');
+        if ($showRecordingPrivacyText && !$perm->have_studip_perm('tutor', $course->id)
+            && isset($features['record']) && $features['record'] == 'true') {
+            $widgetItem['privacy_notice'] = true;
+        }
 
         return $widgetItem;
     }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-30 16:39+0200\n"
+"POT-Creation-Date: 2023-07-03 11:17+0200\n"
 "PO-Revision-Date: 2022-03-04 10:09+0100\n"
 "Last-Translator: April Suddendorf, 2020\n"
 "Language-Team: English (https://www.transifex.com/uol-it/teams/52597/en/)\n"
@@ -93,7 +93,7 @@ msgid "Aktuell ausgewählter Ordner:"
 msgstr "Currently selected folder:"
 
 #: vueapp/components/meeting/admin/server/ServerDialog.vue:73
-#: MeetingPlugin.php:419
+#: MeetingPlugin.php:420
 msgid "Alle"
 msgstr "All"
 
@@ -328,7 +328,7 @@ msgstr "File could not be found."
 msgid "Dateigröße überschreitet!"
 msgstr "File size exceeds!"
 
-#: vueapp/components/meeting/MeetingComponent.vue:217
+#: vueapp/components/meeting/MeetingComponent.vue:217 MeetingPlugin.php:561
 msgid "Datenschutzerklärung"
 msgstr "Data protection"
 
@@ -553,7 +553,7 @@ msgstr "Main folder"
 msgid "Hochladen"
 msgstr "Upload"
 
-#: vueapp/components/meeting/MeetingComponent.vue:218
+#: vueapp/components/meeting/MeetingComponent.vue:218 MeetingPlugin.php:554
 msgid ""
 "Ich bin damit einverstanden, dass diese Sitzung aufgezeichnet wird. Die "
 "Aufzeichnung kann Sprach- und Videoaufnahmen von mir beinhalten. Bitte "
@@ -609,7 +609,7 @@ msgstr "is allowed!"
 #: vueapp/components/meeting/admin/MeetingAdminConfig.vue:126
 #: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:116
 #: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:182
-#: vueapp/components/studip/StudipDialog.vue:66
+#: vueapp/components/studip/StudipDialog.vue:66 MeetingPlugin.php:568
 msgid "Ja"
 msgstr "Yes"
 
@@ -736,7 +736,7 @@ msgstr "Navigation in the folder table"
 #: vueapp/components/meeting/admin/MeetingAdminConfig.vue:135
 #: vueapp/components/meeting/admin/default_slides/MeetingFonts.vue:117
 #: vueapp/components/meeting/admin/default_slides/MeetingTemplates.vue:183
-#: vueapp/components/studip/StudipDialog.vue:87
+#: vueapp/components/studip/StudipDialog.vue:87 MeetingPlugin.php:573
 msgid "Nein"
 msgstr "No"
 
@@ -1540,16 +1540,16 @@ msgstr "Function ID"
 msgid "Passwort"
 msgstr "Password"
 
-#: MeetingPlugin.php:188
+#: MeetingPlugin.php:189
 #, php-format
 msgid "%d Meeting(s), %d neue"
 msgstr "%d Meeting(s), %d new"
 
-#: MeetingPlugin.php:221
+#: MeetingPlugin.php:222
 msgid "Seite Anpassen"
 msgstr "Page customization"
 
-#: MeetingPlugin.php:324
+#: MeetingPlugin.php:325
 msgid ""
 "Virtueller Raum, mit dem Live-Online-Treffen, Veranstaltungen und "
 "Videokonferenzen durchgeführt werden können. Die Teilnehmenden können sich "
@@ -1569,11 +1569,11 @@ msgstr ""
 "websites or applications to the participants, for example. In addition, the "
 "course can be recorded and made available to interested parties."
 
-#: MeetingPlugin.php:333
+#: MeetingPlugin.php:334
 msgid "Face-to-face-Kommunikation mit Adobe Connect oder BigBlueButton"
 msgstr "Face-to-face communication with Adobe Connect or BigBlueButton"
 
-#: MeetingPlugin.php:335
+#: MeetingPlugin.php:336
 msgid ""
 "Videokonferenz- und Veranstaltungsmöglichkeit; Live im Netz präsentieren "
 "sowie gemeinsam zeichnen und arbeiten;Kommunikation über Mikrofon und "
@@ -1585,15 +1585,15 @@ msgstr ""
 "decentralised learning and working groups;Linking to already existing own "
 "rooms"
 
-#: MeetingPlugin.php:484
+#: MeetingPlugin.php:485
 msgid "Alle Veranstaltungstypen"
 msgstr "All course types"
 
-#: MeetingPlugin.php:523
+#: MeetingPlugin.php:535
 msgid "Derzeit finden keine Meetings in den gebuchten Kursen statt."
 msgstr "Currently no meetings are planned in your courses."
 
-#: MeetingPlugin.php:525
+#: MeetingPlugin.php:537
 msgid ""
 "Um Leistungsprobleme zu vermeiden, ist diese Funktion für Administratoren "
 "dauerhaft deaktiviert."
@@ -1601,19 +1601,19 @@ msgstr ""
 "To avoid performance issues, this feature is permanently disabled for "
 "administrators."
 
-#: MeetingPlugin.php:529
+#: MeetingPlugin.php:542
 msgid "Derzeitige Meetings"
 msgstr "Current meetings"
 
-#: MeetingPlugin.php:530
+#: MeetingPlugin.php:543
 msgid "Kommende Meetings"
 msgstr "Upcoming meetings"
 
-#: MeetingPlugin.php:531
+#: MeetingPlugin.php:544
 msgid "Zur Meeting-Liste"
 msgstr "Meeting list"
 
-#: MeetingPlugin.php:532
+#: MeetingPlugin.php:545
 msgid "Direkt zum Meeting"
 msgstr "Directly to the meeting"
 
@@ -2141,7 +2141,7 @@ msgid ""
 msgstr ""
 "Could not join the meeting, communication with the meeting server failed. ("
 
-#: lib/Helpers/WidgetHelper.php:114
+#: lib/Helpers/WidgetHelper.php:116
 msgid "Heute"
 msgstr "Today"
 

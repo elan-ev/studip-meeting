@@ -536,16 +536,48 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
         if ($perm->have_perm('admin') || $perm->have_perm('root')) {
             $empty_text = $this->_('Um Leistungsprobleme zu vermeiden, ist diese Funktion für Administratoren dauerhaft deaktiviert.');
         }
+
         $texts = [
             'empty' => $empty_text,
             'current' => $this->_('Derzeitige Meetings'),
             'upcoming' => $this->_('Kommende Meetings'),
             'to_course' => $this->_('Zur Meeting-Liste'),
-            'to_meeting' => $this->_('Direkt zum Meeting')
+            'to_meeting' => $this->_('Direkt zum Meeting'),
+            'privacy_onclick' => $this->renderPrivacyDialog()
         ];
         $template->set_attribute('texts', $texts);
 
         return $template;
+    }
+
+    private function renderPrivacyDialog() {
+        $privacy_text = $this->_('Ich bin damit einverstanden, dass diese Sitzung aufgezeichnet wird. Die Aufzeichnung kann Sprach- und Videoaufnahmen von mir beinhalten.' .
+        ' Bitte beachten Sie, dass die Aufnahme im Anschluss geteilt werden kann.' .
+        ' Möchten Sie trotzdem teilnehmen?');
+
+        $dialog_id = 'meeting-privacy-confirmation-dialog';
+        $privacy_dialog_options = "{
+            id: '{$dialog_id}',
+            title: '" . $this->_('Datenschutzerklärung') . "',
+            wikilink: false,
+            dialogClass: 'studip-confirmation',
+            width: 400,
+            height: 230,
+            buttons: {
+                accept: {
+                    text: '" . $this->_('Ja') . "',
+                    click: () => {STUDIP.Dialog.close({ id: '{$dialog_id}' }); window.open('%s', '%s');},
+                    class: 'accept'
+                },
+                cancel: {
+                    text: '" . $this->_('Nein') . "',
+                    click: () => STUDIP.Dialog.close({ id: '{$dialog_id}' }),
+                    class: 'cancel'
+                }
+            }
+        }";
+        $privacy_dialog = "return STUDIP.Dialog.show('{$privacy_text}', {$privacy_dialog_options}); return false;";
+        return $privacy_dialog;
     }
 
     public static function isCoursePublic($cid)
