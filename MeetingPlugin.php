@@ -189,7 +189,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
                 'title' => sprintf($this->_('%d Meeting(s), %d neue'), count($courses), $recentMeetings),
             ));
         } else {
-            $navigation->setImage($this->getIcon('meetings', 'gray'), array(
+            $navigation->setImage($this->getIcon('meetings', 'blue'), array(
                 'title' => sprintf('%d Meeting(s)', count($courses)),
             ));
         }
