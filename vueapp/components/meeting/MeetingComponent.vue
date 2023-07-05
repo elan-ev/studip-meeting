@@ -253,12 +253,12 @@ export default {
         showParticipantCount() {
             var maxParticipants = 0;
             if (this.room.features && this.room.features.maxParticipants > 0) {
-                maxParticipants = this.room.features.maxParticipants;
+                maxParticipants = parseInt(this.room.features.maxParticipants, 10);
             }
 
             var participantCount = 0;
             if (this.info && this.info.participantCount > 0) {
-                participantCount = this.info.participantCount;
+                participantCount = parseInt(this.info.participantCount, 10);
             }
 
             if (maxParticipants && participantCount) {
