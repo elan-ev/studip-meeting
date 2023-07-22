@@ -27,16 +27,24 @@ class MigrateIntroductionColumnCourseConfig extends Migration
 
         while ($data = $results->fetch(PDO::FETCH_ASSOC)) {
             $introductions = [];
-            $old_intro = $data['introduction'];
-            $new_intro = new \stdClass();
-            $new_intro->title = '';
-            $new_intro->text = $old_intro;
-            $introductions[] = $new_intro;
+            $old_intro = $data['introduction'] ?? '';
+            if (!empty(trim($old_intro))) {
+                // Make sure the introduction has no empty array (json) string.
+                $old_intro = str_replace('[]', '', $old_intro);
+                $introduction_str = null;
+                if (!empty($old_intro)) {
+                    $new_intro = new \stdClass();
+                    $new_intro->title = '';
+                    $new_intro->text = $old_intro;
+                    $introductions[] = $new_intro;
+                    $introduction_str = json_encode($introductions);
+                }
 
-            $update_stmt->execute([
-                'id'           => $data['id'],
-                'introduction' => json_encode($introductions)
-            ]);
+                $update_stmt->execute([
+                    'id'           => $data['id'],
+                    'introduction' => $introduction_str
+                ]);
+            }
         }
 
         // Rename introduction to introductions.
@@ -60,12 +68,11 @@ class MigrateIntroductionColumnCourseConfig extends Migration
             if (!empty($introductions)) {
                 $new_intro = $introductions[0];
                 $text = $new_intro->text;
-                if (!empty($text)) {
-                    $update_stmt->execute([
-                        'id'           => $data['id'],
-                        'introduction' => $text
-                    ]);
-                }
+
+                $update_stmt->execute([
+                    'id'           => $data['id'],
+                    'introduction' => !empty($text) ? $text : null
+                ]);
             }
         }
 
