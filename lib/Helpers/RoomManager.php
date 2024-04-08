@@ -9,6 +9,7 @@ use ElanEv\Model\Driver;
 use MeetingPlugin;
 use Throwable;
 use PluginEngine;
+
 /**
  * RoomManager.php - contains general function to manage rooms and to evaluate related features.
  *
@@ -20,21 +21,22 @@ class RoomManager
      * validateFeatureInputs which check inputs againt the original configOptions
      *  gets the type of configOption value and validate the feature input
      *
-     *  @param array $features input features
-     *  @param string $driver_name the name of driver to get the class
+     * @param array $features input features
+     * @param string $driver_name the name of driver to get the class
      *
-     *  @return array $features (validated -- neccessary for Integers)
-     *  @return bool  $is_valid (false) in case something is not right!
-     *  @throws 404 Error "Validation failed" reason: Class not found (mostly)
+     * @return array $features (validated -- neccessary for Integers)
+     * @return bool  $is_valid (false) in case something is not right!
+     * @throws 404 Error "Validation failed" reason: Class not found (mostly)
      */
-    public static function validateFeatureInputs($features, $driver_name) {
+    public static function validateFeatureInputs($features, $driver_name)
+    {
         try {
             $is_valid = true;
-            $class = 'ElanEv\\Driver\\' . $driver_name;
+            $class    = 'ElanEv\\Driver\\' . $driver_name;
             if (in_array('ElanEv\Driver\DriverInterface', class_implements($class)) !== false) {
                 if ($create_features = $class::getCreateFeatures()) {
                     //loop through create_features
-                    foreach ($create_features as $create_feature_name => $create_feature_contents ) {
+                    foreach ($create_features as $create_feature_name => $create_feature_contents) {
                         if (isset($features[$create_feature_name])) {
                             switch (gettype($create_feature_contents->getValue())) {
                                 case "boolean":
@@ -44,7 +46,7 @@ class RoomManager
                                     }
                                     break;
                                 case "integer":
-                                    $value = filter_var((int)$features[$create_feature_name], FILTER_VALIDATE_INT);
+                                    $value       = filter_var((int)$features[$create_feature_name], FILTER_VALIDATE_INT);
                                     $value_range = ($create_feature_name == 'maxParticipants') ? -1 : 1;
                                     if ($value === false || $value < $value_range || ($create_feature_name == 'duration' && $value > 1440)) {
                                         $is_valid = false;
@@ -59,7 +61,7 @@ class RoomManager
                                     break;
                                 default:
                                     $value = (string)$features[$create_feature_name];
-                                    $text = '';
+                                    $text  = '';
                                     if ($create_feature_name == 'welcome') {
                                         $text = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $value);
                                     } else {
@@ -84,7 +86,8 @@ class RoomManager
      *
      * @param Meeting $meeting the meeting object
      */
-    public static function checkAssignedFolder(Meeting $meeting) {
+    public static function checkAssignedFolder(Meeting $meeting)
+    {
         if ($meeting->folder_id) {
             try {
                 $folder = \Folder::find($meeting->folder_id);
@@ -106,15 +109,16 @@ class RoomManager
      *
      * @return array
      */
-    public static function checkRecordingCapability($driver, $cid) {
+    public static function checkRecordingCapability($driver, $cid)
+    {
         $allow_recording = false;
-        $message = 'Sitzungsaufzeichnung derzeit deaktiviert.';
-        $type = '';
-        $seriesid = '';
-        $record_config = filter_var(Driver::getConfigValueByDriver($driver, 'record'), FILTER_VALIDATE_BOOLEAN);
+        $message         = 'Sitzungsaufzeichnung derzeit deaktiviert.';
+        $type            = '';
+        $seriesid        = '';
+        $record_config   = filter_var(Driver::getConfigValueByDriver($driver, 'record'), FILTER_VALIDATE_BOOLEAN);
         $opencast_config = filter_var(Driver::getConfigValueByDriver($driver, 'opencast'), FILTER_VALIDATE_BOOLEAN);
         if ($opencast_config) {
-            $type = 'opencast';
+            $type    = 'opencast';
             $message = 'Opencast Serie kann nicht gefunden werden. Bis der
                         Reiter »Opencast« unter »Mehr« aktiviert wurde und eine
                         Serie angelegt wurde, ist eine Aufzeichnung nicht
@@ -123,20 +127,20 @@ class RoomManager
                 $series_id = MeetingPlugin::checkOpenCast($cid);
                 if (!empty($series_id)) {
                     $allow_recording = true;
-                    $seriesid = $series_id;
-                    $message = '';
+                    $seriesid        = $series_id;
+                    $message         = '';
                 }
             }
         } else if ($record_config) {
-            $type = 'bbb';
+            $type            = 'bbb';
             $allow_recording = true;
-            $message = '';
+            $message         = '';
         }
         return [
             "allow_recording" => $allow_recording,
-            "message" => $message,
-            "type" => $type,
-            "seriesid" => $seriesid
+            "message"         => $message,
+            "type"            => $type,
+            "seriesid"        => $seriesid
         ];
     }
 
@@ -146,7 +150,8 @@ class RoomManager
      *
      * @param MeetingCourse $meetingCourse the meeting course object
      */
-    public static function checkAssignedGroup(MeetingCourse $meetingCourse) {
+    public static function checkAssignedGroup(MeetingCourse $meetingCourse)
+    {
         if ($meetingCourse->group_id) {
             try {
                 $group = \Statusgruppen::find($meetingCourse->group_id);
@@ -170,12 +175,12 @@ class RoomManager
      */
     public static function checkGroupPermission($group_id, $cid)
     {
-        global $perm, $user;
+        $user = \User::findCurrent();
         $group = new \Statusgruppen($group_id);
 
         return $group->isMember($user->id)
-            || ($user && is_object($perm)
-                && $perm->have_studip_perm('tutor', $cid, $user->id)
+            || ($user && is_object($GLOBALS['perm'])
+                && $GLOBALS['perm']->have_studip_perm('tutor', $cid, $user->id)
             );
     }
 
@@ -187,9 +192,10 @@ class RoomManager
      * @param string $cid course id
      * @param int $is_default the default flag
      */
-    public static function manageCourseDefaultRoom($meeting_id, $cid, $is_default) {
+    public static function manageCourseDefaultRoom($meeting_id, $cid, $is_default)
+    {
 
-        $meetingCourse = new MeetingCourse([$meeting_id, $cid]);
+        $meetingCourse             = new MeetingCourse([$meeting_id, $cid]);
         $meetingCourse->is_default = $is_default;
         $meetingCourse->store();
 
@@ -210,21 +216,23 @@ class RoomManager
      *
      * @param MeetingCourse $meetingCourse the meeting course object
      */
-    public static function autoSelectCourseDefaultRoom(MeetingCourse $meetingCourse) {
+    public static function autoSelectCourseDefaultRoom(MeetingCourse $meetingCourse)
+    {
         $meetingCourse->is_default = 1;
         $meetingCourse->store();
     }
 
     /**
-    * Adjust the room size settings based on current number of course participants for created room.
-    *
-    * @param array $meeting_course_list a list of meeting courses
-    */
-    public static function adjustMaxParticipants($meeting_course_list) {
+     * Adjust the room size settings based on current number of course participants for created room.
+     *
+     * @param array $meeting_course_list a list of meeting courses
+     */
+    public static function adjustMaxParticipants($meeting_course_list)
+    {
         // Loop through the meeting course list.
         foreach ($meeting_course_list as $meetingCourse) {
             $members_count = ($meetingCourse->course->members) + 5;
-            $features = json_decode($meetingCourse->meeting->features, true);
+            $features      = json_decode($meetingCourse->meeting->features, true);
             // In case the maxParticipants could not be read, or is set to zero (0), we reject the adjustment process.
             if (!$features || !isset($features['maxParticipants']) || $features['maxParticipants'] == 0) {
                 continue;
@@ -233,7 +241,7 @@ class RoomManager
             // In case the count of course members is greater than the features setting (maxParicipants), we adjust the feature settings.
             if ($members_count > $features['maxParticipants']) {
                 // Try to get driver server config.
-                $servers = Driver::getConfigValueByDriver($meetingCourse->meeting->driver, 'servers');
+                $servers       = Driver::getConfigValueByDriver($meetingCourse->meeting->driver, 'servers');
                 $server_config = [];
                 if ($servers && isset($servers[$meetingCourse->meeting->server_index])) {
                     $server_config = $servers[$meetingCourse->meeting->server_index];
