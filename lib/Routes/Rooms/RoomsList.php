@@ -80,7 +80,7 @@ class RoomsList extends MeetingsController
                 }
 
                 // Checking Course Type
-                if (!MeetingPlugin::checkCourseType($meetingCourse->course, $driver->course_type)) {
+                if (isset($driver) && !MeetingPlugin::checkCourseType($meetingCourse->course, $driver->course_type)) {
                     if (!$perm->have_studip_perm('tutor', $cid)) {
                         continue;
                     } else {
@@ -95,7 +95,7 @@ class RoomsList extends MeetingsController
                     $meeting['preupload_not_allowed'] = I18N::_('Das automatische Hochladen von Folien ist derzeit nicht möglich');
                 }
                 $meeting = array_merge($meetingCourse->toArray(), $meeting);
-                
+
                 $meeting['has_recordings'] = false;
 
                 // Check Recordings
@@ -190,7 +190,7 @@ class RoomsList extends MeetingsController
             // Sort the list based on default. We want to push the default room to the top.
             $defaults = array_column($course_rooms_list, 'is_default');
             array_multisort($defaults, SORT_DESC, $course_rooms_list);
-            
+
             return $this->createResponse($course_rooms_list, $response);
         }
     }

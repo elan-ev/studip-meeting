@@ -373,9 +373,9 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
     public function DeleteMeetingOnUserDelete($event, $user)
     {
         if (!$user instanceof \Seminar_User) {
-            $seminar_user = new \Seminar_User($user);
+            $user = new \Seminar_User($user);
         }
-        $meetingCourses = MeetingCourse::findByUser($seminar_user);
+        $meetingCourses = MeetingCourse::findByUser($user);
 
         if ($meetingCourses) {
             foreach ($meetingCourses as $meetingCourse) {
@@ -450,9 +450,6 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
         $course_type_id = $course->getSemType()->offsetGet('id');
 
         $server_course_type_arr = explode("_", $server_course_type);
-        $server_course_class_id = '';
-        $server_course_type_id = '';
-
         if (count($server_course_type_arr) == 1) {
             $server_course_class_id = $server_course_type_arr[0];
             if ($server_course_class_id == $course_class_id) {
@@ -482,12 +479,10 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
     public static function getCourseTypeName($server_course_type)
     {
         if (!$server_course_type || is_array($server_course_type)) { // When it is empty or an array, it supports all course types.
-            return self::_('Alle Veranstaltungstypen');
+            return dgettext(MeetingPlugin::GETTEXT_DOMAIN, 'Alle Veranstaltungstypen');
         }
 
         $server_course_type_arr = explode("_", $server_course_type);
-        $server_course_class_id = '';
-        $server_course_type_id = '';
 
         if (count($server_course_type_arr) == 1) {
             $server_course_class_id = $server_course_type_arr[0];

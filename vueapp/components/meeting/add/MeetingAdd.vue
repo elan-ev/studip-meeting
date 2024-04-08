@@ -239,11 +239,11 @@
                         >
                             <template v-for="(feature, index) in config[room['driver']]['features']['create']['privacy']">
                                 <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :key="index"
-                                    :inlineFeatureWarningIcon="(feature['name'] == 'room_anyone_can_start' && printRoomStartWarning()) ? {messagebox_id: 'room_start_warning'} : {}"
+                                    :inlineFeatureWarningIcon="(feature['name'] === 'room_anyone_can_start' && printRoomStartWarning()) ? {messagebox_id: 'room_start_warning'} : {}"
                                     @toggleInlineFeatureWarning="toggleInlineFeatureWarning"
                                 />
                                 <MessageBox
-                                    v-if="feature['name'] == 'room_anyone_can_start' && printRoomStartWarning()"
+                                    v-if="feature['name'] === 'room_anyone_can_start' && printRoomStartWarning()"
                                     :key="'msgbx' + index" id="room_start_warning"
                                     class="inline-feature-warning"
                                     type="warning"
@@ -300,7 +300,7 @@
                     </fieldset>
 
                     <fieldset id="presentation_sildes_section" class="collapsable collapsed"
-                        v-if="hasPresentationSetting != false">
+                        v-if="hasPresentationSetting !== false">
                         <legend
                             tabindex="0"
                             role="button"
@@ -309,14 +309,14 @@
                             v-on="fieldsetHandlers"
                             v-text="$gettext('Präsentationsfolien')">
                         </legend>
-                        <template v-if="hasPresentationSetting == 'all' || hasPresentationSetting == 'setting'">
+                        <template v-if="hasPresentationSetting === 'all' || hasPresentationSetting === 'setting'">
                             <template v-for="(feature, index) in config[room['driver']]['features']['create']['presentation_sildes']">
                                 <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :key="index" />
                             </template>
                         </template>
 
 
-                        <label v-if="hasPresentationSetting == 'all' || hasPresentationSetting == 'preupload'">
+                        <label v-if="hasPresentationSetting === 'all' || hasPresentationSetting === 'preupload'">
                             <h3>
                                 {{ $gettext('Automatisches hochladen von Materialien') }}
                                 <StudipTooltipIcon :text="$gettext('Verknüpfen Sie einen Ordner mit diesem Raum. '

@@ -50,7 +50,6 @@ class FolderCreate extends MeetingsController
                         'type' => 'error'
                     ],
                 ], $response);
-                die;
             }
 
             $message = [
@@ -64,7 +63,6 @@ class FolderCreate extends MeetingsController
                         'type' => 'error'
                     ],
                 ], $response);
-                die;
             }
 
             $parent_folder = \FileManager::getTypedFolder($parent_id);
@@ -85,11 +83,6 @@ class FolderCreate extends MeetingsController
                         'type' => 'error'
                     ];
                 }
-            } else {
-                $message = [
-                    'text' => $result,
-                    'type' => 'error'
-                ];
             }
 
 
