@@ -173,7 +173,7 @@ class MeetingsHelper
             } else {
                 $error_message = I18N::_('Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server fehlgeschlagen.');
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $error_message = I18N::_('Konnte dem Meeting nicht beitreten, Kommunikation mit dem Meeting-Server fehlgeschlagen. (' . $e->getMessage() . ')');
             throw new Error($error_message, ($e->getCode() ? $e->getCode() : 404));
         }
