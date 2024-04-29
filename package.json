@@ -12,7 +12,7 @@
     },
     "author": "ELAN e.V. (tgloeggl@uos.de)",
     "devDependencies": {
-        "axios": "^0.22.0",
+        "axios": "^0.28.0",
         "clean-webpack-plugin": "^4.0.0",
         "css-loader": "^6.4.0",
         "css-minimizer-webpack-plugin": "^3.1.1",
