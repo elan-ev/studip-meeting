@@ -218,7 +218,8 @@ class Driver
 
         $has_invalid_servers = false;
         $has_no_server = false;
-        if ($config_options['enable'] == 1 && (isset($config_options['servers']) && !count($config_options['servers']) || !isset($config_options['servers']))) {
+        if (isset($config_options['enable']) && $config_options['enable'] == 1 &&
+            (isset($config_options['servers']) && !count($config_options['servers']) || !isset($config_options['servers']))) {
             $config_options['enable'] = 0;
             $has_no_server = true;
         }
