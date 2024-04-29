@@ -61,7 +61,7 @@ class IndexController extends MeetingsController
         $this->configured = false;
         if (!empty($this->driver_config)) {
             foreach ($this->driver_config as $driver => $config) {
-                if ($config['enable']) {
+                if (isset($config['enable']) && $config['enable']) {
                     $this->configured = true;
                 } else {
                     unset($this->driver_config[$driver]);
