@@ -10,7 +10,6 @@ require __DIR__.'/../bootstrap.php';
 
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Driver;
-use MeetingPlugin;
 
 class UpdateMeetingsRecordFeature extends Migration
 {

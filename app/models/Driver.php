@@ -100,7 +100,7 @@ class Driver
 
         // add newly found drivers
         foreach ($drivers as $driver_name => $data) {
-            if (!self::$config[$driver_name]) {
+            if (!isset(self::$config[$driver_name]) || !self::$config[$driver_name]) {
                 self::$config[$driver_name] = [];
             }
         }
