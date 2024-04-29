@@ -37,6 +37,6 @@ class RoomInvitationLink extends MeetingsController
 
         $invitations_link = InvitationsLink::findOneBySQL('meeting_id = ?', [$room_id]);
 
-        return $this->createResponse(['hex' => $invitations_link->hex, 'default_name' => $invitations_link->default_name], $response);
+        return $this->createResponse(['hex' => $invitations_link->hex ?? '', 'default_name' => $invitations_link->default_name ?? ''], $response);
     }
 }

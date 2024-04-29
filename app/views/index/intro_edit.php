@@ -4,12 +4,12 @@
         <label>
             <?= $_('Titel') ?>
             <?= tooltipIcon($_('Wenn leer, wird der standardmäßige Einleitung als Titel angezeigt.')) ?>
-            <input type="text" name="title" value="<?= $title ? htmlReady($title) : null ?>" placeholder="<?= !$title ? $_('Einleitung') : '' ?>" maxlength="254" size="80" autofocus>
+            <input type="text" name="title" value="<?= isset($title) ? htmlReady($title) : null ?>" placeholder="<?= !isset($title) ? $_('Einleitung') : '' ?>" maxlength="254" size="80" autofocus>
         </label>
 
         <label>
             <span class="required"><?= $_('Text') ?></span>
-            <textarea name="text" cols="80" rows="10" class="studip_wysiwyg wysiwyg"><?= $text ? wysiwygReady($text) : null ?></textarea>
+            <textarea name="text" cols="80" rows="10" class="studip_wysiwyg wysiwyg"><?= isset($text) ? wysiwygReady($text) : null ?></textarea>
         </label>
     </fieldset>
     <footer data-dialog-button>

@@ -156,7 +156,7 @@ class RoomAdd extends MeetingsController
                 $meeting->courses[] = new \Course($json['cid']);
                 $meeting->user_id = $user->id;
                 $meeting->name = trim($json['name']);
-                $meeting->description = trim($json['description']);
+                $meeting->description = isset($json['description']) ? trim($json['description']) : '';
                 $meeting->driver = $json['driver'];
                 $meeting->server_index = $json['server_index'];
                 $meeting->attendee_password = Helper::createPassword();
@@ -164,7 +164,7 @@ class RoomAdd extends MeetingsController
                 $meeting->join_as_moderator = $json['join_as_moderator'];
                 $meeting->remote_id = md5(uniqid());
                 $meeting->features = json_encode($json['features']);
-                $meeting->folder_id = $json['folder_id'];
+                $meeting->folder_id = $json['folder_id'] ?? '';
                 $meeting->store();
                 $meetingParameters = $meeting->getMeetingParameters();
 

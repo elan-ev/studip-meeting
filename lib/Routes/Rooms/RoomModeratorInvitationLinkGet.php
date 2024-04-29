@@ -37,6 +37,6 @@ class RoomModeratorInvitationLinkGet extends MeetingsController
 
         $moderators_invitation_link = ModeratorInvitationsLink::findOneBySQL('meeting_id = ?', [$room_id]);
 
-        return $this->createResponse(['hex' => $moderators_invitation_link->hex, 'password' => $moderators_invitation_link->password], $response);
+        return $this->createResponse(['hex' => $moderators_invitation_link->hex ?? '', 'password' => $moderators_invitation_link->password ?? ''], $response);
     }
 }
