@@ -359,7 +359,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
     {
         $plugin_manager = \PluginManager::getInstance();
         $this_plugin = $plugin_manager->getPluginInfo(__CLASS__);
-        $plugin_path = \get_config('PLUGINS_PATH') . '/' .$this_plugin['path'];
+        $plugin_path = $GLOBALS['PLUGINS_PATH'] . '/' .$this_plugin['path'];
         $manifest = $plugin_manager->getPluginManifest($plugin_path);
         if (!empty($item)) {
             return (isset($manifest[$item]) ? $manifest[$item] : false);
