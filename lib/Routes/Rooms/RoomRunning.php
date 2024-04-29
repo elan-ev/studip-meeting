@@ -47,7 +47,7 @@ class RoomRunning extends MeetingsController
                 return $this->createResponse(['status' => $status], $response);
             }
         } catch (Exception $e) {
-            throw new Error($error_message, ($e->getCode() ? $e->getCode() : 404));
+            throw new Error($e->getMessage(), ($e->getCode() ? $e->getCode() : 404));
         }
     }
 }

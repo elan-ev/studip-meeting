@@ -49,7 +49,7 @@ export default {
 
     methods: {
         setNewView(selected) {
-            let selectedView = this.generate_view_items.find(view => view.id == selected);
+            let selectedView = this.generate_view_items.find(view => view.id === selected);
             if (selectedView) {
                 this.current_view_id = selected;
                 this.$store.dispatch(MESSAGES_CLEAR);

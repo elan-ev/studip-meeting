@@ -170,7 +170,7 @@ export default {
         rooms_list_filtered: function() {
             let view = this;
 
-            if (this.roomFilter != '') {
+            if (this.roomFilter !== '') {
                 return this.rooms_list.filter(function(entry) {
                     return (entry.name.toLowerCase().indexOf(view.roomFilter.toLowerCase()) !== -1);
                 });
@@ -230,9 +230,9 @@ export default {
                     Object.keys(this.config[room.driver]['features']).includes('record') &&
                     Object.keys(this.config[room.driver]['features']['record']).includes('record_setting')) {
                     let config_record_setting_features = this.config[room.driver]['features']['record']['record_setting'];
-                    var default_feature_obj = {};
+                    let default_feature_obj = {};
                     if (!Object.keys(room.features).includes('giveAccessToRecordings')) {
-                        default_feature_obj = config_record_setting_features.find(m => m.name == 'giveAccessToRecordings');
+                        default_feature_obj = config_record_setting_features.find(m => m.name === 'giveAccessToRecordings');
 
                         this.$set(room.features, 'giveAccessToRecordings', ((default_feature_obj)
                             ? default_feature_obj.value
@@ -240,7 +240,7 @@ export default {
                         );
                     }
                     if (!Object.keys(room.features).includes('autoStartRecording')) {
-                        default_feature_obj = config_record_setting_features.find(m => m.name == 'autoStartRecording');
+                        default_feature_obj = config_record_setting_features.find(m => m.name === 'autoStartRecording');
 
                         this.$set(room.features, 'autoStartRecording', ((default_feature_obj)
                             ? default_feature_obj.value
@@ -286,7 +286,7 @@ export default {
         roomEditDone(params) {
             this.createEditRoom = false;
 
-            if (params != undefined && params.message != undefined) {
+            if (params !== undefined && params.message !== undefined) {
                 this.showMessage(params.message);
             }
 
@@ -295,7 +295,7 @@ export default {
 
         feedbackDone(params) {
             this.showFeedback = false;
-            if (params != undefined && params.message != undefined) {
+            if (params !== undefined && params.message !== undefined) {
                 this.showMessage(params.message);
             }
         },

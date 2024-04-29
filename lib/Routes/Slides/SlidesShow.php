@@ -92,11 +92,10 @@ class SlidesShow extends MeetingsController
             while (ob_get_level()) {
                 ob_end_clean();
             }
-
-            if ($filesize && !$is_url_file) {
+            $start = 0;
+            $end = $filesize - 1;
+            if (!$is_url_file) {
                 header("Accept-Ranges: bytes");
-                $start = 0;
-                $end = $filesize - 1;
                 $length = $filesize;
                 if (isset($_SERVER['HTTP_RANGE'])) {
                     $c_start = $start;
@@ -127,10 +126,10 @@ class SlidesShow extends MeetingsController
                 }
                 header("Content-Range: bytes $start-$end/$filesize");
                 header("Content-Length: $length");
-            } elseif ($filesize) {
+            } else {
                 header("Content-Length: $filesize");
             }
-            
+
             header("Expires: Mon, 12 Dec 2001 08:00:00 GMT");
             header("Last-Modified: " . gmdate ("D, d M Y H:i:s") . " GMT");
             if ($_SERVER['HTTPS'] == "on"){

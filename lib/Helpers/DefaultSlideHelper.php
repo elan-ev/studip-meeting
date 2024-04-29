@@ -55,13 +55,12 @@ class DefaultSlideHelper {
      * Uses the /data directory by default to create the meeting docs dir,
      * If data directory is not available, then it tries to create the meeting dir,
      * beside the UPLOAD_PATH directory!
-     * 
+     *
      * @return string|boolean meeting docs path or false if the unable to make the dir
      * @throws Error
      */
     private function getMeetingUploadPath()
     {
-        global $perm;
         try {
             $data_dir = rtrim($GLOBALS['STUDIP_BASE_PATH'], '/') . '/data';
             if (!is_dir($data_dir) && is_dir($GLOBALS['UPLOAD_PATH'])) {
@@ -73,7 +72,7 @@ class DefaultSlideHelper {
             }
 
             $meetings_doc_dir = rtrim($data_dir, '/') . '/' . MEETING_DOC_DIRNAME;
-            if (is_writeable($data_dir) && !is_dir($meetings_doc_dir) && $perm->have_perm('admin')) {
+            if (is_writeable($data_dir) && !is_dir($meetings_doc_dir) && $GLOBALS['perm']->have_perm('admin')) {
                 @mkdir($meetings_doc_dir);
             }
 
@@ -93,7 +92,7 @@ class DefaultSlideHelper {
             if ($meeting_doc_upload_path = $this->getMeetingUploadPath()) {
                 $this->font_dir = $meeting_doc_upload_path . '/font';
                 $this->pages_dir = $meeting_doc_upload_path . '/page';
-        
+
                 // Fonts
                 if (!is_dir($this->font_dir)) {
                     @mkdir($this->font_dir);
@@ -102,7 +101,7 @@ class DefaultSlideHelper {
                     @mkdir($this->font_dir . '/italic');
                     @mkdir($this->font_dir . '/bold_italic');
                 }
-        
+
                 // Pages
                 if (!is_dir($this->pages_dir)) {
                     @mkdir($this->pages_dir);
@@ -183,7 +182,7 @@ class DefaultSlideHelper {
      *
      * @return array $dummy dummy news array
      */
-    private function createDummyNewsList() 
+    private function createDummyNewsList()
     {
         $topic = I18N::_('Nachrichtenthema');
         $body = I18N::_('Nachrichteninhalt');
@@ -208,7 +207,7 @@ class DefaultSlideHelper {
      * @param string $template_name the name of the template to use
      * @param Meeting $meeting the meeting object
      * @param boolean $dummy the flag which makes preveiw feature more efficient
-     * 
+     *
      * @return string rendered html from template
      */
     private function getFlexiTemplateHTML($template_factory_dir, $template_name, Meeting $meeting, $dummy = false)
@@ -235,7 +234,7 @@ class DefaultSlideHelper {
         $features = json_decode($meeting->features, true);
         $show_course_news = $features && isset($features['default_slide_course_news']) ? filter_var($features['default_slide_course_news'], FILTER_VALIDATE_BOOLEAN) : false;
         $show_studip_news = $features && isset($features['default_slide_studip_news']) ? filter_var($features['default_slide_studip_news'], FILTER_VALIDATE_BOOLEAN) : false;
-        
+
         $course_news = $this->getNewsList($courseid);
         if ($show_course_news && !empty($course_news)) {
             $template->set_attribute('course_news', $course_news);
@@ -366,7 +365,7 @@ class DefaultSlideHelper {
      * It installs the font using TCPDF_FONTS class which generates a font php file to be used by TCPDF in AddFont class.
      *
      * @param TCPDF $pdf the generated pdf object
-     * 
+     *
      * @return TCPDF $pdf
      */
     public function installFont(TCPDF $pdf)
@@ -413,9 +412,9 @@ class DefaultSlideHelper {
 
     /**
      * Installs the uploaded font into TCPDF_FONTS by type
-     * 
+     *
      * @param string $type type of font
-     * 
+     *
      * @return string installed font path or empty
      */
     private function installFontFileByType($type)
@@ -427,7 +426,7 @@ class DefaultSlideHelper {
         if (!in_array($type, ['bold', 'regular', 'italic', 'bold_italic']) || !is_dir($font_type_dir_path)) {
             return '';
         }
-        
+
         $php_files = glob("$font_type_dir_path/*.php");
         $font_php_file = !empty($php_files) ? $php_files[0] : '';
 
@@ -448,7 +447,7 @@ class DefaultSlideHelper {
     }
 
     /**
-    * Reads all the available folders in pages directory are returns an array of templates based on existing folder in pages dir. 
+    * Reads all the available folders in pages directory are returns an array of templates based on existing folder in pages dir.
     *
     * @return array $templates
     */
@@ -557,7 +556,7 @@ class DefaultSlideHelper {
 
     /**
      * Removes a file
-     * 
+     *
      * @param string $file_path the full file path
      */
     private function removeFile($file_path) {
@@ -587,10 +586,10 @@ class DefaultSlideHelper {
 
     /**
      * Stores the php file into a template page directory.
-     * 
+     *
      * @param UploadedFile $php_file the php file
      * @param int $page the folder as page number
-     * 
+     *
      * @return boolean
      */
     private function uploadPHPTemplate(UploadedFile $php_file, $page)
@@ -620,10 +619,10 @@ class DefaultSlideHelper {
 
     /**
      * Stores the pdf file into a template page directory.
-     * 
+     *
      * @param UploadedFile $pdf_file the php file
      * @param int $page the folder as page number
-     * 
+     *
      * @return boolean
      */
     private function uploadPDFSlide(UploadedFile $pdf_file, $page)
@@ -653,10 +652,10 @@ class DefaultSlideHelper {
 
     /**
      * Deletes a specific file based on the arg. inside the page directory.
-     * 
+     *
      * @param int $page the page folder number
      * @param int $what the type of file to delete
-     * 
+     *
      * @return boolean
      */
     public function deleteTemplate($page, $what)
@@ -701,7 +700,7 @@ class DefaultSlideHelper {
 
     /**
      * Check whether to generate default StudIP PDF template or use uploaded templates
-     * 
+     *
      * @return bool
      */
     public function checkCustomizedTemplates()
@@ -711,9 +710,9 @@ class DefaultSlideHelper {
 
     /**
      * It generates a dummy pdf to provide a preview for the admin to check how does the uploaded pdf and template looks like
-     * 
+     *
      * @param int $page the page number of the template
-     * 
+     *
      * @return Fpdi $pdf the generated pdf object
      */
     public function generatePDFPreview($page)
@@ -726,7 +725,7 @@ class DefaultSlideHelper {
         $course->name = 'Test Course';
         $meeting = new Meeting();
         $meeting->courses[] = $course;
-        $meeting->name = 'Test Meeting'; 
+        $meeting->name = 'Test Meeting';
         $meeting->features = null;
 
         $pages = $this->getInstalledTemplates();
@@ -761,9 +760,9 @@ class DefaultSlideHelper {
 
     /**
      * Reads the content of available sample file and returns it to be downloaded by client.
-     * 
+     *
      * @param string $what the sample file extension to download
-     * 
+     *
      * @return string|boolean $content or false
      */
     public static function downloadSampleTemplate($what) {

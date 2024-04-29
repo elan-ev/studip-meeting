@@ -32,8 +32,6 @@ class RouteMap
 
     public function authenticatedRoutes()
     {
-        global $user;
-
         $this->app->get('/user', Routes\Users\UsersShow::class);
 
         //Routes for rooms in seminar
