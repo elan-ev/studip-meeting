@@ -66,7 +66,7 @@ class WidgetHelper
                     $now,
                     $now,
                 ]);
-            if ($currentSessionDate && !$currentSessionDate->room_booking->resource_id) {
+            if ($currentSessionDate && empty($currentSessionDate->room_booking->resource_id)) {
                 $widgetItem = self::prepareWidgetItems($course, $currentSessionDate);
                 if (!empty($widgetItem)) {
                     $currents[] = $widgetItem;
@@ -81,7 +81,7 @@ class WidgetHelper
                     $now,
                     $tonight,
                 ]);
-            if ($upcomingSessionDate && !$upcomingSessionDate->room_booking->resource_id) {
+            if ($upcomingSessionDate && empty($upcomingSessionDate->room_booking->resource_id)) {
                 $upcomings[] = self::prepareWidgetItems($course, $upcomingSessionDate);
             }
         }
