@@ -15,11 +15,11 @@ class DiscoveryIndex extends MeetingsController
     public function __invoke(Request $request, Response $response, $args)
     {
         $routes = $this->container->get('router')->getRoutes();
-
+        $data   = [];
         foreach ($routes as $id => $route) {
             $data[] = [
-                'type' => 'slim-routes',
-                'id'   => $id,
+                'type'       => 'slim-routes',
+                'id'         => $id,
                 'attributes' => [
                     'methods' => $route->getMethods(),
                     'pattern' => $route->getPattern()

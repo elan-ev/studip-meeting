@@ -3,7 +3,7 @@
     <h1>{{ $gettext('Das Meeting hat noch nicht begonnen') }}</h1>
 
     <div class="waiting-info-container">
-      <img :src="loadingURL" width="24" height="24"/>
+      <img :src="loadingURL" width="24" height="24" :alt="$gettext('Das Meeting hat noch nicht begonnen')"/>
       <p>
         {{ $gettext('Sie treten dem Meeting automatisch bei, sobald es begonnen hat.') }}
       </p>

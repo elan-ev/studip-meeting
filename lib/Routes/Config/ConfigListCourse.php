@@ -19,8 +19,6 @@ class ConfigListCourse extends MeetingsController
 
     public function __invoke(Request $request, Response $response, $args)
     {
-        global $perm;
-
         $drivers = Driver::discover(true);
         $config = Driver::getConfig();
 
@@ -34,7 +32,7 @@ class ConfigListCourse extends MeetingsController
         $displayDeleteRecording = false;
         $displayAddFolder = false;
 
-        if ($perm->have_studip_perm('tutor', $cid)) {
+        if ($GLOBALS['perm']->have_studip_perm('tutor', $cid)) {
             $displayAddRoom = true;
             $displayEditRoom = true;
             $displayDeleteRoom = true;
@@ -97,7 +95,7 @@ class ConfigListCourse extends MeetingsController
 
         $course_general_config = [];
         $showRecordingPrivacyText = Driver::getGeneralConfigValue('show_recording_privacy_text');
-        if ($perm->have_studip_perm('tutor', $cid)) {
+        if ($GLOBALS['perm']->have_studip_perm('tutor', $cid)) {
             $showRecordingPrivacyText = false;
         }
         $course_general_config['show_recording_privacy_text'] = $showRecordingPrivacyText;

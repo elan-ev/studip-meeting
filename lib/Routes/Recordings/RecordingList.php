@@ -38,8 +38,8 @@ class RecordingList extends MeetingsController
         $driver_factory = new DriverFactory(Driver::getConfig());
 
         $meetingCourse = new MeetingCourse([$room_id, $cid ]);
+        $recordings_list = [];
         if (!$meetingCourse->isNew()) {
-            $recordings_list = [];
             try {
                 $driver = $driver_factory->getDriver($meetingCourse->meeting->driver, $meetingCourse->meeting->server_index);
                 if (is_subclass_of($driver, 'ElanEv\Driver\RecordingInterface')) {
@@ -68,7 +68,7 @@ class RecordingList extends MeetingsController
 
     }
 
-    private function getFeatures($str_features, $key = null) 
+    private function getFeatures($str_features, $key = null)
     {
         $features = json_decode($str_features, true);
         if ($key) {

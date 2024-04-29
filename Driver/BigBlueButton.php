@@ -50,8 +50,8 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
         $this->salt = $config['api-key'];
         $this->url  = $config['url'];
-        $this->connection_timeout = $config['connection_timeout'];
-        $this->request_timeout =  $config['request_timeout'];
+        $this->connection_timeout = $config['connection_timeout'] ?? 0;
+        $this->request_timeout =  $config['request_timeout'] ?? 0;
         $this->course_type = (isset($config['course_types'])) ? $config['course_types'] : '';
         $this->active = (isset($config['active'])) ? $config['active'] : true;
     }
@@ -165,7 +165,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
             if (intval($features['maxParticipants']) == 0) {
                 $servers = Driver::getConfigValueByDriver((new \ReflectionClass(self::class))->getShortName(), 'servers');
-                if ($servers && isset($servers[$parameters->getMeetingServerIndex()]) && $servers[$parameters->getMeetingServerIndex()]['maxParticipants']) {
+                if ($servers && isset($servers[$parameters->getMeetingServerIndex()]) && !empty($servers[$parameters->getMeetingServerIndex()]['maxParticipants'])) {
                     $features['maxParticipants'] = intval($servers[$parameters->getMeetingServerIndex()]['maxParticipants']);
                 } else {
                     unset($features['maxParticipants']);

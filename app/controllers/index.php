@@ -149,19 +149,20 @@ class IndexController extends MeetingsController
         $this->getHelpbarContent('main');
         $this->cid = Context::getId();
         if ($err = Request::get('err')) {
-            if ($err == 'server-inactive') {
+            if ($err === 'server-inactive') {
                 PageLayout::postError(I18N::_('Der ausgewählte Server ist deaktiviert.'));
             }
-            if ($err == 'course-type') {
+            if ($err === 'course-type') {
                 PageLayout::postError(I18N::_('Der ausgewählte Server ist in diesem Veranstaltungstyp nicht verfügbar.'));
             }
-            if ($err == 'accessdenied') {
+            if ($err === 'accessdenied') {
                 throw new AccessDeniedException();
             }
         }
 
         $this->setSidebar();
 
+        $this->is_public = false;
         // Here we handle the path to be routed when the plugin is used for public courses.
         if (MeetingPlugin::isCoursePublic($this->cid)) {
             $this->is_public = true;
@@ -374,10 +375,9 @@ class IndexController extends MeetingsController
     public function return_action()
     {
         PageLayout::addScript($this->plugin->getAssetsUrl() . '/js/meetings_return_helper.js?v=' . MeetingPlugin::getMeetingManifestInfo('version'));
-        PageLayout::setTitle(self::getHeaderLine(Context::getId()));
+        PageLayout::setTitle(self::getHeaderLine(Request::get('cid')));
 
-        $cid = Request::get('cid');
-        $return_url = RoomManager::generateMeetingBaseURL('index', ['cid' => $cid]);
+        $return_url = RoomManager::generateMeetingBaseURL('index', ['cid' => Request::get('cid')]);
         $this->return_url = $return_url;
     }
 
@@ -388,27 +388,21 @@ class IndexController extends MeetingsController
     private function getHelpbarContent($id)
     {
         /** @var \Helpbar $helpBar */
-
+        $helpBar = Helpbar::get();
         switch ($id) {
-
             case 'main':
                 $helpText = I18N::_('Durchführung und Verwaltung von Live-Online-Treffen, Veranstaltungen und Videokonferenzen. '
                                 . 'Mit Hilfe der Face-to-Face-Kommunikation können Entfernungen überbrückt, externe Fachleute '
                                 . 'einbezogen und Studierende in Projekten und Praktika begleitet werden.');
-                $helpBar = Helpbar::get();
                 $helpBar->addPlainText('', $helpText);
                 break;
-
             case 'config':
                 $helpText = I18N::_('Arbeitsbereich zum Anpassen der Gesamtansicht der Meetings einer Veranstaltung.');
-                $helpBar = Helpbar::get();
                 $helpBar->addPlainText('', $helpText);
                 break;
-
             case 'my':
                 $helpText = I18N::_('Gesamtansicht aller von Ihnen erstellten Meetings nach '
                                 . 'Semestern oder nach Namen sortiert.');
-                $helpBar = Helpbar::get();
                 $helpBar->addPlainText('', $helpText);
                 break;
         }
@@ -450,8 +444,8 @@ class IndexController extends MeetingsController
     private function buildCourseIndexSidebar()
     {
         $sidebar = Sidebar::get();
-
-        if ($this->perm->have_studip_perm('tutor', Context::getId())) {
+        $context = Context::get();
+        if ($context && $this->perm->have_studip_perm('tutor', $context->id)) {
             $actions = new TemplateWidget(
                 I18N::_('Aktionen'),
                 $this->get_template_factory()->open('index/action_widget')
@@ -489,7 +483,7 @@ class IndexController extends MeetingsController
             null,
             [],
             'config'
-        )->setActive($current_view == 'config');
+        )->setActive($current_view === 'config');
         $views->addLink(
             I18N::_('Informationstexte'),
             $this->url_for('index/intros', ['view' => 'intros']),
@@ -502,7 +496,7 @@ class IndexController extends MeetingsController
 
         // Actions.
         $actions = new ActionsWidget();
-        if ($current_view == 'intros') {
+        if ($current_view === 'intros') {
             $actions->addLink(
                 I18N::_('Informationstext hinzufügen'),
                 $this->url_for('index/add_intro'),
