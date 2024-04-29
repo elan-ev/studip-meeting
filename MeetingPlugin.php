@@ -211,6 +211,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
         $courseConfig = CourseConfig::findByCourseId($courseId);
         $main = new Navigation($courseConfig->title);
         $main->setURL(PluginEngine::getURL($this, [], 'index'));
+        $main->setImage($this->getIcon('meetings', 'blue'));
 
         $main->addSubNavigation('meetings', new Navigation(
             $courseConfig->title,
@@ -330,6 +331,9 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
             . "geschaltet werden, um zum Beispiel den Teilnehmenden bestimmte Webseiten oder Anwendungen "
             . "zu zeigen. Außerdem kann die Veranstaltung aufgezeichnet und Interessierten zur Verfügung gestellt werden."
         );
+
+        $metadata['summary'] = $this->_("Meetings & Videokonferenzen");
+        $metadata['description'] = $this->_('Virtueller Raum, mit dem Live-Online-Treffen, Veranstaltungen und Videokonferenzen durchgeführt werden können.');
 
         $metadata['descriptionshort'] = $this->_("Face-to-face-Kommunikation mit Adobe Connect oder BigBlueButton");
 
