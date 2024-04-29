@@ -83,7 +83,7 @@ class DfnVc implements DriverInterface
         $response = $this->performRequest(array(
             'action' => 'sco-update',
             'type' => 'meeting',
-            'name' => $parameters->getMeetingId().' - '.studip_utf8encode($parameters->getMeetingName()),
+            'name' => $parameters->getMeetingId().' - '.$this->utf8encode($parameters->getMeetingName()),
             'folder-id' => $folderId,
             'session' => $sessionCookie,
         ));
@@ -364,8 +364,8 @@ class DfnVc implements DriverInterface
     {
         return $this->performRequest(array(
             'action' => 'lms-user-create',
-            'first-name' => studip_utf8encode($parameters->getFirstName()),
-            'last-name' => studip_utf8encode($parameters->getLastName()),
+            'first-name' => $this->utf8encode($parameters->getFirstName()),
+            'last-name' => $this->utf8encode($parameters->getLastName()),
             'login' => $parameters->getEmail(),
             'session' => $sessionCookie,
         ));
@@ -439,6 +439,32 @@ class DfnVc implements DriverInterface
             }
         } catch (Throwable $th) {
             return false;
+        }
+    }
+
+    /**
+     * utf8 encoding method
+     * @param string|array $data data to be processed
+     * @return string converted string
+     */
+    private function utf8encode($data) {
+        if (is_array($data)) {
+            $new_data = array();
+            foreach ($data as $key => $value) {
+                $key = $this->utf8encode($key);
+                $new_data[$key] = $this->utf8encode($value);
+            }
+            return $new_data;
+        }
+
+        if (!preg_match('/[\200-\377]/', $data) && !preg_match("'&#[0-9]+;'", $data)) {
+            return $data;
+        } else {
+            return mb_decode_numericentity(
+                mb_convert_encoding($data,'UTF-8', 'WINDOWS-1252'),
+                array(0x100, 0xffff, 0, 0xffff),
+                'UTF-8'
+            );
         }
     }
 }
