@@ -11,5 +11,15 @@
         "guzzlehttp/psr7": "^2.6.2",
         "slim/slim": "^3.12",
         "setasign/fpdi": "^2.0"
+    },
+    "scripts": {
+        "sniffer:php7.4": "phpcs -p -v -s --extensions=php --ignore=*/vendor/*,*/node_modules/*  ./ --standard=vendor/phpcompatibility/php-compatibility/PHPCompatibility --runtime-set testVersion 7.4",
+        "sniffer:php8.0": "phpcs -p -v --extensions=php --ignore=*/vendor/*,*/node_modules/* ./ --standard=vendor/phpcompatibility/php-compatibility/PHPCompatibility --runtime-set testVersion 8.0",
+        "sniffer:php8.1": "phpcs -p -v --extensions=php --ignore=*/vendor/*,*/node_modules/* ./ --standard=vendor/phpcompatibility/php-compatibility/PHPCompatibility --runtime-set testVersion 8.1",
+        "sniffer:php8.2": "phpcs -p -v --extensions=php --ignore=*/vendor/*,*/node_modules/* ./ --standard=vendor/phpcompatibility/php-compatibility/PHPCompatibility --runtime-set testVersion 8.2"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.9",
+        "phpcompatibility/php-compatibility": "^9.3"
     }
 }
