@@ -364,8 +364,8 @@ class DfnVc implements DriverInterface
     {
         return $this->performRequest(array(
             'action' => 'lms-user-create',
-            'first-name' => $parameters->getMeetingName(),
-            'last-name' => $parameters->getMeetingName(),
+            'first-name' => $parameters->getFirstName(),
+            'last-name' => $parameters->getLastName(),
             'login' => $parameters->getEmail(),
             'session' => $sessionCookie,
         ));
