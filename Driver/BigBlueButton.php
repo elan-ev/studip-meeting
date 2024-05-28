@@ -379,7 +379,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         }
 
         try {
-            $method = (is_array($options) && count($options)) ? 'POST' : 'GET';
+            $method = isset($options['body']) ? 'POST' : 'GET';
             $request = $this->client->request($method, $this->url .'/'. $uri, $options);
             return $request->getBody(true);
         } catch (BadResponseException $e) {
@@ -737,6 +737,9 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 $document_xml->addAttribute('url', $document['url']);
             }
             $options['body'] = $modules_xml->asXML();
+            $options['headers'] = [
+                'Content-Type' => 'text/xml'
+            ];
         }
 
         // Finally, we return the options, either with or without body.
