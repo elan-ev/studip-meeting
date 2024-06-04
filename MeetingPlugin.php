@@ -167,19 +167,18 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
         /** @var Seminar_Perm $perm */
         $perm = $GLOBALS['perm'];
 
-        $cache = \StudipCacheFactory::getCache();
         if ($perm->have_studip_perm('tutor', $courseId)) {
-            $courses = unserialize($cache->read('plugins/MeetingPlugin/MeetingCourse/' . $courseId));
-            if (empty($courses)) {
-                $courses = MeetingCourse::findByCourseId($courseId);
-                $cache->write('plugins/MeetingPlugin/MeetingCourse/' . $courseId, serialize($courses), 3600);
-            }
+            $courses = MeetingCourse::findBySQL(
+                'INNER JOIN vc_meetings AS m ON meeting_id = m.id
+                WHERE course_id = :course_id',
+                array('course_id' => $courseId)
+            );
         } else {
-            $courses = unserialize($cache->read('plugins/MeetingPlugin/MeetingCourse/active/' . $courseId));
-            if (empty($courses)) {
-                $courses = MeetingCourse::findActiveByCourseId($courseId);
-                $cache->write('plugins/MeetingPlugin/MeetingCourse/active/' . $courseId, serialize($courses), 3600);
-            }
+            $courses = MeetingCourse::findBySQL(
+                'INNER JOIN vc_meetings AS m ON meeting_id = m.id
+                WHERE active = 1 AND course_id = :course_id',
+                array('course_id' => $courseId)
+            );
         }
 
         $recentMeetings = 0;
