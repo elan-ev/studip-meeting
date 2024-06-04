@@ -244,6 +244,10 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
         require_once __DIR__ . '/vendor/autoload.php';
 
         if (substr($unconsumed_path, 0, 3) == 'api') {
+            // make sure, slim knows if we are running https
+            if (strpos($GLOBALS['ABSOLUTE_URI_STUDIP'], 'https') === 0) {
+                $_SERVER['HTTPS'] = 'on';
+            }
             $appFactory = new AppFactory();
             $app = $appFactory->makeApp($this);
             $app->group('/meetingplugin/api', new RouteMap($app));
