@@ -100,7 +100,8 @@ class RoomAdd extends MeetingsController
             }
 
             $servers = Driver::getConfigValueByDriver($json['driver'], 'servers');
-            $server_maxParticipants = $servers[$json['server_index']]['maxParticipants'];
+            $server_maxParticipants = (!empty($servers[$json['server_index']]['maxParticipants'])) ?
+                $servers[$json['server_index']]['maxParticipants'] : null;
             if (is_numeric($server_maxParticipants) && $server_maxParticipants > 0 && $json['features']['maxParticipants'] > $server_maxParticipants) {
                 $has_error = true;
                 $error_text = sprintf(I18N::_('Teilnehmerzahl darf %d nicht überschreiten'), $server_maxParticipants);

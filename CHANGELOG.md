@@ -1,3 +1,18 @@
+# 2.82.1 (splitted sub-version)
+* Splitted Sub-version for Stud.IP 5.x
+
+# 2.82
+* BigBlueButton version 2.7.8 support
+
+# 2.81
+* PHP 8.1 compatibility
+
+# 2.60
+* PHP 7 and above
+
+# 2.x
+* Refactored to a new solution using Vue js
+
 # 1.5
 * Update to guzzlehttp
 
