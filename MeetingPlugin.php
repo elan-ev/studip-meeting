@@ -250,12 +250,12 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
             }
             $appFactory = new AppFactory();
             $app = $appFactory->makeApp($this);
-            $app->group('/meetingplugin/api', new RouteMap($app));
+            $app->group('/meetingplugin/api', new RouteMap($app->getContainer()));
             $app->run();
         } else if (substr($unconsumed_path, 0, 6) == 'public') {
             $appFactory = new AppFactory();
             $app = $appFactory->makeApp($this);
-            $app->group('/meetingplugin/public', new RouteMapPublic($app));
+            $app->group('/meetingplugin/public', new RouteMapPublic($app->getContainer()));
             $app->run();
         }else {
             PageLayout::addStylesheet($this->getPluginUrl() . '/static/styles.css?v=' . self::getMeetingManifestInfo('version'));

@@ -4,7 +4,7 @@ namespace Meetings;
 
 use Slim\App;
 use StudipPlugin;
-use Meetings\Middlewares\RemoveTrailingSlashes;
+use Slim\Factory\AppFactory as SlimApp;
 
 /**
  * Diese Klasse erstellt eine neue Slim-Applikation und konfiguriert
@@ -21,7 +21,6 @@ use Meetings\Middlewares\RemoveTrailingSlashes;
  *
  * @see http://www.slimframework.com/
  * @see \Studip\ENV
- * @see \Meetings\Middlewares\RemoveTrailingSlashes
  */
 class AppFactory
 {
@@ -36,50 +35,44 @@ class AppFactory
      */
     public function makeApp(StudipPlugin $plugin)
     {
-        $app = new App();
-        $app = $this->configureContainer($app, $plugin);
-        $app->add(new RemoveTrailingSlashes());
+        SlimApp::setContainer($this->getContainer($plugin));
+        $app = SlimApp::create();
 
         return $app;
     }
 
     // hier wird der Container konfiguriert
-    private function configureContainer($app, $plugin)
+    private function getContainer($plugin)
     {
-        $container = $app->getContainer();
-        $container['plugin'] = $plugin;
-        $container['settings']['displayErrorDetails'] = defined('\\Studip\\ENV') && \Studip\ENV === 'development' || $GLOBALS['perm']->have_perm('root');
+        $container = new \DI\Container();
+        $container->set('plugin', $plugin);
+        $container->set('settings', [
+            'displayErrorDetails' => defined('\\Studip\\ENV')
+                && \Studip\ENV === 'development'
+                || $GLOBALS['perm']->have_perm('root')
+        ]);
 
         // error handler
-        $container['errorHandler'] = function ($container) {
+        $container->set('errorHandler', function ($container) {
             return new Errors\ExceptionHandler($container);
-        };
+        });
 
-        if (isset($container['notFoundHandler'])) {
-            unset($container['notFoundHandler']);
-        }
-        $container['notFoundHandler'] = function ($container) {
+        $container->set('notFoundHandler', function ($container) {
             return new Errors\NotFoundHandler($container);
-        };
+        });
 
-        if (isset($container['notAllowedHandler'])) {
-            unset($container['notAllowedHandler']);
-        }
-        $container['notAllowedHandler'] = function ($container) {
+        $container->set('notAllowedHandler', function ($container) {
             return new Errors\NotAllowedHandler($container);
-        };
+        });
 
-        if (isset($container['phpErrorHandler'])) {
-            unset($container['phpErrorHandler']);
-        }
-        $container['phpErrorHandler'] = function ($container) {
+         $container->set('phpErrorHandler', function ($container) {
             return new Errors\PHPErrorHandler($container);
-        };
+        });
 
-        $container->register(new Providers\StudipConfig());
-        $container->register(new Providers\StudipServices());
-        $container->register(new Providers\PluginRoles());
+        new Providers\StudipConfig($container);
+        new Providers\StudipServices($container);
+        new Providers\PluginRoles($container);
 
-        return $app;
+        return $container;
     }
 }

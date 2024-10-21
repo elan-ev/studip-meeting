@@ -31,11 +31,14 @@ Trait MeetingsTrait
 
     public function createResponse($data, $response)
     {
-        return $response->withHeader(
+        $response = $response->withHeader(
             'Content-Type',
-            'application/vnd.api+json'
-        )
-        ->write(json_encode($data));
+            'application/json'
+        );
+
+        $response->getBody()->write(json_encode($data));
+
+        return $response;
     }
 
     public function createEmptyResponse($response)

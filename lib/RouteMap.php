@@ -3,107 +3,107 @@
 namespace Meetings;
 
 use Meetings\Providers\StudipServices;
+use Middlewares\TrailingSlash;
+use Psr\Container\ContainerInterface;
 
 class RouteMap
 {
-    public function __construct(\Slim\App $app)
+    public function __construct(ContainerInterface $container)
     {
-        $this->app = $app;
+        $this->container = $container;
     }
 
-    public function __invoke()
+    public function __invoke(\Slim\Routing\RouteCollectorProxy $app)
     {
-        $container = $this->app->getContainer();
+        $app->group('', [$this, 'authenticatedRoutes'])
+            ->add(new Middlewares\Authentication($this->container->get(StudipServices::AUTHENTICATOR)))
+            ->add(new TrailingSlash(trailingSlash: false));
 
-        $this->app->group('', [$this, 'authenticatedRoutes'])
-            ->add(new Middlewares\Authentication($container[StudipServices::AUTHENTICATOR]))
-            ->add(new Middlewares\RemoveTrailingSlashes);
+        $app->group('', [$this, 'adminRoutes'])
+            ->add(new Middlewares\AdminPerms($this->container))
+            ->add(new Middlewares\Authentication($this->container->get(StudipServices::AUTHENTICATOR)))
+            ->add(new TrailingSlash(trailingSlash: false));
 
-        $this->app->group('', [$this, 'adminRoutes'])
-            ->add(new Middlewares\AdminPerms($container))
-            ->add(new Middlewares\Authentication($container[StudipServices::AUTHENTICATOR]))
-            ->add(new Middlewares\RemoveTrailingSlashes);
+        $app->get('/discovery', Routes\DiscoveryIndex::class);
 
-        $this->app->get('/discovery', Routes\DiscoveryIndex::class);
-
-        $this->app->group('', [$this, 'unauthenticatedRoutes'])
-            ->add(new Middlewares\RemoveTrailingSlashes);
+        $app->group('', [$this, 'unauthenticatedRoutes'])
+            ->add(new TrailingSlash(trailingSlash: false));
     }
 
-    public function authenticatedRoutes()
+    public function authenticatedRoutes(\Slim\Routing\RouteCollectorProxy $group)
     {
-        $this->app->get('/user', Routes\Users\UsersShow::class);
+        $group->get('/user', Routes\Users\UsersShow::class);
 
         //Routes for rooms in seminar
-        $this->app->get('/course/{cid}/rooms', Routes\Rooms\RoomsList::class);
-        $this->app->get('/course/{cid}/config', Routes\Config\ConfigListCourse::class);
+        $group->get('/course/{cid}/rooms', Routes\Rooms\RoomsList::class);
+        $group->get('/course/{cid}/config', Routes\Config\ConfigListCourse::class);
 
-        $this->app->get('/rooms/{room_id}', Routes\Rooms\RoomShow::class);
-        $this->app->get('/rooms/{cid}/{room_id}/status', Routes\Rooms\RoomRunning::class);
-        $this->app->get('/rooms/{cid}/info', Routes\Rooms\RoomInfo::class);
+        $group->get('/rooms/{room_id}', Routes\Rooms\RoomShow::class);
+        $group->get('/rooms/{cid}/{room_id}/status', Routes\Rooms\RoomRunning::class);
+        $group->get('/rooms/{cid}/info', Routes\Rooms\RoomInfo::class);
 
         //Route for joining a meeting
-        $this->app->get('/rooms/join/{cid}/{room_id}', Routes\Rooms\RoomJoin::class);
+        $group->get('/rooms/join/{cid}/{room_id}', Routes\Rooms\RoomJoin::class);
 
         //Routes for recordings
-        $this->app->get('/rooms/{cid}/{room_id}/recordings', Routes\Recordings\RecordingList::class);
+        $group->get('/rooms/{cid}/{room_id}/recordings', Routes\Recordings\RecordingList::class);
 
         //following requests contain validation of permissions
         // rooms with perm
-        $this->app->post('/rooms', Routes\Rooms\RoomAdd::class);
-        $this->app->put('/rooms/{room_id}', Routes\Rooms\RoomEdit::class);
-        $this->app->delete('/rooms/{cid}/{room_id}', Routes\Rooms\RoomDelete::class);
+        $group->post('/rooms', Routes\Rooms\RoomAdd::class);
+        $group->put('/rooms/{room_id}', Routes\Rooms\RoomEdit::class);
+        $group->delete('/rooms/{cid}/{room_id}', Routes\Rooms\RoomDelete::class);
 
         //generate guest invitation link
-        $this->app->get('/rooms/join/{cid}/{room_id}/{guest_name}/guest', Routes\Rooms\RoomJoinGuest::class);
-        $this->app->get('/rooms/invitationLink/{cid}/{room_id}',  Routes\Rooms\RoomInvitationLink::class);
+        $group->get('/rooms/join/{cid}/{room_id}/{guest_name}/guest', Routes\Rooms\RoomJoinGuest::class);
+        $group->get('/rooms/invitationLink/{cid}/{room_id}',  Routes\Rooms\RoomInvitationLink::class);
 
         //generate moderator invitaion link
-        $this->app->get('/rooms/join/{cid}/{room_id}/{moderator_password}/moderator', Routes\Rooms\RoomModeratorInvitationLinkCreate::class);
-        $this->app->get('/rooms/inviteModerator/{cid}/{room_id}',  Routes\Rooms\RoomModeratorInvitationLinkGet::class);
+        $group->get('/rooms/join/{cid}/{room_id}/{moderator_password}/moderator', Routes\Rooms\RoomModeratorInvitationLinkCreate::class);
+        $group->get('/rooms/inviteModerator/{cid}/{room_id}',  Routes\Rooms\RoomModeratorInvitationLinkGet::class);
 
         //generate QR Code
-        $this->app->get('/rooms/qr_code/{cid}/{room_id}',  Routes\Rooms\RoomGenerateQRCode::class);
+        $group->get('/rooms/qr_code/{cid}/{room_id}',  Routes\Rooms\RoomGenerateQRCode::class);
 
         //recordings with perm
-        $this->app->get('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingShow::class);
-        $this->app->delete('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingDelete::class);
+        $group->get('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingShow::class);
+        $group->delete('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingDelete::class);
 
         //routes for feedback
-        $this->app->post('/feedback', Routes\Feedback\FeedbackSubmit::class);
-        $this->app->post('/feedback/uploadTest', Routes\Feedback\UploadTest::class);
+        $group->post('/feedback', Routes\Feedback\FeedbackSubmit::class);
+        $group->post('/feedback/uploadTest', Routes\Feedback\UploadTest::class);
 
         //routes for folders
-        $this->app->get('/folders/{cid}/{folder_id}', Routes\Folder\FolderList::class);
-        $this->app->post('/folders/new_folder', Routes\Folder\FolderCreate::class);
-        $this->app->post('/folders/upload_file', Routes\Folder\FolderUploadFile::class);
+        $group->get('/folders/{cid}/{folder_id}', Routes\Folder\FolderList::class);
+        $group->post('/folders/new_folder', Routes\Folder\FolderCreate::class);
+        $group->post('/folders/upload_file', Routes\Folder\FolderUploadFile::class);
     }
 
-    public function adminRoutes()
+    public function adminRoutes(\Slim\Routing\RouteCollectorProxy $group)
     {
         //configs
-        $this->app->get('/config/list', Routes\Config\ConfigList::class);
-        $this->app->get('/config/{id}', Routes\Config\ConfigShow::class);
-        $this->app->post('/config', Routes\Config\ConfigAdd::class);
-        $this->app->put('/config/{id}', Routes\Config\ConfigEdit::class);
-        $this->app->delete('/config/{id}', Routes\Config\ConfigDelete::class);
+        $group->get('/config/list', Routes\Config\ConfigList::class);
+        $group->get('/config/{id}', Routes\Config\ConfigShow::class);
+        $group->post('/config', Routes\Config\ConfigAdd::class);
+        $group->put('/config/{id}', Routes\Config\ConfigEdit::class);
+        $group->delete('/config/{id}', Routes\Config\ConfigDelete::class);
 
         //default slide management
-        $this->app->get('/default_slide/font', Routes\Slides\FontRead::class);
-        $this->app->post('/default_slide/font', Routes\Slides\FontUpload::class);
-        $this->app->delete('/default_slide/font/{font_type}', Routes\Slides\FontDelete::class);
+        $group->get('/default_slide/font', Routes\Slides\FontRead::class);
+        $group->post('/default_slide/font', Routes\Slides\FontUpload::class);
+        $group->delete('/default_slide/font/{font_type}', Routes\Slides\FontDelete::class);
 
-        $this->app->get('/default_slide/template', Routes\Slides\TemplateRead::class);
-        $this->app->post('/default_slide/template', Routes\Slides\TemplateUpload::class);
-        $this->app->delete('/default_slide/template/{page}/{what}', Routes\Slides\TemplateDelete::class);
+        $group->get('/default_slide/template', Routes\Slides\TemplateRead::class);
+        $group->post('/default_slide/template', Routes\Slides\TemplateUpload::class);
+        $group->delete('/default_slide/template/{page}/{what}', Routes\Slides\TemplateDelete::class);
 
-        $this->app->get('/default_slide/template/preview/{page}', Routes\Slides\TemplatePreview::class);
-        $this->app->get('/default_slide/template/sample/{what}', Routes\Slides\TemplateSampleDownload::class);
+        $group->get('/default_slide/template/preview/{page}', Routes\Slides\TemplatePreview::class);
+        $group->get('/default_slide/template/sample/{what}', Routes\Slides\TemplateSampleDownload::class);
     }
 
-    public function unauthenticatedRoutes()
+    public function unauthenticatedRoutes(\Slim\Routing\RouteCollectorProxy $group)
     {
-        $this->app->get('/slides/{meeting_id}/{slide_id}/{token}', Routes\Slides\SlidesShow::class);
-        $this->app->get('/defaultSlide/{meeting_id}/{token}', Routes\Slides\DefaultSlideShow::class);
+        $group->get('/slides/{meeting_id}/{slide_id}/{token}', Routes\Slides\SlidesShow::class);
+        $group->get('/defaultSlide/{meeting_id}/{token}', Routes\Slides\DefaultSlideShow::class);
     }
 }

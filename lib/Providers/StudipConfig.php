@@ -2,7 +2,7 @@
 
 namespace Meetings\Providers;
 
-class StudipConfig implements \Pimple\ServiceProviderInterface
+class StudipConfig
 {
     /**
      * Diese Methode wird automatisch aufgerufen, wenn diese Klasse dem
@@ -12,14 +12,14 @@ class StudipConfig implements \Pimple\ServiceProviderInterface
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function register(\Pimple\Container $container)
+    public function __construct(\DI\Container $container)
     {
-        $container['studip-current-user'] = function () {
+        $container->set('studip-current-user', function () {
             if ($user = $GLOBALS['user']) {
                 return $user->getAuthenticatedUser();
             }
 
             return null;
-        };
+        });
     }
 }

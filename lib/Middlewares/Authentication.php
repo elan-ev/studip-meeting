@@ -2,8 +2,9 @@
 
 namespace Meetings\Middlewares;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Psr7\Response;
 
 class Authentication
 {
@@ -42,7 +43,7 @@ class Authentication
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function __invoke(Request $request, Response $response, $next)
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler)
     {
         $guards = [
             new Auth\SessionStrategy(),
@@ -53,16 +54,17 @@ class Authentication
             if ($guard->check()) {
                 $request = $this->provideUser($request, $guard->user());
 
-                return $next($request, $response);
+                return $handler->handle($request);
             }
         }
 
-        return $this->generateChallenges($response, $guards);
+        return $this->generateChallenges($request, $guards);
     }
 
     // according to RFC 2616
-    private function generateChallenges(Response $response, array $guards)
+    private function generateChallenges(ServerRequestInterface $request, array $guards)
     {
+        $response = new Response();
         $response = $response->withStatus(401);
 
         foreach ($guards as $guard) {
@@ -75,7 +77,7 @@ class Authentication
     /**
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    private function provideUser(Request $request, \User $user)
+    private function provideUser(ServerRequestInterface $request, \User $user)
     {
         if ('nobody' === $GLOBALS['user']->id) {
             $GLOBALS['user'] = new \Seminar_User($user->id);

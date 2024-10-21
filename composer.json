@@ -9,8 +9,9 @@
     "require": {
         "guzzlehttp/guzzle": "7.5.1",
         "guzzlehttp/psr7": "^2.6.2",
-        "slim/slim": "^3.12",
-        "setasign/fpdi": "^2.0"
+        "setasign/fpdi": "^2.0",
+        "middlewares/trailing-slash": "^2.0",
+        "php-di/php-di": "^5.4"
     },
     "scripts": {
         "sniffer:php7.4": "phpcs -p -v -s --extensions=php --ignore=*/vendor/*,*/node_modules/*  ./ --standard=vendor/phpcompatibility/php-compatibility/PHPCompatibility --runtime-set testVersion 7.4",

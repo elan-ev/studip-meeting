@@ -9,7 +9,7 @@ use User;
  * Diese Klasse stellt Stud.IP-Spezifika zum Beispiel für die
  * Authentifizierung zur Verfügung.
  */
-class StudipServices implements \Pimple\ServiceProviderInterface
+class StudipServices
 {
     /**
      * Schlüssel für den Stud.IP-Authentifizierungservice.
@@ -24,9 +24,9 @@ class StudipServices implements \Pimple\ServiceProviderInterface
      *
      * @param \Pimple\Container $container der Dependency Container
      */
-    public function register(\Pimple\Container $container)
+    public function __construct(\DI\Container $container)
     {
-        $container[self::AUTHENTICATOR] = function ($c) {
+        $container->set(self::AUTHENTICATOR, function ($c) {
             return function ($username, $password) {
                 $check = StudipAuthAbstract::CheckAuthentication($username, $password);
 
@@ -36,6 +36,6 @@ class StudipServices implements \Pimple\ServiceProviderInterface
 
                 return null;
             };
-        };
+        });
     }
 }

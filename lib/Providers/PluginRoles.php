@@ -2,7 +2,7 @@
 
 namespace Meetings\Providers;
 
-class PluginRoles implements \Pimple\ServiceProviderInterface
+class PluginRoles
 {
     /**
      * Diese Methode wird automatisch aufgerufen, wenn diese Klasse dem
@@ -12,10 +12,10 @@ class PluginRoles implements \Pimple\ServiceProviderInterface
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function register(\Pimple\Container $container)
+    public function __construct(\DI\Container $container)
     {
-        $container['roles'] = [
+        $container->set('roles', [
             'admin' => 'Meetings_Admin'
-        ];
+        ]);
     }
 }
