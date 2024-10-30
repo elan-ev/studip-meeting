@@ -2,32 +2,24 @@
 
 namespace Meetings;
 
-use Meetings\Providers\StudipServices;
-use Middlewares\TrailingSlash;
-use Psr\Container\ContainerInterface;
-
 class RouteMap
 {
-    public function __construct(ContainerInterface $container)
+    public function __construct()
     {
-        $this->container = $container;
     }
 
     public function __invoke(\Slim\Routing\RouteCollectorProxy $app)
     {
         $app->group('', [$this, 'authenticatedRoutes'])
-            ->add(new Middlewares\Authentication($this->container->get(StudipServices::AUTHENTICATOR)))
-            ->add(new TrailingSlash(trailingSlash: false));
+            ->add(Middlewares\Authentication::class);
 
         $app->group('', [$this, 'adminRoutes'])
-            ->add(new Middlewares\AdminPerms($this->container))
-            ->add(new Middlewares\Authentication($this->container->get(StudipServices::AUTHENTICATOR)))
-            ->add(new TrailingSlash(trailingSlash: false));
+            ->add(Middlewares\AdminPerms::class)
+            ->add(Middlewares\Authentication::class);
 
         $app->get('/discovery', Routes\DiscoveryIndex::class);
 
-        $app->group('', [$this, 'unauthenticatedRoutes'])
-            ->add(new TrailingSlash(trailingSlash: false));
+        $app->group('', [$this, 'unauthenticatedRoutes']);
     }
 
     public function authenticatedRoutes(\Slim\Routing\RouteCollectorProxy $group)
@@ -56,14 +48,17 @@ class RouteMap
 
         //generate guest invitation link
         $group->get('/rooms/join/{cid}/{room_id}/{guest_name}/guest', Routes\Rooms\RoomJoinGuest::class);
-        $group->get('/rooms/invitationLink/{cid}/{room_id}',  Routes\Rooms\RoomInvitationLink::class);
+        $group->get('/rooms/invitationLink/{cid}/{room_id}', Routes\Rooms\RoomInvitationLink::class);
 
         //generate moderator invitaion link
-        $group->get('/rooms/join/{cid}/{room_id}/{moderator_password}/moderator', Routes\Rooms\RoomModeratorInvitationLinkCreate::class);
-        $group->get('/rooms/inviteModerator/{cid}/{room_id}',  Routes\Rooms\RoomModeratorInvitationLinkGet::class);
+        $group->get(
+            '/rooms/join/{cid}/{room_id}/{moderator_password}/moderator',
+            Routes\Rooms\RoomModeratorInvitationLinkCreate::class
+        );
+        $group->get('/rooms/inviteModerator/{cid}/{room_id}', Routes\Rooms\RoomModeratorInvitationLinkGet::class);
 
         //generate QR Code
-        $group->get('/rooms/qr_code/{cid}/{room_id}',  Routes\Rooms\RoomGenerateQRCode::class);
+        $group->get('/rooms/qr_code/{cid}/{room_id}', Routes\Rooms\RoomGenerateQRCode::class);
 
         //recordings with perm
         $group->get('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingShow::class);

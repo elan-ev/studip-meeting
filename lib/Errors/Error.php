@@ -6,12 +6,11 @@ use RuntimeException;
 
 class Error extends RuntimeException
 {
-    private
-        $details;
+    private $details;
 
     function __construct($message, $code, $details = null)
     {
-        $this->message  = $message;
+        $this->message = $message;
         $this->code = $code;
 
         if (!is_null($details)) {
@@ -19,7 +18,6 @@ class Error extends RuntimeException
         } else {
             $this->details = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
         }
-
     }
 
     public function getDetails()
@@ -50,11 +48,11 @@ class Error extends RuntimeException
         return json_encode([
             'errors' => [
                 [
-                    'code'   => $this->code,
-                    'title'  => $this->message,
-                    'detail' => $this->details
-                ]
-            ]
+                    'code' => $this->code,
+                    'title' => $this->message,
+                    'detail' => $this->details,
+                ],
+            ],
         ]);
     }
 }

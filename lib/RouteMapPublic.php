@@ -2,7 +2,6 @@
 
 namespace Meetings;
 
-use Meetings\Providers\StudipServices;
 use Psr\Container\ContainerInterface;
 
 class RouteMapPublic
@@ -16,8 +15,7 @@ class RouteMapPublic
     {
         $pp->get('/discovery', Routes\DiscoveryIndex::class);
 
-        $app->group('', [$this, 'unauthenticatedRoutes'])
-            ->add(new TrailingSlash(trailingSlash: false));
+        $app->group('', [$this, 'unauthenticatedRoutes']);
     }
 
     public function unauthenticatedRoutes(\Slim\Routing\RouteCollectorProxy $group)
@@ -40,7 +38,7 @@ class RouteMapPublic
         $group->get('/rooms/{cid}/{room_id}/recordings', Routes\Recordings\RecordingList::class);
 
         //generate QR Code
-        $group->get('/rooms/qr_code/{cid}/{room_id}',  Routes\Rooms\RoomGenerateQRCodePublic::class);
+        $group->get('/rooms/qr_code/{cid}/{room_id}', Routes\Rooms\RoomGenerateQRCodePublic::class);
 
         //recordings with perm
         $group->get('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingShow::class);

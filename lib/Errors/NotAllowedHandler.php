@@ -2,51 +2,32 @@
 
 namespace Meetings\Errors;
 
-use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Exception\MethodNotAllowedException;
-use Slim\Container;
+use StudipPlugin;
+use Throwable;
 
-class NotAllowedHandler extends ErrorHandler
+class NotAllowedHandler
 {
-    /**
-     * Der Konstruktor...
-     *
-     * @param ContainerInterface $container der Dependency Container,
-     *                                      der in der Slim-Applikation verwendet wird
-     * @param callable           $previous  der zuvor installierte `Error
-     *                                      Handler` als Fallback
-     */
-    public function __construct(Container $container)
+    use PreparesJsonapiResponse;
+
+    public function __construct(private StudipPlugin $plugin)
     {
-        parent::__construct($container);
     }
 
     /**
      * Diese Methode wird aufgerufen, sobald es zu einer Exception
      * kam, und generiert eine entsprechende JSON-API-spezifische Response.
-     *
-     * @param Request    $request   der eingehende Request
-     * @param Response   $response  die vorbereitete ausgehende Response
-     *
-     * @return Error/NotFoundException
      */
-    public function __invoke(Request $request, Response $response, $methods = ['GET', 'POST', 'PUT', 'DELETE'])
+    public function __invoke(ServerRequestInterface $request, Throwable $exception, bool $displayErrorDetails)
     {
-        $httpCode = 405;
-        $details = null;
+        $message = $this->plugin->getPluginName() . ' - Slim Application Error: Method not Allowed!';
+        $details = '';
 
-        $plugin_name = $this->getPluginName();
-
-        $message = $plugin_name . ' - Slim Application Error: Method Not Allowed!';
-        $details = 'Allowed methods: ' . implode(', ', $methods);
-
-        $meetingError = new Error($message, $httpCode, $details);
-        if (!$this->displayErrorDetails()) {
-            $meetingError->clearDetails();
-        }
-        
-        $response = $this->prepareResponseMessage($request, $response, $meetingError);
-        return $response->withStatus($httpCode);
+        return $this->prepareResponseMessage(
+            $request,
+            app(ResponseFactoryInterface::class)->createResponse(405),
+            new Error($message, 405, $details)
+        );
     }
 }
