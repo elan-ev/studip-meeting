@@ -1,10 +1,10 @@
 <?php
 /**
  * This is a sample file to help admins, how to use templates in order to align html texts in pdf.
- * The admin should have a basic knowledge of StudIP Flexi_Template class, in order to use the placeholders inside the template file!
+ * The admin should have a basic knowledge of StudIP \Flexi\Template class, in order to use the placeholders inside the template file!
  */
 
-// Available Flexi_Template placeholders:
+// Available Flexi\Template placeholders:
 /*
 $text['welcome']            : a welcome message with this text "Willkommen zur Videokonferenz"
 $text['meeting_name']       : name of the meeting

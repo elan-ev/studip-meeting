@@ -30,7 +30,7 @@ use Meetings\Models\I18N;
  * @property \MeetingPlugin         $plugin
  * @property bool                   $configured
  * @property \Seminar_Perm          $perm
- * @property \Flexi_TemplateFactory $templateFactory
+ * @property \Flexi\Factory         $templateFactory
  * @property CourseConfig           $courseConfig
  * @property bool                   $confirmDeleteMeeting
  * @property bool                   $saved

@@ -515,7 +515,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
     /**
      * Return the template for the widget.
      *
-     * @return Flexi_PhpTemplate The template containing the widget contents
+     * @return Flexi\PhpTemplate The template containing the widget contents
      */
     public function getPortalTemplate()
     {
@@ -527,7 +527,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
             return;
         }
 
-        $template_factory = new Flexi_TemplateFactory(__DIR__ . "/templates");
+        $template_factory = new \Flexi\Factory(__DIR__ . "/templates");
         $template = $template_factory->open("index.php");
 
         $template->set_attribute('items', WidgetHelper::getMeetingsForWidget());

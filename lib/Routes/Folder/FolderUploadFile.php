@@ -11,7 +11,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Meetings\MeetingsTrait;
 use Meetings\MeetingsController;
 use Meetings\Errors\Error;
-use Slim\Http\UploadedFile;
+use Nyholm\Psr7\UploadedFile;
 use Meetings\Models\I18N;
 
 
@@ -22,16 +22,23 @@ class FolderUploadFile extends MeetingsController
     {
         try {
             $uploadedFiles = $request->getUploadedFiles();
-            $parent_id = htmlspecialchars($request->getParam('parent_id'));
+            $queryParams = $request->getParsedBody();
+            if (!isset($queryParams['parent_id'])) {
+                throw new Error('Missing parent_id parameter', 422);
+            }
+            $parent_id = htmlspecialchars($queryParams['parent_id']);
             $message = [
                 'type' => 'error',
                 'text' => I18N::_('Datei kann nicht hochgeladen werden')
             ];
             if ($uploadedFiles && isset($uploadedFiles['upload_file'])) {
                 $uploadFile = $uploadedFiles['upload_file'];
+                $uploadFileClientFilename = $uploadFile->getClientFilename();
+                $temp_file = $GLOBALS['TMP_PATH'] . DIRECTORY_SEPARATOR . md5(uniqid($uploadFileClientFilename, true));
+                $uploadFile->moveTo($temp_file);
                 $consumableUploadFile = [
-                    'tmp_name' => [$uploadFile->file],
-                    'name' => [$uploadFile->getClientFilename()],
+                    'tmp_name' => [$temp_file],
+                    'name' => [$uploadFileClientFilename],
                     'size' => [$uploadFile->getSize()],
                     'type' => [$uploadFile->getClientMediaType()],
                     'error' => [$uploadFile->getError()]

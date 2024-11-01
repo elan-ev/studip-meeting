@@ -85,7 +85,7 @@ class TemplatePreview extends MeetingsController
 
             header("Expires: Mon, 12 Dec 2001 08:00:00 GMT");
             header("Last-Modified: " . gmdate ("D, d M Y H:i:s") . " GMT");
-            if ($_SERVER['HTTPS'] == "on"){
+            if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on"){
                 header("Pragma: public");
                 header("Cache-Control: private");
             } else {

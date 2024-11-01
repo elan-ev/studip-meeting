@@ -22,7 +22,11 @@ class TemplateUpload extends MeetingsController
     {
         try {
             $uploadedFiles = $request->getUploadedFiles();
-            $page = filter_var($request->getParam('page'), FILTER_SANITIZE_NUMBER_INT);
+            $queryParams = $request->getParsedBody();
+            if (!isset($queryParams['page'])) {
+                throw new Error('Missing page parameter', 422);
+            }
+            $page = filter_var(htmlspecialchars($queryParams['page'], FILTER_SANITIZE_NUMBER_INT));
             $message = [
                 'type' => 'error',
                 'text' => _('Folie/Template kann nicht hochgeladen werden')

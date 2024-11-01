@@ -21,7 +21,7 @@ use ElanEv\Model\Driver;
 
 /**
  * @property \MeetingPlugin         $plugin
- * @property \Flexi_TemplateFactory $templateFactory
+ * @property \Flexi\Factory         $templateFactory
  * @property bool                   $saved
  * @property array                  $errors
  * @property string                 $deleteAction

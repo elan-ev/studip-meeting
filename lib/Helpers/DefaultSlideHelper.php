@@ -4,13 +4,13 @@ namespace Meetings\Helpers;
 use Meetings\Models\I18N;
 use ElanEv\Model\Meeting;
 use Meetings\Errors\Error;
-use Slim\Http\UploadedFile;
+use Nyholm\Psr7\UploadedFile;
 
 use Course;
 use StudipNews;
 use TCPDF_FONTS;
 use TCPDF;
-use Flexi_TemplateFactory;
+use Flexi\Factory as TemplateFactory;
 use ExportPDF;
 use setasign\Fpdi\Tcpdf\Fpdi;
 /**
@@ -223,7 +223,7 @@ class DefaultSlideHelper {
         }
 
         $courseid = $meeting->courses[0]->seminar_id;
-        $template_factory = new Flexi_TemplateFactory($template_factory_dir);
+        $template_factory = new TemplateFactory($template_factory_dir);
         $template = $template_factory->open($processed_template_name);
         if (!$template) {
             $this->removeFile($php_temp_path);
