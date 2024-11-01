@@ -21,10 +21,11 @@ class DefaultErrorHandler
      */
     public function __invoke(ServerRequestInterface $request, Throwable $exception, bool $displayErrorDetails)
     {
+        $code = $exception->getCode() ?: 500;
         return $this->prepareResponseMessage(
             $request,
-            app(ResponseFactoryInterface::class)->createResponse(500),
-            new Error($exception->getMessage(), 500, '')
+            app(ResponseFactoryInterface::class)->createResponse($code),
+            new Error($exception->getMessage(), $code, '')
         );
     }
 }
