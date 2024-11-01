@@ -36,7 +36,7 @@ class RoomInfo extends MeetingsController
         global $perm;
 
         $driver_factory = new DriverFactory(Driver::getConfig());
-        $cache = \StudipCacheFactory::getCache();
+        $cache = \Studip\Cache\Factory::getCache();
 
         $cid = $args['cid'];
 
