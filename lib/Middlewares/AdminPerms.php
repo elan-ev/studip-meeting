@@ -4,23 +4,11 @@ namespace Meetings\Middlewares;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Meetings\Errors\Error;
 
 class AdminPerms
 {
-    // the container
-    private $container;
-
-    /**
-     * Der Konstruktor.
-     *
-     * @param callable $container the global slim container
-     */
-    public function __construct($container)
-    {
-        $this->container = $container;
-    }
-
     /**
      * Checks, if the current user has the admin role
      *

@@ -2,9 +2,13 @@
 
 namespace Meetings;
 
+use DI\ContainerBuilder;
+use Psr\Container\ContainerInterface;
 use Slim\App;
 use StudipPlugin;
-use Slim\Factory\AppFactory as SlimApp;
+use Slim\Exception\HttpNotFoundException;
+use Slim\Exception\HttpMethodNotAllowedException;
+use Slim\Factory\AppFactory as SlimAppFactory;
 
 /**
  * Diese Klasse erstellt eine neue Slim-Applikation und konfiguriert
@@ -33,46 +37,56 @@ class AppFactory
      *
      * @return \Slim\App die erstellte Slim-Applikation
      */
-    public function makeApp(StudipPlugin $plugin)
+    public function makeApp(StudipPlugin $plugin): App
     {
-        SlimApp::setContainer($this->getContainer($plugin));
-        $app = SlimApp::create();
+        SlimAppFactory::setContainer($this->getContainer($plugin));
+        $app = SlimAppFactory::create();
+        $app->setBasePath($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] . 'plugins.php');
+
+        $app->addRoutingMiddleware();
+        $app->add(\Middlewares\TrailingSlash::class);
+
+        $this->setErrorMiddleware($plugin, $app);
 
         return $app;
     }
 
-    // hier wird der Container konfiguriert
-    private function getContainer($plugin)
+    private function getContainer(StudipPlugin $plugin): ContainerInterface
     {
-        $container = new \DI\Container();
-        $container->set('plugin', $plugin);
-        $container->set('settings', [
-            'displayErrorDetails' => defined('\\Studip\\ENV')
-                && \Studip\ENV === 'development'
-                || $GLOBALS['perm']->have_perm('root')
+        $builder = new ContainerBuilder();
+        $builder->addDefinitions([
+            StudipPlugin::class => $plugin,
+            'roles' => ['admin' => 'Meetings_Admin'],
+            'studip-current-user' => \DI\factory([\User::class, 'findCurrent']),
+            Middlewares\Authentication::class => function (ContainerInterface $container) {
+                return new Middlewares\Authentication(function ($username, $password) {
+                    $check = \StudipAuthAbstract::CheckAuthentication($username, $password);
+
+                    if ($check['uid'] && $check['uid'] != 'nobody') {
+                        return \User::find($check['uid']);
+                    }
+
+                    return null;
+                });
+            },
         ]);
 
-        // error handler
-        $container->set('errorHandler', function ($container) {
-            return new Errors\ExceptionHandler($container);
-        });
+        return $builder->build();
+    }
 
-        $container->set('notFoundHandler', function ($container) {
-            return new Errors\NotFoundHandler($container);
-        });
+    private function setErrorMiddleware(StudipPlugin $plugin, App $app): void
+    {
+        $displayErrorDetails =
+            (defined('\\Studip\\ENV') && \Studip\ENV === 'development') || $GLOBALS['perm']->have_perm('root');
 
-        $container->set('notAllowedHandler', function ($container) {
-            return new Errors\NotAllowedHandler($container);
-        });
+        $errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, true, true);
 
-         $container->set('phpErrorHandler', function ($container) {
-            return new Errors\PHPErrorHandler($container);
-        });
+        $errorMiddleware->setDefaultErrorHandler(Errors\DefaultErrorHandler::class);
 
-        new Providers\StudipConfig($container);
-        new Providers\StudipServices($container);
-        new Providers\PluginRoles($container);
+        // Set the Not Found Handler
+        $errorMiddleware->setErrorHandler(HttpNotFoundException::class, Errors\NotFoundHandler::class);
 
-        return $container;
+        // Set the Not Allowed Handler
+        $errorMiddleware->setErrorHandler(HttpMethodNotAllowedException::class, Errors\NotAllowedHandler::class);
     }
 }

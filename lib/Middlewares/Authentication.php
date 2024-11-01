@@ -2,9 +2,10 @@
 
 namespace Meetings\Middlewares;
 
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Psr7\Response;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class Authentication
 {
@@ -14,10 +15,6 @@ class Authentication
     // $user = $request->getAttribute(Authentication::USER_KEY);
     const USER_KEY = 'studip-user';
 
-    // a callable accepting two arguments username and password and
-    // returning either null or a Stud.IP user object
-    private $authenticator;
-
     /**
      * Der Konstruktor.
      *
@@ -25,9 +22,8 @@ class Authentication
      *                                Nutzernamen und das Passwort als Argumente erhält und damit
      *                                entweder einen Stud.IP-User-Objekt oder null zurückgibt
      */
-    public function __construct($authenticator)
+    public function __construct(private $authenticator)
     {
-        $this->authenticator = $authenticator;
     }
 
     /**
@@ -45,10 +41,7 @@ class Authentication
      */
     public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $handler)
     {
-        $guards = [
-            new Auth\SessionStrategy(),
-            new Auth\HttpBasicAuthStrategy($request, $this->authenticator)
-        ];
+        $guards = [new Auth\SessionStrategy(), new Auth\HttpBasicAuthStrategy($request, $this->authenticator)];
 
         foreach ($guards as $guard) {
             if ($guard->check()) {
@@ -64,8 +57,7 @@ class Authentication
     // according to RFC 2616
     private function generateChallenges(ServerRequestInterface $request, array $guards)
     {
-        $response = new Response();
-        $response = $response->withStatus(401);
+        $response = app(ResponseFactoryInterface::class)->createResponse(401);
 
         foreach ($guards as $guard) {
             $response = $guard->addChallenge($response);
