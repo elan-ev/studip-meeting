@@ -69,7 +69,7 @@ class FolderList extends MeetingsController
 
             $subfolders = [];
             foreach ($standard_folder->subfolders as $subfolder) {
-                $icon = $subfolder->getTypedFolder()->getIcon('clickable')->getShape();
+                $icon = $subfolder->getTypedFolder()->getIcon(\Icon::ROLE_CLICKABLE)->getShape();
                 $subfolders[$subfolder->id] = ["name" => $subfolder->name, "icon" => $icon];
             }
 
@@ -115,7 +115,7 @@ class FolderList extends MeetingsController
                     $folder_obj['folder_types'][] = [
                         'class'    => $folder_type,
                         'name'     => $folder_type::getTypeName(),
-                        'icon'     => $folder_type_instance->getIcon('clickable')->getShape()
+                        'icon'     => $folder_type_instance->getIcon(\Icon::ROLE_CLICKABLE)->getShape()
                     ];
                 }
             }

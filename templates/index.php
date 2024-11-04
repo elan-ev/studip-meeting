@@ -35,7 +35,7 @@
                                     </a>
                                 <? endif; ?>
                                 <a href="<?= $item['meeting_course_url'] ?>" title="<?= htmlReady($texts['to_course']) ?>">
-                                    <?= Icon::create('seminar', 'clickable')->asImg(['class' => 'text-bottom']) ?>
+                                    <?= Icon::create('seminar', Icon::ROLE_CLICKABLE)->asImg(['class' => 'text-bottom']) ?>
                                 </a>
                             </nav>
                         </header>
@@ -77,7 +77,7 @@
                                     </a>
                                 <? endif; ?>
                                 <a href="<?= $item['meeting_course_url'] ?>">
-                                    <?= Icon::create('seminar', 'clickable')->asImg(['class' => 'text-bottom']) ?>
+                                    <?= Icon::create('seminar', Icon::ROLE_CLICKABLE)->asImg(['class' => 'text-bottom']) ?>
                                 </a>
                             </nav>
                         </header>
