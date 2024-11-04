@@ -54,11 +54,7 @@ class Error extends RuntimeException
         }
         return json_encode([
             'errors' => [
-                [
-                    'code' => $this->code,
-                    'title' => $this->message,
-                    'detail' => $this->details,
-                ],
+                $error,
             ],
         ]);
     }
