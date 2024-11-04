@@ -43,8 +43,15 @@ class Error extends RuntimeException
         return $this->code . ': ' . $this->message . $details;
     }
 
-    public function getJson()
+    public function getJson($with_details = true)
     {
+        $error = [
+            'code' => $this->code,
+            'title' => $this->message,
+        ];
+        if ($with_details) {
+            $error['detail'] = $this->details;
+        }
         return json_encode([
             'errors' => [
                 [
