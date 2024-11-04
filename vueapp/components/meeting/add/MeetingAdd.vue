@@ -232,7 +232,7 @@
                                 v-model="room['join_as_moderator']">
                                 {{ $gettext('Alle Teilnehmenden haben Moderationsrechte') }}
                         </label>
-                        <span v-if="Object.keys(config[room['driver']]).includes('features')
+                        <template v-if="Object.keys(config[room['driver']]).includes('features')
                             && Object.keys(config[room['driver']]['features']).includes('create')
                             && Object.keys(config[room['driver']]['features']['create']).includes('privacy')
                             && Object.keys(config[room['driver']]['features']['create']['privacy']).length"
@@ -253,7 +253,7 @@
                                         'wenn Lehrende die Videokonferenz betreten.')"></span>
                                 </MessageBox>
                             </template>
-                        </span>
+                        </template>
                     </fieldset>
 
                     <fieldset id="group_settings_section" class="collapsable collapsed" v-if="room['driver'] && Object.keys(course_groups).length">
