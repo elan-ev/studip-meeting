@@ -4,6 +4,14 @@ Stud.IP Video Conference Plugin
 Ein Stud.IP-Plugin um Konferenzen aus einer Veranstaltung heraus starten zu können.
 Teilnehmende des Kurses können der Konferenz beitreten.
 
+Wichtige Information für Meetings Plugin v 2.83 - Stud.IP 6.x
+------------------------------------------------
+From version 2.83 the plugin is only available for Stud.IP 6.x.
+
+Wichtige Information für Meetings Plugin v 2.82[.1] - Stud.IP 5.x
+------------------------------------------------
+The plugin sub-version from v2.82.1 splitted for Stud.IP 5.x.
+
 Wichtige Information für Meetings Plugin ab 2.82
 ------------------------------------------------
 Kompatibilität für BigBlueButton 2.7.8 ist ab Version 2.82 enthalten.
