@@ -3,12 +3,12 @@
 namespace Meetings;
 
 use DI\ContainerBuilder;
+use Meetings\Errors\ErrorMiddleware;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Slim\App;
-use StudipPlugin;
-
 use Slim\Factory\AppFactory as SlimAppFactory;
-use  Meetings\Errors\ErrorMiddleware;
+use StudipPlugin;
 
 /**
  * Diese Klasse erstellt eine neue Slim-Applikation und konfiguriert
@@ -46,7 +46,7 @@ class AppFactory
         $app->addRoutingMiddleware();
         $app->add(\Middlewares\TrailingSlash::class);
 
-        $this->setErrorMiddleware($plugin, $app);
+        $this->setErrorMiddleware($app);
 
         return $app;
     }
@@ -74,24 +74,12 @@ class AppFactory
         return $builder->build();
     }
 
-    private function setErrorMiddleware(StudipPlugin $plugin, App $app): void
+    private function setErrorMiddleware(App $app): void
     {
         $displayErrorDetails =
             (defined('\\Studip\\ENV') && \Studip\ENV === 'development') || $GLOBALS['perm']->have_perm('root');
 
-        $container = $app->getContainer();
-
-        $logger = $container->has(LoggerInterface::class) ? $container->get(LoggerInterface::class) : null;
-
-        $errorMiddleware = new ErrorMiddleware(
-            callableResolver: $app->getCallableResolver(),
-            responseFactory: $app->getResponseFactory(),
-            displayErrorDetails: $displayErrorDetails,
-            logErrors: true,
-            logErrorDetails: true,
-            logger: $logger,
-            plugin: $plugin
-        );
-        $app->addMiddleware($errorMiddleware);
+        $errorMiddleware = $app->addErrorMiddleware(true, true, true, app(LoggerInterface::class));
+        $errorMiddleware->setDefaultErrorHandler(ErrorMiddleware::class);
     }
 }
