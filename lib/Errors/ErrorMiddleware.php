@@ -29,10 +29,12 @@ class ErrorMiddleware
         $is_catchable = $exception->getCode() >= 400 && $exception->getCode() < 600;
         $is_accepted = is_array($accepts) && in_array('application/json', $accepts);
 
+        $details = $exception->getTrace() ?? null;
+
         if ($is_catchable && $is_accepted) {
             return $this->prepareResponseMessage(
                 app(ResponseFactoryInterface::class)->createResponse($exception->getCode()),
-                new Error(sprintf($message_format, $exception->getMessage()), $exception->getCode()),
+                new Error(sprintf($message_format, $exception->getMessage()), $exception->getCode(), $details),
                 $displayErrorDetails
             );
         }
