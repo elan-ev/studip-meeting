@@ -79,7 +79,7 @@ class AppFactory
         $displayErrorDetails =
             (defined('\\Studip\\ENV') && \Studip\ENV === 'development') || $GLOBALS['perm']->have_perm('root');
 
-        $errorMiddleware = $app->addErrorMiddleware(true, true, true, app(LoggerInterface::class));
+        $errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, true, true, app(LoggerInterface::class));
         $errorMiddleware->setDefaultErrorHandler(ErrorMiddleware::class);
     }
 }
