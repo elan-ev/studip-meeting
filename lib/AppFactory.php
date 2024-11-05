@@ -3,12 +3,12 @@
 namespace Meetings;
 
 use DI\ContainerBuilder;
+use Meetings\Errors\ErrorMiddleware;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Slim\App;
-use StudipPlugin;
-use Slim\Exception\HttpNotFoundException;
-use Slim\Exception\HttpMethodNotAllowedException;
 use Slim\Factory\AppFactory as SlimAppFactory;
+use StudipPlugin;
 
 /**
  * Diese Klasse erstellt eine neue Slim-Applikation und konfiguriert
@@ -46,7 +46,7 @@ class AppFactory
         $app->addRoutingMiddleware();
         $app->add(\Middlewares\TrailingSlash::class);
 
-        $this->setErrorMiddleware($plugin, $app);
+        $this->setErrorMiddleware($app);
 
         return $app;
     }
@@ -74,19 +74,12 @@ class AppFactory
         return $builder->build();
     }
 
-    private function setErrorMiddleware(StudipPlugin $plugin, App $app): void
+    private function setErrorMiddleware(App $app): void
     {
         $displayErrorDetails =
             (defined('\\Studip\\ENV') && \Studip\ENV === 'development') || $GLOBALS['perm']->have_perm('root');
 
-        $errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, true, true);
-
-        $errorMiddleware->setDefaultErrorHandler(Errors\DefaultErrorHandler::class);
-
-        // Set the Not Found Handler
-        $errorMiddleware->setErrorHandler(HttpNotFoundException::class, Errors\NotFoundHandler::class);
-
-        // Set the Not Allowed Handler
-        $errorMiddleware->setErrorHandler(HttpMethodNotAllowedException::class, Errors\NotAllowedHandler::class);
+        $errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, true, true, app(LoggerInterface::class));
+        $errorMiddleware->setDefaultErrorHandler(ErrorMiddleware::class);
     }
 }
