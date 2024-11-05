@@ -5,46 +5,22 @@ namespace Meetings\Errors;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Log\LoggerInterface;
-use Slim\Exception\HttpException;
-use Slim\Handlers\ErrorHandler;
-use Slim\Interfaces\CallableResolverInterface;
-use Slim\Interfaces\ErrorHandlerInterface;
 use StudipPlugin;
 use Throwable;
-use Slim\Middleware\ErrorMiddleware as SlimErrorMiddleware;
 
-class ErrorMiddleware extends SlimErrorMiddleware
+class ErrorMiddleware
 {
-    use PreparesJsonapiResponse;
-
-    /**
-     * @var StudipPlugin plugin
-     */
-    protected $plugin;
-
-    public function __construct(
-        CallableResolverInterface $callableResolver,
-        ResponseFactoryInterface $responseFactory,
-        bool $displayErrorDetails,
-        bool $logErrors,
-        bool $logErrorDetails,
-        ?LoggerInterface $logger = null,
-        StudipPlugin $plugin
-    ) {
-        $this->callableResolver = $callableResolver;
-        $this->responseFactory = $responseFactory;
-        $this->displayErrorDetails = $displayErrorDetails;
-        $this->logErrors = $logErrors;
-        $this->logErrorDetails = $logErrorDetails;
-        $this->logger = $logger;
-        $this->plugin = $plugin;
+    public function __construct(private StudipPlugin $plugin)
+    {
     }
 
-    public function handleException(ServerRequestInterface $request, Throwable $exception): \Psr\Http\Message\ResponseInterface
-    {
+    public function __invoke(
+        ServerRequestInterface $request,
+        Throwable $exception,
+        bool $displayErrorDetails,
+        bool $logErrors,
+        bool $logErrorDetails
+    ): ResponseInterface {
         $message_format = $this->plugin->getPluginName() . ' - Slim Application Error: %s';
 
         $accepts = $request->getHeaderLine('accept');
@@ -53,14 +29,21 @@ class ErrorMiddleware extends SlimErrorMiddleware
         $is_catchable = $exception->getCode() >= 400 && $exception->getCode() < 600;
         $is_accepted = is_array($accepts) && in_array('application/json', $accepts);
 
-
         if ($is_catchable && $is_accepted) {
             return $this->prepareResponseMessage(
                 app(ResponseFactoryInterface::class)->createResponse($exception->getCode()),
-                new Error(sprintf($message_format, $exception->getMessage()), $exception->getCode())
+                new Error(sprintf($message_format, $exception->getMessage()), $exception->getCode()),
+                $displayErrorDetails
             );
         }
 
-        return parent::handleException($request, $exception);
+        throw $exception;
+    }
+
+    private function prepareResponseMessage(ResponseInterface $response, Error $error, $displayErrorDetails)
+    {
+        $response->getBody()->write($error->getJson($displayErrorDetails));
+
+        return $response->withHeader('Content-Type', 'application/vnd.api+json');
     }
 }
