@@ -146,7 +146,7 @@
                                             {{ getCourseTypeName(server[value.name], driver_name) }}
                                         </template>
                                         <template v-else-if="value.name == 'active'">
-                                            <StudipIcon :icon="(server[value.name]) ? 'checkbox-checked' : 'checkbox-unchecked'"
+                                            <StudipIcon :shape="(server[value.name]) ? 'checkbox-checked' : 'checkbox-unchecked'"
                                                 :role="(server[value.name]) ? 'status-green' : 'status-red'" size="14"></StudipIcon>
                                         </template>
                                         <template v-else>
@@ -157,16 +157,16 @@
                                 <td>
                                     <a href="#" :title="$gettext('Server bearbeiten')"
                                         @click.prevent="prepareEditServer(driver_name, index)">
-                                        <StudipIcon icon="edit" role="clickable" ></StudipIcon>
+                                        <StudipIcon shape="edit" role="clickable" ></StudipIcon>
                                     </a>
                                     <a v-if="Object.keys(driver).includes('roomsize-presets')"
                                         href="#" :title="$gettext('Servervoreinstellungen')"
                                         @click.prevent="prepareEditServer(driver_name, index, true)">
-                                        <StudipIcon icon="settings" role="clickable" ></StudipIcon>
+                                        <StudipIcon shape="settings" role="clickable" ></StudipIcon>
                                     </a>
                                     <a href="#" :title="$gettext('Server löschen')"
                                         @click.prevent="deleteServer(driver_name, index)">
-                                        <StudipIcon icon="trash" role="clickable"></StudipIcon>
+                                        <StudipIcon shape="trash" role="clickable"></StudipIcon>
                                     </a>
                                 </td>
                             </tr>

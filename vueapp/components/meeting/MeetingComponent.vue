@@ -13,13 +13,13 @@
                     :text="$gettext('Bitte beachten Sie, dass dieser Raum aufgezeichnet wird! Die Webcams der Teilnehmenden könnten auch aufgezeichnet werden!')"
                     :badge="true"
                 >
-                    <StudipIcon icon="span-full" role="attention" size="11"></StudipIcon> <span v-text="'Rec + Webcam'"></span>
+                    <StudipIcon shape="span-full" role="attention" size="11"></StudipIcon> <span v-text="'Rec + Webcam'"></span>
                 </StudipTooltipIcon>
                 <StudipTooltipIcon v-if="!opencast_webcam_record_enabled"
                     :text="$gettext('Bitte beachten Sie, dass dieser Raum aufgezeichnet wird!')"
                     :badge="true"
                 >
-                    <StudipIcon icon="span-full" role="attention" size="11"></StudipIcon> <span v-text="'Rec'"></span>
+                    <StudipIcon shape="span-full" role="attention" size="11"></StudipIcon> <span v-text="'Rec'"></span>
                 </StudipTooltipIcon>
             </template>
             <StudipActionMenu v-if="generate_menu_items.length"
@@ -37,12 +37,12 @@
             </article>
             <article class="details">
                 <div v-if="showParticipantCount">
-                    <StudipIcon class="info-icon" icon="group4"
+                    <StudipIcon class="info-icon" shape="group4"
                             role="info" size="24"></StudipIcon>
                     <span class="all-sizes" v-text="showParticipantCount"></span>
                 </div>
                 <div v-if="course_config.display.editRoom && room.is_default == 1">
-                    <StudipIcon class="info-icon" icon="star"
+                    <StudipIcon class="info-icon" shape="star"
                             role="info" size="24"></StudipIcon>
                     <span v-text="$gettext('Dies ist der Standardraum')"></span>
                     <span class="size-tiny" v-text="$gettext('Standardraum')"></span>
@@ -54,7 +54,7 @@
                             $gettext('Teilnehmenden nur eingeschränkte Rechte geben')
                             : $gettext('Teilnehmenden Administrationsrechte geben')"
                             @click.prevent="editRights()">
-                        <StudipIcon class="info-icon" :icon="room.join_as_moderator == 1 ? 'lock-unlocked' : 'lock-locked'" role="clickable" size="24"></StudipIcon>
+                        <StudipIcon class="info-icon" :shape="room.join_as_moderator == 1 ? 'lock-unlocked' : 'lock-locked'" role="clickable" size="24"></StudipIcon>
                     </button>
                     <span aria-live="polite" :class="'rights-info-text-' + room.id">
                         {{ room.join_as_moderator == 1 ?
@@ -74,7 +74,7 @@
                             $gettext('Meeting für Teilnehmende unsichtbar schalten')
                             : $gettext('Meeting für Teilnehmende sichtbar schalten') "
                         @click.prevent="editVisibility()">
-                        <StudipIcon class="info-icon" :icon="room.active == 1 ? 'visibility-visible' : 'visibility-invisible'"
+                        <StudipIcon class="info-icon" :shape="room.active == 1 ? 'visibility-visible' : 'visibility-invisible'"
                             role="clickable" size="24"></StudipIcon>
                     </button>
                     <span aria-live="polite" :class="'active-info-text-' + room.id">
@@ -90,7 +90,7 @@
                 </div>
 
                 <div v-if="course_config.display.editRoom && room.group_id">
-                    <StudipIcon class="info-icon" icon="group2"
+                    <StudipIcon class="info-icon" shape="group2"
                             role="info" size="24"></StudipIcon>
                     <span>{{ $gettext('Das Meeting gehört der Gruppe') }}</span>
                     <span v-if="group_name" v-text="group_name"></span>
@@ -98,12 +98,12 @@
                 </div>
                 <div v-if="course_config.display.editRoom && room.folder_id !== null && room.details && room.details.folder">
                     <template v-if="room.preupload_not_allowed">
-                        <StudipIcon class="info-icon" icon="exclaim-circle-full"
+                        <StudipIcon class="info-icon" shape="exclaim-circle-full"
                             role="status-red" size="24"></StudipIcon>
                         <span class="all-sizes" v-text="room.preupload_not_allowed"></span>
                     </template>
                     <template v-else>
-                        <StudipIcon class="info-icon" icon="folder-empty"
+                        <StudipIcon class="info-icon" shape="folder-empty"
                             role="info" size="24">
                         </StudipIcon>
                         <span>
@@ -123,7 +123,7 @@
                 </div>
 
                 <div v-if="num_drivers > 1">
-                    <StudipIcon class="info-icon" icon="video2"
+                    <StudipIcon class="info-icon" shape="video2"
                         role="info" size="24"></StudipIcon>
                     <span class="all-sizes">
                         {{ this.config[room.driver].display_name
@@ -133,7 +133,7 @@
                 </div>
 
                 <div v-if="display_room_recording_warning">
-                    <StudipIcon class="info-icon" icon="exclaim-circle"
+                    <StudipIcon class="info-icon" shape="exclaim-circle"
                         role="status-yellow" size="24"></StudipIcon>
                     <span class="all-sizes" v-text="$gettext('Aufzeichnung kann früher beginnen')"></span>
                     <StudipTooltipIcon :text="$gettext('Es ist bei Aufzeichnungen dringend empfohlen die Veranstaltung und somit die Aufzeichnungen erst zu beginnen,' +
@@ -142,13 +142,13 @@
                 </div>
 
                 <div v-if="course_config.display.editRoom && room.features && room.features.record && room.features.record == 'true' && room.record_not_allowed">
-                    <StudipIcon class="info-icon" icon="exclaim-circle-full"
+                    <StudipIcon class="info-icon" shape="exclaim-circle-full"
                         role="status-red" size="24"></StudipIcon>
                     <span class="all-sizes" v-text="room.record_not_allowed"></span>
                 </div>
 
                 <div v-if="!room.enabled">
-                    <StudipIcon class="info-icon" icon="exclaim-circle-full"
+                    <StudipIcon class="info-icon" shape="exclaim-circle-full"
                         role="status-red" size="24"></StudipIcon>
                     <span class="all-sizes">
                         Dieser Raum ist deaktiviert, da der Treiber {{ room.driver }}

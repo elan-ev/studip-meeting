@@ -5,7 +5,7 @@
                 <div class="caption-container meetings-caption" role="navigation" :aria-lable="$gettext('Navigation in der Ordnertabelle')">
                     <a :title="$gettext('Zum Hauptordner - Ordnerauswahl aufheben')" href="#"
                         @click.prevent="folderHandler('topFolder')">
-                        <StudipIcon class="folder-icon" icon="folder-home-full"
+                        <StudipIcon class="folder-icon" shape="folder-home-full"
                             role="clickable" size="20"></StudipIcon>
                     </a>
                     <template v-if="Object.keys(folder).includes('breadcrumbs')">
@@ -31,7 +31,7 @@
                             <td>
                                 <a :title="$gettext('Als aktueller Ordner auswählen')" href="#" :id="'link-' + sfid"
                                     @click.prevent="folderHandler(sfid)">
-                                    <StudipIcon v-if="sfinfo.icon" :icon="sfinfo.icon"
+                                    <StudipIcon v-if="sfinfo.icon" :shape="sfinfo.icon"
                                         role="clickable" size="16"></StudipIcon>
                                     <span :id="'name-' + sfid">{{sfinfo.name}}</span>
                                 </a>
@@ -42,7 +42,7 @@
                         <tr v-for="(finfo, fid) in folder.files" :key="fid">
                             <td>
                                 <div>
-                                    <StudipIcon v-if="finfo.icon" :icon="finfo.icon"
+                                    <StudipIcon v-if="finfo.icon" :shape="finfo.icon"
                                         role="clickable" size="16"></StudipIcon>
                                     <span>{{finfo.name}}</span>
                                 </div>
@@ -80,7 +80,7 @@
                             <slot name="footerButtons"></slot>
                             <template v-if="Object.keys(folder).includes('files') && Object.keys(folder['files']).length > numFileInFolderLimit">
                                 <a @click.prevent="showFilesInFolder = !showFilesInFolder" class="right" href="#">
-                                    <StudipIcon :icon="(showFilesInFolder) ? 'checkbox-checked' : 'checkbox-unchecked'"
+                                    <StudipIcon :shape="(showFilesInFolder) ? 'checkbox-checked' : 'checkbox-unchecked'"
                                         role="clickable" size="14" />
                                     {{ $gettext('Alle Dateien anzeigen') }}
                                 </a>

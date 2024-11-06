@@ -27,16 +27,16 @@
                     </td>
                     <td>{{ font_item.name ? font_item.name : $gettext('Keine Schriftart') }}</td>
                     <td>
-                        <StudipIcon v-if="font_item.name" icon="accept" role="status-green" />
-                        <StudipIcon v-else icon="decline" role="status-red" />
+                        <StudipIcon v-if="font_item.name" shape="accept" role="status-green" />
+                        <StudipIcon v-else shape="decline" role="status-red" />
                     </td>
                     <td class="actions">
                         <a class="upload">
                             <input type="file" tabindex="0" :title="$gettext('Schriftart hochladen')" ref="font" accept=".ttf" v-on:change="handleFileUpload('font', index)"/>
-                            <StudipIcon icon="upload" role="clickable" />
+                            <StudipIcon shape="upload" role="clickable" />
                         </a>
                         <a href="#" @click.prevent="deleteFont(font_item.type)" :title="$gettext('Schriftart löschen')">
-                            <StudipIcon icon="trash" role="clickable" />
+                            <StudipIcon shape="trash" role="clickable" />
                         </a>
                     </td>
                 </tr>
