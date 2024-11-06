@@ -120,7 +120,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 unset($features['default_slide_studip_news']);
             }
 
-            if ($features['record'] == 'true') {
+            if (isset($features['record']) && $features['record'] == 'true') {
                 if (self::checkRecordingCapability($features)) {
                     $params['name'] = $params['name'] . ' (' . date('Y-m-d H:i:s') . ')';
                 } else {
