@@ -2,7 +2,7 @@
     <ul class="widget-list widget-links meeting-widget-links">
         <li v-for="(item, index) in items" :key="index">
             <button v-on="linkEvents(item)">
-                <StudipIcon :title="item.label" :icon="item.icon" role="clickable" />
+                <StudipIcon :title="item.label" :shape="item.icon" role="clickable" />
                 {{ item.label }}
             </button>
         </li>

@@ -41,13 +41,13 @@
                                 :id="'folder-type-' + folder_type.class">
                             <label :key="folder_type.class" :for="'folder-type-' + folder_type.class">
                                 <div class="icon" v-if="folder_type.icon">
-                                    <StudipIcon :icon="folder_type.icon"
+                                    <StudipIcon :shape="folder_type.icon"
                                         role="clickable" size="32"></StudipIcon>
                                 </div>
                                 <div class="text">
                                     {{ folder_type.name }}
                                 </div>
-                                <StudipIcon icon="check-circle" class="check"
+                                <StudipIcon shape="check-circle" class="check"
                                         role="clickable" size="32"></StudipIcon>
                             </label>
                         </template>

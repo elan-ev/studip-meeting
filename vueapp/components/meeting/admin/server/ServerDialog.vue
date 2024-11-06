@@ -43,7 +43,7 @@
                             <template v-else-if="value.attr && value.attr == 'password'">
                                 <div class="form-password-input" @click.prevent="togglePasswordText($event, value.name)">
                                     <input type="password" :ref="value.name" v-model="server[driver_name][value.name]">
-                                    <StudipIcon class="overlay-input-icon" icon="visibility-visible"
+                                    <StudipIcon class="overlay-input-icon" shape="visibility-visible"
                                         role="clickable" size="16"></StudipIcon>
                                 </div>
                             </template>

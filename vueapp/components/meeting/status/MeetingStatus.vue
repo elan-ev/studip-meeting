@@ -1,6 +1,6 @@
 <template>
     <div v-if="status">
-        <StudipIcon icon="video2" role="attention" size=36></StudipIcon>
+        <StudipIcon shape="video2" role="attention" size=36></StudipIcon>
         <span class="red">
             {{ $gettext('Dieser Raum wird momentan aufgezeichnet!') }}
         </span>

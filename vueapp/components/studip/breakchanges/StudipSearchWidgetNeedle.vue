@@ -11,7 +11,7 @@
                 <a v-if="searchTerm && showClear" @click.prevent="clearSearchTerm"
                     href="#" :title="$gettext('Zurücksetzen')"
                     class="reset-search meeting-reset-search">
-                    <StudipIcon icon="decline" size="20"/>
+                    <StudipIcon shape="decline" size="20"/>
                 </a>
                 <button
                     type="submit"
@@ -20,14 +20,14 @@
                     class="submit-search"
                     @click="sendSearchTerm"
                 >
-                    <StudipIcon icon="search" size="20" />
+                    <StudipIcon shape="search" size="20" />
                 </button>
             </div>
         </template>
         <template v-else>
             <div class="clear-search" v-if="searchTerm && showClear" style="text-align: right;">
                 <a @click.prevent="clearSearchTerm" href="#" :title="$gettext('Zurücksetzen')">
-                    <StudipIcon icon="search+decline" role="clickable" size="16"></StudipIcon>
+                    <StudipIcon shape="search+decline" role="clickable" size="16"></StudipIcon>
                     {{ $gettext('Zurücksetzen') }}
                 </a>
             </div>
