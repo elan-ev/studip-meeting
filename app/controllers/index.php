@@ -192,7 +192,7 @@ class IndexController extends MeetingsController
         }
 
         if (Request::method() === 'POST') {
-            CSRFProtection::verifyRequest();
+            CSRFProtection::verifyUnsafeRequest();
             $this->courseConfig->title = Request::get('title');
             $this->courseConfig->store();
 
