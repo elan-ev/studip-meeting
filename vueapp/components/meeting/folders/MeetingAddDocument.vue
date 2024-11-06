@@ -22,8 +22,8 @@
                             {{ $gettext('Erlaubte Dateigröße:') }} <b>{{ course_config.upload_type.rel_file_size }}</b>
                         </span>
                         <template v-if="filesize !== null">
-                            <StudipIcon v-if="is_filesize_valid" icon="accept" role="status-green" />
-                            <StudipIcon v-else icon="decline" :title="$gettext('Dateigröße überschreitet!')" role="status-red" />
+                            <StudipIcon v-if="is_filesize_valid" shape="accept" role="status-green" />
+                            <StudipIcon v-else shape="decline" :title="$gettext('Dateigröße überschreitet!')" role="status-red" />
                         </template>
                     </div>
                     <div v-if="has_allowed_file_types || has_denied_file_types">
@@ -34,8 +34,8 @@
                             {{ $gettext('Nicht erlaubte Dateitypen:') }} <b>{{ course_config.upload_type.file_types.join(', ') }}</b>
                         </span>
                         <template v-if="filetype !== null">
-                            <StudipIcon v-if="is_filetype_valid" icon="accept" role="status-green" />
-                            <StudipIcon v-else icon="decline" :title="$gettext('Ungültiger Dateityp!')" role="status-red" />
+                            <StudipIcon v-if="is_filetype_valid" shape="accept" role="status-green" />
+                            <StudipIcon v-else shape="decline" :title="$gettext('Ungültiger Dateityp!')" role="status-red" />
                         </template>
                     </div>
                 </div>

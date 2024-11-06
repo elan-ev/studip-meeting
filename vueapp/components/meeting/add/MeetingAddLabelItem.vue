@@ -23,7 +23,7 @@
             </label>
             <span class="inline-feature-warning-icon" v-if="inlineFeatureWarningIcon && inlineFeatureWarningIcon.messagebox_id">
                 <a href="#" @click.prevent="toggleInlineFeatureWarning(inlineFeatureWarningIcon['messagebox_id'])">
-                    <StudipIcon icon="exclaim-circle-full"
+                    <StudipIcon shape="exclaim-circle-full"
                         role="status-yellow" size="16"></StudipIcon>
                 </a>
             </span>
@@ -50,7 +50,7 @@
             </StudipTooltipIcon>
             <span class="inline-feature-warning-icon" v-if="inlineFeatureWarningIcon && inlineFeatureWarningIcon.messagebox_id">
                 <a href="#" @click.prevent="toggleInlineFeatureWarning(inlineFeatureWarningIcon['messagebox_id'])">
-                    <StudipIcon icon="exclaim-circle-full"
+                    <StudipIcon shape="exclaim-circle-full"
                         role="status-yellow" size="16"></StudipIcon>
                 </a>
             </span>

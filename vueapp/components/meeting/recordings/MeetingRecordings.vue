@@ -65,7 +65,7 @@
                                             <div style="text-align: right;">
                                                 <a href="#" :title="$gettext('Aufzeichnung löschen')" style="cursor: pointer;"
                                                     @click.prevent="deleteRecording(recording)">
-                                                    <StudipIcon icon="trash" role="clickable"></StudipIcon>
+                                                    <StudipIcon shape="trash" role="clickable"></StudipIcon>
                                                 </a>
                                             </div>
                                         </td>

@@ -26,22 +26,22 @@
                         <td><span class="required">{{ $gettext('PDF Folie') }}</span></td>
                         <td>{{ displayTemplateName(template, 'pdf') }}</td>
                         <td>
-                            <StudipIcon v-if="template.pdf && template.pdf.filename" icon="accept" role="status-green" />
-                            <StudipIcon v-else icon="decline" role="status-red" />
+                            <StudipIcon v-if="template.pdf && template.pdf.filename" shape="accept" role="status-green" />
+                            <StudipIcon v-else shape="decline" role="status-red" />
                         </td>
                         <td><span><b>*.pdf</b> {{ $gettext('ist erlaubt!') }}</span></td>
                         <td class="actions">
                             <a class="upload">
                                 <input type="file" tabindex="0" :title="$gettext('Folie hochladen')" ref="pdf" :name="'pdf_' + page"
                                     accept=".pdf" v-on:change="handleFileUpload('pdf', parseInt(page, 10))">
-                                <StudipIcon icon="upload" role="clickable" />
+                                <StudipIcon shape="upload" role="clickable" />
                             </a>
                             <a href="#" v-if="template.pdf && template.pdf.preview" :title="$gettext('Vorschau')"
                                 @click.prevent="showPreview(template.pdf.preview)">
-                                <StudipIcon icon="file-pdf" role="clickable"></StudipIcon>
+                                <StudipIcon shape="file-pdf" role="clickable"></StudipIcon>
                             </a>
                             <a href="#" @click.prevent="deleteTemplate('pdf', page)" :title="$gettext('Vorlage löschen')">
-                                <StudipIcon icon="trash" role="clickable"></StudipIcon>
+                                <StudipIcon shape="trash" role="clickable"></StudipIcon>
                             </a>
                         </td>
                     </tr>
@@ -49,18 +49,18 @@
                         <td><span>{{ $gettext('PHP (HTML) Template') }}</span></td>
                         <td>{{ displayTemplateName(template, 'php') }}</td>
                         <td>
-                            <StudipIcon v-if="template.php && template.php.filename" icon="accept" role="status-green" />
-                            <StudipIcon v-else icon="decline" role="status-red" />
+                            <StudipIcon v-if="template.php && template.php.filename" shape="accept" role="status-green" />
+                            <StudipIcon v-else shape="decline" role="status-red" />
                         </td>
                         <td><span><b>*.php</b> {{ $gettext('ist erlaubt!') }}</span></td>
                         <td class="actions">
                             <a class="upload">
                                 <input type="file" tabindex="0" :title="$gettext('PHP Template hochladen')" ref="php" :name="'php_' + page"
                                     accept=".php" v-on:change="handleFileUpload('php', parseInt(page, 10))">
-                                <StudipIcon icon="upload" role="clickable" />
+                                <StudipIcon shape="upload" role="clickable" />
                             </a>
                             <a href="#" @click.prevent="deleteTemplate('php', page)" :title="$gettext('PHP Template löschen')">
-                                <StudipIcon icon="trash"  role="clickable"></StudipIcon>
+                                <StudipIcon shape="trash"  role="clickable"></StudipIcon>
                             </a>
                         </td>
                     </tr>
