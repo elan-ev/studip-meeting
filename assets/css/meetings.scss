@@ -30,8 +30,9 @@ div.vc_introduction {
         li {
             cursor: pointer;
             padding: 0;
-            a img {
-                vertical-align: middle;
+            img {
+                left: 0;
+                position: absolute;
             }
         }
     }
