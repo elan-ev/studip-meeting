@@ -53,7 +53,7 @@ class ConfigListCourse extends MeetingsController
                 $introduction->title = htmlReady($introduction->title);
                 $introduction->text = formatReady($introduction->text);
                 return $introduction;
-            }, $introductions);
+            }, (array) $introductions);
             $course_config['introductions'] = $introductions;
         } else {
             unset($course_config['introductions']);
@@ -149,14 +149,16 @@ class ConfigListCourse extends MeetingsController
                     if (isset($server_values['roomsize-presets']) && count($server_values['roomsize-presets']) > 0) {
                         foreach ($server_values['roomsize-presets'] as $size => $values) {
                             $server_presets[$server_index][$size] = $values;
-                            if ($members_count >= $values['minParticipants']) {
-                                unset($values['minParticipants']);
-                                foreach ($values as $feature_name => $feature_value) {
-                                    $value = $feature_value;
-                                    if (filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
-                                        $value = filter_var($feature_value, FILTER_VALIDATE_BOOLEAN);
+                            if (isset($values['minParticipants'])) {
+                                if ($members_count >= $values['minParticipants']) {
+                                    unset($values['minParticipants']);
+                                    foreach ($values as $feature_name => $feature_value) {
+                                        $value = $feature_value;
+                                        if (filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+                                            $value = filter_var($feature_value, FILTER_VALIDATE_BOOLEAN);
+                                        }
+                                        $server_defaults[$server_index][$feature_name] = $value;
                                     }
-                                    $server_defaults[$server_index][$feature_name] = $value;
                                 }
                             }
                         }
