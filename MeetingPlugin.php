@@ -269,6 +269,8 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
             $dispatcher->current_plugin = $this;
             $dispatcher->dispatch($unconsumed_path);
         }
+
+        die;
     }
 
     public function getAssetsUrl()

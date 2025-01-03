@@ -1,7 +1,7 @@
 pluginname=Meetings
 pluginclassname=MeetingPlugin
 origin=elan-ev
-version=2.83
+version=2.84
 studipMinVersion=6.0
 studipMaxVersion=6.0.99
 
