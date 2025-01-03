@@ -73,12 +73,6 @@ class Authentication
     {
         if ('nobody' === $GLOBALS['user']->id) {
             $GLOBALS['user'] = new \Seminar_User($user->id);
-            $GLOBALS['auth'] = new \Seminar_Auth();
-            $GLOBALS['auth']->auth = [
-                'uid' => $user->id,
-                'uname' => $user->username,
-                'perm' => $user->perms,
-            ];
             $GLOBALS['perm'] = new \Seminar_Perm();
             $GLOBALS['MAIL_VALIDATE_BOX'] = false;
             $GLOBALS['sess']->delete();
