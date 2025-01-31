@@ -60,7 +60,9 @@ class UpdateMeetingsRecordFeature extends Migration
     }
 
     private static function checkOpenCast($cid) {
-        $opencast_plugin = PluginEngine::getPlugin("OpenCast");
+        $opencast_plugin = PluginEngine::getPlugin("OpenCast")
+            ?: PluginEngine::getPlugin("OpencastV3");
+
         if ($opencast_plugin && $opencast_plugin->isActivated($cid)) {
             $db = DBManager::get();
             $stmt = $db->prepare('SELECT series_id FROM oc_seminar_series WHERE seminar_id = ?');
@@ -70,6 +72,7 @@ class UpdateMeetingsRecordFeature extends Migration
                 return $OCSeries;
             }
         }
+
         return false;
     }
 }
