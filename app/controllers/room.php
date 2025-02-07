@@ -10,7 +10,7 @@ use ElanEv\Model\Meeting;
 use ElanEv\Model\QRCodeToken;
 use Meetings\Helpers\MeetingsHelper;
 
-class RoomController extends PluginController
+class RoomController extends MeetingsController
 {
     /**
      * Constructs the controller and provide translations methods.
