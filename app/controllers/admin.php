@@ -36,11 +36,11 @@ class AdminController extends MeetingsController
     /**
      * Constructs the controller and provide translations methods.
      *
-     * @param object $dispatcher
+     * @param \Trails\Dispatcher $dispatcher
      * @see https://stackoverflow.com/a/12583603/982902 if you need to overwrite
      *      the constructor of the controller
      */
-    public function __construct($dispatcher)
+    public function __construct(\Trails\Dispatcher $dispatcher)
     {
         parent::__construct($dispatcher);
 

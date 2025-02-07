@@ -50,7 +50,12 @@ class IndexController extends MeetingsController
      */
     private $driver;
 
-    public function __construct($dispatcher)
+    /**
+     * Constructor for the IndexController.
+     *
+     * @param Trails\Dispatcher $dispatcher
+     */
+    public function __construct(\Trails\Dispatcher $dispatcher)
     {
         parent::__construct($dispatcher);
 
