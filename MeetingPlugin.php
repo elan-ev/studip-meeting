@@ -286,10 +286,13 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
     public static function checkOpenCast($cid = null)
     {
         $plugin_manager = \PluginManager::getInstance();
-        $opencast_plugin = $plugin_manager->getPluginInfo('OpenCast')
-            ?: $plugin_manager->getPluginInfo('OpencastV3');
 
-        $cid = Context::getId();
+        // Prioritize Opencast V3 then fallback to V2!
+        $opencast_plugin = $plugin_manager->getPluginInfo('OpencastV3');
+        if (empty($opencast_plugin) || empty($opencast_plugin['enabled'])) {
+            $opencast_plugin = $plugin_manager->getPluginInfo('OpenCast');
+        }
+
         if ($opencast_plugin && $opencast_plugin['enabled']) {
             if ($cid) {
                 if ($plugin_manager->isPluginActivated($opencast_plugin['id'], $cid)) {
