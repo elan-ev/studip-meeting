@@ -1,6 +1,21 @@
 <?php
+
+use DI\Attribute\Inject;
+
+/**
+ * @SuppressWarnings(StaticAccess)
+ */
 class MeetingsController extends StudipController
 {
+    #[Inject]
+    public StudIPPlugin $plugin;
+
+    public function before_filter(&$action, &$args)
+    {
+        PageLayout::addStylesheet($this->plugin->getPluginUrl() . '/static/styles.css?v=' . MeetingPlugin::getMeetingManifestInfo('version'));
+        parent::before_filter($action, $args);
+    }
+
     public function url_for($to = '')
     {
         $args = func_get_args();
@@ -15,6 +30,6 @@ class MeetingsController extends StudipController
         $args = array_map('urlencode', $args);
         $args[0] = $to;
 
-        return PluginEngine::getURL($this->dispatcher->current_plugin, $params, join('/', $args));
+        return PluginEngine::getURL($this->plugin, $params, join('/', $args));
     }
 }

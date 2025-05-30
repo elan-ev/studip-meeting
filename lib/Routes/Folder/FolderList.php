@@ -7,21 +7,21 @@ namespace Meetings\Routes\Folder;
  * @author Farbod Zamani <zamani@elan-ev.de>
  */
 
+use ElanEv\Model\Meeting;
+use ElanEv\Model\MeetingCourse;
+use Exception;
+use Meetings\Errors\AuthorizationFailedException;
+use Meetings\Errors\Error;
+use Meetings\MeetingsController;
+use Meetings\MeetingsTrait;
+use Meetings\Models\I18N;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Meetings\Errors\AuthorizationFailedException;
-use Meetings\MeetingsTrait;
-use Meetings\MeetingsController;
-use Meetings\Errors\Error;
-use Exception;
-use Meetings\Models\I18N;
-
-use ElanEv\Model\MeetingCourse;
-use ElanEv\Model\Meeting;
 
 class FolderList extends MeetingsController
 {
     use MeetingsTrait;
+
     /**
      * Returns the info about folders
      *

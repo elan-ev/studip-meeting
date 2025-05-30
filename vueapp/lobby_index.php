@@ -8,4 +8,4 @@
     let LOADING_ICON_URL = '<?= Assets::url('images/ajax-indicator-black.svg') ?>';
 </script>
 
-<? PageLayout::addScript($this->plugin->getPluginUrl() . '/static<%= htmlWebpackPlugin.files.js[0] %>'); ?>
+<? PageLayout::addScript($controller->plugin->getPluginUrl() . '/static<%= htmlWebpackPlugin.files.js[0] %>'); ?>

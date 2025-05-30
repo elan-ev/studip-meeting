@@ -13,7 +13,7 @@ class RouteMapPublic
 
     public function __invoke(\Slim\Routing\RouteCollectorProxy $app)
     {
-        $pp->get('/discovery', Routes\DiscoveryIndex::class);
+        $app->get('/discovery', Routes\DiscoveryIndex::class);
 
         $app->group('', [$this, 'unauthenticatedRoutes']);
     }

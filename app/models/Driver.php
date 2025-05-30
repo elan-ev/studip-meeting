@@ -93,7 +93,7 @@ class Driver
 
         // remove non existent drivers from config
         foreach (self::$config as $driver_name => $data) {
-            if (!$drivers[$driver_name]) {
+            if (!isset($drivers[$driver_name])) {
                 unset (self::$config[$driver_name]);
             }
         }

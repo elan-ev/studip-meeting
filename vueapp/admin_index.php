@@ -7,4 +7,4 @@
     let ICON_URL = '<?= Assets::url('images/icons/') ?>';
 </script>
 
-<? PageLayout::addScript($this->plugin->getPluginUrl() . '/static<%= htmlWebpackPlugin.files.js[0] %>'); ?>
+<? PageLayout::addScript($controller->plugin->getPluginUrl() . '/static<%= htmlWebpackPlugin.files.js[0] %>'); ?>

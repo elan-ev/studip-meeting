@@ -20,12 +20,16 @@ require_once __DIR__.'/bootstrap.php';
 use ElanEv\Model\CourseConfig;
 use ElanEv\Model\MeetingCourse;
 use ElanEv\Model\Meeting;
-
+use Meetings\Middlewares\ErrorMiddleware;
+use Meetings\Middlewares\RegisterServiceProviders;
 use Meetings\AppFactory;
 use Meetings\RouteMap;
 use Meetings\RouteMapPublic;
 use Meetings\Helpers\WidgetHelper;
 use Meetings\Errors\Error;
+use Slim\Interfaces\RouteCollectorProxyInterface;
+use Trails\Dispatcher;
+use Trails\Exceptions\UnknownAction;
 
 require_once 'compat/StudipVersion.php';
 
@@ -237,40 +241,22 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
     }
 
     /**
-     * {@inheritdoc}
+     * @SuppressWarnings(UnusedFormalParameter)
      */
-    public function perform($unconsumed_path)
+    public function registerSlimRoutes(RouteCollectorProxyInterface $app, string $unconsumedPath): void
     {
-        require_once __DIR__ . '/vendor/autoload.php';
+        $strategy = $this->getLegacyRouteStrategy($unconsumedPath);
+        $app->group(
+            '/' . strtolower(self::class),
+            function (RouteCollectorProxyInterface $routes) use ($unconsumedPath, $strategy) {
+                $routes->group('/api', RouteMap::class);
+                $routes->group('/public', RouteMapPublic::class);
 
-        if (substr($unconsumed_path, 0, 3) == 'api') {
-            // make sure, slim knows if we are running https
-            if (strpos($GLOBALS['ABSOLUTE_URI_STUDIP'], 'https') === 0) {
-                $_SERVER['HTTPS'] = 'on';
+                $routes->any('{path_info:.*}', $strategy->getCallable($unconsumedPath));
             }
-            $appFactory = new AppFactory();
-            $app = $appFactory->makeApp($this);
-            $app->group('/meetingplugin/api', RouteMap::class);
-            $app->run();
-        } else if (substr($unconsumed_path, 0, 6) == 'public') {
-            $appFactory = new AppFactory();
-            $app = $appFactory->makeApp($this);
-            $app->group('/meetingplugin/public', RouteMapPublic::class);
-            $app->run();
-        } else {
-            PageLayout::addStylesheet($this->getPluginUrl() . '/static/styles.css?v=' . self::getMeetingManifestInfo('version'));
-
-            $trails_root = $this->getPluginPath() . '/app';
-            $dispatcher  = new Trails_Dispatcher($trails_root,
-                rtrim(PluginEngine::getURL($this, null, ''), '/'),
-                'index'
-            );
-
-            $dispatcher->current_plugin = $this;
-            $dispatcher->dispatch($unconsumed_path);
-        }
-
-        die;
+        )
+            ->add(RegisterServiceProviders::class)
+            ->add(ErrorMiddleware::class);
     }
 
     public function getAssetsUrl()

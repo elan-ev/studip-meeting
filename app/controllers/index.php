@@ -74,19 +74,17 @@ class IndexController extends MeetingsController
             }
         }
 
-        $this->plugin = $dispatcher->current_plugin;
-
         // Localization
         $this->_ = function ($string) use ($dispatcher) {
             return call_user_func_array(
-                [$dispatcher->current_plugin, '_'],
+                [$this->plugin, '_'],
                 func_get_args()
             );
         };
 
         $this->_n = function ($string0, $tring1, $n) use ($dispatcher) {
             return call_user_func_array(
-                [$dispatcher->current_plugin, '_n'],
+                [$this->plugin, '_n'],
                 func_get_args()
             );
         };
