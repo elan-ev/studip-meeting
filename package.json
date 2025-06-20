@@ -13,6 +13,7 @@
     "author": "ELAN e.V. (tgloeggl@uos.de)",
     "devDependencies": {
         "axios": "^1.8.4",
+        "cheerio": "1.0.0-rc.3",
         "clean-webpack-plugin": "^4.0.0",
         "css-loader": "^7.1.2",
         "css-minimizer-webpack-plugin": "^6.0.0",
