@@ -18,6 +18,10 @@
                     <input type="text" v-model.trim="general_config['feedback_contact_address']">
                 </label>
                 <label>
+                     {{ $gettext('Feedback Betreff') }}
+                 <input type="text" v-model.trim="general_config['feedback_mail_subject']">
+                </label>
+                <label>
                     {{ $gettext('Feedback Absenderadresse') }}
                     <br>
                     <input type="radio" name="feedback-contact-address"
