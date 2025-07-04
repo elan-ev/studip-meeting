@@ -53,7 +53,10 @@ class FeedbackSubmit extends MeetingsController
                     'type' => 'error'
                 ];
             } else if ($json && $meetingCourse && $current_user) {
-                $subject = I18N::_("Feedback zum Meetings-Plugin");
+                $subject = Driver::getGeneralConfigValue('feedback_mail_subject');
+                if (!$subject) {
+                    $subject = I18N::_("Feedback zum Meetings-Plugin");
+                }
                 $mailbody = $this->generateMessageBody($json, $meetingCourse, $current_user);
                 $feedback = new StudipMail();
 
