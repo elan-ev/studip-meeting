@@ -19,7 +19,7 @@
                 </label>
                 <label>
                      {{ $gettext('Feedback Betreff') }}
-                 <input type="text" v-model.trim="general_config['feedback_mail_subject']">
+                     <input type="text" v-model.trim="general_config['feedback_mail_subject']">
                 </label>
                 <label>
                     {{ $gettext('Feedback Absenderadresse') }}
