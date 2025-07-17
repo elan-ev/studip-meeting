@@ -60,7 +60,12 @@ class UpdateMeetingsRecordFeature extends Migration
     }
 
     private static function checkOpenCast($cid) {
-        $opencast_plugin = PluginEngine::getPlugin("OpenCast");
+        // Prioritize Opencast V3 then fallback to V2!
+        $opencast_plugin = PluginEngine::getPlugin("OpencastV3");
+        if (empty($opencast_plugin) || empty($opencast_plugin->isActivated($cid))) {
+            $opencast_plugin =  PluginEngine::getPlugin("OpenCast");
+        }
+
         if ($opencast_plugin && $opencast_plugin->isActivated($cid)) {
             $db = DBManager::get();
             $stmt = $db->prepare('SELECT series_id FROM oc_seminar_series WHERE seminar_id = ?');
@@ -70,6 +75,7 @@ class UpdateMeetingsRecordFeature extends Migration
                 return $OCSeries;
             }
         }
+
         return false;
     }
 }

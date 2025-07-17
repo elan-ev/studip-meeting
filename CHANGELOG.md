@@ -1,3 +1,6 @@
+# 2.82.2
+* Make sure Opencast V3 is supported
+
 # 2.82.1 (splitted sub-version)
 * Splitted Sub-version for Stud.IP 5.x
 

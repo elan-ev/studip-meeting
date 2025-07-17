@@ -283,9 +283,16 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
      * @param  string  $cid course ID with default null
      * @return bool | array | string(empty - in case opencast is not activated for this course)
     */
-    public static function checkOpenCast($cid = null) {
+    public static function checkOpenCast($cid = null)
+    {
         $plugin_manager = \PluginManager::getInstance();
-        $opencast_plugin = $plugin_manager->getPluginInfo('OpenCast');
+
+        // Prioritize Opencast V3 then fallback to V2!
+        $opencast_plugin = $plugin_manager->getPluginInfo('OpencastV3');
+        if (empty($opencast_plugin) || empty($opencast_plugin['enabled'])) {
+            $opencast_plugin = $plugin_manager->getPluginInfo('OpenCast');
+        }
+
         if ($opencast_plugin && $opencast_plugin['enabled']) {
             if ($cid) {
                 if ($plugin_manager->isPluginActivated($opencast_plugin['id'], $cid)) {
@@ -304,7 +311,8 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
         return false;
     }
 
-    private static function getOpencastSeriesId($cid) {
+    private static function getOpencastSeriesId($cid)
+    {
         if (empty($cid)) {
             return false;
         }
@@ -314,6 +322,7 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
             'SELECT series_id FROM oc_seminar_series
                     WHERE seminar_id = :cid ORDER BY `mkdate` ASC',
             [':cid' => $cid]);
+
         if (empty($series)) {
             return false;
         }

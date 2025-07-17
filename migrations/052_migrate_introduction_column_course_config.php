@@ -64,7 +64,7 @@ class MigrateIntroductionColumnCourseConfig extends Migration
         $results = $db->query("SELECT * FROM vc_course_config");
 
         while ($data = $results->fetch(PDO::FETCH_ASSOC)) {
-            $introductions = json_decode($data['introductions']);
+            $introductions = json_decode($data['introductions'], true);
             if (!empty($introductions)) {
                 $new_intro = $introductions[0];
                 $text = $new_intro->text;
