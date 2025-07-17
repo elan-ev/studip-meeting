@@ -283,29 +283,65 @@ class RoomManager
     /**
      * Generates the meeting plugin url with dynamic controller and params.
      *
+     * NOTE: as we are using getLink by default, the generated url might be encoded initially,
+     * THerefore, to get a proper result you might need to turn the param $encoded to false!
+     *
      * @param string $controller where to land in terms of controller
      * @param array $params the url query string params
+     * @param boolean $encoded make sure the url is encoded using getLink, otherwise getURL is used!
      *
      * @return string
      */
-    public static function generateMeetingBaseURL($controller, $params = [])
+    public static function generateMeetingBaseURL($controller, $params = [], $encoded = true)
     {
-        $studip_absolute_url = rtrim($GLOBALS['ABSOLUTE_URI_STUDIP'], '/');
-
-        $url_scheme = strtok($studip_absolute_url, '://');
-        if (!in_array($url_scheme, ['http', 'https'])) {
-            $url_scheme = 'http';
+        $meeting_link = PluginEngine::getLink('meetingplugin', $params, $controller);
+        if (!$encoded) {
+            $meeting_link = PluginEngine::getURL('meetingplugin', $params, $controller);
         }
-        $url_scheme .= '://';
+        $meeting_link = ltrim(rtrim($meeting_link, '/'), '/');
+        $parsed_meeting_link = parse_url($meeting_link);
 
-        $url_host = str_replace($url_scheme, '', $studip_absolute_url);
+        // A fallback to ensure the link is complete.
+        $studip_absolute_url = rtrim($GLOBALS['ABSOLUTE_URI_STUDIP'], '/');
+        if (!empty($studip_absolute_url) &&
+            (empty($parsed_meeting_link['scheme']) || empty($parsed_meeting_link['host']))) {
+            $parsed_studip_absolute_url = parse_url($studip_absolute_url);
+            $parsed_meeting_link['scheme'] = $parsed_studip_absolute_url['scheme'] ?? 'http';
+            $parsed_meeting_link['host'] = $parsed_studip_absolute_url['host'];
+            if (!empty($parsed_studip_absolute_url['port'])) {
+                $parsed_meeting_link['port'] = $parsed_studip_absolute_url['port'];
+            }
+            if (!empty($parsed_studip_absolute_url['user'])) {
+                $parsed_meeting_link['user'] = $parsed_studip_absolute_url['user'];
+            }
+            if (!empty($parsed_studip_absolute_url['pass'])) {
+                $parsed_meeting_link['pass'] = $parsed_studip_absolute_url['pass'];
+            }
+        }
 
-        $meeting_link = ltrim(PluginEngine::getLink('meetingplugin', $params, $controller), '/');
-
-        $url_sections = array_unique(array_merge(explode('/', $url_host), explode('/', $meeting_link)));
-
-        $meeting_base_url = $url_scheme . implode('/', $url_sections);
+        $meeting_base_url = self::unparse_url($parsed_meeting_link);
 
         return $meeting_base_url;
+    }
+
+    /**
+     * Glue back the url parts.
+     *
+     * @param array $parsed_url the parsed url parts
+     * @return string the glued url out of parsed url parts.
+     */
+    private static function unparse_url($parsed_url)
+    {
+        $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
+        $user     = isset($parsed_url['user']) ? $parsed_url['user'] : '';
+        $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass'] : '';
+        $auth     = ($user || $pass) ? "$user$pass@" : '';
+        $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+        $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+        $path     = isset($parsed_url['path']) ? $parsed_url['path'] : '';
+        $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
+        $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
+
+        return "$scheme$auth$host$port$path$query$fragment";
     }
 }
