@@ -2,7 +2,7 @@
     <img style="vertical-align: middle; margin-right: 3px;" src="<?= Assets::url('images/ajax-indicator-black.svg') ?>" width="24" height="24" alt="waiting">
     <span><?= $_('Vorgang läuft. Bitte warten Sie einen Moment') ?>&hellip;</span>
 </h4>
-<div id="duplicationInfo" class="hidden" style="display: none;">
+<div id="duplicationInfo" style="display: none;">
     <?= MessageBox::info(_('Dies ist ein doppelter Tab. Bitte schließen Sie dieses Fenster manuell oder nutzen Sie den Button "Zurück zu den Meetings". Ihr Browser blockiert möglicherweise das automatische Schließen.')) ?>
     <?= \Studip\LinkButton::create(_('Zurück zu den Meetings'), $return_url)?>
 </div>
