@@ -1,4 +1,4 @@
-<form action="<?= PluginEngine::getLink($plugin, array(), 'index/config') ?>" method="post" class="default">
+<form action="<?= PluginEngine::getLink($controller->plugin, array(), 'index/config') ?>" method="post" class="default">
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend>
@@ -13,6 +13,6 @@
 
     <footer data-dialog-button>
         <?= Studip\Button::createAccept($_('Speichern'), 'anlegen') ?>
-        <?= Studip\LinkButton::createCancel($_('Abbrechen'), PluginEngine::getLink($plugin, array(), 'index')) ?>
+        <?= Studip\LinkButton::createCancel($_('Abbrechen'), PluginEngine::getLink($controller->plugin, array(), 'index')) ?>
     </footer>
 </form>
