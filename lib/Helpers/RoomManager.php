@@ -298,7 +298,7 @@ class RoomManager
         if (!$encoded) {
             $meeting_link = PluginEngine::getURL('meetingplugin', $params, $controller);
         }
-        $meeting_link = ltrim(rtrim($meeting_link, '/'), '/');
+        $meeting_link = rtrim($meeting_link, '/');
         $parsed_meeting_link = parse_url($meeting_link);
 
         // A fallback to ensure the link is complete.
@@ -316,6 +316,10 @@ class RoomManager
             }
             if (!empty($parsed_studip_absolute_url['pass'])) {
                 $parsed_meeting_link['pass'] = $parsed_studip_absolute_url['pass'];
+            }
+            // Ensure the path starts with a slash if it's not empty
+            if (!empty($parsed_meeting_link['path']) && $parsed_meeting_link['path'][0] !== '/') {
+                $parsed_meeting_link['path'] = '/' . $parsed_meeting_link['path'];
             }
         }
 
