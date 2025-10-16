@@ -93,7 +93,7 @@
                                             <span v-if="config[driver]['server_course_type'] && config[driver]['server_course_type'][0] &&
                                                     config[driver]['server_course_type'][0]['name']"
                                             >
-                                                {{$gettext('(für %{ name })') | gettextinterpolate({name: config[driver]['server_course_type'][0]['name']}) }}
+                                                {{ $gettextInterpolate($gettext('(für %{ name })'), {name: config[driver]['server_course_type'][0]['name']}) }}
                                             </span>
                                             <span v-if="!config[driver]['servers'][0] || (config[driver]['server_course_type'] && config[driver]['server_course_type'][0] &&
                                                         !config[driver]['server_course_type'][0]['valid'])"
@@ -131,12 +131,12 @@
                                         <span v-if="config[room['driver']]['server_defaults'] && config[room['driver']]['server_defaults'][server_index]
                                                 &&  config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants']"
                                         >
-                                            {{ $gettext('(max. %{ count } Teilnehmende)') | gettextinterpolate({count: config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants']}) }}
+                                            {{ $gettextInterpolate($gettext('(max. %{ count } Teilnehmende)'), {count: config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants']}) }}
                                         </span>
                                         <span v-if="config[room['driver']]['server_course_type'] && config[room['driver']]['server_course_type'][server_index] &&
                                                     config[room['driver']]['server_course_type'][server_index]['name']"
                                         >
-                                            {{ $gettext('(für %{ name })') | gettextinterpolate({name: config[room['driver']]['server_course_type'][server_index]['name']}) }}
+                                            {{ $gettextInterpolate($gettext('(für %{ name })'), {name: config[room['driver']]['server_course_type'][server_index]['name']}) }}
                                         </span>
                                         <span v-if="!server_config || (config[room['driver']]['server_course_type'] && config[room['driver']]['server_course_type'][server_index] &&
                                                     !config[room['driver']]['server_course_type'][server_index]['valid'])"
@@ -186,14 +186,14 @@
                                 </select>
                             </label>
                         </template>
-                        <template v-for="(feature, index) in config[room['driver']]['features']['create']['roomsize']">
+                        <template v-for="(feature, index) in config[room['driver']]['features']['create']['roomsize']" :key="index">
                             <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature"
                                 :maxAllowedParticipants="maxAllowedParticipants"
                                 :minParticipants="minParticipants"
                                 :isPreset="true"
                                 @checkPresets="checkPresets"
                                 @adjustPresets="selectPresetTemplate"
-                                :key="index"/>
+                                />
                         </template>
                     </fieldset>
 
@@ -206,12 +206,12 @@
                             v-on="fieldsetHandlers"
                             v-text="$gettext('Aufzeichnung')">
                         </legend>
-                        <template v-for="(feature, index) in config[room['driver']]['features']['record']['record_setting']">
+                        <template v-for="(feature, index) in config[room['driver']]['features']['record']['record_setting']" :key="index">
                             <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :maxDuration="maxDuration"
                                 @labelClicked="labelClickHandler"
                                 :badge="(feature['name'] == 'record' && Object.keys(config[room['driver']]).includes('opencast') && config[room['driver']]['opencast'] == '1'
                                             && feature['info'].toLowerCase().includes('opencast')) ? {show: true, text: $gettext('beta')} : {}"
-                                :key="index"/>
+                                />
                         </template>
                     </fieldset>
 
@@ -237,8 +237,8 @@
                             && Object.keys(config[room['driver']]['features']['create']).includes('privacy')
                             && Object.keys(config[room['driver']]['features']['create']['privacy']).length"
                         >
-                            <template v-for="(feature, index) in config[room['driver']]['features']['create']['privacy']">
-                                <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :key="index"
+                            <template v-for="(feature, index) in config[room['driver']]['features']['create']['privacy']" :key="index">
+                                <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature"
                                     :inlineFeatureWarningIcon="(feature['name'] === 'room_anyone_can_start' && printRoomStartWarning()) ? {messagebox_id: 'room_start_warning'} : {}"
                                     @toggleInlineFeatureWarning="toggleInlineFeatureWarning"
                                 />
@@ -294,8 +294,8 @@
                             v-on="fieldsetHandlers"
                             v-text="$gettext('Erweiterte Einstellungen')">
                         </legend>
-                        <template v-for="(feature, index) in config[room['driver']]['features']['create']['extended_setting']">
-                            <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :key="index" />
+                        <template v-for="(feature, index) in config[room['driver']]['features']['create']['extended_setting']" :key="index">
+                            <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" />
                         </template>
                     </fieldset>
 
@@ -310,8 +310,8 @@
                             v-text="$gettext('Präsentationsfolien')">
                         </legend>
                         <template v-if="hasPresentationSetting === 'all' || hasPresentationSetting === 'setting'">
-                            <template v-for="(feature, index) in config[room['driver']]['features']['create']['presentation_sildes']">
-                                <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" :key="index" />
+                            <template v-for="(feature, index) in config[room['driver']]['features']['create']['presentation_sildes']" :key="index">
+                                <MeetingAddLabelItem :ref="feature['name']" :room="room" :feature="feature" />
                             </template>
                         </template>
 
@@ -350,9 +350,6 @@ import store from "@/store";
 import { a11y } from '@/common/a11y.mixins'
 import MeetingAddLabelItem from "@meeting/add/MeetingAddLabelItem";
 import MeetingFolderTable from "@meeting/folders/MeetingFolderTable";
-
-import {translate} from 'vue-gettext';
-const {gettext: $gettext, gettextInterpolate} = translate;
 
 import {
     ROOM_LIST, ROOM_UPDATE, ROOM_CREATE, FOLDER_READ
@@ -493,7 +490,7 @@ export default {
         setDriver() {
             if (this.availableDrivers && Object.keys(this.availableDrivers).length == 1) {
                 if (this.isAddRoom || this.room['driver'] !== Object.keys(this.availableDrivers)[0]) {
-                    this.$set(this.room, "driver" , Object.keys(this.availableDrivers)[0]);
+                    this.room["driver"] = Object.keys(this.availableDrivers)[0];
                     this.handleServerDefaults();
                     return;
                 }
@@ -504,7 +501,7 @@ export default {
                 && this.config[this.room['driver']] !== undefined
                 && this.config[this.room['driver']]['server_defaults'][this.room['server_index']] === undefined
             ) {
-                this.$set(this.room, "server_index" , "0");
+                this.room["server_index"] = "0";
             }
         },
 
@@ -536,11 +533,11 @@ export default {
             // Mandatory server selection when there is only one server available!
             let availalbe_servers = servers.filter((s) => s == true);
             if (availalbe_servers.length == 1) {
-                this.$set(this.room, "server_index" , servers.findIndex((s) => s == true).toString());
+                this.room["server_index"] = servers.findIndex((s) => s == true).toString();
             }
 
             //set default features
-            this.$set(this.room, "features" , {});
+            this.room["features"] = {};
 
             if (Object.keys(this.config[this.room['driver']]).includes('features')) {
                 //set default value of features
@@ -557,7 +554,7 @@ export default {
                             } else {
                                 // skip entring the default server value to the room welcome message here.
                                 let feature_value = feature.name == 'welcome' ? '' : feature.value;
-                                this.$set(this.room['features'], feature.name , feature_value);
+                                this.room['features'][feature.name] = feature_value;
                             }
                         });
                     });
@@ -568,7 +565,7 @@ export default {
                         Object.keys(this.config[this.room['driver']]['server_defaults']).includes(this.room['server_index'])) {
                         for (const [feature_name, feature_value] of Object.entries(this.config[this.room['driver']]['server_defaults'][this.room['server_index']])) {
                             if (feature_name != 'maxAllowedParticipants' && feature_name != 'totalMembers') {
-                                this.$set(this.room['features'], feature_name , feature_value);
+                                this.room['features'][feature_name] = feature_value;
                             }
                         }
                     }
@@ -583,7 +580,7 @@ export default {
                             if (typeof feature.value === 'object' && !Array.isArray(feature.value)) {
                                 this.room['features'][feature['name']] = Object.keys(feature['value'])[0];
                             } else {
-                                this.$set(this.room['features'], feature.name , feature.value);
+                                this.room['features'][feature.name] = feature.value;
                             }
                         });
                     });
@@ -605,21 +602,21 @@ export default {
 
         validateMinMaxParticipants() {
             var isValid = true;
-            this.$set(this.modal_message, "text" , "");
+            this.modal_message["text"] = "";
             var err_message = '';
             if (this.room['driver'] && this.room['server_index'] && this.room['features'] && this.room['features']['maxParticipants']) {
                 if ( Object.keys(this.config[this.room['driver']]).includes('server_defaults')
                 && Object.keys(this.config[this.room['driver']]['server_defaults'][this.room['server_index']]).includes('maxAllowedParticipants')
                 && parseInt(this.room['features']['maxParticipants']) > parseInt(this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'])) {
-                    this.$set(this.room['features'], 'maxParticipants', this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants']);
+                    this.room['features'].maxParticipants = this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'];
                     var maxAllowedParticipants = this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'];
-                    err_message = gettextInterpolate($gettext('Teilnehmerzahl darf %{ maxAllowedParticipants } nicht überschreiten'), {maxAllowedParticipants: maxAllowedParticipants});
+                    err_message = this.$gettextInterpolate(this.$gettext('Teilnehmerzahl darf %{ maxAllowedParticipants } nicht überschreiten'), {maxAllowedParticipants: maxAllowedParticipants});
                     isValid = false;
                 }
 
                 if (parseInt(this.room['features']['maxParticipants']) < parseInt(this.minParticipants)) {
-                    this.$set(this.room['features'], 'maxParticipants', parseInt(this.minParticipants));
-                    err_message = gettextInterpolate($gettext('Teilnehmerzahl soll %{ minParticipants } nicht unterschreiten'), {minParticipants: this.minParticipants});
+                    this.room['features']['maxParticipants'] = parseInt(this.minParticipants);
+                    err_message = this.$gettextInterpolate(this.$gettext('Teilnehmerzahl soll %{ minParticipants } nicht unterschreiten'), {minParticipants: this.minParticipants});
                     isValid = false;
                 }
             }
@@ -637,7 +634,7 @@ export default {
         validateFeatureInputs() {
             var isValid = true;
             var invalidInputs = [];
-            this.$set(this.modal_message, "text" , "");
+            this.modal_message["text"] = "";
             if (this.config && this.room?.driver && this.config[this.room.driver]?.features && this.room?.features) {
                 //loop through the config features...
                 for (const [config_feature_cat, config_feature_contents] of Object.entries(this.config[this.room['driver']]['features'])) {
@@ -655,18 +652,18 @@ export default {
                                                     && typeof this.room['features'][config_feature.name] != 'boolean')) {
                                                 invalidInputs.push(config_feature.display_name)
                                                 isValid = false;
-                                                this.$set(this.room['features'], config_feature.name, config_feature.value);
+                                                this.room['features'][config_feature.name] = config_feature.value;
                                             }
                                         break;
                                         case 'number':
                                             var value = parseInt(this.room['features'][config_feature.name]);
                                             var range_value = (config_feature.name == 'maxParticipants') ? -1 : 0;
                                             if (Number.isInteger(value) && value > range_value) {
-                                                this.$set(this.room['features'], config_feature.name, value);
+                                                this.room['features'][config_feature.name] = value;
                                             } else {
                                                 invalidInputs.push(config_feature.display_name)
                                                 isValid = false;
-                                                this.$set(this.room['features'], config_feature.name, config_feature.value);
+                                                this.room['features'][config_feature.name] =config_feature.value;
                                             }
                                         break;
                                         case 'object':
@@ -685,7 +682,7 @@ export default {
                                             } else {
                                                 text = value.replace(/(<([^>]+)>)/gi, "");
                                             }
-                                            this.$set(this.room['features'], config_feature.name, text);
+                                            this.room['features'][config_feature.name] = text;
                                     }
                                 }
                             });
@@ -696,10 +693,10 @@ export default {
 
             if (invalidInputs.length > 0) {
                 var invalid_inputs_str = invalidInputs.join('), (');
-                this.$set(this.modal_message, "text" , "");
-                this.$set(this.modal_message, "type" , "error");
+                this.modal_message["text"] = "";
+                this.modal_message["type"] = "error";
                 setTimeout(() => {
-                    this.$set(this.modal_message, "text" , gettextInterpolate($gettext('Bitte beachten Sie die folgenden Felder (Eingaben auf Standard zurückgesetzt): (%{ str })'), {str: invalid_inputs_str}));
+                    this.modal_message["text"] =this.$gettextInterpolate(this.$gettext('Bitte beachten Sie die folgenden Felder (Eingaben auf Standard zurückgesetzt): (%{ str })'), {str: invalid_inputs_str});
                 }, 150);
             }
             return isValid;
@@ -707,14 +704,14 @@ export default {
 
         validateMinMaxDuration() {
             var isValid = true;
-            this.$set(this.modal_message, "text" , "");
+            this.modal_message["text"] = "";
             var err_message = '';
 
             if (this.maxDuration && this.room['driver'] && this.room['server_index'] && this.room['features'] && this.room['features']['duration']) {
                 if (this.room['features']['duration'] > this.maxDuration) {
-                    err_message = gettextInterpolate($gettext('Konferenzdauer darf %{ maxDuration } Minuten nicht überschreiten'), {maxDuration: this.maxDuration});
+                    err_message = this.$gettextInterpolate(this.$gettext('Konferenzdauer darf %{ maxDuration } Minuten nicht überschreiten'), {maxDuration: this.maxDuration});
                     isValid = false;
-                    this.$set(this.room['features'], 'duration', this.maxDuration);
+                    this.room['features']['duration'] = this.maxDuration;
                 }
             }
 
@@ -757,8 +754,8 @@ export default {
                 .then(({ data }) => {
                     this.message = data.message;
                     if (this.message.type == 'error') {
-                        this.$set(this.modal_message, "type" , "error");
-                        this.$set(this.modal_message, "text" , this.message.text);
+                        this.modal_message["type"] = "error";
+                        this.modal_message["text"] = this.message.text;
                     } else {
                         store.dispatch(ROOM_LIST);
                         this.$emit('done', { message: this.message });
@@ -768,8 +765,8 @@ export default {
                 });
             } else {
                 var empty_fields_str = empty_fields_arr.join('), (');
-                this.$set(this.modal_message, "type" , "error");
-                this.$set(this.modal_message, "text" , gettextInterpolate($gettext('Bitte füllen Sie folgende Felder aus: (%{ str })'), {str: empty_fields_str}));
+                this.modal_message["type"] = "error";
+                this.modal_message["text"] = this.$gettextInterpolate(this.$gettext('Bitte füllen Sie folgende Felder aus: (%{ str })'), {str: empty_fields_str});
             }
         },
 
@@ -830,7 +827,7 @@ export default {
         },
 
         folderHandler(to) {
-            this.$set(this.room, "folder_id" , (to == 'topFolder' ? null : to));
+            this.room["folder_id"] = (to == 'topFolder' ? null : to);
             this.getFolders(to);
         },
 
@@ -866,6 +863,8 @@ export default {
                         $('#privacy_settings_section').removeClass('collapsed');
                     }
 
+                    // TODO: $children ersetzen
+                    /*
                     var dialogComponent = this.$children.filter( (children) => {
                         return children.$options.name == 'Dialog'
                     });
@@ -880,6 +879,7 @@ export default {
                             }
                         );
                     }
+                    */
                 }
             }, 100);
         },
@@ -897,9 +897,9 @@ export default {
                 for (const [feature_name, feature_value] of Object.entries(preset)) {
                     if (!skip_default_params.includes(feature_name) && !skip.includes(feature_name)) {
                         if (feature_name == 'minParticipants') {
-                            this.$set(this.room.features, 'maxParticipants', feature_value);
+                            this.room.features['maxParticipants'] = feature_value;
                         } else {
-                            this.$set(this.room.features, feature_name, feature_value);
+                            this.room.features[feature_name] = feature_value;
                         }
                     }
                 }

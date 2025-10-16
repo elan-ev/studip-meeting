@@ -25,7 +25,7 @@
 <script>
 import Vue from 'vue';
 
-export default Vue.extend({
+export default {
     name: 'studip-icon',
     props: {
         ariaRole: {
@@ -87,5 +87,5 @@ export default Vue.extend({
             }
         },
     },
-});
+};
 </script>

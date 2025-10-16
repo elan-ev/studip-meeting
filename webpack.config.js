@@ -95,4 +95,9 @@ module.exports = {
             "@meeting": path.resolve(__dirname, "vueapp/components/meeting"),
         },
     },
+    externals: {
+        vue: 'Vue',
+        vuex: 'Vuex',
+    },
+    externalsType: 'global',
 };

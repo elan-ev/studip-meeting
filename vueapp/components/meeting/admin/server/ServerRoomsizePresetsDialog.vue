@@ -152,7 +152,7 @@ export default {
 
         performDelete({index}) {
             this.dialog_message = {};
-            this.$delete(this.server_presets, index);
+            delete this.server_presets[index];
             this.dialog_message.type = 'success';
             this.dialog_message.text = this.$gettext('Voreinstellung wurde gelöscht.');
         },
@@ -163,7 +163,7 @@ export default {
             this.server_presets = JSON.parse(JSON.stringify(server_presets_reactive));
             this.driver_presets = this.driver?.['roomsize-presets'] ?? [];
             this.driver_presets.forEach(item => {
-                this.$set(this.new_preset, item.name, item.value);
+                this.new_preset[item.name] = item.value;
             });
         },
 

@@ -150,8 +150,8 @@ export default {
                 .then(({ data }) => {
                     this.message = data.message;
                     if (this.message.type == 'error') {
-                        this.$set(this.modal_message, "type" , "error");
-                        this.$set(this.modal_message, "text" , this.message.text);
+                        this.modal_message["type"] = "error";
+                        this.modal_message["text"] = this.message.text;
                     } else {
                         this.$emit('done', { message: this.message });
                         this.$store.commit(FEEDBACK_CLEAR);
@@ -160,8 +160,8 @@ export default {
                     this.$emit('cancel');
                 });
             } else {
-                this.$set(this.modal_message, "type" , "error");
-                this.$set(this.modal_message, "text" , this.$gettext(`Beschreibung darf nicht leer sein`));
+                this.modal_message["type"] = "error";
+                this.modal_message["text"] = this.$gettext(`Beschreibung darf nicht leer sein`);
             }
 
         },

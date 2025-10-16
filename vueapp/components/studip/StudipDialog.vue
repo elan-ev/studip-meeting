@@ -1,5 +1,5 @@
 <template>
-    <MountingPortal mountTo="body" append>
+    <Teleport to="body" append>
         <focus-trap v-model="trap" :initial-focus="() => $refs.buttonB">
             <div class="studip-dialog" @keydown.esc="closeDialog">
                 <transition name="dialog-fade">
@@ -99,12 +99,12 @@
                 </transition>
             </div>
         </focus-trap>
-    </MountingPortal>
+    </Teleport>
 </template>
 
 <script>
 import { FocusTrap } from 'focus-trap-vue';
-import VueResizeable from 'vrp-vue-resizable';
+import VueResizeable from 'vue-resizable';
 let uuid = 0;
 const dialogPadding = 3;
 

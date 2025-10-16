@@ -55,8 +55,6 @@
 
 <script>
 import { mapGetters } from "vuex";
-import {translate} from 'vue-gettext';
-const {gettext: $gettext, gettextInterpolate} = translate;
 
 import {
     FOLDER_FILE_UPLOAD
@@ -81,7 +79,7 @@ export default {
         ...mapGetters(['course_config']),
         tooltip_title_text() {
             return this.filename ?
-                gettextInterpolate($gettext('%{ filename } ist bereits ausgewählt.'),
+                this.$gettextInterpolate(this.$gettext('%{ filename } ist bereits ausgewählt.'),
                     {filename: this.filename})
                 : this.$gettext('Neue Datei zum Hochladen auswählen.')
         },
@@ -126,7 +124,7 @@ export default {
             } else {
                 this.modal_message = {
                     type: 'error',
-                    text: $gettext('Beim Drag & Drop Fehler geschlagen!')
+                    text: this.$gettext('Beim Drag & Drop Fehler geschlagen!')
                 }
             }
         },
@@ -138,7 +136,7 @@ export default {
             } else {
                 this.modal_message = {
                     type: 'error',
-                    text: $gettext('Beim Auswahl der Datei Fehler geschlagen!')
+                    text: this.$gettext('Beim Auswahl der Datei Fehler geschlagen!')
                 }
             }
         },
@@ -149,7 +147,7 @@ export default {
             if (!file) {
                 this.modal_message = {
                     type: 'error',
-                    text: $gettext('Datei konnte nicht gefunden werden.')
+                    text: this.$gettext('Datei konnte nicht gefunden werden.')
                 }
                 return;
             }

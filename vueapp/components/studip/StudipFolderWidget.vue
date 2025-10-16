@@ -1,10 +1,10 @@
 <template>
     <ul class="widget-list widget-links meeting-widget-links">
         <li v-for="(item, index) in items" :key="index">
-            <StudipIcon :title="item.label" :shape="item.icon" role="clickable" />
-            <a href="#" v-on="linkEvents(item)">
+            <button type="button" @click="emitClick(item)">
+                <StudipIcon :title="item.label" :shape="item.icon" role="clickable" />
                 {{ item.label }}
-            </a>
+            </button>
         </li>
     </ul>
 </template>
@@ -30,14 +30,10 @@ export default {
 
             return attributes;
         },
-        linkEvents(item) {
-            let events = {};
+        emitClick(item) {
             if (item.emit) {
-                events.click = () => {
-                    this.$emit.apply(this, [item.emit].concat(item.emitArguments));
-                };
+                this.$emit(item.emit, ...[item.emitArguments ?? []]);
             }
-            return events;
         },
     },
 };

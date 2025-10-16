@@ -16,7 +16,7 @@
                 <MessageBox type="info"
                     v-if="Object.keys(recording_list).length == 0"
                 >
-                    {{ $gettext('Keine Aufzeichnungen für Raum %{ name } vorhanden') | gettextinterpolate({name: room.name}) }}
+                    {{ $gettextInterpolate($gettext('Keine Aufzeichnungen für Raum %{ name } vorhanden'), {name: room.name}) }}
                 </MessageBox>
 
                 <form class="default" method="post">
@@ -146,8 +146,8 @@ export default {
             this.$store.dispatch(RECORDING_DELETE, recording)
             .then(({data}) => {
                 if (data.message) {
-                    this.$set(this.modal_message, "type" , data.message.type);
-                    this.$set(this.modal_message, "text" , data.message.text);
+                    this.modal_message["type"] = data.message.type;
+                    this.modal_message["text"] = data.message.text;
                     if (data.message.type == 'success') {
                         this.$store.dispatch(RECORDING_LIST, recording.room_id);
                     }

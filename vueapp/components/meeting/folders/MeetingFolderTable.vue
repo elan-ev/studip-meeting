@@ -9,9 +9,9 @@
                             role="clickable" size="20"></StudipIcon>
                     </a>
                     <template v-if="Object.keys(folder).includes('breadcrumbs')">
-                        <template v-for="(bcname, bcid) in folder.breadcrumbs">
+                        <template v-for="(bcname, bcid) in folder.breadcrumbs" :key="bcid">
                             &nbsp;/&nbsp;
-                            <a :key="bcid" :title="$gettext('Zum Ordner:') + bcname" href="#"
+                            <a :title="$gettext('Zum Ordner:') + bcname" href="#"
                                 @click.prevent="folderHandler(bcid)">
                                 {{bcname}}
                             </a>
@@ -55,7 +55,12 @@
                                 <span v-if="Object.keys(folder).includes('files')
                                     && Object.keys(folder['files']).length > numFileInFolderLimit"
                                 >
-                                    {{ $gettext('In diesem Ordner befinden sich %{ count } Dateien. Wählen sie "Alle Dateien anzeigen" um diese Dateien aufzulisten') | gettextinterpolate({count: Object.keys(folder['files']).length}) }}
+                                    {{
+                                    $gettextInterpolate(
+                                      $gettext('In diesem Ordner befinden sich %{ count } Dateien. Wählen sie "Alle Dateien anzeigen" um diese Dateien aufzulisten'),
+                                      { count: Object.keys(folder['files']).length }
+                                    )
+                                    }}
                                 </span>
                                 <span v-else>
                                     {{ $gettext('Dieser Ordner ist leer') }}

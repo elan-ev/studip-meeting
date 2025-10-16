@@ -94,25 +94,25 @@
         />
 
         <!-- Sidebar Contents -->
-        <MountingPortal mountTo="#meeting-action-widget" name="sidebar-actions" v-if="generate_action_items.length">
+        <Teleport to="#meeting-action-widget" name="sidebar-actions" v-if="generate_action_items.length">
             <StudipActionWidget
                 :items="generate_action_items"
                 @createNewRoom="createNewRoom"
                 @displayFolderManager="displayFolderManager"
             />
-        </MountingPortal>
-        <MountingPortal mountTo="#meeting-folder-widget" name="sidebar-actions" v-if="generate_folder_widget_items.length">
+        </Teleport>
+        <Teleport to="#meeting-folder-widget" append name="sidebar-actions" v-if="generate_folder_widget_items.length">
             <StudipFolderWidget
                 :items="generate_folder_widget_items"
                 @displayFolderManager="displayFolderManager"
             />
-        </MountingPortal>
-        <MountingPortal mountTo="#meeting-search-widget" name="sidebar-search">
+        </Teleport>
+        <Teleport to="#meeting-search-widget" append name="sidebar-search">
             <StudipSearchWidget
                 @setRoomFilter="setRoomFilter"
                 @clearRoomFilter="clearRoomFilter"
             />
-        </MountingPortal>
+        </Teleport>
     </div>
 </template>
 
@@ -234,18 +234,16 @@ export default {
                     if (!Object.keys(room.features).includes('giveAccessToRecordings')) {
                         default_feature_obj = config_record_setting_features.find(m => m.name === 'giveAccessToRecordings');
 
-                        this.$set(room.features, 'giveAccessToRecordings', ((default_feature_obj)
+                        room.features['giveAccessToRecordings'] = ((default_feature_obj)
                             ? default_feature_obj.value
-                            : true)
-                        );
+                            : true);
                     }
                     if (!Object.keys(room.features).includes('autoStartRecording')) {
                         default_feature_obj = config_record_setting_features.find(m => m.name === 'autoStartRecording');
 
-                        this.$set(room.features, 'autoStartRecording', ((default_feature_obj)
+                        room.features['autoStartRecording'] = ((default_feature_obj)
                             ? default_feature_obj.value
-                            : true)
-                        );
+                            : true);
                     }
                 }
 

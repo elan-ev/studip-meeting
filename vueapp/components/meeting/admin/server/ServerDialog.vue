@@ -26,8 +26,8 @@
                                 <option value="">
                                     {{ $gettext('Alle') }}
                                 </option>
-                                <template v-for="(cvalue, cindex) in value.value">
-                                    <optgroup style="font-weight:bold;" :label="cvalue.name" :key="cindex">
+                                <template v-for="(cvalue, cindex) in value.value" :key="cindex">
+                                    <optgroup style="font-weight:bold;" :label="cvalue.name">
                                         <option v-for="(svalue, sindex) in cvalue.subs" :key="sindex" :value="sindex">
                                             {{svalue}}
                                         </option>
@@ -119,6 +119,8 @@ export default {
         },
 
         validateRoomSizeNumberInputs() {
+            // TODO: $children ersetzen
+            /*
             var cmp = this.$children.find(child => { return child.$options.name === "ServerRoomSize"; });
             let validity = true;
             if (cmp) {
@@ -134,13 +136,15 @@ export default {
                 }
             }
             return validity;
+            */
+            return true;
         },
         reduceMins() {
             if (this.server[this.driver_name]['maxParticipants'] &&
                 parseInt(this.server[this.driver_name]['maxParticipants']) > 0 &&
                 this.server[this.driver_name]['roomsize-presets']) {
                 if (parseInt(this.server[this.driver_name]['maxParticipants']) > 0 && parseInt(this.server[this.driver_name]['maxParticipants']) < 3) {
-                    this.$set(this.server_object[this.driver_name], "maxParticipants" , "3");
+                    this.server_object[this.driver_name]["maxParticipants"] = "3";
 
                 }
                 for (const [size_key, size_value] of Object.entries(this.server[this.driver_name]['roomsize-presets'])) {
@@ -164,7 +168,7 @@ export default {
             }
 
             if (this.server[this.driver_name] && !Object.keys(this.server[this.driver_name]).includes('course_types')) {
-                this.$set(this.server[this.driver_name], 'course_types', '');
+                this.server[this.driver_name]['course_types'] = '';
             }
         },
 

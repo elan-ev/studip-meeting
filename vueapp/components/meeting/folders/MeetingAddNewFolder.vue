@@ -35,11 +35,11 @@
                         <legend>
                             {{ $gettext('Ordnertyp auswählen') }}
                         </legend>
-                        <template v-for="(folder_type, ik) in parent.folder_types">
-                            <input :key="ik" type="radio" name="folder_type"
+                        <template v-for="(folder_type, ik) in parent.folder_types" :key="ik">
+                            <input type="radio" name="folder_type"
                                 :value="folder_type.class" v-model="new_folder.type"
                                 :id="'folder-type-' + folder_type.class">
-                            <label :key="folder_type.class" :for="'folder-type-' + folder_type.class">
+                            <label :for="'folder-type-' + folder_type.class">
                                 <div class="icon" v-if="folder_type.icon">
                                     <StudipIcon :shape="folder_type.icon"
                                         role="clickable" size="32"></StudipIcon>
@@ -88,12 +88,12 @@ export default {
                 if (this.new_folder.name != '') {
                     text = this.$gettext('Bitte wählen Sie einen Ordner Typ aus');
                 }
-                this.$set(this.modal_message, "type" , "error");
-                this.$set(this.modal_message, "text" , text);
+                this.modal_message["type"] = "error";
+                this.modal_message["text"] = text;
                 return;
             }
 
-            this.$set(this.new_folder, "parent_id" , this.parent.id);
+            this.new_folder["parent_id"] = this.parent.id;
 
             this.$store.dispatch(FOLDER_CREATE, this.new_folder)
             .then(({ data }) => {

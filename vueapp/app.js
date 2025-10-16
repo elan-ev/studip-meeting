@@ -1,6 +1,6 @@
-import Vue from 'vue';
 import App from './App.vue';
 
+import { createApp, h } from "vue";
 import $ from 'jquery';
 import router from "./router";
 import store from "./store";
@@ -8,11 +8,8 @@ import "./public-path";
 
 import { ERROR_COMMIT } from "./store/actions.type";
 import ApiService from "./common/api.service";
-import DateFilter from "./common/date.filter";
-import ErrorFilter from "./common/error.filter";
-import {gettextinterpolate} from "./common/gettextinterpolate.filter";
 
-import GetTextPlugin from 'vue-gettext';
+import { createGettext } from 'vue3-gettext';
 import PortalVue from 'portal-vue';
 import translations from './i18n/translations.json';
 // Common Studip Components.
@@ -25,52 +22,51 @@ import StudipTooltipIcon from "@studip/StudipTooltipIcon";
 import MessageBox from '@/components/messages/MessageBox.vue';
 import MessageList from '@/components/messages/MessageList.vue';
 
-Vue.filter("date", DateFilter);
-Vue.filter("error", ErrorFilter);
-Vue.filter("gettextinterpolate", gettextinterpolate);
-/*
-# Example of using this filter:
-{{ $gettext('%{ page }. Vorlage') | gettextinterpolate({page}) }}
-*/
 
-ApiService.init();
+STUDIP.Vue.load().then(({ createApp: studipCreateApp }) => {
+    const app = createApp({
+        render: () => h(App)
+    });
+    app.use(store);
+    app.use(router);
 
-// Redirect to login page, if a 401 is catched
-Vue.axios.interceptors.response.use((response) => { // intercept the global error
-        return response;
-    }, function (error) {
-        store.dispatch(ERROR_COMMIT, error.response);
+    ApiService.init(app);
 
-        // Do something with response error
-        return Promise.reject(error)
-    }
-);
+    // Redirect to login page, if a 401 is catched
+    // intercept the global error
+    app.axios.interceptors.response.use(
+        (response) => {
+            return response;
+        },
+        function (error) {
+            store.dispatch(ERROR_COMMIT, error.response);
 
-Vue.component('StudipDialog', StudipDialog)
-Vue.component('StudipIcon', StudipIcon)
-Vue.component('StudipButton', StudipButton)
-Vue.component('StudipTooltipIcon', StudipTooltipIcon)
-Vue.component('MessageBox', MessageBox)
-Vue.component('MessageList', MessageList)
+            // Do something with response error
+            return Promise.reject(error)
+        }
+    );
+    app.axios.defaults.baseURL = API_URL;
 
-Vue.use(GetTextPlugin, {
-    availableLanguages: {
-        de_DE: 'Deutsch',
-        en_GB: 'British English',
-    },
-    defaultLanguage: String.locale.replace('-', '_'),
-    translations: translations,
-    silent: true,
-});
+    app.component('StudipDialog', StudipDialog)
+    app.component('StudipIcon', StudipIcon)
+    app.component('StudipButton', StudipButton)
+    app.component('StudipTooltipIcon', StudipTooltipIcon)
+    app.component('MessageBox', MessageBox)
+    app.component('MessageList', MessageList)
 
-Vue.use(PortalVue);
 
-$(function() {
-    const VueInstance = new Vue({
-        router,
-        store,
-        render: h => h(App)
-    }).$mount('#app');
+    const gettext = createGettext({
+        availableLanguages: {
+            de_DE: 'Deutsch',
+            en_GB: 'British English',
+        },
+        defaultLanguage: String.locale.replace('-', '_'),
+        translations: translations,
+        silent: true,
+    });
 
-    VueInstance.axios.defaults.baseURL = API_URL;
+    app.use(gettext);
+    app.use(PortalVue);
+
+    $(() => app.mount("#app"));
 });

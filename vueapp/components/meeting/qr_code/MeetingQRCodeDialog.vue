@@ -27,6 +27,7 @@
                             <StudipTooltipIcon :text="$gettext('Scannen Sie den QR-Code und verwenden Sie den Zugangscode, um mit einem anderen Gerät an dem Meeting teilzunehmen')"></StudipTooltipIcon>
                             <div style="text-align: center; margin: 20px 0;">
                                 <QrcodeVue :value="url" level="H" :size="200"></QrcodeVue>
+                                <h1>TODO!</h1>
                             </div>
                         </label>
                         <label v-if="token">
@@ -45,7 +46,7 @@
 
 <script>
 
-import QrcodeVue from 'qrcode.vue';
+// import QrcodeVue from 'qrcode.vue';
 
 import {
     ROOM_GENERATE_QR_CODE
@@ -57,7 +58,7 @@ export default {
     props: ['room'],
 
     components: {
-        QrcodeVue
+        // QrcodeVue
     },
 
     data() {
