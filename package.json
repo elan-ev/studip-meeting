@@ -16,7 +16,7 @@
         "cheerio": "1.0.0-rc.3",
         "clean-webpack-plugin": "^4.0.0",
         "css-loader": "^7.1.2",
-        "css-minimizer-webpack-plugin": "^6.0.0",
+        "css-minimizer-webpack-plugin": "^8.0.0",
         "date-fns": "^3.6.0",
         "easygettext": "^2.17.0",
         "extract-loader": "^4.0.3",
