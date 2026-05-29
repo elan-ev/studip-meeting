@@ -3,7 +3,7 @@ pluginclassname=MeetingPlugin
 origin=elan-ev
 version=2.84
 studipMinVersion=6.0
-studipMaxVersion=6.2.99
+studipMaxVersion=6.3.99
 
 screenshot=images/screenshots/Der_Reiter_Meeting.png
 screenshot=images/screenshots/Der_Meeting-Raum_mit_BBB.png
