@@ -26,7 +26,6 @@
         "html-rspack-plugin": "^6.1.9",
         "jquery": "^4.0.0",
         "mini-css-extract-plugin": "^2.9.4",
-        "pdfvuer": "^2.0.1",
         "popper.js": "^1.16.1",
         "portal-vue": "^3.0.0",
         "qrcode.vue": "^3.9.1",

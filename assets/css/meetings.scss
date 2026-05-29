@@ -578,3 +578,19 @@ button.as-link {
     }
 }
 /* End Lobby Styles */
+
+
+/* PDF Viewer */
+
+.meeting-pdf-preview-embed {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.meeting-empty-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}

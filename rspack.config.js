@@ -49,6 +49,10 @@ module.exports = {
                 test: /\.css$/,
                 use: ["vue-style-loader", "css-loader"],
             },
+            {
+                test: /\.(svg|png|jpe?g|gif|webp|ico|eot|ttf|woff2?)$/i,
+                type: "asset/resource",
+            },
         ],
     },
     plugins: [
@@ -96,12 +100,17 @@ module.exports = {
         extensions: [".vue", ".js"],
         fallback: {
             fs: false,
+            url: false,
         },
         alias: {
             "@": path.resolve(__dirname, "vueapp"),
             "@studip": path.resolve(__dirname, "vueapp/components/studip"),
             "@meeting": path.resolve(__dirname, "vueapp/components/meeting"),
+            "@vue-pdf-viewer/viewer$": path.resolve(__dirname, "node_modules/@vue-pdf-viewer/viewer/dist/index.cjs"),
         },
+    },
+    node: {
+        __filename: false,
     },
     externals: {
         vue: 'Vue',

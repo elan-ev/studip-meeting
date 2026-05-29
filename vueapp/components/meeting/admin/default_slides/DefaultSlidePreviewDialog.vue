@@ -5,49 +5,41 @@
             :closeText="$gettext('Abbrechen')"
             closeClass="cancel"
             class="meeting-dialog"
-            height="500"
             width="800"
+            height="800"
             @close="close"
         >
             <template v-slot:dialogContent>
-                <pdf v-if="preview" :src="preview" :page="1" @error="errorCaptured" @progress="loadedRatio = $event">
-                    <template slot="loading">
-                    loading content...
-                    </template>
-                </pdf>
+                <embed
+                    v-if="preview"
+                    :src="preview"
+                    type="application/pdf"
+                    class="meeting-pdf-preview-embed"
+                />
+                <div v-else class="meeting-empty-preview">
+                    {{ $gettext('Keine Vorschau verfügbar.') }}
+                </div>
             </template>
         </studip-dialog>
     </div>
 </template>
 
 <script>
-import pdf from 'pdfvuer'
-import 'pdfjs-dist/build/pdf.worker.entry'
-
-
-
 export default {
     name: "DefaultSlidePreviewDialog",
-
-    components: {
-        pdf
-    },
 
     props: {
         preview: {
             type: String,
-            required: true
+            required: true,
         },
     },
 
     methods: {
         close() {
-            this.$emit('cancel');
-        },
-        errorCaptured(err) {
-            console.log(err);
-            return false
+            this.$emit('cancel')
         },
     },
 }
 </script>
+
