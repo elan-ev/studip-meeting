@@ -56,7 +56,7 @@
                             <select id="network-type" v-model="feedback['network_type']">
                                 <option v-for="(nt_value, nt_name) in network_types_complied" :key="nt_name"
                                         :value="nt_name">
-                                        <span>{{ nt_value }}</span>
+                                    {{ nt_value }}
                                 </option>
                             </select>
                         </label>

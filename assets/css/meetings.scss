@@ -1,3 +1,5 @@
+@use "sass:color";
+
 /* Definitions */
 
 $gap: 15px;
@@ -263,7 +265,7 @@ div.inline-feature-warning {
                                 color: #D60000;
                             }
                             50% {
-                                color: darken(#D60000, 7%);
+                                color: color.adjust(#D60000, $lightness: -7%);
                             }
                             100% {
                                 color: inherit;

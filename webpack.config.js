@@ -89,6 +89,9 @@ module.exports = {
     ],
     resolve: {
         extensions: [".vue", ".js"],
+        fallback: {
+            fs: false,
+        },
         alias: {
             "@": path.resolve(__dirname, "vueapp"),
             "@studip": path.resolve(__dirname, "vueapp/components/studip"),
