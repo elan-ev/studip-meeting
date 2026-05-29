@@ -1,10 +1,9 @@
 const path = require("path");
 
-const { VueLoaderPlugin } = require("vue-loader");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const { rspack } = require('@rspack/core');
+const { VueLoaderPlugin } = require('rspack-vue-loader');
+const { CssExtractRspackPlugin } = require("@rspack/core");
+const HtmlRspackPlugin = require("html-rspack-plugin");
 
 module.exports = {
     entry: ["./vueapp/app.js", "./assets/css/meetings.scss"], // the entry point
@@ -12,18 +11,28 @@ module.exports = {
         filename: "[name].[contenthash].js", // the output filename
         path: path.resolve(__dirname, "static"), // fully qualified path
         publicPath: "/",
+        clean: true,
     },
     module: {
         rules: [
             {
                 test: /\.vue$/,
-                use: "vue-loader",
+                loader: "rspack-vue-loader",
+                options: {
+                    experimentalInlineMatchResource: true,
+                    compilerOptions: {
+                        whitespace: 'preserve',
+                        isCustomElement(tag) {
+                            return ['altcha-widget'].includes(tag);
+                        },
+                    },
+                },
             },
             {
                 test: /\.scss$/,
                 use: [
                     {
-                        loader: MiniCssExtractPlugin.loader,
+                        loader: CssExtractRspackPlugin.loader,
                     },
                     {
                         loader: "css-loader",
@@ -43,44 +52,40 @@ module.exports = {
         ],
     },
     plugins: [
-        new CleanWebpackPlugin(),
         new VueLoaderPlugin(),
-        new MiniCssExtractPlugin({
+        new rspack.DefinePlugin({
+            __VUE_OPTIONS_API__: JSON.stringify(true),
+            __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+            __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
+        }),
+        new CssExtractRspackPlugin({
             filename: "styles.css",
         }),
-        new CssMinimizerPlugin({
-            minimizerOptions: {
-                discardComments: {
-                    removeAll: true,
-                },
-                safe: true,
-            },
-        }),
-        new HtmlWebpackPlugin({
+        new HtmlRspackPlugin({
             template: "vueapp/course_index.php",
             inject: false,
             minify: false,
             filename: "../app/views/index/index.php",
         }),
-        new HtmlWebpackPlugin({
+        new HtmlRspackPlugin({
             template: "vueapp/admin_index.php",
             inject: false,
             minify: false,
             filename: "../app/views/admin/index.php",
         }),
-        new HtmlWebpackPlugin({
+        new HtmlRspackPlugin({
             template: "vueapp/lobby_index.php",
             inject: false,
             minify: false,
             filename: "../app/views/room/lobby.php",
         }),
-        new HtmlWebpackPlugin({
+        new HtmlRspackPlugin({
             template: "vueapp/lobby_index.php",
             inject: false,
             minify: false,
             filename: "../app/views/room/qrcode_lobby.php",
         }),
-        new HtmlWebpackPlugin({
+        new HtmlRspackPlugin({
             template: "vueapp/lobby_index.php",
             inject: false,
             minify: false,
@@ -89,10 +94,18 @@ module.exports = {
     ],
     resolve: {
         extensions: [".vue", ".js"],
+        fallback: {
+            fs: false,
+        },
         alias: {
             "@": path.resolve(__dirname, "vueapp"),
             "@studip": path.resolve(__dirname, "vueapp/components/studip"),
             "@meeting": path.resolve(__dirname, "vueapp/components/meeting"),
         },
     },
+    externals: {
+        vue: 'Vue',
+        vuex: 'Vuex',
+    },
+    externalsType: 'global',
 };

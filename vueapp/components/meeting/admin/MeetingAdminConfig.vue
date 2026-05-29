@@ -306,7 +306,7 @@ export default {
         },
 
         performDeleteServer({driver_name, index}) {
-            this.$delete(this.config[driver_name]['servers'], index);
+            delete this.config[driver_name]['servers'][index];
         },
 
         clearServer(driver_name) {
@@ -318,9 +318,9 @@ export default {
                     this.server_object[driver_name][key] = -1;
                 }
                 // Pre-define active param.
-                this.$set(this.server_object[driver_name], 'active', true);
+                this.server_object[driver_name]['active'] =true;
                 // Pre-define roomsize-presets param.
-                this.$set(this.server_object[driver_name], 'roomsize-presets', {});
+                this.server_object[driver_name]['roomsize-presets'] = {};
             }
         },
 
@@ -334,7 +334,7 @@ export default {
             let server_object = params.server;
 
             if (!this.config[driver_name]['servers']) {
-                this.$set(this.config[driver_name], 'servers', []);
+                this.config[driver_name]['servers'] = [];
             }
 
             var index = 0;
@@ -357,7 +357,7 @@ export default {
                 }
             }
             //push to the servers array
-            this.$set(this.config[driver_name]['servers'], index , new_server_object);
+            this.config[driver_name]['servers'][index] = new_server_object;
             this.serverDialogVisible = false;
         },
 
@@ -379,7 +379,7 @@ export default {
 
         savePresets(params) {
             if (this.config?.[params.driver_name]?.servers?.[params.server_index]) {
-                this.$set(this.config[params.driver_name]['servers'][params.server_index], 'roomsize-presets' , params.server_presets);
+                this.config[params.driver_name]['servers'][params.server_index]['roomsize-presets'] = params.server_presets;
             } else {
                 this.$store.dispatch(MESSAGES_CLEAR);
                 this.$store.dispatch(MESSAGE_ADD, {
@@ -394,7 +394,7 @@ export default {
             for (var driver_name in this.drivers) {
                 var server_config = new Object();
                 server_config.index = -1;
-                this.$set(this.server_object, driver_name, server_config);
+                this.server_object[driver_name] = server_config;
             }
         },
 
@@ -403,9 +403,9 @@ export default {
             setTimeout(() => {
                 if (this.config[driver_name][recording_option] && this.config[driver_name][recording_option] == '1') {
                     if (recording_option == 'opencast' && this.config[driver_name]['record']) { // If opencast going to be enabled, record must be disabled.
-                        this.$set(this.config[driver_name], 'record', '0');
+                        this.config[driver_name]['record'] = '0';
                     } else if (recording_option == 'record' && this.config[driver_name]['opencast']) {// If record going to be enabled, opencast must be disabled.
-                        this.$set(this.config[driver_name], 'opencast', '0');
+                        this.config[driver_name]['opencast'] = '0';
                     }
                 }
             }, 100);

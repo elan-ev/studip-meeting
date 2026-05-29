@@ -4,13 +4,13 @@
         <MeetingDefaultSildeManager v-else-if="current_view_id === 'slides'"/>
 
         <!-- Sidebar Contents -->
-        <MountingPortal mountTo="#meeting-admin-view-widget" name="sidebar-views" v-if="generate_view_items.length">
+        <Teleport to="#meeting-admin-view-widget" name="sidebar-views" v-if="generate_view_items.length">
             <StudipViewWidget
                 :currentView="current_view_id"
                 :views="generate_view_items"
                 @changeView="setNewView"
             />
-        </MountingPortal>
+        </Teleport>
     </div>
 </template>
 

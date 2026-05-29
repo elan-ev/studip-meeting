@@ -61,9 +61,6 @@
 
 <script>
 import { mapGetters } from "vuex";
-import {translate} from 'vue-gettext';
-const {gettext: $gettext, gettextInterpolate} = translate;
-
 import MeetingFolderTable from "@meeting/folders/MeetingFolderTable";
 import MeetingAddNewFolder from "@meeting/folders/MeetingAddNewFolder";
 import MeetingAddDocument from "@meeting/folders/MeetingAddDocument";
@@ -93,10 +90,10 @@ export default {
     computed: {
         ...mapGetters(['folder']),
         new_folder_title() {
-            return gettextInterpolate($gettext('Neuer Ordner unter (%{ current }) erstellen.'),{current: this.folder.name});
+            return this.$gettext(this.$gettext('Neuer Ordner unter (%{ current }) erstellen.'),{current: this.folder.name});
         },
         add_document_title() {
-            return gettextInterpolate($gettext('Dokumente in (%{ current }) hinzufügen.'),{current: this.folder.name});
+            return this.$gettext(this.$gettext('Dokumente in (%{ current }) hinzufügen.'),{current: this.folder.name});
         }
     },
 

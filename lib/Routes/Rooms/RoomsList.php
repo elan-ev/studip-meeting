@@ -69,6 +69,7 @@ class RoomsList extends MeetingsController
 
                 $meetingEnabled = true;
 
+                $driver = null;
                 try {
                     $driver = $driver_factory->getDriver(
                         $meetingCourse->meeting->driver,
@@ -99,7 +100,7 @@ class RoomsList extends MeetingsController
                 $meeting['has_recordings'] = false;
 
                 // Check Recordings
-                if (is_subclass_of($driver, 'ElanEv\Driver\RecordingInterface')) {
+                if ($driver && is_subclass_of($driver, 'ElanEv\Driver\RecordingInterface')) {
                     if ($perm->have_studip_perm('tutor', $cid)
                         || (!$perm->have_studip_perm('tutor', $cid)
                             && filter_var($this->getFeatures($meeting['features'],

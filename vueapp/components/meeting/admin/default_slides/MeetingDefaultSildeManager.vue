@@ -28,8 +28,6 @@
 
 <script>
 import { mapGetters } from "vuex";
-import {translate} from 'vue-gettext';
-const {gettext: $gettext, gettextInterpolate} = translate;
 
 import {
     DEFAULT_SLIDE_TEMPLATE_READ,
@@ -91,13 +89,12 @@ export default {
                 addTemplate = false;
             }
             if (addTemplate) {
-                this.$set(this.templates, nextIndex, {pdf: {}, php: {}});
+                this.templates[nextIndex] = {pdf: {}, php: {}};
             } else {
-                this.$set(this.message, 'type', 'error');
-                this.$set(this.message, 'text',
-                    gettextInterpolate($gettext('Bitte laden Sie zuerst eine PDF-Datei für die %{ next_index }. Vorlage hoch.'),
-                        {next_index: (nextIndex - 1)})
-                );
+                this.message['type'] =  'error';
+                this.message['text'] =
+                    this.$gettext(this.$gettext('Bitte laden Sie zuerst eine PDF-Datei für die %{ next_index }. Vorlage hoch.'),
+                        {next_index: (nextIndex - 1)});
             }
         },
     },

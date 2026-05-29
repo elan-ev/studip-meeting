@@ -9,7 +9,7 @@
                 :aria-expanded="isLastTemplate(page)"
                 v-on="fieldsetHandlers"
             >
-                {{ $gettext('%{ page }. Vorlage') | gettextinterpolate({page}) }}
+                {{ $gettext($gettext('%{ page }. Vorlage'), {page}) }}
             </legend>
             <table class="default collapsable meetings-default-slides-settings">
                 <thead>
@@ -90,8 +90,6 @@
 </template>
 
 <script>
-import {translate} from 'vue-gettext';
-const {gettext: $gettext, gettextInterpolate} = translate;
 import { a11y } from '@/common/a11y.mixins'
 
 import {
@@ -124,7 +122,7 @@ export default {
 
         displayTemplateName(template, where) {
             var sub = (where == 'pdf') ? 'Folie' : 'Template';
-            var name = gettextInterpolate($gettext('Keine %{ sub }'), {sub: sub});
+            var name = this.$gettext(this.$gettext('Keine %{ sub }'), {sub: sub});
             if (template && template[where] && template[where].filename) {
                 name = template[where].filename;
             }
@@ -137,11 +135,10 @@ export default {
             // Prevent php upload without having the pdf!
             if (what == 'php' && this.templates?.[page]?.pdf && Object.keys(this.templates[page].pdf).length == 0) {
                 this.message = {};
-                this.$set(this.message, 'type', 'error');
-                this.$set(this.message, 'text',
-                    gettextInterpolate($gettext('Bitte laden Sie zuerst eine PDF-Datei für die %{ ref }. Vorlage hoch.'),
-                        {ref: ref_index + 1})
-                );
+                this.message['type'] = 'error';
+                this.message['text'] =
+                    this.$gettext(this.$gettext('Bitte laden Sie zuerst eine PDF-Datei für die %{ ref }. Vorlage hoch.'),
+                        {ref: ref_index + 1});
                 return;
             }
             let file = null;
@@ -177,9 +174,9 @@ export default {
                 && Object.keys(this.templates[page][what]).length == 0) {
                 // Remove template if pdf delete is asked!
                 if (what == 'pdf') {
-                    this.$delete(this.templates, page);
-                    this.$set(this.message, 'type', 'success');
-                    this.$set(this.message, 'text', this.$gettext('Folie/Template wurde erfolgreich gelöscht'));
+                    delete this.templates[page];
+                    this.message['type'] = 'success';
+                    this.message['text'] = this.$gettext('Folie/Template wurde erfolgreich gelöscht');
                 }
                 return;
             } else {

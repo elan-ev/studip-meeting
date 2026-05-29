@@ -19,8 +19,7 @@
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.9",
-        "phpcompatibility/php-compatibility": "^9.3",
-        "guzzlehttp/psr7": "^2.7"
+        "phpcompatibility/php-compatibility": "^9.3"
     },
     "scripts": {
         "sniffer:php8.0": "phpcs -p -v --extensions=php --ignore=*/vendor/*,*/node_modules/* ./ --standard=vendor/phpcompatibility/php-compatibility/PHPCompatibility --runtime-set testVersion 8.0",

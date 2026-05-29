@@ -69,10 +69,10 @@
         <template v-else>
             {{ feature['display_name'] }}
             <span v-if="feature['name'] == 'maxParticipants' && maxAllowedParticipants != 0">
-                {{ $gettext('(Max. Limit: %{ count })') | gettextinterpolate({count: maxAllowedParticipants}) }}
+                {{ $gettext($gettext('(Max. Limit: %{ count })'), {count: maxAllowedParticipants}) }}
             </span>
             <span v-if="feature['name'] == 'duration' && maxDuration">
-                {{ $gettext('(Max. Limit: %{ maxDuration } Minuten)') | gettextinterpolate({maxDuration: maxDuration}) }}
+                {{ $gettext($gettext('(Max. Limit: %{ maxDuration } Minuten)'), {maxDuration: maxDuration}) }}
             </span>
             <StudipTooltipIcon v-if="Object.keys(feature).includes('info')"
                 :text="feature['info']">
@@ -164,7 +164,7 @@ export default {
                     var disabled = false;
                     if (this.feature['name'] == 'opencast_webcam_record') {
                         if (!this.room?.features?.record || (this.room.features.record && JSON.parse(this.room.features.record) == false)) {
-                            this.$set(this.room.features, 'opencast_webcam_record', 'false');
+                            this.room.features['opencast_webcam_record'] = 'false';
                             disabled = true;
                         }
                     }
@@ -176,7 +176,7 @@ export default {
                             // If the room is in edit mode (NOT NEW), we change the value,
                             // otherwise we don't in order to make the config value work!
                             if (this.room?.mkdate) {
-                                this.$set(this.room.features, 'autoStartRecording', 'false');
+                                this.room.features['autoStartRecording'] = 'false';
                             }
                             disabled = true;
                         }
@@ -186,7 +186,7 @@ export default {
                     var disabled = false;
                     if (this.feature['name'] == 'duration') {
                         if (!this.room?.features?.record || (this.room.features.record && JSON.parse(this.room.features.record) == false)) {
-                            this.$set(this.room.features, 'duration', this.feature['value']);
+                            this.room.features['duration'] = this.feature['value'];
                             disabled = true;
                         }
                     }
@@ -195,7 +195,7 @@ export default {
                     var disabled = false;
                     if (this.feature['name'] == 'giveAccessToRecordings') {
                         if (!this.room?.features?.record || (this.room.features.record && JSON.parse(this.room.features.record) == false)) {
-                            this.$set(this.room.features, 'giveAccessToRecordings', 'false');
+                            this.room.features['giveAccessToRecordings'] = 'false';
                             disabled = true;
                         }
                     }

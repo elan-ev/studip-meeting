@@ -1,5 +1,4 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import { createStore } from 'vuex';
 
 import error from "./error.module";
 import config from "./config.module";
@@ -11,17 +10,16 @@ import default_slide from "./default_slide.module";
 import messages from "./messages.module";
 
 
-Vue.use(Vuex);
 
-export default new Vuex.Store({
-  modules: {
-    error,
-    config,
-    rooms_list,
-    recording_list,
-    feedback,
-    folder,
-    default_slide,
-    messages
-  }
-});
+const store = createStore({});
+
+store.registerModule('error', error);
+store.registerModule('config', config);
+store.registerModule('rooms_list', rooms_list);
+store.registerModule('recording_list', recording_list);
+store.registerModule('feedback', feedback);
+store.registerModule('folder', folder);
+store.registerModule('default_slide', default_slide);
+store.registerModule('messages', messages);
+
+export default store;
