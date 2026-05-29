@@ -194,7 +194,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
         $options = $this->prepareSlides($parameters->getMeetingId());
         $response = $this->performRequest('create', $params, $options);
-        $xml = new \SimpleXMLElement($response);
+        $xml = $this->parseXmlResponse($response);
 
         if (!$xml instanceof \SimpleXMLElement) {
             return false;
@@ -294,7 +294,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
         $response = $this->performRequest('getRecordings', $params);
 
-        $xml = new \SimpleXMLElement($response);
+        $xml = $this->parseXmlResponse($response);
 
         if (!$xml instanceof \SimpleXMLElement) {
             return false;
@@ -314,7 +314,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
         $response = $this->performRequest('deleteRecordings', $params);
 
-        $xml = new \SimpleXMLElement($response);
+        $xml = $this->parseXmlResponse($response);
 
         if (!$xml instanceof \SimpleXMLElement) {
             return false;
@@ -334,7 +334,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
         $response = $this->performRequest('isMeetingRunning', $params);
 
-        $xml = new \SimpleXMLElement($response);
+        $xml = $this->parseXmlResponse($response);
 
         if (!$xml instanceof \SimpleXMLElement) {
             return false;
@@ -355,7 +355,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
         $response = $this->performRequest('getMeetingInfo', $params);
 
-        $xml = new \SimpleXMLElement($response);
+        $xml = $this->parseXmlResponse($response);
 
         if (!$xml instanceof \SimpleXMLElement) {
             return false;
@@ -384,7 +384,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             return $request->getBody(true);
         } catch (BadResponseException $e) {
             $response = $e->getResponse()->getBody(true);
-            $xml = new \SimpleXMLElement($response);
+            $xml = $this->parseXmlResponse($response);
             $status_code = 500;
             $error = I18N::_('Interner Fehler');
             $message = I18N::_('Bitte wenden Sie sich an einen Systemadministrator!');
@@ -402,6 +402,27 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     private function createSignature($prefix, array $params = array())
     {
         return sha1($prefix . $this->buildQueryString($params) . $this->salt);
+    }
+
+    /**
+     * Parse XML responses without emitting PHP warnings on malformed payloads.
+     */
+    private function parseXmlResponse($response)
+    {
+        if (!is_string($response) || trim($response) === '') {
+            return null;
+        }
+
+        $use_internal_errors = libxml_use_internal_errors(true);
+        libxml_clear_errors();
+        try {
+            $xml = simplexml_load_string($response);
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($use_internal_errors);
+        }
+
+        return $xml instanceof \SimpleXMLElement ? $xml : null;
     }
 
     private function buildQueryString($params)
@@ -646,7 +667,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
         try {
             $response = $this->performRequest('getMeetings');
 
-            $xml = new \SimpleXMLElement($response);
+            $xml = $this->parseXmlResponse($response);
 
             if (!$xml instanceof \SimpleXMLElement) {
                 return false;
