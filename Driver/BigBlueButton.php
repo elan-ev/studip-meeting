@@ -395,8 +395,6 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             }
             throw new Error(I18N::_($error) . ': ' . I18N::_($message), $status_code);
         }
-
-        return $request->getBody(true);
     }
 
     private function createSignature($prefix, array $params = array())
@@ -409,14 +407,14 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
      */
     private function parseXmlResponse($response)
     {
-        if (!is_string($response) || trim($response) === '') {
+        if (!is_string((string)$response) || trim((string)$response) === '') {
             return null;
         }
 
         $use_internal_errors = libxml_use_internal_errors(true);
         libxml_clear_errors();
         try {
-            $xml = simplexml_load_string($response);
+            $xml = simplexml_load_string((string)$response);
         } finally {
             libxml_clear_errors();
             libxml_use_internal_errors($use_internal_errors);
