@@ -27,19 +27,6 @@ div.vc_introduction {
 /* End Introduction */
 
 /* Sidebar */
-.meeting-action-widget, .meeting-folder-widget {
-    .meeting-widget-links {
-        li {
-            cursor: pointer;
-            padding: 0;
-            img {
-                left: 0;
-                position: absolute;
-            }
-        }
-    }
-}
-
 .meeting-search-widget {
     &.hide {
         display: none;
