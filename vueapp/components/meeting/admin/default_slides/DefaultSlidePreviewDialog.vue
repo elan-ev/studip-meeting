@@ -14,9 +14,9 @@
                     v-if="preview"
                     :src="preview"
                     type="application/pdf"
-                    class="pdf-preview-embed"
+                    class="meeting-pdf-preview-embed"
                 />
-                <div v-else class="empty-preview">
+                <div v-else class="meeting-empty-preview">
                     {{ $gettext('Keine Vorschau verfügbar.') }}
                 </div>
             </template>
@@ -43,17 +43,3 @@ export default {
 }
 </script>
 
-<style scoped>
-.pdf-preview-embed {
-    width: 100%;
-    height: 100%;
-    border: 0;
-}
-
-.empty-preview {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-}
-</style>
