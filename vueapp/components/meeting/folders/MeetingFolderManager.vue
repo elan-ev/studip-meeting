@@ -90,10 +90,10 @@ export default {
     computed: {
         ...mapGetters(['folder']),
         new_folder_title() {
-            return this.$gettextInterpolate(this.$gettext('Neuer Ordner unter (%{ current }) erstellen.'),{current: this.folder.name});
+            return this.$gettext(this.$gettext('Neuer Ordner unter (%{ current }) erstellen.'),{current: this.folder.name});
         },
         add_document_title() {
-            return this.$gettextInterpolate(this.$gettext('Dokumente in (%{ current }) hinzufügen.'),{current: this.folder.name});
+            return this.$gettext(this.$gettext('Dokumente in (%{ current }) hinzufügen.'),{current: this.folder.name});
         }
     },
 

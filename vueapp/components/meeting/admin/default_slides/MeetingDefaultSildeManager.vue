@@ -93,7 +93,7 @@ export default {
             } else {
                 this.message['type'] =  'error';
                 this.message['text'] =
-                    this.$gettextInterpolate(this.$gettext('Bitte laden Sie zuerst eine PDF-Datei für die %{ next_index }. Vorlage hoch.'),
+                    this.$gettext(this.$gettext('Bitte laden Sie zuerst eine PDF-Datei für die %{ next_index }. Vorlage hoch.'),
                         {next_index: (nextIndex - 1)});
             }
         },

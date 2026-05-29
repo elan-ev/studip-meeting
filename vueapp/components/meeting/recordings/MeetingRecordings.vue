@@ -16,7 +16,7 @@
                 <MessageBox type="info"
                     v-if="Object.keys(recording_list).length == 0"
                 >
-                    {{ $gettextInterpolate($gettext('Keine Aufzeichnungen für Raum %{ name } vorhanden'), {name: room.name}) }}
+                    {{ $gettext($gettext('Keine Aufzeichnungen für Raum %{ name } vorhanden'), {name: room.name}) }}
                 </MessageBox>
 
                 <form class="default" method="post">

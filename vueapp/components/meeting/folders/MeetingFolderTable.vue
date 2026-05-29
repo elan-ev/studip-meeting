@@ -56,7 +56,7 @@
                                     && Object.keys(folder['files']).length > numFileInFolderLimit"
                                 >
                                     {{
-                                    $gettextInterpolate(
+                                    $gettext(
                                       $gettext('In diesem Ordner befinden sich %{ count } Dateien. Wählen sie "Alle Dateien anzeigen" um diese Dateien aufzulisten'),
                                       { count: Object.keys(folder['files']).length }
                                     )

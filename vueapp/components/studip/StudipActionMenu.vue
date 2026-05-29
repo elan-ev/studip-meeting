@@ -144,7 +144,7 @@ export default {
             return Number.parseInt(collapseAt) <= this.items.filter((item) => item.type !== 'separator').length;
         },
         tooltip () {
-            return this.context ? this.$gettextInterpolate(this.$gettext('%{title} für %{context}'), {title: this.title, context: this.context}) : this.title;
+            return this.context ? this.$gettext(this.$gettext('%{title} für %{context}'), {title: this.title, context: this.context}) : this.title;
         }
     }
 }

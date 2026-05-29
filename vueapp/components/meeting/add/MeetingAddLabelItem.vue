@@ -69,10 +69,10 @@
         <template v-else>
             {{ feature['display_name'] }}
             <span v-if="feature['name'] == 'maxParticipants' && maxAllowedParticipants != 0">
-                {{ $gettextInterpolate($gettext('(Max. Limit: %{ count })'), {count: maxAllowedParticipants}) }}
+                {{ $gettext($gettext('(Max. Limit: %{ count })'), {count: maxAllowedParticipants}) }}
             </span>
             <span v-if="feature['name'] == 'duration' && maxDuration">
-                {{ $gettextInterpolate($gettext('(Max. Limit: %{ maxDuration } Minuten)'), {maxDuration: maxDuration}) }}
+                {{ $gettext($gettext('(Max. Limit: %{ maxDuration } Minuten)'), {maxDuration: maxDuration}) }}
             </span>
             <StudipTooltipIcon v-if="Object.keys(feature).includes('info')"
                 :text="feature['info']">

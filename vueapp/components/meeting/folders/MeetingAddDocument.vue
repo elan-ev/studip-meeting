@@ -79,7 +79,7 @@ export default {
         ...mapGetters(['course_config']),
         tooltip_title_text() {
             return this.filename ?
-                this.$gettextInterpolate(this.$gettext('%{ filename } ist bereits ausgewählt.'),
+                this.$gettext(this.$gettext('%{ filename } ist bereits ausgewählt.'),
                     {filename: this.filename})
                 : this.$gettext('Neue Datei zum Hochladen auswählen.')
         },

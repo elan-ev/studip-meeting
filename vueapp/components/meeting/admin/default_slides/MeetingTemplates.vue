@@ -9,7 +9,7 @@
                 :aria-expanded="isLastTemplate(page)"
                 v-on="fieldsetHandlers"
             >
-                {{ $gettextInterpolate($gettext('%{ page }. Vorlage'), {page}) }}
+                {{ $gettext($gettext('%{ page }. Vorlage'), {page}) }}
             </legend>
             <table class="default collapsable meetings-default-slides-settings">
                 <thead>
@@ -122,7 +122,7 @@ export default {
 
         displayTemplateName(template, where) {
             var sub = (where == 'pdf') ? 'Folie' : 'Template';
-            var name = this.$gettextInterpolate(this.$gettext('Keine %{ sub }'), {sub: sub});
+            var name = this.$gettext(this.$gettext('Keine %{ sub }'), {sub: sub});
             if (template && template[where] && template[where].filename) {
                 name = template[where].filename;
             }
@@ -137,7 +137,7 @@ export default {
                 this.message = {};
                 this.message['type'] = 'error';
                 this.message['text'] =
-                    this.$gettextInterpolate(this.$gettext('Bitte laden Sie zuerst eine PDF-Datei für die %{ ref }. Vorlage hoch.'),
+                    this.$gettext(this.$gettext('Bitte laden Sie zuerst eine PDF-Datei für die %{ ref }. Vorlage hoch.'),
                         {ref: ref_index + 1});
                 return;
             }

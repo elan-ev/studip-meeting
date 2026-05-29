@@ -93,7 +93,7 @@
                                             <span v-if="config[driver]['server_course_type'] && config[driver]['server_course_type'][0] &&
                                                     config[driver]['server_course_type'][0]['name']"
                                             >
-                                                {{ $gettextInterpolate($gettext('(für %{ name })'), {name: config[driver]['server_course_type'][0]['name']}) }}
+                                                {{ $gettext($gettext('(für %{ name })'), {name: config[driver]['server_course_type'][0]['name']}) }}
                                             </span>
                                             <span v-if="!config[driver]['servers'][0] || (config[driver]['server_course_type'] && config[driver]['server_course_type'][0] &&
                                                         !config[driver]['server_course_type'][0]['valid'])"
@@ -131,12 +131,12 @@
                                         <span v-if="config[room['driver']]['server_defaults'] && config[room['driver']]['server_defaults'][server_index]
                                                 &&  config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants']"
                                         >
-                                            {{ $gettextInterpolate($gettext('(max. %{ count } Teilnehmende)'), {count: config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants']}) }}
+                                            {{ $gettext($gettext('(max. %{ count } Teilnehmende)'), {count: config[room['driver']]['server_defaults'][server_index]['maxAllowedParticipants']}) }}
                                         </span>
                                         <span v-if="config[room['driver']]['server_course_type'] && config[room['driver']]['server_course_type'][server_index] &&
                                                     config[room['driver']]['server_course_type'][server_index]['name']"
                                         >
-                                            {{ $gettextInterpolate($gettext('(für %{ name })'), {name: config[room['driver']]['server_course_type'][server_index]['name']}) }}
+                                            {{ $gettext($gettext('(für %{ name })'), {name: config[room['driver']]['server_course_type'][server_index]['name']}) }}
                                         </span>
                                         <span v-if="!server_config || (config[room['driver']]['server_course_type'] && config[room['driver']]['server_course_type'][server_index] &&
                                                     !config[room['driver']]['server_course_type'][server_index]['valid'])"
@@ -610,13 +610,13 @@ export default {
                 && parseInt(this.room['features']['maxParticipants']) > parseInt(this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'])) {
                     this.room['features'].maxParticipants = this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'];
                     var maxAllowedParticipants = this.config[this.room['driver']]['server_defaults'][this.room['server_index']]['maxAllowedParticipants'];
-                    err_message = this.$gettextInterpolate(this.$gettext('Teilnehmerzahl darf %{ maxAllowedParticipants } nicht überschreiten'), {maxAllowedParticipants: maxAllowedParticipants});
+                    err_message = this.$gettext(this.$gettext('Teilnehmerzahl darf %{ maxAllowedParticipants } nicht überschreiten'), {maxAllowedParticipants: maxAllowedParticipants});
                     isValid = false;
                 }
 
                 if (parseInt(this.room['features']['maxParticipants']) < parseInt(this.minParticipants)) {
                     this.room['features']['maxParticipants'] = parseInt(this.minParticipants);
-                    err_message = this.$gettextInterpolate(this.$gettext('Teilnehmerzahl soll %{ minParticipants } nicht unterschreiten'), {minParticipants: this.minParticipants});
+                    err_message = this.$gettext(this.$gettext('Teilnehmerzahl soll %{ minParticipants } nicht unterschreiten'), {minParticipants: this.minParticipants});
                     isValid = false;
                 }
             }
@@ -696,7 +696,7 @@ export default {
                 this.modal_message["text"] = "";
                 this.modal_message["type"] = "error";
                 setTimeout(() => {
-                    this.modal_message["text"] =this.$gettextInterpolate(this.$gettext('Bitte beachten Sie die folgenden Felder (Eingaben auf Standard zurückgesetzt): (%{ str })'), {str: invalid_inputs_str});
+                    this.modal_message["text"] =this.$gettext(this.$gettext('Bitte beachten Sie die folgenden Felder (Eingaben auf Standard zurückgesetzt): (%{ str })'), {str: invalid_inputs_str});
                 }, 150);
             }
             return isValid;
@@ -709,7 +709,7 @@ export default {
 
             if (this.maxDuration && this.room['driver'] && this.room['server_index'] && this.room['features'] && this.room['features']['duration']) {
                 if (this.room['features']['duration'] > this.maxDuration) {
-                    err_message = this.$gettextInterpolate(this.$gettext('Konferenzdauer darf %{ maxDuration } Minuten nicht überschreiten'), {maxDuration: this.maxDuration});
+                    err_message = this.$gettext(this.$gettext('Konferenzdauer darf %{ maxDuration } Minuten nicht überschreiten'), {maxDuration: this.maxDuration});
                     isValid = false;
                     this.room['features']['duration'] = this.maxDuration;
                 }
@@ -766,7 +766,7 @@ export default {
             } else {
                 var empty_fields_str = empty_fields_arr.join('), (');
                 this.modal_message["type"] = "error";
-                this.modal_message["text"] = this.$gettextInterpolate(this.$gettext('Bitte füllen Sie folgende Felder aus: (%{ str })'), {str: empty_fields_str});
+                this.modal_message["text"] = this.$gettext(this.$gettext('Bitte füllen Sie folgende Felder aus: (%{ str })'), {str: empty_fields_str});
             }
         },
 
