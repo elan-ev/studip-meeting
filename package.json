@@ -4,9 +4,9 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "webpack --watch --mode=\"development\"",
+        "dev": "rspack build --watch --mode=\"development\"",
         "translate": "gettext-extract --attribute v-i18n --attribute v-translate --output locale/en/LC_MESSAGES/meetings_js.pot $(find vueapp -type f -name '*.vue') && sh translate.sh && gettext-compile --output vueapp/i18n/translations.json locale/en/LC_MESSAGES/meetings.po",
-        "prod": "webpack --mode=\"production\"",
+        "prod": "rspack build --mode=\"production\"",
         "prezip": "npm install && npm run prod && composer install --no-dev",
         "zip": "zip -r Meetings-V$npm_package_version.zip app assets Driver images lib templates locale migrations static bootstrap.php vendor LICENSE README.md MeetingPlugin.php plugin.manifest -x '*.editorconfig' -x 'vendor/*.git*' -x '*.DS_Store'"
     },
@@ -14,18 +14,16 @@
     "devDependencies": {
         "axios": "^1.16.1",
         "cheerio": "1.2.0",
-        "clean-webpack-plugin": "^4.0.0",
         "css-loader": "^7.1.4",
-        "css-minimizer-webpack-plugin": "^8.0.0",
         "date-fns": "^4.3.0",
         "easygettext": "^2.17.0",
         "extract-loader": "^4.0.3",
         "file-loader": "^6.2.0",
         "focus-trap": "^7.6.5",
         "focus-trap-vue": "^4.1.0",
-        "html-webpack-plugin": "^5.6.7",
+        "html-rspack-plugin": "^5.7.2",
         "jquery": "^4.0.0",
-        "mini-css-extract-plugin": "^2.10.2",
+        "mini-css-extract-plugin": "^2.9.4",
         "pdfvuer": "^2.0.1",
         "popper.js": "^1.16.1",
         "portal-vue": "^3.0.0",
@@ -40,7 +38,8 @@
         "vue-style-loader": "^4.1.3",
         "vue3-gettext": "^4.0.0-beta.1",
         "vuex": "^4.1.0",
-        "webpack": "^5.107.2",
-        "webpack-cli": "^7.0.3"
+        "@rspack/cli": "^1.6.4",
+        "@rspack/core": "^1.6.4",
+        "rspack-vue-loader": "^17.5.0"
     }
 }
