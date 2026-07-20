@@ -14,7 +14,7 @@
     "devDependencies": {
         "@rspack/cli": "^2.0.5",
         "@rspack/core": "^2.0.5",
-        "axios": "^1.16.1",
+        "axios": "^1.18.1",
         "cheerio": "1.2.0",
         "css-loader": "^7.1.4",
         "date-fns": "^4.3.0",
