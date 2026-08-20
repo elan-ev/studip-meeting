@@ -6,7 +6,7 @@
             closeClass="cancel"
             class="meeting-dialog"
             height="400"
-            width="500"
+            width="800"
             @close="$emit('cancel')"
         >
             <template v-slot:dialogContent>
@@ -61,11 +61,22 @@
                                             </ul>
                                         </td>
                                         <td style="width: 35%">{{ recording['startTime'] }}</td>
-                                        <td v-if="course_config.display.deleteRecording" style="width: 5%">
+                                        <td  style="width: 5%">
                                             <div style="text-align: right;">
-                                                <a href="#" :title="$gettext('Aufzeichnung löschen')" style="cursor: pointer;"
-                                                    @click.prevent="deleteRecording(recording)">
+                                                <a v-if="course_config.display.deleteRecording" 
+                                                    href="#" :title="$gettext('Aufzeichnung löschen')" 
+                                                    style="cursor: pointer;"
+                                                    @click.prevent="deleteRecording(recording)"
+                                                >
                                                     <StudipIcon shape="trash" role="clickable"></StudipIcon>
+                                                </a>
+
+                                                <a v-if="course_config.display.deleteRecording" 
+                                                    href="#" :title="$gettext('Aufzeichnung öffentlich schalten')" 
+                                                    style="cursor: pointer;"
+                                                    @click.prevent="publishRecording(recording)"
+                                                >
+                                                    <StudipIcon shape="publish" role="clickable"></StudipIcon>
                                                 </a>
                                             </div>
                                         </td>
