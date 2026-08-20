@@ -33,7 +33,7 @@
         </header>
         <section class="contents">
             <article v-if="room.description" class="description">
-                <p v-html="nl2Br(room.description)"></p>
+                <p>{{ room.description  }}</p>
             </article>
             <article class="details">
                 <div v-if="showParticipantCount">
@@ -431,10 +431,6 @@ export default {
         showQRCode() {
             this.$emit('displayQRCode', this.getNonReactiveRoom());
         },
-
-        nl2Br(pureText) {
-            return pureText.replace(/(?:\r\n|\r|\n)/g, '<br>');
-        }
     }
 }
 </script>
