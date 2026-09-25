@@ -10,4 +10,4 @@
     <?= isset($studip_version) ? "let STUDIP_VERSION = $studip_version" : '' ?>;
 </script>
 
-<? PageLayout::addScript($controller->plugin->getPluginUrl() . '/static<%= htmlWebpackPlugin.files.js[0] %>'); ?>
+<? PageLayout::addScript($controller->plugin->getPluginUrl() . '/static<%= htmlWebpackPlugin.files.js[0] %>', ['defer' => 1]); ?>
