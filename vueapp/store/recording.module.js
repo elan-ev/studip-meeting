@@ -5,6 +5,7 @@ import {
     RECORDING_LIST,
     RECORDING_SHOW,
     RECORDING_DELETE,
+    RECORDING_VISIBILITY_UPDATE,
 } from "./actions.type";
 
 import {
@@ -49,6 +50,22 @@ export const actions = {
 
     async [RECORDING_DELETE](context, recording) {
         return await ApiService.delete('recordings/' + CID + '/' + recording.room_id + '/' + recording.recordID);
+    },
+
+    async [RECORDING_VISIBILITY_UPDATE](context, {recording, recordings, visibility}) {
+        if (recordings) {
+            return await ApiService.put(
+                'recordings/' + CID + '/' + recordings[0].room_id + '/visibility',
+                {
+                    visibility,
+                    recording_ids: recordings.map(item => String(item.recordID)),
+                }
+            );
+        }
+        return await ApiService.put(
+            'recordings/' + CID + '/' + recording.room_id + '/' + recording.recordID + '/visibility',
+            {visibility}
+        );
     },
 };
 

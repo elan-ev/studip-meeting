@@ -62,6 +62,8 @@ class RouteMap
 
         //recordings with perm
         $group->get('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingShow::class);
+        $group->put('/recordings/{cid}/{room_id}/visibility', Routes\Recordings\RecordingVisibilityUpdate::class);
+        $group->put('/recordings/{cid}/{room_id}/{recordings_id}/visibility', Routes\Recordings\RecordingVisibilityUpdate::class);
         $group->delete('/recordings/{cid}/{room_id}/{recordings_id}', Routes\Recordings\RecordingDelete::class);
 
         //routes for feedback

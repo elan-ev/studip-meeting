@@ -34,7 +34,11 @@ class RoomManager
             $is_valid = true;
             $class    = 'ElanEv\\Driver\\' . $driver_name;
             if (in_array('ElanEv\Driver\DriverInterface', class_implements($class)) !== false) {
-                if ($create_features = $class::getCreateFeatures()) {
+                $create_features = $class::getCreateFeatures();
+                if (in_array('ElanEv\Driver\RecordingInterface', class_implements($class)) !== false) {
+                    $create_features = array_merge($create_features, $class::getRecordFeature());
+                }
+                if ($create_features) {
                     //loop through create_features
                     foreach ($create_features as $create_feature_name => $create_feature_contents) {
                         if (isset($features[$create_feature_name])) {
