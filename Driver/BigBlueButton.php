@@ -20,6 +20,8 @@ use Meetings\Models\I18N;
  */
 class BigBlueButton implements DriverInterface, RecordingInterface, FolderManagementInterface, ServerRoomsizePresetInterface
 {
+    private const RECORDING_VISIBILITY_METADATA = 'studip-recording-visibility';
+
     /**
      * @var \GuzzleHttp\ClientInterface The HTTP client
      */
@@ -77,6 +79,13 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
             if (isset($features['giveAccessToRecordings'])) { // keen unwanted params
                 unset($features['giveAccessToRecordings']);
+            }
+
+            if (isset($features['recordingVisibility'])) {
+                // Store the room default with the meeting so every generated
+                // recording keeps the visibility selected at creation time.
+                $features['meta_' . self::RECORDING_VISIBILITY_METADATA] = $features['recordingVisibility'];
+                unset($features['recordingVisibility']);
             }
 
             if (isset($features['guestPolicy-ALWAYS_ACCEPT'])) {
@@ -324,6 +333,77 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
     }
 
     /**
+     * Changes the Stud.IP visibility and the corresponding BBB publish status.
+     */
+    public function setRecordingVisibility($recordID, $visibility)
+    {
+        if (!in_array($visibility, ['teachers', 'participants', 'public'], true)) {
+            return false;
+        }
+
+        $recordID = is_array($recordID) ? implode(',', $recordID) : $recordID;
+
+        $params = [
+            'recordID' => $recordID,
+            'meta_' . self::RECORDING_VISIBILITY_METADATA => $visibility,
+        ];
+        $response = $this->parseXmlResponse($this->performRequest('updateRecordings', $params));
+        if (!$response instanceof \SimpleXMLElement || (string) $response->returncode !== 'SUCCESS') {
+            return false;
+        }
+
+        $params = [
+            'recordID' => $recordID,
+            'publish' => $visibility === 'public' ? 'true' : 'false',
+        ];
+        $response = $this->parseXmlResponse($this->performRequest('publishRecordings', $params));
+
+        return $response instanceof \SimpleXMLElement
+            && (string) $response->returncode === 'SUCCESS';
+    }
+
+    /**
+     * Returns the visibility stored as BBB recording metadata, falling back to
+     * the room default for recordings created before this feature existed.
+     */
+    public function getRecordingVisibility($recording, $default = 'teachers')
+    {
+        $metadata = $this->getRecordingVisibilityMetadata($recording);
+        if ($metadata !== null) {
+            $visibility = $metadata;
+        } else {
+            // Existing recordings inherit the former room setting.
+            $visibility = $default;
+        }
+
+        return in_array($visibility, ['teachers', 'participants', 'public'], true)
+            ? $visibility
+            : 'teachers';
+    }
+
+    public function recordingVisibilityNeedsSync($recording, $visibility)
+    {
+        $hasMetadata = $this->getRecordingVisibilityMetadata($recording) !== null;
+        $isPublished = isset($recording->published) && (string) $recording->published === 'true';
+
+        return !$hasMetadata || $isPublished !== ($visibility === 'public');
+    }
+
+    private function getRecordingVisibilityMetadata($recording)
+    {
+        if (isset($recording->metadata->{self::RECORDING_VISIBILITY_METADATA})) {
+            return (string) $recording->metadata->{self::RECORDING_VISIBILITY_METADATA};
+        }
+
+        // Compatibility with metadata written by the initial implementation.
+        if (isset($recording->metadata->studip_recording_visibility)) {
+            return (string) $recording->metadata->studip_recording_visibility;
+        }
+
+        return null;
+    }
+
+    /**
      * {@inheritdoc}
      */
     function isMeetingRunning(MeetingParameters $parameters)
@@ -546,8 +626,16 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             $startStopRecording_config, I18N::_('Legen Sie fest, ob die Sitzungsaufzeichnung automatisch oder von den Moderierenden manuell gestartet werden soll.'));
         }
 
-        $res['giveAccessToRecordings'] = new ConfigOption('giveAccessToRecordings', I18N::_('Aufzeichnungen direkt für Teilnehmende sichtbar schalten'),
-                true, I18N::_('Legen Sie fest, ob neben Lehrenden auch Teilnehmende Zugriff auf die Aufzeichnungen haben sollen.'));
+        $res['recordingVisibility'] = new ConfigOption(
+            'recordingVisibility',
+            I18N::_('Standardsichtbarkeit der Aufzeichnungen'),
+            [
+                'teachers' => I18N::_('Nur Lehrende'),
+                'participants' => I18N::_('Lehrende und Teilnehmende'),
+                'public' => I18N::_('Öffentlich'),
+            ],
+            I18N::_('Legt fest, wer neue Aufzeichnungen dieses Raums sehen darf.')
+        );
         return $res;
     }
 
@@ -586,7 +674,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
                 'record_setting' => [
                     'record',
                     'opencast_webcam_record',
-                    'giveAccessToRecordings',
+                    'recordingVisibility',
                     'autoStartRecording',
                     'duration',
                 ]

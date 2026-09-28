@@ -6,7 +6,7 @@ const { CssExtractRspackPlugin } = require("@rspack/core");
 const HtmlRspackPlugin = require("html-rspack-plugin");
 
 module.exports = {
-    entry: ["./vueapp/app.js", "./assets/css/meetings.scss"], // the entry point
+    entry: ["./vueapp/app.js"], // the entry point
     output: {
         filename: "[name].[contenthash].js", // the output filename
         path: path.resolve(__dirname, "static"), // fully qualified path
@@ -27,32 +27,7 @@ module.exports = {
                         },
                     },
                 },
-            },
-            {
-                test: /\.scss$/,
-                use: [
-                    {
-                        loader: CssExtractRspackPlugin.loader,
-                    },
-                    {
-                        loader: "css-loader",
-                        options: {
-                            importLoaders: 2,
-                        },
-                    },
-                    {
-                        loader: "sass-loader",
-                    },
-                ],
-            },
-            {
-                test: /\.css$/,
-                use: ["vue-style-loader", "css-loader"],
-            },
-            {
-                test: /\.(svg|png|jpe?g|gif|webp|ico|eot|ttf|woff2?)$/i,
-                type: "asset/resource",
-            },
+            }
         ],
     },
     plugins: [

@@ -27,6 +27,7 @@ export const ROOM_MODERATOR_INVITATION_LINK = "roomModeratorInvitationLink";
 export const RECORDING_LIST     = "recordingList";
 export const RECORDING_SHOW     = "recordingShow";
 export const RECORDING_DELETE   = "recordingDelete";
+export const RECORDING_VISIBILITY_UPDATE = "recordingVisibilityUpdate";
 
 export const FEEDBACK_SUBMIT    = "feedbackSubmit";
 

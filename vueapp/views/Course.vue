@@ -231,12 +231,18 @@ export default {
                     Object.keys(this.config[room.driver]['features']['record']).includes('record_setting')) {
                     let config_record_setting_features = this.config[room.driver]['features']['record']['record_setting'];
                     let default_feature_obj = {};
-                    if (!Object.keys(room.features).includes('giveAccessToRecordings')) {
-                        default_feature_obj = config_record_setting_features.find(m => m.name === 'giveAccessToRecordings');
+                    if (!Object.keys(room.features).includes('recordingVisibility')) {
+                        default_feature_obj = config_record_setting_features.find(m => m.name === 'recordingVisibility');
 
-                        room.features['giveAccessToRecordings'] = ((default_feature_obj)
-                            ? default_feature_obj.value
-                            : true);
+                        if (Object.keys(room.features).includes('giveAccessToRecordings')) {
+                            room.features['recordingVisibility'] = String(room.features.giveAccessToRecordings) === 'true'
+                                ? 'participants'
+                                : 'teachers';
+                        } else {
+                            room.features['recordingVisibility'] = default_feature_obj
+                                ? Object.keys(default_feature_obj.value)[0]
+                                : 'teachers';
+                        }
                     }
                     if (!Object.keys(room.features).includes('autoStartRecording')) {
                         default_feature_obj = config_record_setting_features.find(m => m.name === 'autoStartRecording');

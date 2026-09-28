@@ -33,6 +33,8 @@ class RecordingList extends MeetingsController
      */
     public function __invoke(Request $request, Response $response, $args)
     {
+        global $perm;
+
         $room_id = $args['room_id'];
         $cid = $args['cid'];
         $driver_factory = new DriverFactory(Driver::getConfig());
@@ -45,11 +47,39 @@ class RecordingList extends MeetingsController
                 if (is_subclass_of($driver, 'ElanEv\Driver\RecordingInterface')) {
                     $recordings = $driver->getRecordings($meetingCourse->meeting->getMeetingParameters());
                     if (!empty($recordings)) {
+                        $features = $this->getFeatures($meetingCourse->meeting['features']);
+                        $defaultVisibility = $features['recordingVisibility']
+                            ?? (filter_var(
+                                $features['giveAccessToRecordings'] ?? false,
+                                FILTER_VALIDATE_BOOLEAN
+                            ) ? 'participants' : 'teachers');
+                        $isTutor = $perm->have_studip_perm('tutor', $cid);
+                        $isParticipant = $perm->have_studip_perm('user', $cid);
+
                         foreach ($recordings as $recording) {
+                            $visibility = method_exists($driver, 'getRecordingVisibility')
+                                ? $driver->getRecordingVisibility($recording, $defaultVisibility)
+                                : $defaultVisibility;
+
+                            // A new BBB recording inherits the configured room default when
+                            // it is seen for the first time. This also applies BBB's publish flag.
+                            if (method_exists($driver, 'recordingVisibilityNeedsSync')
+                                && method_exists($driver, 'setRecordingVisibility')
+                                && $driver->recordingVisibilityNeedsSync($recording, $visibility)) {
+                                $driver->setRecordingVisibility((string) $recording->recordID, $visibility);
+                            }
+
+                            if (!$isTutor
+                                && $visibility !== 'public'
+                                && !($isParticipant && $visibility === 'participants')) {
+                                continue;
+                            }
+
                             //Converting datetimes here in php, becasue Vuejs date filter does not act normally !!!
                             $recording->startTime =  date('d.m.Y, H:i:s', (int)$recording->startTime / 1000);
                             $recording->endTime =  date('d.m.Y, H:i:s', (int)$recording->endTime / 1000);
                             $recording->room_id = $room_id;
+                            $recording->visibility = $visibility;
                             $recordings_list['default'][] = $recording;
                         }
                     }
@@ -72,7 +102,6 @@ class RecordingList extends MeetingsController
     {
         $features = json_decode($str_features, true);
         if ($key) {
-            $rep = $features[$key];
             return isset($features[$key]) ? $features[$key] : null;
         } else {
             return $features;

@@ -2214,5 +2214,44 @@ msgstr "General configuration for the meetings plugin in JSON"
 msgid "Standardfolie"
 msgstr "Default slide"
 
+msgid "Standardsichtbarkeit der Aufzeichnungen"
+msgstr "Default recording visibility"
+
+msgid "Nur Lehrende"
+msgstr "Teachers only"
+
+msgid "Lehrende und Teilnehmende"
+msgstr "Teachers and participants"
+
+msgid "Öffentlich"
+msgstr "Public"
+
+msgid "Legt fest, wer neue Aufzeichnungen dieses Raums sehen darf."
+msgstr "Defines who may view new recordings of this room."
+
+msgid "Sichtbarkeit"
+msgstr "Visibility"
+
+msgid "Sichtbarkeit der Aufzeichnung"
+msgstr "Recording visibility"
+
+msgid "Sichtbarkeit der Aufzeichnung wurde geändert."
+msgstr "The recording visibility was changed."
+
+msgid "Sichtbarkeit der Aufzeichnung konnte nicht geändert werden."
+msgstr "The recording visibility could not be changed."
+
+msgid "Aufzeichnung auswählen"
+msgstr "Select recording"
+
+msgid "Sichtbarkeit für ausgewählte Aufzeichnungen"
+msgstr "Visibility for selected recordings"
+
+msgid "Die Sichtbarkeit der ausgewählten Aufzeichnungen wurde geändert."
+msgstr "The visibility of the selected recordings was changed."
+
+msgid "Die Sichtbarkeit konnte nicht für alle ausgewählten Aufzeichnungen geändert werden."
+msgstr "The visibility could not be changed for all selected recordings."
+
 #~ msgid "Aktionsmenü"
 #~ msgstr "Action menu"

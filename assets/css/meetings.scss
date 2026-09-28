@@ -1,4 +1,4 @@
-@use "sass:color";
+@import "assets/stylesheets/mixins/colors";
 
 /* Definitions */
 
@@ -8,11 +8,6 @@ $content-full-max-width: $workspace-max-width;
 $content-half-max-width: calc(calc($workspace-max-width / 2) - calc($gap / 2) - 2px);
 
 /* End definitions */
-
-
-@mixin assets-bg-icon($img) {
-    background-image: url("../../../../assets/images/icons/" + $img);
-}
 
 /* Introduction */
 div.vc_introduction {
@@ -52,7 +47,7 @@ table.conference-meetings {
             display: none;
         }
         &.active {
-            background-color: #e2e3e4;
+            background-color: $dark-gray-color-15;
         }
     }
 
@@ -106,11 +101,116 @@ form.create-conference-meeting input[type="text"] {
 
 .meeting-recording-url {
     margin-right: 5px;
-    color: #28497c !important;
+    color: $base-color !important;
     cursor: pointer;
 
     &:hover {
         text-decoration: underline !important;
+    }
+}
+
+.meeting-recordings {
+    .recording-selection {
+        width: 3rem;
+        text-align: center;
+    }
+
+    .recording-link {
+        width: 32%;
+    }
+
+    .recording-playback-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .recording-date {
+        width: 20%;
+        white-space: nowrap;
+    }
+
+    .recording-visibility {
+        width: 36%;
+        min-width: 19rem;
+    }
+
+    .recording-actions {
+        width: 5%;
+    }
+
+    .recording-actions-container {
+        text-align: right;
+
+        a {
+            cursor: pointer;
+        }
+    }
+
+    .visibility-status,
+    .visibility-dropdown-trigger,
+    .visibility-dropdown .dropdown__items button,
+    .bulk-visibility-action {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .visibility-dropdown {
+        min-width: 17rem;
+        background: $white;
+
+        .dropdown__content {
+            min-width: 17rem;
+            background: $white;
+        }
+
+        .dropdown__items {
+            background: $white;
+            width: 100%;
+
+            button {
+                width: 100%;
+                padding: 0.4rem 0.6rem;
+                border: 0;
+                background: $white;
+                color: inherit;
+                text-align: left;
+                cursor: pointer;
+
+                &:hover,
+                &:focus,
+                &[aria-current="true"] {
+                    background: $content-color-20;
+                }
+            }
+        }
+    }
+
+    .visibility-dropdown-trigger {
+        width: 100%;
+        min-height: 2rem;
+        padding: 0.25rem 0.6rem;
+        border: 1px solid $content-color;
+        border-radius: 0;
+        background: $white;
+        color: inherit;
+        text-align: left;
+        cursor: pointer;
+
+        &::after {
+            width: 0;
+            height: 0;
+            margin-left: auto;
+            border-top: 0.4rem solid $base-color;
+            border-right: 0.3rem solid transparent;
+            border-left: 0.3rem solid transparent;
+            content: '';
+        }
+    }
+
+    .bulk-visibility-action {
+        flex-wrap: wrap;
     }
 }
 
@@ -126,7 +226,7 @@ fieldset {
 
         span {
             &.disabled {
-                color: #555;
+                color: $dark-gray-color;
             }
 
             &.inline-feature-warning-icon {
@@ -141,7 +241,7 @@ fieldset {
         }
 
         &.disabled {
-            color:#555 !important;
+            color: $dark-gray-color !important;
         }
 
         &.radio-label {
@@ -233,11 +333,11 @@ div.inline-feature-warning {
                             display: none;
                         }
                         &.red {
-                            color: #D60000;
+                            color: $red;
                         }
 
                         &.creator-date {
-                            color: #636971;
+                            color: $dark-gray-color-80;
                             font-size: 12px;
                             float: right;
                             font-style: italic;
@@ -250,10 +350,10 @@ div.inline-feature-warning {
 
                         @keyframes alert {
                             0% {
-                                color: #D60000;
+                                color: $red;
                             }
                             50% {
-                                color: color.adjust(#D60000, $lightness: -7%);
+                                color: $red-80;
                             }
                             100% {
                                 color: inherit;
@@ -363,8 +463,8 @@ span.meeting-badge {
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: .25rem;
-    color: #fff;
-    background-color: #28497c;
+    color: $white;
+    background-color: $base-color;
     text-indent: 0;
 
     img {
@@ -421,10 +521,10 @@ label.with-append{
     }
     input[type="text"] {
         cursor: default;
-        background-color: white !important;
+        background-color: $white !important;
         &:focus {
             outline: none;
-            border: 1px solid #c5c7ca;
+            border: 1px solid $dark-gray-color-30;
 
         }
     }

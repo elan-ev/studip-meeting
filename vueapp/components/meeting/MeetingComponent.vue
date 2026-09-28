@@ -24,7 +24,6 @@
             </template>
             <StudipActionMenu v-if="generate_menu_items.length"
                 :items="generate_menu_items"
-                @getRecording="getRecording"
                 @editFeatures="editFeatures"
                 @showQRCode="showQRCode"
                 @writeFeedback="writeFeedback"
@@ -162,6 +161,14 @@
                 <span v-show="room.enabled">{{ $gettext('Teilnehmen') }}</span>
                 <span  v-show="!room.enabled">{{ $gettext('Teilnehmen nicht möglich') }}</span>
             </button>
+            <StudipButton v-if="room.has_recordings"
+                type="button"
+                icon="video2"
+                :title="$gettext('Aufzeichnungen')"
+                @click="getRecording"
+            >
+                <span v-text="$gettext('Aufzeichnungen')"></span>
+            </StudipButton>
             <template v-if="course_config.display.editRoom && room.features">
                 <StudipButton v-if="room.features['invite_moderator'] && room.features['invite_moderator'] == 'true'"
                     type="button" v-on:click="getModeratorGuestInfo()"
@@ -277,10 +284,6 @@ export default {
             let id = 1;
             if (this.course_config?.display?.editRoom) {
                 menuItems.push({id: id, label: this.$gettext('Raumeinstellungen'), icon: 'admin', emit: 'editFeatures'});
-                id++;
-            }
-            if (this.room?.has_recordings) {
-                menuItems.push({id: id, label: this.$gettext('Die vorhandenen Aufzeichnungen'), icon: 'video2', emit: 'getRecording'});
                 id++;
             }
             menuItems.push({id: id, label: this.$gettext('Persönlichen QR-Code anzeigen'), icon: 'code-qr', emit: 'showQRCode'});

@@ -191,11 +191,11 @@ export default {
                         }
                     }
                     return disabled;
-                case 'giveAccessToRecordings':
+                case 'recordingVisibility':
                     var disabled = false;
-                    if (this.feature['name'] == 'giveAccessToRecordings') {
+                    if (this.feature['name'] == 'recordingVisibility') {
                         if (!this.room?.features?.record || (this.room.features.record && JSON.parse(this.room.features.record) == false)) {
-                            this.room.features['giveAccessToRecordings'] = 'false';
+                            this.room.features['recordingVisibility'] = 'teachers';
                             disabled = true;
                         }
                     }

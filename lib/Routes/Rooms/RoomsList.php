@@ -101,19 +101,33 @@ class RoomsList extends MeetingsController
 
                 // Check Recordings
                 if ($driver && is_subclass_of($driver, 'ElanEv\Driver\RecordingInterface')) {
-                    if ($perm->have_studip_perm('tutor', $cid)
-                        || (!$perm->have_studip_perm('tutor', $cid)
-                            && filter_var($this->getFeatures($meeting['features'],
-                                'giveAccessToRecordings'
-                            ), FILTER_VALIDATE_BOOLEAN))
-                    ) {
-                        $recordings = $driver->getRecordings($meetingCourse->meeting->getMeetingParameters());
-                        if (!empty($recordings)
-                            || ($this->getFeatures($meeting['features'], 'meta_opencast-dc-isPartOf') && !empty(MeetingPlugin::checkOpenCast($meetingCourse->course_id)) &&
-                            $this->getFeatures($meeting['features'], 'meta_opencast-dc-isPartOf') == MeetingPlugin::checkOpenCast($meetingCourse->course_id)))
-                        {
-                            $meeting['has_recordings'] = true;
+                    $recordingVisibility = $this->getFeatures($meeting['features'], 'recordingVisibility');
+                    if (!$recordingVisibility) {
+                        $recordingVisibility = filter_var(
+                            $this->getFeatures($meeting['features'], 'giveAccessToRecordings'),
+                            FILTER_VALIDATE_BOOLEAN
+                        ) ? 'participants' : 'teachers';
+                    }
+                    $isTutor = $perm->have_studip_perm('tutor', $cid);
+                    $isParticipant = $perm->have_studip_perm('user', $cid);
+                    $recordings = $driver->getRecordings($meetingCourse->meeting->getMeetingParameters());
+                    if (!empty($recordings)) {
+                        foreach ($recordings as $recording) {
+                            $visibility = method_exists($driver, 'getRecordingVisibility')
+                                ? $driver->getRecordingVisibility($recording, $recordingVisibility)
+                                : $recordingVisibility;
+                            if ($isTutor || $visibility === 'public'
+                                || ($isParticipant && $visibility === 'participants')) {
+                                $meeting['has_recordings'] = true;
+                                break;
+                            }
                         }
+                    }
+                    if (($isTutor || in_array($recordingVisibility, ['participants', 'public'], true))
+                        && $this->getFeatures($meeting['features'], 'meta_opencast-dc-isPartOf')
+                        && !empty(MeetingPlugin::checkOpenCast($meetingCourse->course_id))
+                        && $this->getFeatures($meeting['features'], 'meta_opencast-dc-isPartOf') == MeetingPlugin::checkOpenCast($meetingCourse->course_id)) {
+                        $meeting['has_recordings'] = true;
                     }
                 }
 

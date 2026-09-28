@@ -6,7 +6,7 @@
             closeClass="cancel"
             class="meeting-dialog"
             height="400"
-            width="500"
+            width="1000"
             @close="$emit('cancel')"
         >
             <template v-slot:dialogContent>
@@ -30,19 +30,36 @@
                         </label>
                     </fieldset>
                     <fieldset v-if="Object.keys(recording_list).includes('default') && Object.keys(recording_list['default']).length">
-                        <label>
+                        <div class="meeting-recordings">
                             <table class="default">
                                 <thead>
                                     <tr>
-                                        <th scope="col">{{ $gettext('Aufzeichnungen') }}</th>
-                                        <th scope="col">{{ $gettext('Datum') }}</th>
+                                        <th v-if="canManageVisibility" class="recording-selection" scope="col">
+                                            <input
+                                                type="checkbox"
+                                                :checked="allRecordingsSelected"
+                                                :aria-label="$gettext('Alle auswählen')"
+                                                @change="toggleAllRecordings($event.target.checked)"
+                                            >
+                                        </th>
+                                        <th class="recording-link" scope="col">{{ $gettext('Aufzeichnungen') }}</th>
+                                        <th class="recording-date" scope="col">{{ $gettext('Datum') }}</th>
+                                        <th v-if="room.driver === 'BigBlueButton'" class="recording-visibility" scope="col">{{ $gettext('Sichtbarkeit') }}</th>
                                         <th v-if="course_config.display.deleteRecording" scope="col">{{ $gettext('Aktionen') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(recording, index) in recording_list.default" :key="index">
-                                        <td style="width: 60%">
-                                            <ul style="list-style: none; padding: 0;">
+                                        <td v-if="canManageVisibility" class="recording-selection">
+                                            <input
+                                                type="checkbox"
+                                                :value="String(recording.recordID)"
+                                                v-model="selectedRecordings"
+                                                :aria-label="$gettext('Aufzeichnung auswählen')"
+                                            >
+                                        </td>
+                                        <td class="recording-link">
+                                            <ul class="recording-playback-list">
                                                 <template v-if="Array.isArray(recording['playback']['format'])">
                                                     <li v-for="(format, index) in recording['playback']['format']" :key="index">
                                                         <a class="meeting-recording-url" target="_blank"
@@ -60,19 +77,106 @@
                                                 </li>
                                             </ul>
                                         </td>
-                                        <td style="width: 35%">{{ recording['startTime'] }}</td>
-                                        <td v-if="course_config.display.deleteRecording" style="width: 5%">
-                                            <div style="text-align: right;">
-                                                <a href="#" :title="$gettext('Aufzeichnung löschen')" style="cursor: pointer;"
-                                                    @click.prevent="deleteRecording(recording)">
+                                        <td class="recording-date">{{ recording['startTime'] }}</td>
+                                        <td v-if="room.driver === 'BigBlueButton'" class="recording-visibility">
+                                            <StudipDropdown
+                                                v-if="course_config.display.deleteRecording"
+                                                v-model="visibilityDropdowns[recording.recordID]"
+                                                class="visibility-dropdown"
+                                                :withCloseButton="false"
+                                            >
+                                                <template #trigger>
+                                                    <button
+                                                        type="button"
+                                                        class="visibility-dropdown-trigger"
+                                                        :aria-label="$gettext('Sichtbarkeit der Aufzeichnung')"
+                                                        @click="visibilityDropdowns[recording.recordID] = !visibilityDropdowns[recording.recordID]"
+                                                    >
+                                                        <StudipIcon :shape="visibilityIcon(recording.visibility)" role="clickable" size="20" />
+                                                        <span>{{ visibilityLabel(recording.visibility) }}</span>
+                                                    </button>
+                                                </template>
+                                                <template #items>
+                                                    <li v-for="visibility in visibilityOptions" :key="visibility.value" role="menuitem">
+                                                        <button
+                                                            type="button"
+                                                            :aria-current="recording.visibility === visibility.value ? 'true' : undefined"
+                                                            @click="selectVisibility(recording, visibility.value)"
+                                                        >
+                                                            <StudipIcon :shape="visibility.icon" role="clickable" size="20" />
+                                                            <span>{{ visibility.label }}</span>
+                                                        </button>
+                                                    </li>
+                                                </template>
+                                            </StudipDropdown>
+                                            <span v-else class="visibility-status">
+                                                <StudipIcon
+                                                    :shape="visibilityIcon(recording.visibility)"
+                                                    role="info"
+                                                    size="20"
+                                                />
+                                                <span>{{ visibilityLabel(recording.visibility) }}</span>
+                                            </span>
+                                        </td>
+                                        <td class="recording-actions">
+                                            <div class="recording-actions-container">
+                                                <a v-if="course_config.display.deleteRecording" 
+                                                    href="#" :title="$gettext('Aufzeichnung löschen')" 
+                                                    @click.prevent="deleteRecording(recording)"
+                                                >
                                                     <StudipIcon shape="trash" role="clickable"></StudipIcon>
                                                 </a>
+
                                             </div>
                                         </td>
                                     </tr>
                                 </tbody>
+                                <tfoot v-if="canManageVisibility">
+                                    <tr>
+                                        <td colspan="5">
+                                            <div class="bulk-visibility-action">
+                                                <StudipDropdown
+                                                    v-model="bulkDropdownOpen"
+                                                    class="visibility-dropdown"
+                                                    :withCloseButton="false"
+                                                >
+                                                    <template #trigger>
+                                                        <button
+                                                            type="button"
+                                                            class="visibility-dropdown-trigger"
+                                                            @click="bulkDropdownOpen = !bulkDropdownOpen"
+                                                        >
+                                                            <StudipIcon :shape="visibilityIcon(bulkVisibility)" role="clickable" size="20" />
+                                                            <span>{{ visibilityLabel(bulkVisibility) }}</span>
+                                                        </button>
+                                                    </template>
+                                                    <template #items>
+                                                        <li v-for="visibility in visibilityOptions" :key="visibility.value" role="menuitem">
+                                                            <button
+                                                                type="button"
+                                                                :aria-current="bulkVisibility === visibility.value ? 'true' : undefined"
+                                                                @click="selectBulkVisibility(visibility.value)"
+                                                            >
+                                                                <StudipIcon :shape="visibility.icon" role="clickable" size="20" />
+                                                                <span>{{ visibility.label }}</span>
+                                                            </button>
+                                                        </li>
+                                                    </template>
+                                                </StudipDropdown>
+                                                <button
+                                                    type="button"
+                                                    class="button"
+                                                    :disabled="selectedRecordings.length === 0 || bulkUpdatePending"
+                                                    @click="updateSelectedVisibility"
+                                                >
+                                                    {{ $gettext('Übernehmen') }}
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tfoot>
                             </table>
-                        </label>
+                        </div>
                     </fieldset>
                 </form>
             </template>
@@ -97,15 +201,20 @@
 
 <script>
 import { mapGetters } from "vuex";
+import StudipDropdown from '@/components/StudipDropdown.vue';
 
 import { confirm_dialog } from '@/common/confirm_dialog.mixins'
 
 import {
-    RECORDING_LIST, RECORDING_DELETE,
+    RECORDING_LIST, RECORDING_DELETE, RECORDING_VISIBILITY_UPDATE,
 } from "@/store/actions.type";
 
 export default {
     name: "MeetingRecordings",
+
+    components: {
+        StudipDropdown,
+    },
 
     props: ['room'],
 
@@ -115,13 +224,32 @@ export default {
         return {
             modal_message: {},
             message: '',
+            selectedRecordings: [],
+            bulkVisibility: 'teachers',
+            bulkUpdatePending: false,
+            bulkDropdownOpen: false,
+            visibilityDropdowns: {},
         }
     },
 
     computed: {
         ...mapGetters([
             'course_config', 'recording_list', 'recording'
-        ])
+        ]),
+        canManageVisibility() {
+            return this.room.driver === 'BigBlueButton' && this.course_config.display.deleteRecording;
+        },
+        allRecordingsSelected() {
+            const recordings = this.recording_list.default || [];
+            return recordings.length > 0 && this.selectedRecordings.length === recordings.length;
+        },
+        visibilityOptions() {
+            return [
+                {value: 'teachers', icon: 'lock-locked', label: this.$gettext('Nur Lehrende')},
+                {value: 'participants', icon: 'group2', label: this.$gettext('Lehrende und Teilnehmende')},
+                {value: 'public', icon: 'globe', label: this.$gettext('Öffentlich')},
+            ];
+        },
     },
 
     mounted() {
@@ -129,6 +257,79 @@ export default {
     },
 
     methods: {
+        visibilityIcon(visibility) {
+            return {
+                teachers: 'lock-locked',
+                participants: 'group2',
+                public: 'globe',
+            }[visibility] || 'lock-locked';
+        },
+        visibilityLabel(visibility) {
+            return {
+                teachers: this.$gettext('Nur Lehrende'),
+                participants: this.$gettext('Lehrende und Teilnehmende'),
+                public: this.$gettext('Öffentlich'),
+            }[visibility] || this.$gettext('Nur Lehrende');
+        },
+        updateVisibility(recording, visibility) {
+            this.$store.dispatch(RECORDING_VISIBILITY_UPDATE, {recording, visibility})
+            .then(({data}) => {
+                if (data.message) {
+                    this.modal_message = data.message;
+                }
+                this.$store.dispatch(RECORDING_LIST, recording.room_id);
+            });
+        },
+        selectVisibility(recording, visibility) {
+            this.visibilityDropdowns[recording.recordID] = false;
+            if (recording.visibility !== visibility) {
+                this.updateVisibility(recording, visibility);
+            }
+        },
+        selectBulkVisibility(visibility) {
+            this.bulkVisibility = visibility;
+            this.bulkDropdownOpen = false;
+        },
+        selectBulkVisibility(visibility, event) {
+            this.bulkVisibility = visibility;
+            event.currentTarget.closest('details').removeAttribute('open');
+        },
+        toggleAllRecordings(checked) {
+            this.selectedRecordings = checked
+                ? (this.recording_list.default || []).map(recording => String(recording.recordID))
+                : [];
+        },
+        updateSelectedVisibility() {
+            const recordings = (this.recording_list.default || []).filter(recording =>
+                this.selectedRecordings.includes(String(recording.recordID))
+            );
+            if (!recordings.length) {
+                return;
+            }
+
+            this.bulkUpdatePending = true;
+            this.$store.dispatch(RECORDING_VISIBILITY_UPDATE, {
+                recordings,
+                visibility: this.bulkVisibility,
+            }).then(({data}) => {
+                const failed = data?.message?.type === 'error';
+                this.modal_message = {
+                    type: failed ? 'error' : 'success',
+                    text: failed
+                        ? this.$gettext('Die Sichtbarkeit konnte nicht für alle ausgewählten Aufzeichnungen geändert werden.')
+                        : this.$gettext('Die Sichtbarkeit der ausgewählten Aufzeichnungen wurde geändert.'),
+                };
+                this.selectedRecordings = [];
+                return this.$store.dispatch(RECORDING_LIST, this.room.id);
+            }).catch(() => {
+                this.modal_message = {
+                    type: 'error',
+                    text: this.$gettext('Die Sichtbarkeit konnte nicht für alle ausgewählten Aufzeichnungen geändert werden.'),
+                };
+            }).finally(() => {
+                this.bulkUpdatePending = false;
+            });
+        },
         deleteRecording(recording) {
             this.showConfirmDialog = false;
             this.showConfirmDialog = {
