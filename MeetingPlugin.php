@@ -68,6 +68,10 @@ class MeetingPlugin extends StudIPPlugin implements PortalPlugin, StandardPlugin
         if (!$this->isActivated()) {
             return;
         }
+
+        if (Context::getId()) {
+            $this->addStylesheet('assets/css/meetings.scss');
+        }
     }
 
     /**

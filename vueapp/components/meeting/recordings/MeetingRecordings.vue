@@ -30,7 +30,7 @@
                         </label>
                     </fieldset>
                     <fieldset v-if="Object.keys(recording_list).includes('default') && Object.keys(recording_list['default']).length">
-                        <div>
+                        <div class="meeting-recordings">
                             <table class="default">
                                 <thead>
                                     <tr>
@@ -59,7 +59,7 @@
                                             >
                                         </td>
                                         <td class="recording-link">
-                                            <ul style="list-style: none; padding: 0;">
+                                            <ul class="recording-playback-list">
                                                 <template v-if="Array.isArray(recording['playback']['format'])">
                                                     <li v-for="(format, index) in recording['playback']['format']" :key="index">
                                                         <a class="meeting-recording-url" target="_blank"
@@ -79,31 +79,49 @@
                                         </td>
                                         <td class="recording-date">{{ recording['startTime'] }}</td>
                                         <td v-if="room.driver === 'BigBlueButton'" class="recording-visibility">
-                                            <span class="visibility-status">
+                                            <StudipDropdown
+                                                v-if="course_config.display.deleteRecording"
+                                                v-model="visibilityDropdowns[recording.recordID]"
+                                                class="visibility-dropdown"
+                                                :withCloseButton="false"
+                                            >
+                                                <template #trigger>
+                                                    <button
+                                                        type="button"
+                                                        class="visibility-dropdown-trigger"
+                                                        :aria-label="$gettext('Sichtbarkeit der Aufzeichnung')"
+                                                        @click="visibilityDropdowns[recording.recordID] = !visibilityDropdowns[recording.recordID]"
+                                                    >
+                                                        <StudipIcon :shape="visibilityIcon(recording.visibility)" role="clickable" size="20" />
+                                                        <span>{{ visibilityLabel(recording.visibility) }}</span>
+                                                    </button>
+                                                </template>
+                                                <template #items>
+                                                    <li v-for="visibility in visibilityOptions" :key="visibility.value" role="menuitem">
+                                                        <button
+                                                            type="button"
+                                                            :aria-current="recording.visibility === visibility.value ? 'true' : undefined"
+                                                            @click="selectVisibility(recording, visibility.value)"
+                                                        >
+                                                            <StudipIcon :shape="visibility.icon" role="clickable" size="20" />
+                                                            <span>{{ visibility.label }}</span>
+                                                        </button>
+                                                    </li>
+                                                </template>
+                                            </StudipDropdown>
+                                            <span v-else class="visibility-status">
                                                 <StudipIcon
                                                     :shape="visibilityIcon(recording.visibility)"
                                                     role="info"
                                                     size="20"
                                                 />
-                                                <select
-                                                    class="size-l"
-                                                    v-if="course_config.display.deleteRecording"
-                                                    :value="recording.visibility"
-                                                    :aria-label="$gettext('Sichtbarkeit der Aufzeichnung')"
-                                                    @change="updateVisibility(recording, $event.target.value)"
-                                                >
-                                                    <option value="teachers">{{ $gettext('Nur Lehrende') }}</option>
-                                                    <option value="participants">{{ $gettext('Lehrende und Teilnehmende') }}</option>
-                                                    <option value="public">{{ $gettext('Öffentlich') }}</option>
-                                                </select>
-                                                <span v-else>{{ visibilityLabel(recording.visibility) }}</span>
+                                                <span>{{ visibilityLabel(recording.visibility) }}</span>
                                             </span>
                                         </td>
-                                        <td  style="width: 5%">
-                                            <div style="text-align: right;">
+                                        <td class="recording-actions">
+                                            <div class="recording-actions-container">
                                                 <a v-if="course_config.display.deleteRecording" 
                                                     href="#" :title="$gettext('Aufzeichnung löschen')" 
-                                                    style="cursor: pointer;"
                                                     @click.prevent="deleteRecording(recording)"
                                                 >
                                                     <StudipIcon shape="trash" role="clickable"></StudipIcon>
@@ -116,12 +134,35 @@
                                 <tfoot v-if="canManageVisibility">
                                     <tr>
                                         <td colspan="5">
-                                            <div>
-                                                <select class="size-s" v-model="bulkVisibility">
-                                                    <option value="teachers">{{ $gettext('Nur Lehrende') }}</option>
-                                                    <option value="participants">{{ $gettext('Lehrende und Teilnehmende') }}</option>
-                                                    <option value="public">{{ $gettext('Öffentlich') }}</option>
-                                                </select>
+                                            <div class="bulk-visibility-action">
+                                                <StudipDropdown
+                                                    v-model="bulkDropdownOpen"
+                                                    class="visibility-dropdown"
+                                                    :withCloseButton="false"
+                                                >
+                                                    <template #trigger>
+                                                        <button
+                                                            type="button"
+                                                            class="visibility-dropdown-trigger"
+                                                            @click="bulkDropdownOpen = !bulkDropdownOpen"
+                                                        >
+                                                            <StudipIcon :shape="visibilityIcon(bulkVisibility)" role="clickable" size="20" />
+                                                            <span>{{ visibilityLabel(bulkVisibility) }}</span>
+                                                        </button>
+                                                    </template>
+                                                    <template #items>
+                                                        <li v-for="visibility in visibilityOptions" :key="visibility.value" role="menuitem">
+                                                            <button
+                                                                type="button"
+                                                                :aria-current="bulkVisibility === visibility.value ? 'true' : undefined"
+                                                                @click="selectBulkVisibility(visibility.value)"
+                                                            >
+                                                                <StudipIcon :shape="visibility.icon" role="clickable" size="20" />
+                                                                <span>{{ visibility.label }}</span>
+                                                            </button>
+                                                        </li>
+                                                    </template>
+                                                </StudipDropdown>
                                                 <button
                                                     type="button"
                                                     class="button"
@@ -160,6 +201,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import StudipDropdown from '@/components/StudipDropdown.vue';
 
 import { confirm_dialog } from '@/common/confirm_dialog.mixins'
 
@@ -169,6 +211,10 @@ import {
 
 export default {
     name: "MeetingRecordings",
+
+    components: {
+        StudipDropdown,
+    },
 
     props: ['room'],
 
@@ -181,6 +227,8 @@ export default {
             selectedRecordings: [],
             bulkVisibility: 'teachers',
             bulkUpdatePending: false,
+            bulkDropdownOpen: false,
+            visibilityDropdowns: {},
         }
     },
 
@@ -194,6 +242,13 @@ export default {
         allRecordingsSelected() {
             const recordings = this.recording_list.default || [];
             return recordings.length > 0 && this.selectedRecordings.length === recordings.length;
+        },
+        visibilityOptions() {
+            return [
+                {value: 'teachers', icon: 'lock-locked', label: this.$gettext('Nur Lehrende')},
+                {value: 'participants', icon: 'group2', label: this.$gettext('Lehrende und Teilnehmende')},
+                {value: 'public', icon: 'globe', label: this.$gettext('Öffentlich')},
+            ];
         },
     },
 
@@ -224,6 +279,20 @@ export default {
                 }
                 this.$store.dispatch(RECORDING_LIST, recording.room_id);
             });
+        },
+        selectVisibility(recording, visibility) {
+            this.visibilityDropdowns[recording.recordID] = false;
+            if (recording.visibility !== visibility) {
+                this.updateVisibility(recording, visibility);
+            }
+        },
+        selectBulkVisibility(visibility) {
+            this.bulkVisibility = visibility;
+            this.bulkDropdownOpen = false;
+        },
+        selectBulkVisibility(visibility, event) {
+            this.bulkVisibility = visibility;
+            event.currentTarget.closest('details').removeAttribute('open');
         },
         toggleAllRecordings(checked) {
             this.selectedRecordings = checked
@@ -289,40 +358,3 @@ export default {
     }
 }
 </script>
-
-<!-- <style scoped>
-.recording-selection {
-    width: 3rem;
-    text-align: center;
-}
-
-.recording-link {
-    width: 32%;
-}
-
-.recording-date {
-    width: 20%;
-    white-space: nowrap;
-}
-
-.recording-visibility {
-    width: 36%;
-    min-width: 19rem;
-}
-
-.visibility-status,
-.recording-bulk-action {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.visibility-status select {
-    width: 100%;
-}
-
-.recording-bulk-action {
-    justify-content: flex-end;
-    flex-wrap: wrap;
-}
-</style> -->

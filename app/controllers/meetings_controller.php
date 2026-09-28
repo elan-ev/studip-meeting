@@ -10,12 +10,6 @@ class MeetingsController extends StudipController
     #[Inject]
     public StudIPPlugin $plugin;
 
-    public function before_filter(&$action, &$args)
-    {
-        PageLayout::addStylesheet($this->plugin->getPluginUrl() . '/static/styles.css?v=' . MeetingPlugin::getMeetingManifestInfo('version'));
-        parent::before_filter($action, $args);
-    }
-
     public function url_for($to = '')
     {
         $args = func_get_args();
