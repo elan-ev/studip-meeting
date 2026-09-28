@@ -20,6 +20,8 @@ use Meetings\Models\I18N;
  */
 class BigBlueButton implements DriverInterface, RecordingInterface, FolderManagementInterface, ServerRoomsizePresetInterface
 {
+    private const RECORDING_VISIBILITY_METADATA = 'studip-recording-visibility';
+
     /**
      * @var \GuzzleHttp\ClientInterface The HTTP client
      */
@@ -82,7 +84,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
             if (isset($features['recordingVisibility'])) {
                 // Store the room default with the meeting so every generated
                 // recording keeps the visibility selected at creation time.
-                $features['meta_studip_recording_visibility'] = $features['recordingVisibility'];
+                $features['meta_' . self::RECORDING_VISIBILITY_METADATA] = $features['recordingVisibility'];
                 unset($features['recordingVisibility']);
             }
 
@@ -343,7 +345,7 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
         $params = [
             'recordID' => $recordID,
-            'meta_studip_recording_visibility' => $visibility,
+            'meta_' . self::RECORDING_VISIBILITY_METADATA => $visibility,
         ];
         $response = $this->parseXmlResponse($this->performRequest('updateRecordings', $params));
         if (!$response instanceof \SimpleXMLElement || (string) $response->returncode !== 'SUCCESS') {
@@ -366,8 +368,9 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
      */
     public function getRecordingVisibility($recording, $default = 'teachers')
     {
-        if (isset($recording->metadata->studip_recording_visibility)) {
-            $visibility = (string) $recording->metadata->studip_recording_visibility;
+        $metadata = $this->getRecordingVisibilityMetadata($recording);
+        if ($metadata !== null) {
+            $visibility = $metadata;
         } else {
             // Existing recordings inherit the former room setting.
             $visibility = $default;
@@ -380,10 +383,24 @@ class BigBlueButton implements DriverInterface, RecordingInterface, FolderManage
 
     public function recordingVisibilityNeedsSync($recording, $visibility)
     {
-        $hasMetadata = isset($recording->metadata->studip_recording_visibility);
+        $hasMetadata = $this->getRecordingVisibilityMetadata($recording) !== null;
         $isPublished = isset($recording->published) && (string) $recording->published === 'true';
 
         return !$hasMetadata || $isPublished !== ($visibility === 'public');
+    }
+
+    private function getRecordingVisibilityMetadata($recording)
+    {
+        if (isset($recording->metadata->{self::RECORDING_VISIBILITY_METADATA})) {
+            return (string) $recording->metadata->{self::RECORDING_VISIBILITY_METADATA};
+        }
+
+        // Compatibility with metadata written by the initial implementation.
+        if (isset($recording->metadata->studip_recording_visibility)) {
+            return (string) $recording->metadata->studip_recording_visibility;
+        }
+
+        return null;
     }
 
     /**
